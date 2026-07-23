@@ -22,6 +22,7 @@ native program-guide UI with modern Japanese listings.
 - Native `header.bin`, `epg.bin`, and `str.bin` WC24 delivery works.
 - WC24 AES-OFB envelopes and Nintendo LZ10 payloads are generated locally.
 - All 54 Japanese broadcast areas and 376 terrestrial services are collected.
+- Native area-coded URLs receive compact region-specific EPG packages.
 - Daily collection, validation, native packing, and atomic publishing work.
 - TV no Tomo CGI compatibility includes the known native `X-RESULT` contracts.
 

@@ -129,7 +129,18 @@ def serve(
                 self.send_header("Content-Type", "application/json")
             elif route in routes or route in asset_routes or suffix_asset is not None:
                 item = routes.get(route) or asset_routes.get(route) or suffix_asset
-                body = item.payload.read_bytes()
+                payload_path = item.payload
+                route_parts = route.strip("/").split("/")
+                if len(route_parts) == 2 and route_parts[0].isdigit():
+                    area_payload = (
+                        item.payload.parent
+                        / "areas"
+                        / route_parts[0]
+                        / item.payload.name
+                    )
+                    if area_payload.is_file():
+                        payload_path = area_payload
+                body = payload_path.read_bytes()
                 if item.compression == "nintendo-lz10":
                     body = _nintendo_lz10_literal(body)
                 if item.envelope == "wc24-aes-ofb":

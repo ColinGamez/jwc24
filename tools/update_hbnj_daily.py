@@ -69,6 +69,17 @@ def main() -> int:
         run("tools/validate_hbnj_guide.py", str(guide))
         run("tools/pack_hbnj_guide.py", str(guide), "--out-dir", str(payloads))
         run("tools/validate_hbnj_payloads.py", str(guide), str(payloads))
+        run(
+            "tools/build_hbnj_area_payloads.py",
+            str(guide),
+            "--out-dir",
+            str(payloads / "areas"),
+        )
+        run(
+            "tools/validate_hbnj_area_payloads.py",
+            str(guide),
+            str(payloads / "areas"),
+        )
 
         archive = PRIVATE / f"jwc24-all-{broadcast_date}.json"
         publish(guide, archive)
@@ -77,6 +88,9 @@ def main() -> int:
         # Header data changes only when station/area metadata changes, but
         # publishing it alongside a fully validated guide keeps rebuilds reproducible.
         publish(payloads / "header.hdpk", CURRENT / "header.hdpk")
+        for area in sorted((payloads / "areas").iterdir()):
+            for filename in ("epg.hdpk", "string.hdpk"):
+                publish(area / filename, CURRENT / "areas" / area.name / filename)
 
     for path in (CURRENT / "header.hdpk", CURRENT / "epg.hdpk", CURRENT / "string.hdpk"):
         digest = hashlib.sha256(path.read_bytes()).hexdigest().upper()
