@@ -6,6 +6,7 @@ import html
 import json
 import re
 import tempfile
+import unicodedata
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
@@ -79,6 +80,21 @@ def attribute(attrs: str, name: str) -> str:
 def compact_text(value: str) -> str:
     value = re.sub(r"<[^>]+>", " ", value)
     return re.sub(r"\s+", " ", html.unescape(value)).strip()
+
+
+def wii_safe_text(value: str) -> str:
+    """Replace supplementary broadcast symbols unsupported by the Wii font."""
+    result: list[str] = []
+    for character in value:
+        if ord(character) <= 0xFFFF:
+            result.append(character)
+            continue
+        normalized = unicodedata.normalize("NFKC", character)
+        if normalized != character and all(ord(item) <= 0xFFFF for item in normalized):
+            result.append(f"[{normalized}]")
+        # Other supplementary emoji have no reliable equivalent in HBNJ's
+        # Wii-era font and are omitted instead of rendering as surrogate ??.
+    return re.sub(r"\s+", " ", "".join(result)).strip()
 
 
 def parse_timestamp(value: str) -> datetime:
@@ -179,10 +195,16 @@ def parse_region(
                 title = compact_text(title_match.group("title"))
             if not title:
                 raise ValueError(f"missing program title on line {line_number}")
+            title = wii_safe_text(title)
+            if not title:
+                # Bangumi occasionally publishes placeholder events whose
+                # title contains only full-width spaces.
+                title = "番組情報なし"
             detail_match = DETAIL_PATTERN.search(anchor_body)
             description = (
                 compact_text(detail_match.group("detail")) if detail_match else ""
             )
+            description = wii_safe_text(description)
             genre_match = GENRE_PATTERN.search(item.group("body"))
             source_genre = genre_match.group("genre").lower() if genre_match else ""
             genre_id = BANGUMI_GENRE_IDS.get(source_genre, 0)

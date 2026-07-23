@@ -78,6 +78,14 @@ def main() -> int:
         description = program.get("description", "")
         if not isinstance(description, str):
             fail(f"program {program['id']} has a non-string description")
+        for field_name, value in (("title", program["title"]), ("description", description)):
+            supplementary = [character for character in value if ord(character) > 0xFFFF]
+            if supplementary:
+                codes = ", ".join(f"U+{ord(character):05X}" for character in supplementary[:3])
+                fail(
+                    f"program {program['id']} {field_name} contains "
+                    f"Wii-unsupported supplementary characters: {codes}"
+                )
         descriptions += bool(description)
         programs_by_channel[channel_id].append((start, end))
 
