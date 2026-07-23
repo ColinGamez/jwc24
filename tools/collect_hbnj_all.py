@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -15,11 +16,27 @@ def main() -> int:
     parser.add_argument("--date", required=True, help="Broadcast date in YYYYMMDD form")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--delay", type=float, default=0.5, help="Delay between region requests")
+    parser.add_argument(
+        "--retries",
+        type=int,
+        default=3,
+        help="Attempts per region before failing the complete build",
+    )
+    parser.add_argument(
+        "--retry-delay",
+        type=float,
+        default=1.0,
+        help="Initial retry delay in seconds (doubles after each failure)",
+    )
     args = parser.parse_args()
     if not re.fullmatch(r"\d{8}", args.date):
         raise SystemExit("--date must use YYYYMMDD")
     if args.delay < 0:
         raise SystemExit("--delay cannot be negative")
+    if args.retries < 1:
+        raise SystemExit("--retries must be at least 1")
+    if args.retry_delay < 0:
+        raise SystemExit("--retry-delay cannot be negative")
 
     areas: list[dict[str, object]] = []
     channels: list[dict[str, object]] = []
@@ -34,15 +51,30 @@ def main() -> int:
                 f"group={group_id} area={area_name}",
                 flush=True,
             )
-            source_url, source = fetch(group_id, args.date)
-            region = parse_region(
-                source,
-                group_id=group_id,
-                area_id=area_id,
-                area_name=area_name,
-                prefecture_raw=prefecture_raw,
-                source_url=source_url,
-            )
+            for attempt in range(1, args.retries + 1):
+                try:
+                    source_url, source = fetch(group_id, args.date)
+                    region = parse_region(
+                        source,
+                        group_id=group_id,
+                        area_id=area_id,
+                        area_name=area_name,
+                        prefecture_raw=prefecture_raw,
+                        source_url=source_url,
+                    )
+                    break
+                except Exception as error:
+                    if attempt == args.retries:
+                        raise
+                    wait = args.retry_delay * (2 ** (attempt - 1))
+                    print(
+                        f"  attempt {attempt}/{args.retries} failed: "
+                        f"{type(error).__name__}: {error}; retrying in {wait:g}s",
+                        file=sys.stderr,
+                        flush=True,
+                    )
+                    if wait:
+                        time.sleep(wait)
             area = dict(region["area"])
             areas.append(area)
             channels.extend(region["channels"])
