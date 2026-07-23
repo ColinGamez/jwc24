@@ -65,8 +65,10 @@ def main() -> int:
     string, string_relocs, _ = parse_hdpk(args.payload_dir / "string.hdpk")
     if u32(header, 0) != 1:
         raise ValueError("header preflight status is not 1")
-    if len(string) != 0x20 or string_relocs:
-        raise ValueError("string payload is not the expected empty native table")
+    string_count = u32(string, 0x18)
+    string_table = u32(string, 0x1C)
+    if string_count != len(guide["programs"]) or not string_table:
+        raise ValueError("string table count does not match guide")
 
     station_count = u32(header, 0x34)
     station_table = u32(header, 0x38)
@@ -104,6 +106,8 @@ def main() -> int:
     epg_station_table = u32(epg, 0x20)
     epg_keys = []
     program_ids = []
+    string_positions = []
+    guide_programs = {int(program["id"]): program for program in guide["programs"]}
     for index in range(epg_station_count):
         entry = epg_station_table + index * 0x0C
         key, count, refs = u32(epg, entry), u32(epg, entry + 4), u32(epg, entry + 8)
@@ -119,6 +123,17 @@ def main() -> int:
                 raise ValueError("invalid or overlapping native program window")
             read_text(epg, title)
             program_ids.append(program_id)
+            position = u32(epg, detail + 0x14)
+            if not 1 <= position <= string_count:
+                raise ValueError("EPG program has invalid string-table position")
+            record = string_table + (position - 1) * 8
+            first, second = u32(string, record), u32(string, record + 4)
+            expected_description = str(guide_programs[program_id].get("description", "")).strip()
+            if (read_text(string, first) if first else "") != expected_description:
+                raise ValueError("native program description does not match guide")
+            if second:
+                read_text(string, second)
+            string_positions.append(position)
             previous_end = end
     if epg_keys != header_keys:
         raise ValueError("header and EPG station keys differ")
@@ -126,6 +141,8 @@ def main() -> int:
         raise ValueError("native program table count/IDs are invalid")
     if set(program_ids) != {int(program["id"]) for program in guide["programs"]}:
         raise ValueError("native program IDs do not match guide")
+    if sorted(string_positions) != list(range(1, string_count + 1)):
+        raise ValueError("EPG string-table positions are not a complete unique sequence")
 
     print(
         f"valid native HBNJ payloads: stations={station_count} areas={area_count} "

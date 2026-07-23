@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from pack_hbnj_guide import make_epg, make_hdpk, station_maps
+from pack_hbnj_guide import make_epg, make_string, station_maps
 
 
 def main() -> int:
@@ -37,7 +37,7 @@ def main() -> int:
         (output / "epg.hdpk").write_bytes(
             make_epg(area_document, area_channels, global_keys)
         )
-        (output / "string.hdpk").write_bytes(make_hdpk(bytearray(0x20), set()))
+        (output / "string.hdpk").write_bytes(make_string(area_document, area_channels))
         print(
             f"area {area['id']}: stations={len(area_channels)} "
             f"programs={len(area_programs)}"

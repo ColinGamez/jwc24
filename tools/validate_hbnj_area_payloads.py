@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from validate_hbnj_payloads import parse_hdpk, u32
+from validate_hbnj_payloads import parse_hdpk, read_text, u32
 
 
 def main() -> int:
@@ -30,9 +30,7 @@ def main() -> int:
         epg_path = args.area_dir / str(area_id) / "epg.hdpk"
         string_path = args.area_dir / str(area_id) / "string.hdpk"
         epg, _, _ = parse_hdpk(epg_path)
-        string, string_relocs, _ = parse_hdpk(string_path)
-        if len(string) != 0x20 or string_relocs:
-            raise ValueError(f"area {area_id}: invalid string payload")
+        string, _, _ = parse_hdpk(string_path)
 
         expected_channels = [int(value) for value in area["channel_ids"]]
         expected_keys = [key_by_channel[channel_id] for channel_id in expected_channels]
@@ -45,6 +43,9 @@ def main() -> int:
         station_table = u32(epg, 0x20)
         actual_keys: list[int] = []
         actual_program_ids: set[int] = set()
+        string_count = u32(string, 0x18)
+        string_table = u32(string, 0x1C)
+        string_positions: set[int] = set()
         for index in range(station_count):
             station = station_table + index * 0x0C
             key, count, refs = u32(epg, station), u32(epg, station + 4), u32(epg, station + 8)
@@ -56,12 +57,26 @@ def main() -> int:
                 start, end = u32(epg, detail), u32(epg, detail + 4)
                 if end <= start or (previous_end is not None and start < previous_end):
                     raise ValueError(f"area {area_id}: invalid native time window")
+                position = u32(epg, detail + 0x14)
+                if not 1 <= position <= string_count:
+                    raise ValueError(f"area {area_id}: invalid string-table position")
+                record = string_table + (position - 1) * 8
+                first, second = u32(string, record), u32(string, record + 4)
+                if first:
+                    read_text(string, first)
+                if second:
+                    read_text(string, second)
+                string_positions.add(position)
                 actual_program_ids.add(program_id)
                 previous_end = end
         if actual_keys != expected_keys:
             raise ValueError(f"area {area_id}: station keys differ from global header")
         if actual_program_ids != expected_program_ids:
             raise ValueError(f"area {area_id}: program IDs differ from guide")
+        if string_count != len(expected_program_ids):
+            raise ValueError(f"area {area_id}: string record count differs from programs")
+        if string_positions != set(range(1, string_count + 1)):
+            raise ValueError(f"area {area_id}: incomplete string-table positions")
         total_bytes += epg_path.stat().st_size
         print(
             f"area {area_id}: valid stations={station_count} "
