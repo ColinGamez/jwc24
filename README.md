@@ -13,6 +13,30 @@ and displays a current Japanese television guide.
 > contain Nintendo software, WADs, NAND data, private keys, or downloaded guide
 > data.
 
+## Japan-first. Original-channel-first. Native WC24.
+
+JWC24 is an independent implementation built from my own testing and reverse
+engineering. It is not a WiiLink24 fork, frontend, or server clone, and it is
+not affiliated with WiiLink24.
+
+What defines this project is its focus:
+
+- **4.3J comes first.** JWC24 is designed around Japanese system software and
+  Japan-only channels instead of treating them as later regional additions.
+- **Original WADs stay original.** The target is to revive clean channel
+  releases by recreating the services and data formats they expect.
+- **The native WC24 path matters.** Downloads go through Dolphin's emulated
+  IOS WC24 scheduler, task table, encrypted delivery, and VFF storage.
+- **One foundation, multiple channels.** TV no Tomo is the first proof, while
+  the shared transport is being built for other 4.3J WC24 applications and
+  Wii Mail.
+- **Reverse engineering is part of the result.** Parsers and independent
+  validators document the recovered formats instead of hiding channel-specific
+  behavior behind replacement screens.
+
+The short version: JWC24 is about preserving how Japan's original Wii channels
+actually worked, then giving them new data without replacing their identity.
+
 ## What I have working
 
 - The original HBNJ WAD runs without channel binary patches.
