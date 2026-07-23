@@ -7,14 +7,14 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from zoneinfo import ZoneInfo
 
 
 WORKSPACE = Path(__file__).resolve().parents[1]
 PRIVATE = WORKSPACE / "channels" / "hbnj" / "private"
 CURRENT = WORKSPACE / "channels" / "hbnj" / "generated" / "current"
+JAPAN_STANDARD_TIME = timezone(timedelta(hours=9), name="JST")
 
 
 def run(*arguments: str) -> None:
@@ -56,8 +56,12 @@ def main() -> int:
         help="Broadcast date in YYYYMMDD form (default: current date in Japan)",
     )
     parser.add_argument("--delay", type=float, default=0.5)
+    parser.add_argument("--retries", type=int, default=3)
+    parser.add_argument("--retry-delay", type=float, default=1.0)
     args = parser.parse_args()
-    broadcast_date = args.date or datetime.now(ZoneInfo("Asia/Tokyo")).strftime("%Y%m%d")
+    # Japan has observed UTC+09:00 year-round since 1951, so this avoids an
+    # unnecessary dependency on the optional Windows IANA/tzdata package.
+    broadcast_date = args.date or datetime.now(JAPAN_STANDARD_TIME).strftime("%Y%m%d")
     if len(broadcast_date) != 8 or not broadcast_date.isdigit():
         raise SystemExit("--date must use YYYYMMDD")
 
@@ -74,6 +78,10 @@ def main() -> int:
             str(guide),
             "--delay",
             str(args.delay),
+            "--retries",
+            str(args.retries),
+            "--retry-delay",
+            str(args.retry_delay),
         )
         run("tools/validate_hbnj_guide.py", str(guide))
         run("tools/pack_hbnj_guide.py", str(guide), "--out-dir", str(payloads))

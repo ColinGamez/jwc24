@@ -8,9 +8,16 @@ $log = Join-Path $logDirectory "hbnj-update-$stamp.log"
 Push-Location $workspace
 try {
     $env:PYTHONIOENCODING = "utf-8"
+    # Windows PowerShell promotes native stderr to an ErrorRecord. This Python
+    # installation emits a harmless prefix warning on stderr, so temporarily
+    # allow the process to finish and judge success by its actual exit code.
+    $previousErrorActionPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
     & py -3 "tools\update_hbnj_daily.py" *>&1 | Tee-Object -FilePath $log
-    if ($LASTEXITCODE -ne 0) {
-        throw "HBNJ updater exited with code $LASTEXITCODE"
+    $updaterExitCode = $LASTEXITCODE
+    $ErrorActionPreference = $previousErrorActionPreference
+    if ($updaterExitCode -ne 0) {
+        throw "HBNJ updater exited with code $updaterExitCode"
     }
 }
 finally {
