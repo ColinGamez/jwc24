@@ -180,10 +180,10 @@ def make_epg(document: dict, channel_by_id: dict[int, dict], keys: dict[int, int
             put_u32(data, detail, wii_seconds(program["start"]))
             put_u32(data, detail + 4, wii_seconds(program["end"]))
             put_u32(data, detail + 8, titles[program_index][0], relocs)
-            data[detail + 0x0C] = 1
-            data[detail + 0x0F] = 1
-            data[detail + 0x10] = 1
-            data[detail + 0x11] = 1
+            genre_id = int(program.get("genre_id", 0))
+            if not 0 <= genre_id <= 0xFF:
+                raise ValueError(f"invalid genre ID {genre_id} for program {program['id']}")
+            data[detail + 0x0C] = genre_id
             program_index += 1
 
     for offset, encoded in titles:

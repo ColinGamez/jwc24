@@ -23,12 +23,15 @@ native program-guide UI with modern Japanese listings.
 - WC24 AES-OFB envelopes and Nintendo LZ10 payloads are generated locally.
 - All 54 Japanese broadcast areas and 376 terrestrial services are collected.
 - Native area-coded URLs receive compact region-specific EPG packages.
+- Bangumi genre categories are translated into TV no Tomo's native genre IDs.
+- Program descriptions are retained in the validated source data for the
+  forthcoming native detail-string packer.
 - Daily collection, validation, native packing, and atomic publishing work.
 - TV no Tomo CGI compatibility includes the known native `X-RESULT` contracts.
 
-Still experimental: genre/detail metadata, region-specific EPG packages,
-multi-day rollover, automatic server installation, popularity synchronization,
-Wii Mail, and adapters for additional 4.3J channels.
+Still experimental: native detail-string display, multi-day rollover,
+automatic server installation, popularity synchronization, Wii Mail, and
+adapters for additional 4.3J channels.
 
 ## Repository policy
 

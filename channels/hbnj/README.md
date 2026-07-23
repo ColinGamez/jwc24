@@ -32,6 +32,10 @@ stage succeeds, so a failed upstream collection leaves the previous guide live.
 It also builds and validates one EPG per native area ID under
 `generated/current/areas/<id>`. Requests such as `/1016/epg.bin` resolve to the
 matching regional payload, with the national package retained as a fallback.
+The collector also maps Bangumi's CSS genre categories to TV no Tomo's
+one-based ARIB genre IDs. It preserves program descriptions in the private
+guide JSON, but does not publish them in `str.bin` until that table's native
+record layout has been independently verified.
 
 The task layout is based on confirmed reverse engineering from the retired
 workspace. It is not considered production-compatible until a clean WAD launch

@@ -19,7 +19,16 @@ CURRENT = WORKSPACE / "channels" / "hbnj" / "generated" / "current"
 
 def run(*arguments: str) -> None:
     command = [sys.executable, *arguments]
-    result = subprocess.run(command, cwd=WORKSPACE, check=False)
+    environment = os.environ.copy()
+    # Windows may otherwise inherit a legacy console code page that cannot
+    # print Japanese area names and aborts an otherwise valid collection.
+    environment.setdefault("PYTHONUTF8", "1")
+    result = subprocess.run(
+        command,
+        cwd=WORKSPACE,
+        check=False,
+        env=environment,
+    )
     if result.returncode:
         raise RuntimeError(f"command failed ({result.returncode}): {' '.join(command)}")
 
