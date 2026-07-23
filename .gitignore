@@ -1,0 +1,36 @@
+# Private/local schedule acquisition and generated data
+channels/*/private/
+channels/*/generated/
+private/
+snapshots/
+
+# Original/proprietary channel and NAND material
+*.wad
+*.app
+*.tik
+*.tmd
+*.cert
+*.vff
+wc24pubk.mod
+dolphin-*-quarantine-*/
+/FindHbnjError271110.java
+/ReadHbnjRootName.java
+
+# Derived channel payloads are built locally
+channels/*/payloads/*.bin
+channels/*/payloads/*.hdpk
+
+# Reverse-engineering output
+*_dump*.txt
+*_refs.txt
+*.gpr
+*.rep/
+
+# Python/editor caches
+__pycache__/
+*.py[cod]
+.venv/
+.vscode/
+*.egg-info/
+build/
+dist/

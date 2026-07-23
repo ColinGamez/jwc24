@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "channel_id": "HBNJ",
+  "name": "TV no Tomo Channel G Guide for Wii",
+  "title_id": "0001000148424e4a",
+  "system_menu_region": "JPN",
+  "base_url": "http://tvepg.wapp.wii.com",
+  "prune_duplicate_tasks": true,
+  "tasks": [
+    {
+      "slot": 10,
+      "filename": "epg.bin",
+      "route": "/1016/epg.bin",
+      "payload": "generated/current/epg.hdpk",
+      "refresh_minutes": 60,
+      "retry_minutes": 5,
+      "unsigned": false,
+      "mode": "adopt",
+      "compression": "nintendo-lz10",
+      "envelope": "wc24-aes-ofb"
+    },
+    {
+      "slot": 11,
+      "filename": "str.bin",
+      "route": "/1016/str.bin",
+      "payload": "generated/current/string.hdpk",
+      "refresh_minutes": 60,
+      "retry_minutes": 5,
+      "unsigned": false,
+      "mode": "adopt",
+      "compression": "nintendo-lz10",
+      "envelope": "wc24-aes-ofb"
+    }
+  ],
+  "assets": [
+    {
+      "filename": "header.bin",
+      "payload": "generated/current/header.hdpk",
+      "compression": "nintendo-lz10",
+      "envelope": "wc24-aes-ofb"
+    }
+  ]
+}
