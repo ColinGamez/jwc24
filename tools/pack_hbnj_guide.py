@@ -64,6 +64,30 @@ def station_maps(channels: list[dict]) -> tuple[dict[int, dict], dict[int, int]]
     return by_id, keys
 
 
+def ordered_program_rows(
+    document: dict,
+    channel_by_id: dict[int, dict],
+) -> tuple[dict[int, list[dict]], list[dict]]:
+    grouped: dict[int, list[dict]] = defaultdict(list)
+    for program in document["programs"]:
+        channel_id = int(program["channel_id"])
+        if channel_id not in channel_by_id:
+            raise ValueError(f"program references missing channel {channel_id}")
+        grouped[channel_id].append(program)
+    if set(grouped) != set(channel_by_id):
+        raise ValueError("every channel must have at least one program")
+
+    programs: list[dict] = []
+    for channel_id in channel_by_id:
+        rows = sorted(grouped[channel_id], key=lambda row: row["start"])
+        for previous, current in zip(rows, rows[1:]):
+            if datetime.fromisoformat(current["start"]) < datetime.fromisoformat(previous["end"]):
+                raise ValueError(f"overlapping programs on channel {channel_id}")
+        grouped[channel_id] = rows
+        programs.extend(rows)
+    return grouped, programs
+
+
 def make_header(document: dict, channel_by_id: dict[int, dict], keys: dict[int, int]) -> bytes:
     channels = list(channel_by_id.values())
     areas = document["areas"]
@@ -127,23 +151,8 @@ def make_header(document: dict, channel_by_id: dict[int, dict], keys: dict[int, 
 
 
 def make_epg(document: dict, channel_by_id: dict[int, dict], keys: dict[int, int]) -> bytes:
-    grouped: dict[int, list[dict]] = defaultdict(list)
-    for program in document["programs"]:
-        channel_id = int(program["channel_id"])
-        if channel_id not in channel_by_id:
-            raise ValueError(f"program references missing channel {channel_id}")
-        grouped[channel_id].append(program)
-    if set(grouped) != set(channel_by_id):
-        raise ValueError("every channel must have at least one program")
-
+    grouped, programs = ordered_program_rows(document, channel_by_id)
     ordered_channels = list(channel_by_id)
-    programs = []
-    for channel_id in ordered_channels:
-        rows = sorted(grouped[channel_id], key=lambda row: row["start"])
-        for previous, current in zip(rows, rows[1:]):
-            if datetime.fromisoformat(current["start"]) < datetime.fromisoformat(previous["end"]):
-                raise ValueError(f"overlapping programs on channel {channel_id}")
-        programs.extend(rows)
 
     root_size = 0x2C
     station_table = root_size
@@ -180,13 +189,42 @@ def make_epg(document: dict, channel_by_id: dict[int, dict], keys: dict[int, int
             put_u32(data, detail, wii_seconds(program["start"]))
             put_u32(data, detail + 4, wii_seconds(program["end"]))
             put_u32(data, detail + 8, titles[program_index][0], relocs)
-            data[detail + 0x0C] = 1
-            data[detail + 0x0F] = 1
-            data[detail + 0x10] = 1
-            data[detail + 0x11] = 1
+            genre_id = int(program.get("genre_id", 0))
+            if not 0 <= genre_id <= 0xFF:
+                raise ValueError(f"invalid genre ID {genre_id} for program {program['id']}")
+            data[detail + 0x0C] = genre_id
+            put_u32(data, detail + 0x14, program_index + 1)
             program_index += 1
 
     for offset, encoded in titles:
+        data[offset:offset + len(encoded)] = encoded
+    return make_hdpk(data, relocs)
+
+
+def make_string(document: dict, channel_by_id: dict[int, dict]) -> bytes:
+    _, programs = ordered_program_rows(document, channel_by_id)
+    root_size = 0x20
+    table = root_size
+    cursor = table + len(programs) * 8
+    descriptions: list[tuple[int, bytes] | None] = []
+    for program in programs:
+        description = str(program.get("description", "")).strip()
+        if description:
+            encoded = cstr(description)
+            descriptions.append((cursor, encoded))
+            cursor += len(encoded)
+        else:
+            descriptions.append(None)
+
+    data = bytearray(cursor)
+    relocs: set[int] = set()
+    put_u32(data, 0x18, len(programs))
+    put_u32(data, 0x1C, table, relocs)
+    for index, description in enumerate(descriptions):
+        if description is None:
+            continue
+        offset, encoded = description
+        put_u32(data, table + index * 8, offset, relocs)
         data[offset:offset + len(encoded)] = encoded
     return make_hdpk(data, relocs)
 
@@ -203,7 +241,7 @@ def main() -> int:
     files = {
         "header.hdpk": make_header(document, channel_by_id, keys),
         "epg.hdpk": make_epg(document, channel_by_id, keys),
-        "string.hdpk": make_hdpk(bytearray(0x20), set()),
+        "string.hdpk": make_string(document, channel_by_id),
     }
     args.out_dir.mkdir(parents=True, exist_ok=True)
     for name, payload in files.items():

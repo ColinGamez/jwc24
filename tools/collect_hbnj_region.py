@@ -42,6 +42,29 @@ TITLE_PATTERN = re.compile(
     r'<p\b[^>]*class="[^"]*\bprogram_title\b[^"]*"[^>]*>(?P<title>.*?)</p>',
     re.IGNORECASE | re.DOTALL,
 )
+DETAIL_PATTERN = re.compile(
+    r'<p\b[^>]*class="[^"]*\bprogram_detail\b[^"]*"[^>]*>(?P<detail>.*?)</p>',
+    re.IGNORECASE | re.DOTALL,
+)
+GENRE_PATTERN = re.compile(r"\bgc-(?P<genre>[a-z0-9_-]+)\b", re.IGNORECASE)
+
+# TV no Tomo stores up to three one-byte genre IDs in each program record.
+# Its IDs follow the ARIB main-genre order plus one because zero means unset.
+BANGUMI_GENRE_IDS = {
+    "news": 1,
+    "sports": 2,
+    "information": 3,
+    "info": 3,
+    "drama": 4,
+    "music": 5,
+    "variety": 6,
+    "movie": 7,
+    "anime": 8,
+    "documentary": 9,
+    "theater": 10,
+    "education": 11,
+    "welfare": 12,
+}
 
 
 def attribute(attrs: str, name: str) -> str:
@@ -156,6 +179,13 @@ def parse_region(
                 title = compact_text(title_match.group("title"))
             if not title:
                 raise ValueError(f"missing program title on line {line_number}")
+            detail_match = DETAIL_PATTERN.search(anchor_body)
+            description = (
+                compact_text(detail_match.group("detail")) if detail_match else ""
+            )
+            genre_match = GENRE_PATTERN.search(item.group("body"))
+            source_genre = genre_match.group("genre").lower() if genre_match else ""
+            genre_id = BANGUMI_GENRE_IDS.get(source_genre, 0)
             href = attribute(anchor_attrs, "href")
             content_id = str(metadata.get("contentsId") or "")
             program_id = str(metadata.get("programId") or attribute(attrs, "pid"))
@@ -167,6 +197,9 @@ def parse_region(
                     "source_program_id": program_id,
                     "source_event_id": source_event_id,
                     "title": title,
+                    "description": description,
+                    "genre_id": genre_id,
+                    "source_genre": source_genre or "none",
                     "start": start.isoformat(timespec="minutes"),
                     "end": end.isoformat(timespec="minutes"),
                     "source_url": urljoin(BASE_URL, href),

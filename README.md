@@ -1,132 +1,127 @@
 # JWC24
 
-JWC24 is an experimental, reusable replacement-service toolkit for Japanese
-WiiConnect24 channels running under Dolphin. It preserves original channel
-WADs and works with Dolphin's native WC24 scheduler, per-channel download
-tasks, and VFF storage.
+JWC24 is my project to revive discontinued Japanese WiiConnect24 services for
+4.3J Wii software. The goal is one replacement WC24 platform that can support
+multiple original channels without modifying or redistributing their WADs.
 
-The platform is deliberately split into two layers:
+The first channel I brought back is **TV no Tomo Channel G-Guide for Wii**
+(`HBNJ`). It now boots from a clean Japanese v512 WAD in Dolphin, completes its
+original setup flow, downloads data through the Wii's native WC24 scheduler,
+and displays a current Japanese television guide.
 
-- `jwc24/` implements shared WC24 task parsing, provisioning, validation, and
-  HTTP payload delivery.
-- `channels/` contains one manifest per revived channel. Channel-specific
-  binary generators and CGI handlers can be added beside each manifest.
+> This repository documents and develops the replacement service. It does not
+> contain Nintendo software, WADs, NAND data, private keys, or downloaded guide
+> data.
 
-TV no Tomo (`HBNJ`, title ID `0001000148424e4a`) is the first working adapter,
-not a special case in the WC24 core. The current proof of concept reaches the
-native program-guide UI with modern Japanese listings.
+## What I have working
 
-## Current status
+- The original HBNJ WAD runs without channel binary patches.
+- Dolphin's WC24 scheduler downloads native `header.bin`, `epg.bin`, and
+  `str.bin` files from JWC24.
+- JWC24 produces the channel's original WC24 AES-OFB envelope, Nintendo LZ10
+  compression, and HDPK data structures.
+- The guide covers all 54 Japanese broadcast areas and 376 terrestrial
+  services.
+- Area-coded requests receive compact regional payloads; Gunma currently has
+  11 stations and 397 programs.
+- Current titles, times, genres, and Japanese program descriptions are packed
+  into their native TV no Tomo records.
+- The original activation, query, popularity, and synchronization CGI calls
+  receive the response contracts expected by the channel.
+- A daily job collects, validates, packs, independently checks, and atomically
+  publishes a new guide.
 
-- Clean Japanese v512 HBNJ WAD boots without binary patches.
-- Native `header.bin`, `epg.bin`, and `str.bin` WC24 delivery works.
-- WC24 AES-OFB envelopes and Nintendo LZ10 payloads are generated locally.
-- All 54 Japanese broadcast areas and 376 terrestrial services are collected.
-- Daily collection, validation, native packing, and atomic publishing work.
-- TV no Tomo CGI compatibility includes the known native `X-RESULT` contracts.
+## Why it is more than a TV no Tomo patch
 
-Still experimental: genre/detail metadata, region-specific EPG packages,
-multi-day rollover, automatic server installation, popularity synchronization,
-Wii Mail, and adapters for additional 4.3J channels.
+The shared code in `jwc24/` handles WC24 task inspection, safe provisioning,
+payload delivery, encryption, compression, and validation. TV no Tomo lives in
+`channels/hbnj/` as the first channel-specific adapter.
 
-## Repository policy
+That split is intentional: future 4.3J channels can have their own manifest,
+data generator, validators, and CGI behavior while reusing the same WC24
+transport. Wii Mail support is also planned because it is part of the wider
+WC24 experience.
 
-This repository contains source code and documentation only. It deliberately
-does **not** contain:
-
-- WADs, tickets, TMDs, extracted channel content, or NAND files
-- Wii identities, MAC addresses, WC24 keys, or emulator saves
-- downloaded/generated schedules or HDPK payloads
-- local TLS private keys, rollback snapshots, or reverse-engineering dumps
-
-You must provide your own legally obtained channel and Dolphin NAND.
-
-## Safety model
-
-- Provisioning is a dry run unless `--apply` is supplied.
-- Every applied edit creates a timestamped backup beside `nwc24dl.bin`.
-- Occupied task slots are never overwritten unless they already belong to the
-  same manifest and use the expected filename.
-- Dolphin must be closed before applying a manifest.
-- The original WAD is treated as immutable input.
-
-The `account --bootstrap-local` operation promotes an already generated WC24
-identity to the registered state for a local replacement service. It does not
-contact Nintendo, WiiLink, or another third party, and it refuses NANDs that
-have never generated a WC24 ID.
-
-## Commands
-
-```powershell
-py -3 -m jwc24 audit --dl-list "$env:APPDATA\Dolphin Emulator\Wii\shared2\wc24\nwc24dl.bin"
-py -3 -m jwc24 account --config "$env:APPDATA\Dolphin Emulator\Wii\shared2\wc24\nwc24msg.cfg"
-py -3 -m jwc24 validate-manifest channels\hbnj\channel.json
-py -3 -m jwc24 provision channels\hbnj\channel.json --dl-list "$env:APPDATA\Dolphin Emulator\Wii\shared2\wc24\nwc24dl.bin"
-py -3 -m jwc24 serve channels\hbnj\channel.json --nand-root "$env:APPDATA\Dolphin Emulator\Wii"
+```text
+original 4.3J channel
+        |
+        v
+Dolphin IOS /dev/net/kd/request
+        |
+        v
+native WC24 download task
+        |
+        v
+JWC24 transport and channel adapter
+        |
+        v
+validated replacement data
 ```
 
-## Build today's HBNJ guide
+## Current project status
 
-Python 3.11 or newer is recommended.
+TV no Tomo has reached its real program-guide UI with current listings. The
+latest build validated:
+
+- 54 broadcast areas
+- 376 stations
+- 14,871 programs
+- 12,897 program descriptions
+- every header-to-EPG station key
+- every EPG-to-string record index
+- every regional native payload
+
+The next work is focused on in-app polish, multi-day guide rollover,
+popularity synchronization, easier local server setup, Wii Mail, and adapters
+for more Japanese WC24 channels.
+
+## Repository layout
+
+- `jwc24/` — reusable WC24 transport, task, account, and server code
+- `channels/hbnj/` — TV no Tomo manifest, service behavior, and documentation
+- `tools/` — guide collection, native packing, validation, and inspection
+- `.github/workflows/` — source and package checks
+
+Private runtime material and generated data are deliberately excluded from
+Git.
+
+## Development notes
+
+The project currently targets Dolphin and Python 3.11 or newer. The daily HBNJ
+build is:
 
 ```powershell
 py -3 tools\update_hbnj_daily.py
 ```
 
-This performs four gates before publishing anything:
-
-1. strict collection for all 54 areas;
-2. schema/reference/time-window validation;
-3. native UTF-16BE HDPK packing;
-4. independent binary parsing and cross-file validation.
-
-Only a fully valid build is atomically published to
-`channels/hbnj/generated/current`. A failed update leaves the previous guide
+That command collects all regions into private staging, validates the complete
+guide, creates native HDPK payloads, independently parses them, and publishes
+only after every check passes. A failed build leaves the previous live guide
 untouched.
 
-## Run the service
-
-Validate and provision manifests with Dolphin closed:
+The shared command-line tools can audit WC24 state, inspect the local account,
+validate channel manifests, provision tasks, and run the replacement server:
 
 ```powershell
-py -3 -m jwc24 validate-manifest channels\hbnj\bootstrap.json
+py -3 -m jwc24 audit --dl-list "$env:APPDATA\Dolphin Emulator\Wii\shared2\wc24\nwc24dl.bin"
+py -3 -m jwc24 account --config "$env:APPDATA\Dolphin Emulator\Wii\shared2\wc24\nwc24msg.cfg"
 py -3 -m jwc24 validate-manifest channels\hbnj\channel.json
-py -3 -m jwc24 provision channels\hbnj\channel.json `
-  --dl-list "$env:APPDATA\Dolphin Emulator\Wii\shared2\wc24\nwc24dl.bin"
+py -3 -m jwc24 serve channels\hbnj\channel.json --nand-root "$env:APPDATA\Dolphin Emulator\Wii"
 ```
 
-Provisioning is a dry run unless `--apply` is supplied.
+Provisioning defaults to a dry run, creates timestamped backups when applied,
+and refuses to overwrite unrelated occupied task slots. The original WAD is
+always treated as immutable input.
 
-Start HTTP delivery after generating payloads:
+## Project boundaries
 
-```powershell
-py -3 -m jwc24 serve channels\hbnj\channel.json `
-  --nand-root "$env:APPDATA\Dolphin Emulator\Wii" --port 80
-```
+The public repository intentionally excludes:
 
-Local HTTPS CGI testing additionally requires a private development
-certificate; do not commit it.
+- WADs, tickets, TMDs, extracted content, and NAND files
+- Wii identities, MAC addresses, WC24 keys, and emulator saves
+- collected schedules and generated HDPK payloads
+- TLS private keys, rollback snapshots, and reverse-engineering dumps
 
-## Architecture
-
-```text
-clean 4.3J NAND
-      |
-      v
-manifest-driven task provisioner --> Dolphin IOS /dev/net/kd/request
-                                          |
-                                          v
-                                  replacement HTTP service
-                                          |
-                                          v
-                           channel adapter / payload generator
-```
-
-Each future channel gets its own manifest, payload generator, validators, and
-optional CGI adapter while sharing the WC24 transport and safety machinery.
-
-## Warning
-
-JWC24 is early reverse-engineering software. Keep NAND backups, test in a
-separate Dolphin user directory, and never provision task tables while Dolphin
-is running.
+JWC24 is still early reverse-engineering software. I develop it against
+separate Dolphin data with backups and keep all copyrighted or
+machine-specific material outside the repository.

@@ -59,6 +59,8 @@ def main() -> int:
 
     programs_by_channel: dict[int, list[tuple[datetime, datetime]]] = defaultdict(list)
     cross_midnight = 0
+    genre_counts: Counter[int] = Counter()
+    descriptions = 0
     for program in programs:
         channel_id = program["channel_id"]
         if channel_id not in channel_by_id:
@@ -69,6 +71,14 @@ def main() -> int:
             fail(f"program {program['id']} has a non-positive window")
         if end.date() != start.date():
             cross_midnight += 1
+        genre_id = program.get("genre_id", 0)
+        if not isinstance(genre_id, int) or not 0 <= genre_id <= 12:
+            fail(f"program {program['id']} has invalid genre ID {genre_id!r}")
+        genre_counts[genre_id] += 1
+        description = program.get("description", "")
+        if not isinstance(description, str):
+            fail(f"program {program['id']} has a non-string description")
+        descriptions += bool(description)
         programs_by_channel[channel_id].append((start, end))
 
     empty_channels = set(channel_ids) - programs_by_channel.keys()
@@ -104,7 +114,8 @@ def main() -> int:
     print(
         f"valid: areas={len(areas)} channels={len(channels)} "
         f"programs={len(programs)} cross_midnight={cross_midnight} "
-        f"repeated_names_across_areas={duplicate_names}"
+        f"repeated_names_across_areas={duplicate_names} "
+        f"descriptions={descriptions} genres={dict(sorted(genre_counts.items()))}"
     )
     print(f"sha256={hashlib.sha256(raw).hexdigest().upper()} bytes={len(raw)}")
     return 0

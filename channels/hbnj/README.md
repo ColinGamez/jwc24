@@ -29,6 +29,14 @@ served.
 schema audit, native packing, and independent binary audit in a private staging
 directory. It atomically publishes to `generated/current` only after every
 stage succeeds, so a failed upstream collection leaves the previous guide live.
+It also builds and validates one EPG per native area ID under
+`generated/current/areas/<id>`. Requests such as `/1016/epg.bin` resolve to the
+matching regional payload, with the national package retained as a fallback.
+The collector also maps Bangumi's CSS genre categories to TV no Tomo's
+one-based ARIB genre IDs. It preserves program descriptions in the private
+guide JSON and packs them into the first text pointer of each native `str.bin`
+record. Every EPG detail record carries a validated one-based index into that
+table; the optional second text pointer remains empty.
 
 The task layout is based on confirmed reverse engineering from the retired
 workspace. It is not considered production-compatible until a clean WAD launch
