@@ -17,6 +17,9 @@ ENTRY_BASE = HEADER_SIZE + RECORD_SIZE * ENTRY_COUNT
 FILE_SIZE = ENTRY_BASE + ENTRY_SIZE * ENTRY_COUNT
 CHANNEL_CONTENT = 3
 UNSIGNED_FLAG = 0x00000004
+# Native encrypted channel-content tasks use bit 1 plus the WC24 decrypt bit.
+# Without these, IOS writes the AES ciphertext into the VFF unchanged.
+ENCRYPTED_CHANNEL_FLAGS = 0x0000000A
 
 
 @dataclass(frozen=True)
@@ -102,12 +105,20 @@ def entries(data: bytes | bytearray) -> list[EntrySummary]:
     return [value for slot in range(ENTRY_COUNT) if (value := entry(data, slot)) is not None]
 
 
+def _created_task_flags(task: Task) -> int:
+    if task.unsigned:
+        return UNSIGNED_FLAG
+    if task.envelope == "wc24-aes-ofb":
+        return ENCRYPTED_CHANNEL_FLAGS
+    return 0
+
+
 def _write_task(data: bytearray, manifest: ChannelManifest, task: Task) -> None:
     offset = _entry_offset(task.slot)
     data[offset : offset + ENTRY_SIZE] = b"\0" * ENTRY_SIZE
     _put_u16(data, offset, task.slot)
     data[offset + 2] = CHANNEL_CONTENT
-    _put_u32(data, offset + 4, UNSIGNED_FLAG if task.unsigned else 0)
+    _put_u32(data, offset + 4, _created_task_flags(task))
     _put_u32(data, offset + 8, manifest.title_code)
     _put_u32(data, offset + 12, manifest.title_type)
     _put_u16(data, offset + 24, 1)
@@ -179,10 +190,15 @@ def provision(path: Path, manifest: ChannelManifest, apply: bool) -> tuple[list[
                 f"slot {task.slot} is occupied by {current.title_id:016x} {current.filename!r}"
             )
         expected_url = manifest.base_url + task.route
+        expected_flags = _created_task_flags(task)
         if (
             current
             and current.url == expected_url
-            and bool(current.flags & UNSIGNED_FLAG) == task.unsigned
+            and (
+                current.flags == expected_flags
+                if task.mode == "create"
+                else bool(current.flags & UNSIGNED_FLAG) == task.unsigned
+            )
             and current.entry_type == CHANNEL_CONTENT
         ):
             if task.mode == "adopt":
