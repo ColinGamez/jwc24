@@ -4,7 +4,7 @@ import argparse
 import hashlib
 import json
 from collections import Counter, defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 
@@ -23,6 +23,20 @@ def main() -> int:
         fail("unexpected guide format")
     if document.get("status") != "ok":
         fail("guide status is not ok")
+    days = document.get("days", 1)
+    if not isinstance(days, int) or not 1 <= days <= 8:
+        fail(f"guide days must be between 1 and 8, got {days!r}")
+    try:
+        first_broadcast_date = datetime.strptime(document["broadcast_date"], "%Y%m%d")
+    except (KeyError, TypeError, ValueError) as error:
+        fail(f"invalid broadcast_date: {error}")
+    broadcast_dates = {
+        (first_broadcast_date + timedelta(days=offset)).strftime("%Y%m%d")
+        for offset in range(days)
+    }
+    expected_end_date = (first_broadcast_date + timedelta(days=days - 1)).strftime("%Y%m%d")
+    if document.get("broadcast_end_date", document["broadcast_date"]) != expected_end_date:
+        fail("broadcast_end_date does not match the requested guide window")
 
     areas = document.get("areas")
     channels = document.get("channels")
@@ -58,6 +72,7 @@ def main() -> int:
         fail("area channel lists do not partition the channel table exactly")
 
     programs_by_channel: dict[int, list[tuple[datetime, datetime]]] = defaultdict(list)
+    dates_by_channel: dict[int, set[str]] = defaultdict(set)
     cross_midnight = 0
     genre_counts: Counter[int] = Counter()
     descriptions = 0
@@ -88,11 +103,20 @@ def main() -> int:
                 )
         descriptions += bool(description)
         programs_by_channel[channel_id].append((start, end))
+        dates_by_channel[channel_id].add(start.strftime("%Y%m%d"))
 
     empty_channels = set(channel_ids) - programs_by_channel.keys()
     if empty_channels:
         fail(f"channels without programs: {sorted(empty_channels)[:5]}")
     for channel_id, windows in programs_by_channel.items():
+        missing_dates = broadcast_dates - dates_by_channel[channel_id]
+        if missing_dates:
+            fail(
+                f"channel {channel_id} has no program starts on broadcast dates "
+                f"{sorted(missing_dates)}"
+            )
+        if len(windows) > 768:
+            fail(f"channel {channel_id} exceeds native 768-program capacity")
         windows.sort()
         for previous, current in zip(windows, windows[1:]):
             if current[0] < previous[1]:
@@ -114,13 +138,22 @@ def main() -> int:
     source_program_total = sum(source["programs"] for source in sources)
     if source_channel_total != len(channels) or source_program_total != len(programs):
         fail("source totals do not match the aggregate tables")
+    if days > 1:
+        expected_dates = sorted(broadcast_dates)
+        for source in sources:
+            if source.get("broadcast_dates") != expected_dates:
+                fail(f"source {source.get('area_id')} has an incomplete date window")
+            if len(source.get("source_urls", [])) != days:
+                fail(f"source {source.get('area_id')} has incomplete source URLs")
+            if len(source.get("daily_program_counts", [])) != days:
+                fail(f"source {source.get('area_id')} has incomplete daily counts")
 
     duplicate_names = sum(
         count - 1 for count in Counter(channel["name"] for channel in channels).values()
         if count > 1
     )
     print(
-        f"valid: areas={len(areas)} channels={len(channels)} "
+        f"valid: days={days} areas={len(areas)} channels={len(channels)} "
         f"programs={len(programs)} cross_midnight={cross_midnight} "
         f"repeated_names_across_areas={duplicate_names} "
         f"descriptions={descriptions} genres={dict(sorted(genre_counts.items()))}"

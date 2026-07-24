@@ -55,7 +55,10 @@ def main() -> int:
         "--date",
         help="Broadcast date in YYYYMMDD form (default: current date in Japan)",
     )
-    parser.add_argument("--delay", type=float, default=0.5)
+    # Eight days across 54 areas is 432 requests. A short courtesy delay keeps
+    # the scheduled build comfortably inside its 20-minute execution window.
+    parser.add_argument("--delay", type=float, default=0.1)
+    parser.add_argument("--days", type=int, default=8)
     parser.add_argument("--retries", type=int, default=3)
     parser.add_argument("--retry-delay", type=float, default=1.0)
     args = parser.parse_args()
@@ -78,6 +81,8 @@ def main() -> int:
             str(guide),
             "--delay",
             str(args.delay),
+            "--days",
+            str(args.days),
             "--retries",
             str(args.retries),
             "--retry-delay",

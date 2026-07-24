@@ -47,9 +47,11 @@ actually worked, then giving them new data without replacing their identity.
 - The guide covers all 54 Japanese broadcast areas and 376 terrestrial
   services.
 - Area-coded requests receive compact regional payloads; Gunma currently has
-  11 stations and 397 programs.
+  11 stations and 3,475 programs across the channel's full eight-day window.
 - Current titles, times, genres, and Japanese program descriptions are packed
   into their native TV no Tomo records.
+- The original genre-search table is populated with 12 Japanese categories,
+  and the date carousel receives eight consecutive broadcast days.
 - The original activation, query, popularity, and synchronization CGI calls
   receive the response contracts expected by the channel.
 - A daily job collects, validates, packs, independently checks, and atomically
@@ -89,15 +91,16 @@ latest build validated:
 
 - 54 broadcast areas
 - 376 stations
-- 14,871 programs
-- 12,897 program descriptions
+- 123,803 programs across eight broadcast days
+- 104,665 program descriptions
+- 12 native genre-search categories
 - every header-to-EPG station key
 - every EPG-to-string record index
 - every regional native payload
 
-The next work is focused on in-app polish, multi-day guide rollover,
-popularity synchronization, easier local server setup, Wii Mail, and adapters
-for more Japanese WC24 channels.
+The next work is focused on visual testing of the completed genre and date
+flows, popularity synchronization, easier local server setup, Wii Mail, and
+adapters for more Japanese WC24 channels.
 
 ## Repository layout
 
@@ -118,10 +121,10 @@ build is:
 py -3 tools\update_hbnj_daily.py
 ```
 
-That command collects all regions into private staging, validates the complete
-guide, creates native HDPK payloads, independently parses them, and publishes
-only after every check passes. A failed build leaves the previous live guide
-untouched.
+That command collects eight days for all regions into private staging,
+validates the complete guide and native size ceilings, creates HDPK payloads,
+independently parses them, and publishes only after every check passes. A
+failed build leaves the previous live guide untouched.
 
 The shared command-line tools can audit WC24 state, inspect the local account,
 validate channel manifests, provision tasks, and run the replacement server:

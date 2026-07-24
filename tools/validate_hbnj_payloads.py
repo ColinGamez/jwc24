@@ -5,6 +5,21 @@ import json
 import struct
 from pathlib import Path
 
+EXPECTED_GENRE_NAMES = (
+    "ニュース／報道",
+    "スポーツ",
+    "情報／ワイドショー",
+    "ドラマ",
+    "音楽",
+    "バラエティ",
+    "映画",
+    "アニメ／特撮",
+    "ドキュメンタリー／教養",
+    "劇場／公演",
+    "趣味／教育",
+    "福祉",
+)
+
 
 def u16(data: bytes | bytearray, offset: int) -> int:
     return struct.unpack_from(">H", data, offset)[0]
@@ -102,6 +117,17 @@ def main() -> int:
     if area_count != len(guide["areas"]) or memberships != expected_memberships:
         raise ValueError("area table does not match guide")
 
+    genre_count = u32(header, 0x44)
+    genre_table = u32(header, 0x48)
+    if genre_count != len(EXPECTED_GENRE_NAMES) or not genre_table:
+        raise ValueError("header genre table count/pointer is invalid")
+    for index, expected_name in enumerate(EXPECTED_GENRE_NAMES):
+        entry = genre_table + index * 8
+        if header[entry] != index or header[entry + 1] != 0:
+            raise ValueError("header genre positions are invalid")
+        if read_text(header, u32(header, entry + 4)) != expected_name:
+            raise ValueError("header genre label differs from canonical table")
+
     epg_station_count = u32(epg, 0x1C)
     epg_station_table = u32(epg, 0x20)
     epg_keys = []
@@ -146,7 +172,7 @@ def main() -> int:
 
     print(
         f"valid native HBNJ payloads: stations={station_count} areas={area_count} "
-        f"memberships={memberships} programs={len(program_ids)} "
+        f"memberships={memberships} genres={genre_count} programs={len(program_ids)} "
         f"range={u32(epg, 0x10)}..{u32(epg, 0x14)} root=main status=1"
     )
     return 0

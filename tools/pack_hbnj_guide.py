@@ -11,6 +11,20 @@ from pathlib import Path
 ROOT_NAME = b"main\0"
 WII_EPOCH = datetime(2000, 1, 1)
 TERRESTRIAL_DIGITAL = 9
+GENRE_NAMES = (
+    "ニュース／報道",
+    "スポーツ",
+    "情報／ワイドショー",
+    "ドラマ",
+    "音楽",
+    "バラエティ",
+    "映画",
+    "アニメ／特撮",
+    "ドキュメンタリー／教養",
+    "劇場／公演",
+    "趣味／教育",
+    "福祉",
+)
 
 
 def align(value: int, amount: int = 4) -> int:
@@ -100,6 +114,8 @@ def make_header(document: dict, channel_by_id: dict[int, dict], keys: dict[int, 
         member_tables.append(cursor)
         cursor += len(area["channel_ids"]) * 0x0C
 
+    genre_table = cursor
+    cursor += len(GENRE_NAMES) * 8
     station_names = []
     for channel in channels:
         encoded = cstr(str(channel["name"]))
@@ -111,6 +127,11 @@ def make_header(document: dict, channel_by_id: dict[int, dict], keys: dict[int, 
     for area in areas:
         encoded = cstr(str(area["name"]))
         area_names.append((cursor, encoded))
+        cursor += len(encoded)
+    genre_names = []
+    for name in GENRE_NAMES:
+        encoded = cstr(name)
+        genre_names.append((cursor, encoded))
         cursor += len(encoded)
 
     data = bytearray(cursor)
@@ -144,7 +165,18 @@ def make_header(document: dict, channel_by_id: dict[int, dict], keys: dict[int, 
             put_u16(data, member + 6, member_index + 1)
             put_u32(data, member + 8, 1)
 
-    for offset, encoded in station_names + area_names:
+    # Genre records are ordered exactly like the one-based genre IDs stored in
+    # EPG details. Their main positions are zero-based; this broad-category
+    # table has one sub-entry (position zero) under each main category.
+    put_u32(data, 0x44, len(GENRE_NAMES))
+    put_u32(data, 0x48, genre_table, relocs)
+    for index, (text_offset, _) in enumerate(genre_names):
+        entry = genre_table + index * 8
+        data[entry] = index
+        data[entry + 1] = 0
+        put_u32(data, entry + 4, text_offset, relocs)
+
+    for offset, encoded in station_names + area_names + genre_names:
         data[offset:offset + len(encoded)] = encoded
     data[station_aux:station_aux + len(cstr("station"))] = cstr("station")
     return make_hdpk(data, relocs)

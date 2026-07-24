@@ -30,14 +30,19 @@
       "mode": "adopt",
       "compression": "nintendo-lz10",
       "envelope": "wc24-aes-ofb"
-    }
-  ],
-  "assets": [
+    },
     {
+      "slot": 12,
       "filename": "header.bin",
+      "route": "/header.bin",
       "payload": "generated/current/header.hdpk",
+      "refresh_minutes": 1440,
+      "retry_minutes": 5,
+      "unsigned": false,
+      "mode": "create",
       "compression": "nintendo-lz10",
       "envelope": "wc24-aes-ofb"
     }
-  ]
+  ],
+  "assets": []
 }
