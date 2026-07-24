@@ -56,6 +56,9 @@ actually worked, then giving them new data without replacing their identity.
   receive the response contracts expected by the channel.
 - A daily job collects, validates, packs, independently checks, and atomically
   publishes a new guide.
+- The shared Wii Mail service implements account registration, Dolphin's
+  challenge/HMAC check, multipart sending, persistent recipient queues,
+  multipart receiving, and deletion independently of any one channel.
 
 ## Why it is more than a TV no Tomo patch
 
@@ -65,8 +68,7 @@ payload delivery, encryption, compression, and validation. TV no Tomo lives in
 
 That split is intentional: future 4.3J channels can have their own manifest,
 data generator, validators, and CGI behavior while reusing the same WC24
-transport. Wii Mail support is also planned because it is part of the wider
-WC24 experience.
+transport and mail service.
 
 ```text
 original 4.3J channel
@@ -99,8 +101,9 @@ latest build validated:
 - every regional native payload
 
 The next work is focused on visual testing of the completed genre and date
-flows, popularity synchronization, easier local server setup, Wii Mail, and
-adapters for more Japanese WC24 channels.
+flows, incoming-mail support in Dolphin's KD implementation, friend
+registration, easier local server setup, and adapters for more Japanese WC24
+channels.
 
 ## Repository layout
 
@@ -134,11 +137,23 @@ py -3 -m jwc24 audit --dl-list "$env:APPDATA\Dolphin Emulator\Wii\shared2\wc24\n
 py -3 -m jwc24 account --config "$env:APPDATA\Dolphin Emulator\Wii\shared2\wc24\nwc24msg.cfg"
 py -3 -m jwc24 validate-manifest channels\hbnj\channel.json
 py -3 -m jwc24 serve channels\hbnj\channel.json --nand-root "$env:APPDATA\Dolphin Emulator\Wii"
+py -3 -m jwc24 mail-serve --data-dir private\mail
+py -3 -m jwc24 mail-config --config "$env:APPDATA\Dolphin Emulator\Wii\shared2\wc24\nwc24msg.cfg" --base-url http://127.0.0.1:8081 --data-dir private\mail
 ```
 
 Provisioning defaults to a dry run, creates timestamped backups when applied,
 and refuses to overwrite unrelated occupied task slots. The original WAD is
 always treated as immutable input.
+
+`mail-config` is also dry-run by default. It creates or reuses a private local
+account, reports every URL change, recalculates the WC24 config checksum, and
+backs up `nwc24msg.cfg` before `--apply`. Private credentials and queued MIME
+messages live under the ignored data directory.
+
+The server-side receive/delete protocol is implemented and independently
+tested. Dolphin 2606 still skips WC24 download entries whose destination
+filename is empty, so importing received mail into `wc24recv.mbx` requires a
+Dolphin KD implementation patch; it does not require modifying a channel WAD.
 
 ## Project boundaries
 
