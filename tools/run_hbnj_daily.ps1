@@ -7,6 +7,9 @@ $log = Join-Path $logDirectory "hbnj-update-$stamp.log"
 
 Push-Location $workspace
 try {
+    $utf8 = New-Object System.Text.UTF8Encoding($false)
+    [Console]::OutputEncoding = $utf8
+    $OutputEncoding = $utf8
     $env:PYTHONIOENCODING = "utf-8"
     # Windows PowerShell promotes native stderr to an ErrorRecord. This Python
     # installation emits a harmless prefix warning on stderr, so temporarily

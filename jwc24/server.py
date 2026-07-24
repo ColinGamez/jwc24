@@ -138,8 +138,13 @@ def serve(
                         / route_parts[0]
                         / item.payload.name
                     )
-                    if area_payload.is_file():
-                        payload_path = area_payload
+                    if not area_payload.is_file():
+                        # Never fall back to the national package for an
+                        # unknown numeric area. Its station count exceeds the
+                        # channel's 24-station native model capacity.
+                        self.send_error(HTTPStatus.NOT_FOUND)
+                        return
+                    payload_path = area_payload
                 body = payload_path.read_bytes()
                 if item.compression == "nintendo-lz10":
                     body = _nintendo_lz10_literal(body)

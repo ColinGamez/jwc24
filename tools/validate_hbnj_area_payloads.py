@@ -6,6 +6,15 @@ from pathlib import Path
 
 from validate_hbnj_payloads import parse_hdpk, read_text, u32
 
+LZ10_MAX_INPUT = 0xFFFFFF
+VFF_CAPACITY = 4 * 1024 * 1024
+
+
+def literal_lz10_size(raw_size: int) -> int:
+    if not 0 < raw_size <= LZ10_MAX_INPUT:
+        raise ValueError(f"payload cannot be represented by Nintendo LZ10: {raw_size} bytes")
+    return 4 + raw_size + (raw_size + 7) // 8
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate all area-specific native HBNJ EPGs.")
@@ -13,6 +22,8 @@ def main() -> int:
     parser.add_argument("area_dir", type=Path)
     args = parser.parse_args()
     guide = json.loads(args.guide.read_text(encoding="utf-8"))
+    header_path = args.area_dir.parent / "header.hdpk"
+    header_size = header_path.stat().st_size
     channel_order = [int(channel["id"]) for channel in guide["channels"]]
     key_by_channel = {
         channel_id: (9 << 16) | index
@@ -77,12 +88,22 @@ def main() -> int:
             raise ValueError(f"area {area_id}: string record count differs from programs")
         if string_positions != set(range(1, string_count + 1)):
             raise ValueError(f"area {area_id}: incomplete string-table positions")
-        total_bytes += epg_path.stat().st_size
+        epg_size = epg_path.stat().st_size
+        string_size = string_path.stat().st_size
+        wc24_download_bytes = literal_lz10_size(epg_size) + literal_lz10_size(string_size)
+        vff_payload_bytes = header_size + wc24_download_bytes
+        if vff_payload_bytes >= VFF_CAPACITY:
+            raise ValueError(
+                f"area {area_id}: native payloads exceed the 4 MiB VFF capacity "
+                f"before filesystem overhead ({vff_payload_bytes} bytes)"
+            )
+        total_bytes += epg_size + string_size
         print(
             f"area {area_id}: valid stations={station_count} "
-            f"programs={len(actual_program_ids)} bytes={epg_path.stat().st_size}"
+            f"programs={len(actual_program_ids)} raw={epg_size + string_size} "
+            f"wc24={wc24_download_bytes} vff_payload={vff_payload_bytes}"
         )
-    print(f"valid area payloads={len(guide['areas'])} total_epg_bytes={total_bytes}")
+    print(f"valid area payloads={len(guide['areas'])} total_raw_bytes={total_bytes}")
     return 0
 
 
