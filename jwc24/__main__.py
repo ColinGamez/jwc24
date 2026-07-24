@@ -7,6 +7,8 @@ from urllib.parse import urlparse
 
 from . import dl_list, wc24_config
 from .manifest import load_manifest
+from .mail import MailStore
+from .mail_server import serve_mail
 from .server import serve
 
 
@@ -37,12 +39,43 @@ def build_parser() -> argparse.ArgumentParser:
     account.add_argument("--config", type=Path, required=True)
     account.add_argument("--bootstrap-local", action="store_true")
     account.add_argument("--apply", action="store_true")
+
+    mail_server = sub.add_parser("mail-serve", help="run the shared WC24 mail service")
+    mail_server.add_argument("--host", default="127.0.0.1")
+    mail_server.add_argument("--port", type=int, default=8081)
+    mail_server.add_argument("--data-dir", type=Path, required=True)
+
+    mail_config = sub.add_parser(
+        "mail-config", help="provision Dolphin's WC24 mail URLs and credentials"
+    )
+    mail_config.add_argument("--config", type=Path, required=True)
+    mail_config.add_argument("--base-url", required=True)
+    mail_config.add_argument("--data-dir", type=Path, required=True)
+    mail_config.add_argument("--apply", action="store_true")
     return parser
 
 
 def main() -> int:
     args = build_parser().parse_args()
     try:
+        if args.command == "mail-serve":
+            serve_mail(args.host, args.port, args.data_dir)
+            return 0
+        if args.command == "mail-config":
+            config = wc24_config.read(args.config)
+            state = wc24_config.summarize(config)
+            account = MailStore(args.data_dir).register(f"{state.nwc24_id:016d}")
+            before, after, backup = wc24_config.configure_mail(
+                args.config,
+                args.base_url,
+                account.password,
+                account.mlchkid,
+                args.apply,
+            )
+            for old, new in zip(before, after):
+                print(f"{old} -> {new}")
+            print(f"applied; backup: {backup}" if backup else "dry run only; pass --apply")
+            return 0
         if args.command == "account":
             if args.apply and not args.bootstrap_local:
                 raise ValueError("--apply requires --bootstrap-local")
@@ -56,7 +89,8 @@ def main() -> int:
                 print(f"checksum: {after.calculated_checksum:08x} (valid={after.checksum_valid})")
                 print(f"applied; backup: {backup}" if backup else "dry run/no change")
             else:
-                state = wc24_config.summarize(wc24_config.read(args.config))
+                config = wc24_config.read(args.config)
+                state = wc24_config.summarize(config)
                 print(f"WiiConnect24 ID: {state.nwc24_id}")
                 print(f"ID generation: {state.id_generation}")
                 print(f"creation stage: {state.creation_stage}")
@@ -65,6 +99,13 @@ def main() -> int:
                     f"checksum: stored={state.stored_checksum:08x} "
                     f"calculated={state.calculated_checksum:08x} valid={state.checksum_valid}"
                 )
+                password_set, check_id_set = wc24_config.mail_credentials_present(config)
+                print(
+                    f"mail credentials: password={password_set} "
+                    f"check_id={check_id_set}"
+                )
+                for index, url in enumerate(wc24_config.mail_urls(config)):
+                    print(f"mail URL {index}: {url}")
             return 0
         if args.command == "audit":
             data = dl_list.read(args.dl_list)
