@@ -87,8 +87,6 @@ def load_manifest(path: Path) -> ChannelManifest:
         raise ValueError("prune_duplicate_tasks must be boolean")
 
     raw_tasks = _required(data, "tasks", list)
-    if not raw_tasks:
-        raise ValueError("manifest must declare at least one task")
     tasks: list[Task] = []
     seen_slots: set[int] = set()
     seen_names: set[str] = set()

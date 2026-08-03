@@ -98,8 +98,21 @@ def create_mail_server(host: str, port: int, store: MailStore) -> ThreadingHTTPS
                         try:
                             store.store_message(account, payload)
                             results[f"cd{entry_id}"] = 100
-                        except ValueError:
-                            results[f"cd{entry_id}"] = 220
+                        except ValueError as error:
+                            store.quarantine_rejected(account, payload, str(error))
+                            # Older local provisioning incorrectly stored the full console address
+                            # as the domain suffix. NWC24 then overflowed its fixed header buffer,
+                            # producing duplicated IDs and a NUL-truncated payload that cannot be
+                            # retried successfully. It is already quarantined above, so acknowledge
+                            # only this recognizable legacy corruption to retire the poisoned entry.
+                            duplicated_sender = (
+                                f"w{account.wii_id}w{account.wii_id}@wii.com".encode()
+                            )
+                            results[f"cd{entry_id}"] = (
+                                100
+                                if b"\0" in payload and duplicated_sender in payload
+                                else 220
+                            )
                     self._reply(cgi_response(**results))
                     return
                 if path.endswith("/receive.cgi"):

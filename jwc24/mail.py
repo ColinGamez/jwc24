@@ -40,9 +40,9 @@ MAIL_CHECK_KEY = bytes(
         0xAD,
     )
 )
-WII_ADDRESS = re.compile(r"(?i)\bw([0-9]{16})@wii\.com\b")
+WII_ADDRESS = re.compile(r"(?i)\bw?([0-9]{16})@wii\.com\b")
 SMTP_RECIPIENT = re.compile(
-    r"(?im)^RCPT TO:\s*w([0-9]{16})@wii\.com\s*$"
+    r"(?im)^RCPT TO:\s*w?([0-9]{16})@wii\.com\s*$"
 )
 SMTP_DATA = re.compile(br"(?im)^DATA\r?\n")
 MAX_MAIL_SIZE = 208_952
@@ -77,9 +77,11 @@ class MailStore:
         self.root = root.resolve()
         self.accounts_path = self.root / "accounts.json"
         self.messages = self.root / "messages"
+        self.rejected = self.root / "rejected"
         self._lock = threading.RLock()
         self.root.mkdir(parents=True, exist_ok=True)
         self.messages.mkdir(parents=True, exist_ok=True)
+        self.rejected.mkdir(parents=True, exist_ok=True)
 
     def _read_accounts(self) -> dict[str, dict[str, str]]:
         if not self.accounts_path.is_file():
@@ -154,8 +156,10 @@ class MailStore:
     def _advance_flag(self, wii_id: str) -> None:
         accounts = self._read_accounts()
         record = accounts[wii_id]
-        value = (int(record.get("mail_flag", NO_MAIL_FLAG), 16) + 1) % (1 << 132)
-        record["mail_flag"] = f"{value:033x}"
+        # KD compares only the first 22 characters of this opaque 33-character
+        # value. A conventional right-aligned counter can therefore change
+        # without the Wii noticing. Generate a fresh full-width value instead.
+        record["mail_flag"] = secrets.token_hex(17)[:33]
         self._write_accounts(accounts)
 
     def store_message(self, sender: MailAccount, payload: bytes) -> list[str]:
@@ -179,15 +183,30 @@ class MailStore:
             unknown = [recipient for recipient in recipients if recipient not in accounts]
             if unknown:
                 raise ValueError(f"unknown Wii mail recipient: {unknown[0]}")
-            digest = hashlib.sha256(message_payload).hexdigest()
             for recipient in recipients:
                 inbox = self.messages / recipient
                 inbox.mkdir(parents=True, exist_ok=True)
+                if message.get("X-Wii-Cmd") == "80010001":
+                    # The Wii Menu can reload IOS during startup, causing more than one KD session
+                    # to issue the same friend-registration command with a different Date header.
+                    # Give that logical operation a stable key so retries remain idempotent.
+                    identity = f"registration:{sender.wii_id}:{recipient}".encode("ascii")
+                    digest = hashlib.sha256(identity).hexdigest()
+                else:
+                    digest = hashlib.sha256(message_payload).hexdigest()
                 destination = inbox / f"{digest}.eml"
                 if not destination.exists():
                     destination.write_bytes(message_payload)
                     self._advance_flag(recipient)
         return recipients
+
+    def quarantine_rejected(self, sender: MailAccount, payload: bytes, reason: str) -> Path:
+        """Preserve a rejected native payload privately so protocol mismatches are diagnosable."""
+        digest = hashlib.sha256(payload).hexdigest()
+        destination = self.rejected / f"{sender.wii_id}-{digest}.eml"
+        destination.write_bytes(payload)
+        destination.with_suffix(".txt").write_text(reason + "\n", encoding="utf-8")
+        return destination
 
     def pending(self, wii_id: str | int) -> list[Path]:
         inbox = self.messages / normalize_wii_id(wii_id)

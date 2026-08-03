@@ -159,7 +159,9 @@ def configure_mail(
     endpoints = ("account.cgi", "check.cgi", "receive.cgi", "delete.cgi", "send.cgi")
     desired_urls = tuple(f"{base}/cgi-bin/{endpoint}" for endpoint in endpoints)
     data = bytearray(original)
-    _put_c_string(data, EMAIL_OFFSET, 0x40, f"w{state.nwc24_id:016d}@wii.com")
+    # This field is the mail-domain suffix, not the console's complete address. The NWC24
+    # library prepends each numeric Wii ID when composing SMTP and MIME address fields.
+    _put_c_string(data, EMAIL_OFFSET, 0x40, "@wii.com")
     _put_c_string(data, MAIL_SECRET_OFFSET, 0x20, password)
     _put_c_string(data, MLCHKID_OFFSET, 0x24, mlchkid)
     for index, url in enumerate(desired_urls):

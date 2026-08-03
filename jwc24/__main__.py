@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 from urllib.parse import urlparse
 
-from . import dl_list, wc24_config
+from . import dl_list, launcher, wc24_config
 from .manifest import load_manifest
 from .mail import MailStore
 from .mail_server import serve_mail
@@ -28,7 +28,7 @@ def build_parser() -> argparse.ArgumentParser:
     provision.add_argument("--apply", action="store_true")
 
     server = sub.add_parser("serve", help="serve the payload routes in a manifest")
-    server.add_argument("manifest", type=Path)
+    server.add_argument("manifest", type=Path, nargs="+")
     server.add_argument("--host", default="127.0.0.1")
     server.add_argument("--port", type=int)
     server.add_argument("--nand-root", type=Path)
@@ -52,12 +52,23 @@ def build_parser() -> argparse.ArgumentParser:
     mail_config.add_argument("--base-url", required=True)
     mail_config.add_argument("--data-dir", type=Path, required=True)
     mail_config.add_argument("--apply", action="store_true")
+
+    launch = sub.add_parser("launch", help="run JWC24 mail and patched Dolphin together")
+    launch.add_argument("--dolphin", type=Path, required=True)
+    launch.add_argument("--data-dir", type=Path, required=True)
+    launch.add_argument("--host", default="127.0.0.1")
+    launch.add_argument("--port", type=int, default=8081)
+    launch.add_argument("--title", default="0000000100000002")
     return parser
 
 
 def main() -> int:
     args = build_parser().parse_args()
     try:
+        if args.command == "launch":
+            return launcher.launch(
+                args.dolphin, args.data_dir, args.host, args.port, args.title
+            )
         if args.command == "mail-serve":
             serve_mail(args.host, args.port, args.data_dir)
             return 0
@@ -118,6 +129,23 @@ def main() -> int:
                 )
             return 0
 
+        if args.command == "serve":
+            manifests = tuple(load_manifest(path) for path in args.manifest)
+            netlocs = {urlparse(item.base_url).netloc for item in manifests}
+            if len(netlocs) != 1:
+                raise ValueError("served manifests must share one base host and port")
+            parsed = urlparse(manifests[0].base_url)
+            port = args.port or parsed.port or (443 if parsed.scheme == "https" else 80)
+            serve(
+                manifests,
+                args.host,
+                port,
+                args.nand_root,
+                args.tls_cert,
+                args.tls_key,
+            )
+            return 0
+
         manifest = load_manifest(args.manifest)
         if args.command == "validate-manifest":
             print(f"{manifest.channel_id}: {manifest.name}")
@@ -134,18 +162,6 @@ def main() -> int:
                 print(f"applied; backup: {backup}")
             else:
                 print("dry run only; pass --apply to write")
-            return 0
-        if args.command == "serve":
-            parsed = urlparse(manifest.base_url)
-            port = args.port or parsed.port or (443 if parsed.scheme == "https" else 80)
-            serve(
-                manifest,
-                args.host,
-                port,
-                args.nand_root,
-                args.tls_cert,
-                args.tls_key,
-            )
             return 0
     except (OSError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
