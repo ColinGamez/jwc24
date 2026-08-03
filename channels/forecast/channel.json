@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "channel_id": "HAFJ",
+  "name": "Forecast Channel (Japan)",
+  "title_id": "000100024841464a",
+  "system_menu_region": "JPN",
+  "base_url": "http://192.168.2.17",
+  "prune_duplicate_tasks": false,
+  "tasks": [
+    {
+      "slot": 3,
+      "filename": "3.bin",
+      "route": "/0/001/forecast.bin",
+      "payload": "../../private/forecast/generated/current/forecast.bin",
+      "refresh_minutes": 60,
+      "retry_minutes": 5,
+      "unsigned": false,
+      "mode": "adopt",
+      "compression": "none",
+      "envelope": "raw"
+    },
+    {
+      "slot": 4,
+      "filename": "4.bin",
+      "route": "/0/001/short.bin",
+      "payload": "../../private/forecast/generated/current/short.bin",
+      "refresh_minutes": 60,
+      "retry_minutes": 5,
+      "unsigned": false,
+      "mode": "adopt",
+      "compression": "none",
+      "envelope": "raw"
+    }
+  ],
+  "assets": []
+}

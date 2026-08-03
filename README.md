@@ -101,9 +101,11 @@ latest build validated:
 - every regional native payload
 
 The next work is focused on visual testing of the completed genre and date
-flows, incoming-mail support in Dolphin's KD implementation, friend
-registration, easier local server setup, and adapters for more Japanese WC24
-channels.
+flows, restoring the bundled Japanese Forecast and News channels through their
+native WC24 tasks, incoming-mail support in Dolphin's KD implementation,
+friend registration, easier local server setup, and adapters for more Japanese
+WC24 channels. Forecast comes before Wii no Ma bootstrap work because the room
+UI integrates weather state.
 
 ## Repository layout
 
@@ -138,7 +140,15 @@ py -3 -m jwc24 account --config "$env:APPDATA\Dolphin Emulator\Wii\shared2\wc24\
 py -3 -m jwc24 validate-manifest channels\hbnj\channel.json
 py -3 -m jwc24 serve channels\hbnj\channel.json --nand-root "$env:APPDATA\Dolphin Emulator\Wii"
 py -3 -m jwc24 mail-serve --data-dir private\mail
+py -3 -m jwc24 launch --data-dir private\mail --dolphin "C:\path\to\Dolphin-JWC24-Mail.exe"
 py -3 -m jwc24 mail-config --config "$env:APPDATA\Dolphin Emulator\Wii\shared2\wc24\nwc24msg.cfg" --base-url http://127.0.0.1:8081 --data-dir private\mail
+```
+
+Local stock inputs can be identified and hashed without extracting or changing
+them:
+
+```powershell
+py -3 tools\inventory_stock_titles.py --wads "Stock WADs" --nus-title "NusDownloader\titles\000300044B44474A\256"
 ```
 
 Provisioning defaults to a dry run, creates timestamped backups when applied,
@@ -149,6 +159,10 @@ always treated as immutable input.
 account, reports every URL change, recalculates the WC24 config checksum, and
 backs up `nwc24msg.cfg` before `--apply`. Private credentials and queued MIME
 messages live under the ignored data directory.
+
+`launch` is the normal day-to-day entry point. It reuses a healthy JWC24 mail
+service when one is already running; otherwise it owns a temporary local server,
+health-checks it before launching Dolphin, and shuts it down when Dolphin exits.
 
 The server-side receive/delete protocol is implemented and independently
 tested. Dolphin 2606 still skips WC24 download entries whose destination

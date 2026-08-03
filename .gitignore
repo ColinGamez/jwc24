@@ -11,6 +11,7 @@ snapshots/
 *.tmd
 *.cert
 *.vff
+/NusDownloader/
 wc24pubk.mod
 dolphin-*-quarantine-*/
 /FindHbnjError271110.java
