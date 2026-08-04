@@ -15,10 +15,6 @@ def config_xml(base_url: str, updated: str) -> bytes:
     base = base_url.rstrip("/")
     root = ET.Element("Config")
     values = (
-        # This JWC24 WAD retains the stock v1025 client's version checks. The
-        # 9998 value used by separately version-patched clients triggers the
-        # stock channel's Wii Shop update screen (354607).
-        ("ver", "399"),
         ("maint", "0"),
         ("url1", f"{base}/url1/"),
         ("url2", f"{base}/url2/"),
