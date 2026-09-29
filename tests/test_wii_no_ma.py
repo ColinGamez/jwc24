@@ -27,7 +27,8 @@ class WiiNoMaTests(unittest.TestCase):
         xml = config_xml("http://192.168.2.16", "2026-08-02T00:00:00")
         encrypted = encrypt_cbc(xml, key, iv)
         self.assertEqual(len(encrypted) % 16, 0)
-        self.assertIn(b"<ver>399</ver>", xml)
+        # Reference first.bin has no <ver> element (HEAD matches reference).
+        self.assertNotIn(b"<ver>", xml)
         self.assertIn(b"http://192.168.2.16/url1/", xml)
         self.assertNotIn(xml, encrypted)
 

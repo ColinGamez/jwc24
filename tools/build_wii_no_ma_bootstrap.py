@@ -37,14 +37,16 @@ def config_xml(base_url: str, updated: str) -> bytes:
 
 
 def encrypt_cbc(payload: bytes, key: bytes, iv: bytes) -> bytes:
-    padding = 16 - len(payload) % 16
-    padded = payload + bytes((padding,)) * padding
     try:
         from Crypto.Cipher import AES
+        from Crypto.Util.Padding import pad
     except ModuleNotFoundError:
         openssl = shutil.which("openssl")
         if not openssl:
             raise RuntimeError("AES-CBC requires pycryptodome or OpenSSL")
+        # Use manual PKCS#7 padding for OpenSSL
+        padding = 16 - len(payload) % 16
+        padded = payload + bytes((padding,)) * padding
         result = subprocess.run(
             [openssl, "enc", "-aes-128-cbc", "-K", key.hex(), "-iv", iv.hex(), "-nopad"],
             input=padded,
@@ -52,6 +54,7 @@ def encrypt_cbc(payload: bytes, key: bytes, iv: bytes) -> bytes:
             check=True,
         )
         return result.stdout
+    padded = pad(payload, AES.block_size)
     return AES.new(key, AES.MODE_CBC, iv=iv).encrypt(padded)
 
 

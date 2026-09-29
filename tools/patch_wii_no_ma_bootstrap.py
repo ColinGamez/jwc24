@@ -15,6 +15,8 @@ REFERENCE_URLS = (
     b"http://prod.wiilink24.com/conf/first.bin",
     b"http://192.168.2.17///////conf/first.bin",
     b"http://192.168.2.17/////////conf/first.bin",
+    b"http://192.168.2.16///////conf/first.bin",
+    b"http://192.168.2.16/////////conf/first.bin",
 )
 
 
