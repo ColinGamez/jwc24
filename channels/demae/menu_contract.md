@@ -163,6 +163,23 @@ still need review. Merely returning these tag names is not native acceptance.
 
 Private disassembly evidence: `private/demae/menu-consumer.private.txt`.
 
+## Executable size-field checks
+
+`tools/verify_demae_size_fields.py` executes the four size-row setters in the
+fingerprinted private executable, with allocation, free, string lengths and
+memcpy mocked. Item code (`0x800296C0`) and stock text (`0x800299C8`) use
+byte strings; size (`0x8002977C`) and display price (`0x80029840`) use native
+UTF-16 text. Their field offsets are `+4`, `+20`, `+8` and `+12` respectively.
+The stock setter stores text; this does not establish which values the UI
+interprets as available or sold out.
+
+Checks verify that copied text survives overwriting the source buffer and
+that replacement invokes free for the previous field. Injecting allocation
+failure into each setter returns zero and leaves that field null: replacement
+does not preserve the old value. Free is mocked, so this is not a leak check.
+These checks do not execute XML consumption, size-list attachment, native
+rendering or ordering. Synthetic inputs remain offline test data only.
+
 ## Basket trace start
 
 Action 16 is requested at `0x8007ADD4`. The following consumer starts at

@@ -58,6 +58,8 @@ The native XML recursion fix uses explicit closing tags and CDATA. Offline
 checks exercise the fingerprinted native parser, category consumer, text
 storage, deep copies and linked-list selection, with SDK dependencies mocked.
 Allocation-failure checks verify preservation of already-linked menu rows.
+Separate native size-field checks verify text copies and replacement failure
+behavior; they do not establish stock meanings or size-list rendering.
 
 The last real-category sweep verified 57 categories across 34 branches. Four
 branches retain category characters outside the current CP932 producer policy;
