@@ -107,8 +107,42 @@ friend registration, easier local server setup, and adapters for more Japanese
 WC24 channels. Forecast comes before Wii no Ma bootstrap work because the room
 UI integrates weather state.
 
+Wii no Ma's native Flash shop is unfinished: no compatible `index.esf` entry
+is configured, so new bootstrap builds set `shopvalid=0`. The paid catalog
+and Rakuten product artwork are separate features; they do not implement the
+native Flash shop or in-channel checkout.
+
+## Demae Channel restoration
+
+Demae (`HCHJ`) is an active experiment, with Hot Pepper restaurant discovery
+and a planned Demae-can phone checkout handoff. The original home flow is
+preserved; the QR handoff belongs after browsing and basket selection.
+
+- The persistent local archive retains **9,400 restaurant listings across all
+  47 prefectures**, including source history and reviewed branch links. This
+  is a partial directory snapshot, not complete delivery coverage.
+- The latest reviewed menu imports retain **248 listed items from 38 branches
+  in 38 prefectures**. Observations expire for use after 24 hours; retaining
+  history does not make old prices or availability current.
+- Local preview endpoints support paginated menus, category filtering and
+  basket subtotal calculations. Phone confirmation and durable Wii Mail
+  notices are implemented separately from native checkout.
+- Offline checks exercise the native XML parser, menu-category consumer and
+  menu model. These checks do not prove that the full menu UI renders.
+
+**Native dish selection and checkout are unfinished.** Nine prefectures still
+lack reviewed menu observations in the retained snapshot. Native item rows
+also require size/variant details that have not been extracted. The current
+integration does not submit orders or transfer a basket to Demae-can; final
+item selection, options and charges must be confirmed on the provider site.
+
+See the [Demae setup and current status](channels/demae/README.md),
+[menu and basket progress](channels/demae/menu_basket.md), and
+[native menu/item contracts](channels/demae/menu_contract.md).
+
 ## Repository layout
 
+- `channels/demae/` — Demae restoration status, source reviews and native contracts
 - `jwc24/` — reusable WC24 transport, task, account, and server code
 - `channels/hbnj/` — TV no Tomo manifest, service behavior, and documentation
 - `tools/` — guide collection, native packing, validation, and inspection
