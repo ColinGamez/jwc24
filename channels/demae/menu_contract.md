@@ -2,6 +2,19 @@
 
 ## Native item-list contract anchors
 
+The size-row trace is now anchored separately: sizeList child count at
+`0x8004FE78` and indexed child access at `0x8004FE94` iterate the actual
+children without requiring formatted child names. Within each child,
+itemCode (`0x8004FEB0`), size (`0x8004FF18`), price (`0x8004FFC8`) and
+isSoldout (`0x800500B8`) are looked up. Their native setters are respectively
+`0x800296C0`, `0x8002977C`, `0x80029840` and `0x800299C8`, followed by
+attachment through `0x80027358`. The static checker verifies each call.
+An itemCode that is missing, has no payload or has empty text skips that size
+row; a missing price node/payload exits the size loop and reaches the
+positive-count check. Consequently, a generic `options_observed` boolean
+cannot supply the actual variant identities/labels/prices required here.
+Stock semantics and empty-value defaults still need independent tracing.
+
 The action-10 request is at `0x8004F3E0`; its item-list consumer begins at
 `0x8004F45C` with shared status category 0x42. A bounded static trace finds
 positive integer `Count`, then `List/container%d` rows indexed from zero.

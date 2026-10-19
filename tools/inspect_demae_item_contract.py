@@ -45,9 +45,23 @@ def inspect(source):
     instruction(0x800501C0, 0x2C030000)
     instruction(0x800501C4, 0x41810024)  # bgt required before item insertion.
     branch(0x80050200, 0x80026060)
+    size_fields = [(42, 'itemCode', 0x8004FEB0), (62, 'size', 0x8004FF18),
+                   (51, 'price', 0x8004FFC8), (79, 'isSoldout', 0x800500B8)]
+    for _, _, address in size_fields:
+        branch(address, 0x800C43E0)
+    # The loop reads actual sizeList children; row names are not formatted.
+    branch(0x8004FE78, 0x800C4AF4)
+    branch(0x8004FE94, 0x800C4AFC)
+    branch(0x8004FEFC, 0x800296C0)  # Variant itemCode setter.
+    branch(0x8004FFA4, 0x8002977C)  # Variant display size setter.
+    branch(0x8005008C, 0x80029840)  # Variant display price setter.
+    branch(0x80050144, 0x800299C8)  # Variant stock-status setter.
     return {'action': 'webApi_item_list', 'request_address': '0x8004f3e0',
             'consumer_address': '0x8004f45c', 'count_must_be_positive': True,
             'row_pattern': 'List/container%d',
             'fields': [{'name': name, 'lookup': f'0x{address:08x}'} for _, name, address in fields],
             'size_count_must_be_positive_before_insertion': True,
+            'size_row_fields': [{'name': name, 'lookup': f'0x{address:08x}'}
+                                for _, name, address in size_fields],
+            'size_row_names_are_iterated': True,
             'static_trace_only': True, 'native_rendering_verified': False}

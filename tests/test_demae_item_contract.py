@@ -12,6 +12,9 @@ class ItemContractTests(unittest.TestCase):
         report = inspect(source.read_bytes())
         self.assertEqual(report['row_pattern'], 'List/container%d')
         self.assertTrue(report['size_count_must_be_positive_before_insertion'])
+        self.assertEqual([r['name'] for r in report['size_row_fields']],
+                         ['itemCode', 'size', 'price', 'isSoldout'])
+        self.assertTrue(report['size_row_names_are_iterated'])
         self.assertTrue(report['static_trace_only'])
 
     def test_wrong_source_rejected(self):
