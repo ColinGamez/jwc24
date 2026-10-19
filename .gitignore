@@ -35,3 +35,6 @@ __pycache__/
 *.egg-info/
 build/
 dist/
+
+# Persistent cross-process asset publisher locks
+.publication.lock
