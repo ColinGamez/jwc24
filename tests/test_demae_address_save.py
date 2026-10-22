@@ -40,6 +40,7 @@ class AddressSaveTests(unittest.TestCase):
             self.skipTest('Private helper executable unavailable')
         report = inspect_contract(source.read_bytes())
         self.assertEqual(report['transform_buffer_bytes'], 16384)
+        self.assertEqual(report['caller_key_bits'], 256)
         self.assertEqual(report['post_transform_magic'], 'PDFF')
         self.assertTrue(report['helper_success_required'])
         self.assertTrue(report['static_trace_only'])

@@ -28,6 +28,8 @@ def inspect_contract(source):
                     raise ValueError('Address-save native trace anchor mismatch')
                 return
         raise ValueError('Address-save anchor outside executable sections')
+    instruction(0x800E10A0, 0x38A00020)  # Save caller selects a 32-byte key.
+    instruction(0x800E10A4, 0x48000001 | ((0x800879D0-0x800E10A4) & 0x03FFFFFC))
     instruction(0x800E10BC, 0x38C04000)  # Transformation buffer size, r6.
     instruction(0x800E10C0, 0x48000001 | ((0x80087A94-0x800E10C0) & 0x03FFFFFC))
     instruction(0x800E10F0, 0x2C1B0001)  # Helper return must equal one.
@@ -36,7 +38,7 @@ def inspect_contract(source):
     instruction(0x800E1110, 0x28004646)  # Compare remaining low half.
     instruction(0x800E1114, 0x40820018)
     return {'title': 'HCCJ', 'title_version': 2,
-            'transform_buffer_bytes': 0x4000,
+            'transform_buffer_bytes': 0x4000, 'caller_key_bits': 256,
             'transform_helper': '0x80087a94',
             'post_transform_magic': 'PDFF',
             'helper_success_required': True,
