@@ -35,6 +35,10 @@ navigation, directory categories and restaurant lists. Postal lookup currently
 uses the manual-selection fallback. Directory rows do not establish delivery
 or payment capabilities.
 
+The offline [processed postal lookup](postal_lookup_contract.md) now matches
+the original helper's exact-match and rounded-fallback selection on synthetic
+native checks. It is not connected to the live postal route.
+
 With a menu directory loaded, the separate preview API provides:
 
 - `GET /preview/menu?restaurant_id=hotpepper:J000662333&page=1`: six-item

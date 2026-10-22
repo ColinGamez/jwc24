@@ -115,7 +115,7 @@ WC24 transport or Message Board implementation.
 | --- | --- |
 | Shared WC24 / TV no Tomo / Forecast / News | Capture readiness, per-task results, freshness and native consumption separately; preserve observed channel-specific registrations |
 | Wii Mail | Compare queue, mailbox capacity and native receipt/display semantics; distinguish transport limits from per-session application budgets |
-| Demae address helper | Compare the exact-match/alternative search behavior with the stock native consumer; retain safe record bounds and source ambiguity handling |
+| Demae address helper | Exact/alternative selection now matches the stock native consumer on synthetic checks; download acceptance and live integration remain open |
 | Demae ordering | Continue verified variant/menu/item/basket contracts; postal tools do not solve ordering APIs |
 | Wii no Ma | Keep interaction receipts, actual media codec and native notification delivery as separate verification targets |
 | CMOC / Nintendo Channel / Body Check | Recover each client's payload and prerequisites; shared WC24 guidance does not substitute for those formats |
@@ -133,3 +133,16 @@ hashes. SQLite integrity and enriched text searches were checked. Five focused
 tests cover the new diagnostic categories, families, leading-zero handling,
 malformed inputs, unknown channel codes and CLI output. No production server,
 account, task, emulator profile, order or mail queue was changed.
+
+## Follow-up: native postal selection verified
+
+The recovered checker behavior was compared with HCCJ v2's actual postal
+consumer at `0x8002EBCC`. Exact matches select the first matching row;
+without one, the last rounded-hundred fallback wins. Synthetic execution
+compared status, selected postcode and every output text field, including
+Japanese and surrogate-pair text. Missing records preserve native output.
+The independent bounded helper intentionally validates malformed trailing
+data that the native early-return path might not visit. See the
+[postal lookup contract](../channels/demae/postal_lookup_contract.md) for
+limits, source fingerprint and verification scope. This does not change
+the manual-selection fallback or prove encrypted download acceptance.

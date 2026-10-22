@@ -53,6 +53,37 @@ class PostalRecord:
     strings: tuple[str, str, str]
 
 
+@dataclass(frozen=True)
+class PostalLookup:
+    kind: str
+    record: PostalRecord | None
+
+
+def lookup_processed_postal(data: bytes, postal_code: int) -> PostalLookup:
+    """Inspect exact/rounded lookup semantics offline, without delivery claims.
+
+    All framing is validated before lookup, unlike the native early-return
+    path. Selected strings exceeding native UTF-16 output capacities are
+    rejected rather than silently truncated. Source order is retained.
+    """
+    if type(postal_code) is not int or not 0 <= postal_code <= 9_999_999:
+        raise PostalFormatError('Postal query must be a seven-digit-range integer')
+    records = inspect_postal_records(data, max_bytes=MAX_NATIVE_DOWNLOAD_BYTES)
+    alternative_code = postal_code // 100 * 100
+    result = PostalLookup('not_found', None)
+    for record in records:
+        if record.postal_code == postal_code:
+            result = PostalLookup('exact', record)
+            break
+        if record.postal_code == alternative_code:
+            result = PostalLookup('alternative', record)
+    if result.record is not None:
+        for value, limit in zip(result.record.strings, (31, 31, 63)):
+            if len(value.encode('utf-16-be')) > limit*2:
+                raise PostalFormatError('Selected postal string exceeds native output capacity')
+    return result
+
+
 def inspect_postal_records(data: bytes, *, max_bytes: int = MAX_INSPECTION_BYTES,
                            max_records: int = 16384) -> tuple[PostalRecord, ...]:
     """Parse U32BE plus three terminated UTF-16BE strings with bounded reads.
