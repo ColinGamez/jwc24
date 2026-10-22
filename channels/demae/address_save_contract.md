@@ -114,7 +114,43 @@ what was exercised. The sample is not portable merely because its length and
 post-decryption magic are known. No integrity/authenticity claim follows from
 this CBC construction or the bounded caller's `PDFF` comparison.
 
+## Bounded section framing
+
+The native lookup at `0x800E3F0C` starts scanning the transformed buffer at
+offset `0x80`. It reads a four-byte tag, a big-endian length at section `+4`,
+and a stop byte at `+8`. It returns the first matching tag. For a nonmatching
+tag it stops when the stop byte is nonzero; otherwise it advances by the
+section length while the next offset remains below `0x4000`.
+
+The INFO accessor at `0x800E1760` checks the returned length against `0x256F`
+before addressing payload at section `+12`. The initializer places INFO at
+`0x80` and a later KANA initializer uses `0x25EF`, consistent with the length
+including the 12-byte header. This establishes framing, not personal-field
+meanings or validation of the payload. Three header bytes after the stop byte
+remain opaque to the new inspector.
+
+`jwc24/demae_save_sections.py` now inspects this metadata in an **already
+decrypted** 16 KiB buffer. It requires PDFF and rejects zero/short lengths,
+out-of-buffer extents and truncated section headers. These are conservative
+tooling checks: the native lookup's loop does not establish the same bounds.
+The inspector reports the header version byte without inventing an enum or
+validating all versions, and never interprets payload strings or personal
+fields. It is not an encrypted-save decoder or authenticity checker.
+
+`tools/verify_demae_save_sections.py` executes the native lookup unchanged,
+mocking memcpy only. Synthetic tests verify section offsets, sizes, stop
+behavior, first-match behavior for duplicate tags, missing-tag output
+preservation and a tag hidden behind a nonzero stop byte. Additional checks
+cover malformed framing and metadata-only handling of opaque payloads.
+Synthetic INFO/KANA test lengths are for lookup control flow; they are not
+real INFO record bodies and cannot establish native save acceptance.
+
+```powershell
+python -m unittest tests.test_demae_save_sections
+```
+
+No checksum/MAC verification has been established by this bounded trace.
 Private provenance and disassembly are under
-`private/demae/address-save-evidence/`. The next step is to trace the save's
-integrity and record paths before implementing an independent decoder;
-no service route or live profile was changed.
+`private/demae/address-save-evidence/`. Save integrity, actual sample/device
+binding and personal-record semantics remain unresolved. No service route or
+live profile was changed.

@@ -76,6 +76,8 @@ The [address-save follow-up](address_save_contract.md) verifies a cataloged
 HCCJ sample, native save-header trace and AES-CBC routines with synthetic keys.
 Identifier-dependent key/IV construction is checked with replaced templates;
 actual sample/device binding, integrity checks and decoding remain unfinished.
+Decrypted section framing now has a bounded metadata inspector and native
+lookup checks; it does not decode personal fields or validate authenticity.
 
 ## Local setup and checks
 
