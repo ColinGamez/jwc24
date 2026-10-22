@@ -74,7 +74,8 @@ See [menu/item contracts](menu_contract.md), [shop contracts](shop_contract.md),
 [directory status](directory_categories.md) and [crash findings](native_crashes.md).
 The [address-save follow-up](address_save_contract.md) verifies a cataloged
 HCCJ sample, native save-header trace and AES-CBC routines with synthetic keys.
-Save-specific key derivation, integrity checks and decoding remain unfinished.
+Identifier-dependent key/IV construction is checked with replaced templates;
+actual sample/device binding, integrity checks and decoding remain unfinished.
 
 ## Local setup and checks
 

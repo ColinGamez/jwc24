@@ -28,6 +28,27 @@ class SaveCryptoTests(unittest.TestCase):
         self.assertEqual(report['blocks_verified'], 1024)
         self.assertFalse(report['save_integrity_verified'])
 
+    def test_native_identifier_constructor_with_replaced_templates(self):
+        source = self.source()
+        for identifier in (0, 0xFFFFFFFF, 0x12345678, 0x80000001):
+            with self.subTest(identifier=identifier):
+                report = verify(source, bytes(range(32)), bytes(range(16)), bytes(range(64)),
+                                synthetic_identifier=identifier)
+                self.assertTrue(report['synthetic_identifier_construction_verified'])
+                self.assertTrue(report['platform_query_with_mocked_ipc_verified'])
+                self.assertTrue(report['original_templates_replaced'])
+                self.assertFalse(report['key_derivation_verified'])
+                self.assertNotIn('identifier', report)
+
+    def test_invalid_identifier_constructor_inputs_rejected(self):
+        source = self.source()
+        for identifier in (-1, 2**32, True, '1234'):
+            with self.subTest(identifier=identifier):
+                with self.assertRaisesRegex(ValueError, 'synthetic U32'):
+                    verify(source, bytes(32), bytes(16), bytes(16), synthetic_identifier=identifier)
+        with self.assertRaisesRegex(ValueError, '32-byte template'):
+            verify(source, bytes(16), bytes(16), bytes(16), synthetic_identifier=1)
+
     def test_invalid_inputs_rejected(self):
         with self.assertRaisesRegex(ValueError, 'fingerprint'):
             verify(b'wrong', bytes(32), bytes(16), bytes(16))

@@ -31,8 +31,9 @@ the raw on-disk file must start with that marker. The buffer argument is not
 by itself proof that all valid save files must have exactly that length.
 
 The transformation is now independently checked as AES-CBC, as described
-below. Save-specific key derivation, integrity checks and record layout
-remain to trace. The original sample has not been decoded. These
+below. Identifier-dependent byte construction is also checked with replaced
+templates. Actual sample/device binding, integrity checks and record layout
+remain unresolved. The original sample has not been decoded. These
 findings must not be applied to processed postal records, which have their
 own U32BE/UTF-16BE framing in `jwc24/demae.py`.
 
@@ -80,7 +81,40 @@ the correct key/IV for the archive sample, authentication, save-record framing,
 checksum behavior or native save acceptance. It must not be used to install
 a size/magic-matching file into the user's live NAND.
 
+## Identifier-dependent construction and failure behavior
+
+The native caller queries a four-byte platform identifier through wrapper
+`0x80167F68`, then passes it to constructor `0x800E431C`. The wrapper uses
+IOCtlV command 7, no input vectors and one four-byte output vector. The local
+Dolphin source identifies this as ES GetDeviceId: see
+`Source/Core/Core/IOS/ES/ES.h` and `ES/Identity.cpp` in checkout
+`cb9df1264526c37ed3901afc622c456e8ee137da`. Those two files were unmodified
+at inspection; their fingerprints are retained in private evidence.
+
+The constructor places the identifier's big-endian bytes at key offsets
+7, 15, 23 and 31, and at IV offsets 12 through 15. Remaining bytes come from
+the executable's templates. No original template bytes are reproduced here.
+
+The harness overwrites both templates in emulated memory with synthetic
+patterns before executing the original constructor. Four synthetic identifiers
+exercise zero, all-one, distinct-byte and high-bit cases. Native output is
+compared with independent byte construction, checked for output-bound writes,
+and passed through the independently checked AES-CBC routines.
+
+The native identifier wrapper also runs with only IOS IPC mocked. Checks
+verify its vector shape, successful copying, propagation of a simulated IPC
+failure without changing caller output, and rejection of a missing descriptor
+or null output pointer before IPC. No real device identifier is queried.
+
+This establishes the tested construction pattern, not the identity or template
+material needed for the archive sample. The harness's
+`key_derivation_verified: false` retains that stronger, actual-save limitation;
+the separate synthetic-construction and mocked-platform-query flags report
+what was exercised. The sample is not portable merely because its length and
+post-decryption magic are known. No integrity/authenticity claim follows from
+this CBC construction or the bounded caller's `PDFF` comparison.
+
 Private provenance and disassembly are under
-`private/demae/address-save-evidence/`. The next step is to trace save-specific
-key derivation and the integrity path before implementing an independent
-decoder; no service route or live profile was changed.
+`private/demae/address-save-evidence/`. The next step is to trace the save's
+integrity and record paths before implementing an independent decoder;
+no service route or live profile was changed.
