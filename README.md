@@ -92,6 +92,8 @@ The [Nintendo collection index](research/nintendo_collection_index_20261022.md)
 maps the local research tree and existing archive catalogs to JWC24 follow-up
 work. The [early Wii SDK PDF review](research/sdk_pdf_review_20261022.md) covers
 19 platform manuals and their channel-specific uses and limits.
+The [goldmine WC24 follow-up](research/goldmine_wc24_followup_20261022.md)
+records three later archived manuals, postal-tool evidence and shared diagnostics.
 
 TV no Tomo has reached its real program-guide UI with current listings. The
 latest build validated:

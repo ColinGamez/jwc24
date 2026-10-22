@@ -145,3 +145,8 @@ cross-checked against the completed summary. Read-only path and FTS lookups
 were exercised with known positive records; absent-path and restricted-kind
 queries were checked separately. No channel server, original Nintendo file,
 emulator profile, save, order or mail queue was modified by indexing.
+
+The subsequent [WC24/postal-tool follow-up](goldmine_wc24_followup_20261022.md)
+verified 13 selected archive members, including three PDFs (42 pages), and
+enriched the private text index to 834 documents. The baseline counts above
+remain the original inventory snapshot.
