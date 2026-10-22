@@ -1,6 +1,6 @@
 # Demae restoration status
 
-Updated October 19, 2026. Demae is an experimental restoration using real
+Updated October 22, 2026. Demae is an experimental restoration using real
 Hot Pepper restaurant data, with a separate Demae-can phone checkout backend.
 **Native dish selection, basket UI and final checkout handoff are unfinished.**
 
@@ -72,6 +72,8 @@ semantics, lunch handling and checkout wiring remain unfinished.
 
 See [menu/item contracts](menu_contract.md), [shop contracts](shop_contract.md),
 [directory status](directory_categories.md) and [crash findings](native_crashes.md).
+The [address-save follow-up](address_save_contract.md) verifies a cataloged
+HCCJ sample and native save-header trace; save decoding remains unfinished.
 
 ## Local setup and checks
 

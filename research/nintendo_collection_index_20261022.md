@@ -91,6 +91,10 @@ The payload was not extracted or read in this pass. Any follow-up should
 check identity/provenance and avoid copying personal records into fixtures or
 publishing them.
 
+The subsequent [address-save follow-up](../channels/demae/address_save_contract.md)
+verified the exact archive member and a native post-transformation marker.
+It did not decode the sample or establish safe installation/native acceptance.
+
 ### Early channels and original visual references
 
 The collection already contains extensive early-menu/channel research, resource
