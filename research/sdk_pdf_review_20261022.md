@@ -165,8 +165,9 @@ status to working services or commit those unrelated changes.
    whose actual assets/executable establish THP use.
 5. **Locate later, service-specific references.** Search separate manuals or
    captures for NWC24, VFF, NAND/IPC, HTTP/TLS and the individual channel APIs.
-   The broader workbench has non-PDF research artifacts, but those were not
-   audited as part of this PDF review and require a separate evidence pass.
+   The broader workbench has non-PDF research artifacts. The subsequent
+   [collection-wide index](nintendo_collection_index_20261022.md) locates those
+   leads and catalogs; it does not replace individual protocol verification.
 
 ## Result and validation
 
