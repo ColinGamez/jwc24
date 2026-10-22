@@ -88,6 +88,10 @@ validated replacement data
 
 ## Current project status
 
+The [early Wii SDK PDF review](research/sdk_pdf_review_20261022.md) maps 19
+platform manuals to JWC24's channels, useful implementation checks and the
+service-specific protocols still needing investigation.
+
 TV no Tomo has reached its real program-guide UI with current listings. The
 latest build validated:
 
