@@ -44,7 +44,10 @@ including allocation and header failure cleanup. Native LZ10/LZ11 decompression
 now passes separate guarded synthetic checks. Its filesystem wrapper also
 passes synthetic file/heap tests, including read,
 write, close and allocation failures. Real storage and complete download
-acceptance remain unverified.
+acceptance remain unverified. The original processing orchestrator now also
+passes a combined synthetic task-file test from decryption through address
+selection, including its cancellation checkpoint. WC24 task delivery is not
+part of this test.
 These checks are not connected to the live postal route.
 
 With a menu directory loaded, the separate preview API provides:

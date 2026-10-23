@@ -138,3 +138,30 @@ transactional storage behavior is established by mocked I/O.
 This completes separate synthetic execution checks for decrypt/strip, unpack
 and record lookup. The complete native request orchestration, real storage,
 WC24 envelope authentication/delivery and UI behavior remain unverified.
+
+## Combined native processing sequence (October 23, 2026)
+
+`tools.verify_demae_postal_pipeline.verify` now enters the original processing
+orchestrator at `0x8002E7C8`. One emulated process executes the native decrypt/
+strip callback, unpack wrapper, final processed-file reader and postal lookup.
+The harness does not replace those routines with Python implementations. A
+synthetic in-memory filesystem carries each stage's actual written bytes into
+the next stage's reads. Heap, lock, filesystem, initialization and libc services
+are mocked; no real WC24 task is registered or downloaded.
+
+An independent decoder and lookup helper provide expected results. The harness
+compares the intermediate compressed bytes including padding, final processed
+file, native lookup status, all three address fields and result-readiness flag.
+Both LZ10 and LZ11 pass exact, alternative and missing-address cases. Additional
+fixtures cover duplicate row selection, zero postcodes and maximum UTF-16 field
+capacities with surrogate pairs. Allocation guards and resource cleanup pass.
+
+With the synthetic cancellation flag set at entry, this mode still decrypts
+and writes its intermediate file before returning at the next checkpoint.
+The test verifies return value 1, no published address result and cleanup;
+it does not simulate cancellation arriving asynchronously during a service call.
+
+This verifies native **task-file processing orchestration**, extending the
+separate stage checks above. It does not establish request registration,
+scheduler/download operation, signed-envelope acceptance, real storage behavior,
+or on-screen address entry. Those remain the boundary before live integration.

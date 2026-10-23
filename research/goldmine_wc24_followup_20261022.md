@@ -177,3 +177,12 @@ services mocked. Expected output, allocation guards and cleanup pass for the
 tested cases. A destination-close error follows an already completed write;
 it does not imply that the output was rolled back. Complete native request
 orchestration, real storage and WC24 delivery/authentication remain open.
+
+The original task-file processing orchestrator at `0x8002E7C8` now also passes
+a combined synthetic execution test. Actual native intermediate writes feed
+the next native stage's reads in one emulated process, from ciphertext through
+address-result publication. Both compression types, exact/fallback/missing
+results, duplicate rows, UTF-16 capacities and a cancellation checkpoint are
+covered. This closes the separate-stage-only gap for task-file processing;
+request registration, WC24 delivery/authentication, real storage and UI behavior
+remain unverified. See the postal lookup contract for precise mocked services.
