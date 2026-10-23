@@ -2,7 +2,7 @@ from pathlib import Path
 import struct
 import unittest
 
-from jwc24.demae import PostalFormatError, lookup_processed_postal
+from jwc24.demae import PostalFormatError, decode_postal_download, lookup_processed_postal
 from tools.verify_demae_postal_lookup import verify
 
 
@@ -13,6 +13,24 @@ def row(code, name='test', strings=None):
 
 
 class PostalLookupTests(unittest.TestCase):
+    def test_synthetic_download_through_lookup(self):
+        from Crypto.Cipher import AES
+        from jwc24.forecast import encode_lz10_literal
+        from jwc24.lz11 import encode_lz11
+        key, iv = bytes(range(32)), bytes(range(16))
+        raw = row(3770800, 'alternative')+row(3770813, strings=('群馬県', 'test city', 'test town'))
+        for encode in (encode_lz10_literal, encode_lz11):
+            plain = b'zpcd\x10'+bytes(11)+encode(raw)
+            plain += bytes((-len(plain)) % 16)
+            ciphertext = AES.new(key, AES.MODE_CBC, iv=iv).encrypt(plain)
+            decoded = decode_postal_download(ciphertext, key, iv)
+            self.assertEqual(decoded, raw)
+            exact = lookup_processed_postal(decoded, 3770813)
+            self.assertEqual(exact.kind, 'exact')
+            self.assertEqual(exact.record.strings, ('群馬県', 'test city', 'test town'))
+            self.assertEqual(lookup_processed_postal(decoded, 3770899).kind, 'alternative')
+            self.assertEqual(lookup_processed_postal(decoded, 9999999).kind, 'not_found')
+
     def test_exact_wins_in_either_order(self):
         for data in (row(3770800)+row(3770813), row(3770813)+row(3770800)):
             self.assertEqual(lookup_processed_postal(data, 3770813).kind, 'exact')

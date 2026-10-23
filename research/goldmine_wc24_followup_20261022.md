@@ -146,3 +146,10 @@ data that the native early-return path might not visit. See the
 [postal lookup contract](../channels/demae/postal_lookup_contract.md) for
 limits, source fingerprint and verification scope. This does not change
 the manual-selection fallback or prove encrypted download acceptance.
+
+On October 23, the original `zpcd` header gate at `0x8002E954` was also
+executed against 266 synthetic cases. It accepts every offset byte after
+checking the magic and minimum length; buffer-offset validation remains a
+deliberate safeguard in our independent decoder. Synthetic LZ10/LZ11 encrypted
+fixtures now exercise that decoder through exact/fallback/missing record
+selection. These checks do not establish native download callback acceptance.

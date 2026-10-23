@@ -36,3 +36,23 @@ This verifies processed-record selection, not WC24 delivery, encrypted
 download acceptance, the address save, native UI operation or restaurant
 coverage. No historical address dataset, device identifier, real save or key
 is needed for these checks.
+
+## Application header gate follow-up (October 23, 2026)
+
+`tools.verify_demae_postal_header.verify` executes the original `0x8002E954`
+header gate without mocking its instructions. Its 266 synthetic cases cover
+all 256 offset-byte values, declared lengths zero through four, each incorrect
+magic byte, and a longer valid buffer. Successful calls write one big-endian
+word containing byte 4; rejected calls preserve the output. Guard bytes around
+that word remain unchanged.
+
+The gate checks a minimum length of five and the four `zpcd` bytes only. It
+accepts offset zero and offsets beyond the supplied buffer. This is evidence
+about this gate, not proof that later processing accepts those inputs. The
+independent decoder deliberately keeps its stricter offset bounds.
+
+An additional synthetic integration test encrypts both LZ10 and LZ11 processed
+fixtures with an explicitly supplied test key/IV, decodes them, then checks
+exact, alternative and missing lookup results. This connects the independent
+offline components; it does not execute the native download callback or prove
+transport authentication, real-Wii acceptance or UI behavior.

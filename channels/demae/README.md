@@ -37,7 +37,9 @@ or payment capabilities.
 
 The offline [processed postal lookup](postal_lookup_contract.md) now matches
 the original helper's exact-match and rounded-fallback selection on synthetic
-native checks. It is not connected to the live postal route.
+native checks. The original `zpcd` header gate is also verified separately;
+synthetic LZ10/LZ11 downloads exercise the independent decoder through lookup.
+These checks are not connected to the live postal route.
 
 With a menu directory loaded, the separate preview API provides:
 
