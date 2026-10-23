@@ -188,15 +188,20 @@ def verify(source, key, iv, ciphertext, postal_code, *, cancelled=False,
             'wc24_download_verified': False, 'native_ui_verified': False}
 
 
-def verify_request_reset(source, postal_code):
+def verify_request_reset(source, postal_code, *, cached_bucket=None, force_update=False):
     """Verify the stock request creator clears prior results before queueing.
 
-    Formatting, manager lookup/status and queue submission are mocked. This
-    exercises an accepted request, not real registration or thread scheduling.
+    Formatting, manager lookup, request cleanup/diagnostics and thread dispatch
+    are mocked. Native queue preparation and status reads execute unchanged.
     """
     if hashlib.sha256(source).hexdigest() != SOURCE_SHA:
         raise ValueError('Address helper executable fingerprint mismatch')
     lookup_processed_postal(b'', postal_code)
+    from jwc24.demae_postal_encode import postal_bucket
+    bucket = postal_bucket(postal_code)
+    if (type(force_update) is not bool or (cached_bucket is not None
+            and (type(cached_bucket) is not int or not 0 <= cached_bucket <= 990 or cached_bucket % 10))):
+        raise ValueError('Invalid synthetic request cache options')
     from tools.inspect_demae_references import sections
     from unicorn import Uc, UC_ARCH_PPC, UC_MODE_32, UC_MODE_BIG_ENDIAN, UC_HOOK_CODE
     from unicorn.ppc_const import UC_PPC_REG_0, UC_PPC_REG_LR, UC_PPC_REG_PC
@@ -205,7 +210,10 @@ def verify_request_reset(source, postal_code):
     for _, offset, address, size in sections(source):
         cpu.mem_write(address, source[offset:offset+size])
     context, manager, end = 0x80910000, 0x80940000, 0x817ff000
-    calls = {'queued': 0}
+    calls = {'queued': 0, 'cleanups': 0, 'formatted_bucket': None}
+    synthetic_key, synthetic_iv = bytes(range(32)), bytes(range(16))
+    def read_string(address, limit):
+        return bytes(cpu.mem_read(address, limit)).split(b'\0', 1)[0]
     def reg(n):
         return cpu.reg_read(UC_PPC_REG_0+n)
     def hook(cpu, address, size, user):
@@ -215,13 +223,30 @@ def verify_request_reset(source, postal_code):
             returned = reg(3)
         elif address == 0x8002d7b4:
             returned = manager
-        elif address == 0x8002dc08:
-            returned = 1 if calls['queued'] else 0
         elif address == 0x801b5bc8:
-            cpu.mem_write(reg(3), b'synthetic\0')
-        elif address == 0x8002da48:
-            if reg(7) != 0x8002e7c8 or reg(8) != context:
+            calls['formatted_bucket'] = reg(5)
+            cpu.mem_write(reg(3), f'bucket-{reg(5)}'.encode('ascii')+b'\0')
+        elif address == 0x801b5fc0:
+            returned = int(read_string(reg(3), reg(5)) != read_string(reg(4), reg(5)))
+        elif address == 0x801b5de8:
+            value = b'synthetic-output' if reg(4) == 0x801e50a8 else read_string(reg(4), reg(5))
+            cpu.mem_write(reg(3), (value+b'\0').ljust(reg(5), b'\0'))
+            returned = reg(3)
+        elif address == 0x80004338:
+            cpu.mem_write(reg(3), bytes(cpu.mem_read(reg(4), reg(5))))
+            returned = reg(3)
+        elif address == 0x8002cbb8:
+            calls['cleanups'] += 1
+        elif address == 0x8002c9f8:
+            if (reg(3), reg(4), reg(5)) != (manager, manager+0x35c, 1):
+                raise ValueError('Native queue thread dispatch shape differs')
+            callback, passed_context = struct.unpack('>II', cpu.mem_read(manager+0x61c, 8))
+            if callback != 0x8002e7c8 or passed_context != context:
                 raise ValueError('Native request queued different processing context')
+            if (int.from_bytes(cpu.mem_read(manager+0x628, 4), 'big') != 2
+                    or int.from_bytes(cpu.mem_read(manager+0x360, 4), 'big') != manager+0x364
+                    or bytes(cpu.mem_read(manager+0x464, 1)) != b'\x01'):
+                raise ValueError('Native queue pending state differs at dispatch')
             # The ready flag and result must already be reset at submission.
             if bytes(cpu.mem_read(context+0x28, 1)) != b'\0':
                 raise ValueError('Native request queued before clearing ready flag')
@@ -230,14 +255,21 @@ def verify_request_reset(source, postal_code):
             calls['queued'] += 1
         cpu.reg_write(UC_PPC_REG_0+3, returned)
         cpu.reg_write(UC_PPC_REG_PC, cpu.reg_read(UC_PPC_REG_LR))
-    for address in (0x8000443c, 0x8002d7b4, 0x8002dc08, 0x801b5bc8, 0x8002da48):
+    for address in (0x8000443c, 0x80004338, 0x8002d7b4, 0x801b5bc8, 0x801b5fc0,
+                    0x801b5de8, 0x8002cbb8, 0x8002dce0, 0x8002c9f8):
         cpu.hook_add(UC_HOOK_CODE, hook, begin=address, end=address)
     cpu.mem_write(context, struct.pack('>II', 10, 0x40000))
     cpu.mem_write(context+0xc, b'\x01')
     cpu.mem_write(context+0x28, b'\x01')
     cpu.mem_write(context+0x2c, b'!'*0x108)
+    cpu.mem_write(manager+0x628, struct.pack('>I', 1))
+    cpu.mem_write(manager+0x630, b'synthetic-path\0')
+    cpu.mem_write(manager+0x730, synthetic_key)
+    cpu.mem_write(manager+0x750, synthetic_iv)
+    if cached_bucket is not None:
+        cpu.mem_write(manager+0x364, f'bucket-{cached_bucket}'.encode('ascii')+b'\0')
     for register, value in {1: 0x817e0000, 2: 0x80374c40, 13: 0x80373820,
-                           3: context, 4: postal_code, 5: 0}.items():
+                           3: context, 4: postal_code, 5: int(force_update)}.items():
         cpu.reg_write(UC_PPC_REG_0+register, value)
     cpu.reg_write(UC_PPC_REG_LR, end)
     cpu.emu_start(0x8002e34c, end, count=1_000_000)
@@ -248,5 +280,19 @@ def verify_request_reset(source, postal_code):
         raise ValueError('Native request did not clear prior address fields')
     if int.from_bytes(cpu.mem_read(context+0x134, 4), 'big') != postal_code:
         raise ValueError('Native request did not retain the requested postcode')
+    refresh = cached_bucket != bucket or force_update
+    if calls['formatted_bucket'] != bucket or calls['cleanups'] != int(refresh):
+        raise ValueError('Native request bucket or cache refresh differs')
+    if bytes(cpu.mem_read(manager+0x624, 1)) != bytes([int(refresh)]):
+        raise ValueError('Native queue refresh flag differs')
+    if read_string(manager+0x364, 256) != f'bucket-{bucket}'.encode('ascii'):
+        raise ValueError('Native queue request label differs')
+    if int.from_bytes(cpu.mem_read(manager+0x618, 4), 'big') != 0x48000:
+        raise ValueError('Native queue input work capacity differs')
+    if (bytes(cpu.mem_read(manager+0x565, 32)) != synthetic_key
+            or bytes(cpu.mem_read(manager+0x585, 16)) != synthetic_iv):
+        raise ValueError('Native queue synthetic crypto parameters differ')
     return {'native_request_creator_mocked': False, 'prior_result_reset_verified': True,
-            'formatting_manager_queue_mocked': True, 'real_task_registration_verified': False}
+            'native_queue_preparation_mocked': False, 'native_status_reader_mocked': False,
+            'bucket_verified': True, 'cache_refresh_required': refresh,
+            'formatting_manager_dispatch_mocked': True, 'real_task_registration_verified': False}

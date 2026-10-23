@@ -35,22 +35,14 @@ navigation, directory categories and restaurant lists. Postal lookup currently
 uses the manual-selection fallback. Directory rows do not establish delivery
 or payment capabilities.
 
-The offline [processed postal lookup](postal_lookup_contract.md) now matches
-the original helper's exact-match and rounded-fallback selection on synthetic
-native checks. The original `zpcd` header gate is also verified separately;
-synthetic LZ10/LZ11 downloads exercise the independent decoder through lookup.
-The original decrypt-and-strip callback also passes synthetic file-I/O checks,
-including allocation and header failure cleanup. Native LZ10/LZ11 decompression
-now passes separate guarded synthetic checks. Its filesystem wrapper also
-passes synthetic file/heap tests, including read,
-write, close and allocation failures. Real storage and complete download
-acceptance remain unverified. The original processing orchestrator now also
-passes a combined synthetic task-file test from decryption through address
-selection, including its cancellation checkpoint. WC24 task delivery is not
-part of this test.
-Combined read/write failure checks also verify that later stages stop. The
-original accepted-request creator clears prior address results before queueing;
-queue submission remains mocked in this check.
+Offline [native postal checks](postal_lookup_contract.md) cover the combined
+decrypt/header-strip, LZ10/LZ11 unpack and address-selection sequence using
+synthetic task files. They also exercise cancellation, resource cleanup and
+file/allocation failures. The accepted-request creator resets prior results;
+native queue preparation passes cache-decision and full-range bucket checks.
+
+Storage, initialization and thread dispatch use mocks. WC24 registration,
+delivery/authentication, real storage and UI acceptance remain unverified.
 These checks are not connected to the live postal route.
 
 With a menu directory loaded, the separate preview API provides:

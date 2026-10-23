@@ -188,3 +188,30 @@ manager lookup/status and queue submission mocked. It verifies the reset at
 submission for zero, a representative postcode and the maximum postcode. This
 does not execute a real queue, thread scheduler or WC24 task registration, and
 does not prove behavior for every rejected or concurrently issued request.
+
+## Native queue preparation and bucket boundaries (October 23, 2026)
+
+The request-reset harness now executes queue preparation at `0x8002DA48` and
+the native status reader at `0x8002DC08`, extending the earlier mocked-queue
+check. Only manager lookup, formatting/string helpers, request cleanup,
+diagnostics and thread dispatch are mocked in this part of the harness.
+
+The native creator's numeric formatting argument matches the independent stock
+bucket calculation at both endpoints of all 100 postcode buckets, covering
+0 through 9,999,999. The formatting helper emits synthetic labels, so this
+check does not verify the original URL or path formatting.
+
+Queue preparation retains the processing callback and result-context pointer,
+copies synthetic key/IV parameters and prepares pending state 2 before the
+mocked dispatch. Its work-capacity slot receives the caller's 256 KiB capacity
+plus 32 KiB (`0x48000`). This slot arithmetic does not change the independent
+256 KiB processed-data limit or prove a transport allocation policy.
+
+An existing identical bucket label without force-update selects the native
+reuse path and clears the refresh flag. A missing/different label or a forced
+update invokes the mocked prior-request cleanup and sets that flag. These
+are preparation decisions; they do not prove that cached files exist, are
+fresh/authentic, or that a scheduler actually performs a new download.
+
+Real dispatch, concurrent request behavior, task registration, WC24 delivery,
+storage and UI acceptance remain unverified.

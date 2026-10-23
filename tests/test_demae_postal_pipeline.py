@@ -80,6 +80,29 @@ class NativePostalPipelineTests(unittest.TestCase):
             self.assertTrue(report['prior_result_reset_verified'])
             self.assertFalse(report['real_task_registration_verified'])
 
+    def test_native_queue_cache_decision(self):
+        path = Path(__file__).resolve().parents[1]/'private/demae/v2/main.decompressed.dol'
+        if not path.is_file():
+            self.skipTest('Private helper executable unavailable')
+        for cached, forced, refresh in ((None, False, True), (370, False, False),
+                                        (360, False, True), (370, True, True)):
+            with self.subTest(cached=cached, forced=forced):
+                report = verify_request_reset(path.read_bytes(), 3770813,
+                                              cached_bucket=cached, force_update=forced)
+                self.assertEqual(report['cache_refresh_required'], refresh)
+                self.assertFalse(report['native_queue_preparation_mocked'])
+                self.assertFalse(report['native_status_reader_mocked'])
+
+    def test_native_bucket_boundaries_across_full_postcode_range(self):
+        path = Path(__file__).resolve().parents[1]/'private/demae/v2/main.decompressed.dol'
+        if not path.is_file():
+            self.skipTest('Private helper executable unavailable')
+        source = path.read_bytes()
+        for bucket in range(100):
+            for query in (bucket*100000, bucket*100000+99999):
+                with self.subTest(query=query):
+                    self.assertTrue(verify_request_reset(source, query)['bucket_verified'])
+
     def test_fingerprint_required(self):
         with self.assertRaisesRegex(ValueError, 'fingerprint'):
             verify(b'', bytes(32), bytes(16), bytes(16), 1)

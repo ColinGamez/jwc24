@@ -194,3 +194,11 @@ result, but native execution of the accepted-request creator (`0x8002E34C`)
 confirms that it resets that result before submitting the callback. Formatting,
 manager status and queue submission are mocked; real registration and scheduling
 remain unverified. This separates caller reset behavior from worker processing.
+
+The request harness subsequently replaced mocked queue preparation/status with
+the original `0x8002DA48` and `0x8002DC08` routines. It verifies numeric bucket
+arguments at all 200 endpoints of the full seven-digit range, synthetic crypto
+parameter/context transfer and pending state before mocked thread dispatch.
+Same-bucket reuse, changed-bucket refresh and forced refresh follow the expected
+native branches. Formatting still emits synthetic labels: original URL/path
+construction, real dispatch and WC24 task registration are not established.
