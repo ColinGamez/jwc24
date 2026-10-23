@@ -202,3 +202,10 @@ parameter/context transfer and pending state before mocked thread dispatch.
 Same-bucket reuse, changed-bucket refresh and forced refresh follow the expected
 native branches. Formatting still emits synthetic labels: original URL/path
 construction, real dispatch and WC24 task registration are not established.
+
+On October 24, the request harness also began executing the original message
+queue initialization/send/receive routines. The request descriptor pointer
+survives a native queue round trip; empty reads preserve output and full sends
+preserve FIFO contents across wraparound. Queue storage guards remain intact.
+Only interrupt/wake-up services are mocked at that boundary. Blocking/races,
+actual worker scheduling and WC24 delivery remain unverified.

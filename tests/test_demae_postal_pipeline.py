@@ -93,6 +93,15 @@ class NativePostalPipelineTests(unittest.TestCase):
                 self.assertFalse(report['native_queue_preparation_mocked'])
                 self.assertFalse(report['native_status_reader_mocked'])
 
+    def test_native_message_queue_round_trip_and_capacity(self):
+        path = Path(__file__).resolve().parents[1]/'private/demae/v2/main.decompressed.dol'
+        if not path.is_file():
+            self.skipTest('Private helper executable unavailable')
+        report = verify_request_reset(path.read_bytes(), 3770813)
+        self.assertFalse(report['native_message_send_receive_mocked'])
+        self.assertTrue(report['queue_round_trip_verified'])
+        self.assertTrue(report['queue_wrap_and_full_verified'])
+
     def test_native_bucket_boundaries_across_full_postcode_range(self):
         path = Path(__file__).resolve().parents[1]/'private/demae/v2/main.decompressed.dol'
         if not path.is_file():

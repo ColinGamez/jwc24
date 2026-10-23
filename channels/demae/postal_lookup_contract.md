@@ -215,3 +215,26 @@ fresh/authentic, or that a scheduler actually performs a new download.
 
 Real dispatch, concurrent request behavior, task registration, WC24 delivery,
 storage and UI acceptance remain unverified.
+
+## Native message handoff (October 24, 2026)
+
+The request harness now executes the send wrapper at `0x8002C9F8` and receive
+wrapper at `0x8002CA28`, including the underlying queue initialization, send
+and receive routines (`0x8013DEDC`, `0x8013DF3C`, `0x8013E004`). The earlier
+mocked dispatch boundary is replaced by an observer that allows native
+instructions to continue. Interrupt disable/restore and thread wake-up services
+remain mocked; no real thread is started or blocked.
+
+Native initialization prepares a two-slot synthetic ring buffer. Request
+preparation enqueues its descriptor pointer, which the original receive code
+retrieves unchanged. The descriptor retains its processing callback/context.
+An empty nonblocking receive returns zero without changing the output pointer.
+Further synthetic messages verify FIFO order across ring wraparound and that a
+full nonblocking send returns zero without replacing the queued messages.
+Queue occupancy returns to zero, and buffer guards remain unchanged.
+
+The production-shaped request send uses flag 1, but the synthetic queue has
+space, so this does not exercise waiting under that flag. Capacity/empty cases
+use flag zero. Blocking, wake-up races, concurrent threads and actual worker
+execution after receipt are not covered. This verifies message transport
+within the emulated queue, not WC24 network delivery or scheduler operation.

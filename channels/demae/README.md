@@ -40,8 +40,11 @@ decrypt/header-strip, LZ10/LZ11 unpack and address-selection sequence using
 synthetic task files. They also exercise cancellation, resource cleanup and
 file/allocation failures. The accepted-request creator resets prior results;
 native queue preparation passes cache-decision and full-range bucket checks.
+The original message queue also passes pointer round-trip, FIFO wraparound,
+full-send and empty-receive checks.
 
-Storage, initialization and thread dispatch use mocks. WC24 registration,
+Storage, initialization and kernel synchronization use mocks; actual worker
+scheduling is unverified. WC24 registration,
 delivery/authentication, real storage and UI acceptance remain unverified.
 These checks are not connected to the live postal route.
 

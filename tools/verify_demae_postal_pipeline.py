@@ -191,8 +191,8 @@ def verify(source, key, iv, ciphertext, postal_code, *, cancelled=False,
 def verify_request_reset(source, postal_code, *, cached_bucket=None, force_update=False):
     """Verify the stock request creator clears prior results before queueing.
 
-    Formatting, manager lookup, request cleanup/diagnostics and thread dispatch
-    are mocked. Native queue preparation and status reads execute unchanged.
+    Formatting, manager lookup, cleanup/diagnostics and kernel synchronization
+    are mocked. Native queue preparation, message send/receive and status execute.
     """
     if hashlib.sha256(source).hexdigest() != SOURCE_SHA:
         raise ValueError('Address helper executable fingerprint mismatch')
@@ -238,6 +238,10 @@ def verify_request_reset(source, postal_code, *, cached_bucket=None, force_updat
         elif address == 0x8002cbb8:
             calls['cleanups'] += 1
         elif address == 0x8002c9f8:
+            if reg(4) in (0x80960100, 0x80960104, 0x80960108):
+                if reg(3) != manager or reg(5) != 0:
+                    raise ValueError('Unexpected synthetic nonblocking send')
+                return
             if (reg(3), reg(4), reg(5)) != (manager, manager+0x35c, 1):
                 raise ValueError('Native queue thread dispatch shape differs')
             callback, passed_context = struct.unpack('>II', cpu.mem_read(manager+0x61c, 8))
@@ -253,10 +257,17 @@ def verify_request_reset(source, postal_code, *, cached_bucket=None, force_updat
             if bytes(cpu.mem_read(context+0x2c, 0x108)) != struct.pack('>I', 2)+bytes(0x104):
                 raise ValueError('Native request queued before clearing prior address fields')
             calls['queued'] += 1
+            return  # Observe only: execute the original send wrapper below.
+        elif address == 0x8013d740:
+            returned = 1
+        elif address == 0x8013d768:
+            if reg(3) != 1:
+                raise ValueError('Native queue interrupt restore token differs')
         cpu.reg_write(UC_PPC_REG_0+3, returned)
         cpu.reg_write(UC_PPC_REG_PC, cpu.reg_read(UC_PPC_REG_LR))
     for address in (0x8000443c, 0x80004338, 0x8002d7b4, 0x801b5bc8, 0x801b5fc0,
-                    0x801b5de8, 0x8002cbb8, 0x8002dce0, 0x8002c9f8):
+                    0x801b5de8, 0x8002cbb8, 0x8002dce0, 0x8002c9f8,
+                    0x8013d740, 0x8013d768, 0x8014107c):
         cpu.hook_add(UC_HOOK_CODE, hook, begin=address, end=address)
     cpu.mem_write(context, struct.pack('>II', 10, 0x40000))
     cpu.mem_write(context+0xc, b'\x01')
@@ -268,6 +279,19 @@ def verify_request_reset(source, postal_code, *, cached_bucket=None, force_updat
     cpu.mem_write(manager+0x750, synthetic_iv)
     if cached_bucket is not None:
         cpu.mem_write(manager+0x364, f'bucket-{cached_bucket}'.encode('ascii')+b'\0')
+    queue_buffer, message_output = 0x80950020, 0x80960000
+    queue_guard = b'!'*32
+    cpu.mem_write(queue_buffer-32, queue_guard+bytes(8)+queue_guard)
+    def call(address, *args):
+        for register, value in {1: 0x817e0000, 2: 0x80374c40, 13: 0x80373820,
+                               **dict(enumerate(args, 3))}.items():
+            cpu.reg_write(UC_PPC_REG_0+register, value)
+        cpu.reg_write(UC_PPC_REG_LR, end)
+        cpu.emu_start(address, end, count=1_000_000)
+        if cpu.reg_read(UC_PPC_REG_PC) != end:
+            raise ValueError('Native message queue routine did not return')
+        return reg(3)
+    call(0x8013dedc, manager+0x318, queue_buffer, 2)
     for register, value in {1: 0x817e0000, 2: 0x80374c40, 13: 0x80373820,
                            3: context, 4: postal_code, 5: int(force_update)}.items():
         cpu.reg_write(UC_PPC_REG_0+register, value)
@@ -292,7 +316,34 @@ def verify_request_reset(source, postal_code, *, cached_bucket=None, force_updat
     if (bytes(cpu.mem_read(manager+0x565, 32)) != synthetic_key
             or bytes(cpu.mem_read(manager+0x585, 16)) != synthetic_iv):
         raise ValueError('Native queue synthetic crypto parameters differ')
+    if int.from_bytes(cpu.mem_read(manager+0x334, 4), 'big') != 1:
+        raise ValueError('Native send did not enqueue one message')
+    cpu.mem_write(message_output, b'!!!!')
+    if (call(0x8002ca28, manager, message_output, 0) != 1
+            or int.from_bytes(cpu.mem_read(message_output, 4), 'big') != manager+0x35c):
+        raise ValueError('Native receive did not recover the queued request pointer')
+    cpu.mem_write(message_output, b'!!!!')
+    if call(0x8002ca28, manager, message_output, 0) != 0 or bytes(cpu.mem_read(message_output, 4)) != b'!!!!':
+        raise ValueError('Native empty nonblocking receive changed output')
+    # The first round trip advanced the head. Filling both slots now exercises
+    # ring wraparound; flags zero deliberately avoids a real blocking wait.
+    messages = (0x80960100, 0x80960104)
+    for message in messages:
+        if call(0x8002c9f8, manager, message, 0) != 1:
+            raise ValueError('Native nonblocking send failed before queue capacity')
+    if call(0x8002c9f8, manager, 0x80960108, 0) != 0:
+        raise ValueError('Native full nonblocking queue accepted an extra message')
+    for message in messages:
+        if (call(0x8002ca28, manager, message_output, 0) != 1
+                or int.from_bytes(cpu.mem_read(message_output, 4), 'big') != message):
+            raise ValueError('Native queue wraparound changed FIFO order')
+    if (int.from_bytes(cpu.mem_read(manager+0x334, 4), 'big') != 0
+            or bytes(cpu.mem_read(queue_buffer-32, 32)) != queue_guard
+            or bytes(cpu.mem_read(queue_buffer+8, 32)) != queue_guard):
+        raise ValueError('Native queue occupancy or buffer guards differ')
     return {'native_request_creator_mocked': False, 'prior_result_reset_verified': True,
             'native_queue_preparation_mocked': False, 'native_status_reader_mocked': False,
+            'native_message_send_receive_mocked': False, 'queue_round_trip_verified': True,
+            'queue_wrap_and_full_verified': True,
             'bucket_verified': True, 'cache_refresh_required': refresh,
-            'formatting_manager_dispatch_mocked': True, 'real_task_registration_verified': False}
+            'formatting_manager_kernel_sync_mocked': True, 'real_task_registration_verified': False}
