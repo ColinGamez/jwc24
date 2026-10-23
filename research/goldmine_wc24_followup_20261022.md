@@ -161,3 +161,11 @@ including trailing block padding, for synthetic LZ10 and LZ11 inputs. Size,
 header and allocation failures release their resources in the tested paths.
 Native decompression and real download acceptance remain separate open checks;
 the full scope is recorded in the postal lookup contract linked above.
+
+The native bounded decompressor (`0x80160D80`) and size reader (`0x80160AA0`)
+now also pass guarded synthetic comparisons. Coverage includes literal and
+overlapping-copy LZ10/LZ11 data, long LZ11 tokens, extended size headers,
+truncation, invalid references and trailing padding. The native consumer
+rejects more than 32 unused trailing bytes. An independent Python decoder fix
+makes all truncated LZ11 token forms raise `ValueError` consistently. The
+filesystem decompression wrapper and full native download path remain open.

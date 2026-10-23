@@ -80,3 +80,30 @@ paths. Unsafe header offsets are excluded before emulation.
 This narrows the unverified boundary to subsequent decompression/storage and
 the surrounding download transport. Mocked file I/O does not establish real
 filesystem behavior, signed-envelope acceptance, authenticity or UI operation.
+
+## Native bounded decompressor (October 23, 2026)
+
+`tools.verify_demae_postal_lz.verify` executes the native size reader at
+`0x80160AA0` and bounded LZ consumer at `0x80160D80` without mocking either.
+Synthetic output is compared byte-for-byte, with guards before and after the
+declared output buffer. This verifies the routines called by the filesystem
+wrapper at `0x8002D044`; that wrapper itself is not yet executed by this harness.
+
+Passing fixtures cover LZ10/LZ11 literals, overlapping distance-one copies,
+both extended LZ11 copy-length forms, extended output-size headers and trailing
+padding through 32 bytes. Negative fixtures cover unsupported compression,
+truncated literals/tokens, references before the output buffer and excessive
+trailing bytes. Native routine statuses observed are `-1` for unsupported
+type, `-2` for truncation, `-3` for more than 32 unused trailing bytes and `-4`
+for the tested invalid references. These are routine statuses, not displayed
+channel error codes. They do not describe every possible malformed input.
+
+The independent Python LZ11 decoder now explicitly checks every copy-token
+length before reading, consistently raising `ValueError` for truncation.
+This also keeps truncated input inside the postal decoder's format-error path.
+The independent decoder's padding policy remains permissive; native tests do
+not establish that all inputs accepted by Python will pass the Wii consumer.
+
+Remaining acceptance work includes the filesystem wrapper's failure paths,
+the complete native pipeline and actual WC24 delivery/authentication. No live
+route or emulator profile is changed by these offline checks.

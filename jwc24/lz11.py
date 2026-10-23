@@ -30,15 +30,21 @@ def decode_lz11(payload: bytes) -> bytes:
                 output.append(payload[source])
                 source += 1
                 continue
+            if source >= len(payload):
+                raise ValueError("truncated LZ11 back-reference")
             first = payload[source]
             source += 1
             marker = first >> 4
             if marker == 0:
+                if len(payload) - source < 2:
+                    raise ValueError("truncated LZ11 back-reference")
                 second, third = payload[source : source + 2]
                 source += 2
                 length = ((first & 0xF) << 4 | second >> 4) + 0x11
                 distance = ((second & 0xF) << 8 | third) + 1
             elif marker == 1:
+                if len(payload) - source < 3:
+                    raise ValueError("truncated LZ11 back-reference")
                 second, third, fourth = payload[source : source + 3]
                 source += 3
                 length = (
@@ -46,6 +52,8 @@ def decode_lz11(payload: bytes) -> bytes:
                 ) + 0x111
                 distance = ((third & 0xF) << 8 | fourth) + 1
             else:
+                if source >= len(payload):
+                    raise ValueError("truncated LZ11 back-reference")
                 second = payload[source]
                 source += 1
                 length = marker + 1
