@@ -209,3 +209,11 @@ survives a native queue round trip; empty reads preserve output and full sends
 preserve FIFO contents across wraparound. Queue storage guards remain intact.
 Only interrupt/wake-up services are mocked at that boundary. Blocking/races,
 actual worker scheduling and WC24 delivery remain unverified.
+
+A controlled native worker iteration now also passes: the original worker
+receives one queued descriptor and invokes its stored processing callback,
+which executes the combined postal pipeline. Synthetic successful task
+completion is supplied at the download-routine boundary. Processing failures
+and cancellation reach the manager's callback-status field; the observer then
+requests a stop and the native loop exits. Real thread creation/scheduling,
+task completion, registration and network delivery remain unverified.

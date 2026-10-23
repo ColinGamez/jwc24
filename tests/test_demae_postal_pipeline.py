@@ -71,6 +71,25 @@ class NativePostalPipelineTests(unittest.TestCase):
         self.assertFalse(report['prior_result_retained'])
         self.assertTrue(report['new_result_published'])
 
+    def test_worker_consumes_message_and_processes_delivered_file(self):
+        raw = row(3770800, ('alternative', '', ''))+row(3770813, ('群馬県', 'test', 'town'))
+        for lz11 in (False, True):
+            for query, kind in ((3770813, 'exact'), (3770899, 'alternative'), (9999999, 'not_found')):
+                with self.subTest(lz11=lz11, kind=kind):
+                    report = self.check(raw, query, lz11=lz11, worker=True)
+                    self.assertEqual(report['result_kind'], kind)
+                    self.assertTrue(report['native_worker_loop_verified'])
+                    self.assertTrue(report['task_completion_mocked'])
+                    self.assertFalse(report['real_thread_scheduling_verified'])
+
+    def test_worker_propagates_processing_failure_and_cancellation(self):
+        for options in ({'cancelled': True}, *({'fault': fault} for fault in
+                        ('decrypt_read', 'decrypt_write', 'unpack_read', 'unpack_write', 'final_read'))):
+            with self.subTest(options=options):
+                report = self.check(row(1, ('test', '', '')), 1, worker=True, **options)
+                self.assertFalse(report['new_result_published'])
+                self.assertTrue(report['native_worker_loop_verified'])
+
     def test_native_request_creator_resets_prior_result(self):
         path = Path(__file__).resolve().parents[1]/'private/demae/v2/main.decompressed.dol'
         if not path.is_file():

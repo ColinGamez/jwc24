@@ -238,3 +238,33 @@ space, so this does not exercise waiting under that flag. Capacity/empty cases
 use flag zero. Blocking, wake-up races, concurrent threads and actual worker
 execution after receipt are not covered. This verifies message transport
 within the emulated queue, not WC24 network delivery or scheduler operation.
+
+## Native worker consumption and callback (October 24, 2026)
+
+The combined processing harness now has a `worker=True` mode. It prepares a
+synthetic manager/request, initializes the native queue and enqueues one request
+descriptor using the original send wrapper. Instead of directly calling the
+processing orchestrator, it manually enters worker `0x8002DE70`. The worker's
+native receive, descriptor check and request processor (`0x8002DF34`) invoke
+the processing callback through the stored function pointer and result context.
+The native queue/request creator is tested separately; this experiment seeds
+the manager directly rather than running registration and creation end to end.
+
+The task-download routine at `0x8002CC04` is mocked to report success with the
+synthetic encrypted task file already present. The worker then executes the
+native decrypt/strip, unpack, final read and lookup sequence. Both compression
+types pass exact/fallback/missing results. Injected processing file failures
+and cancellation propagate into the manager's stored callback status without
+publishing a fresh address result. Allocation and queue guards remain intact.
+
+After the single request returns to the loop, a harness observer sets its stop
+flag. The worker executes its own stop branch, records state 3 and returns zero;
+that return is distinct from the callback status stored at manager offset
+`0x760`. Queue occupancy must be zero, and all processing resources must be
+released. Unexpected idle sleeping fails the experiment rather than invoking
+real kernel services.
+
+This verifies a controlled native worker iteration, not OS thread creation,
+concurrent scheduling, actual task completion or network delivery. Kernel
+synchronization and storage remain mocked. The deliberately supplied task
+success does not establish download-entry registration or authentication.

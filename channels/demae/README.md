@@ -43,6 +43,8 @@ native queue preparation passes cache-decision and full-range bucket checks.
 The original message queue also passes pointer round-trip, FIFO wraparound,
 full-send and empty-receive checks.
 
+The original worker also consumes a queued request and invokes processing in a
+controlled single-message test, with task completion supplied by the harness.
 Storage, initialization and kernel synchronization use mocks; actual worker
 scheduling is unverified. WC24 registration,
 delivery/authentication, real storage and UI acceptance remain unverified.
