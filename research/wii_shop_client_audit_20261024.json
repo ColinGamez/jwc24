@@ -1,0 +1,292 @@
+{
+  "schema_version": 1,
+  "title_id": "0001000248414241",
+  "title_version": 21,
+  "required_ios": 56,
+  "boot_index": 17,
+  "tmd_sha256": "cac6f84d3c17a04c45aa1f088ad9f491deaf3f9462fc49d9447b520dc6d83e67",
+  "contents": [
+    {
+      "index": 0,
+      "content_id": "0000005d",
+      "shared": false,
+      "bytes": 435904,
+      "sha1_matches_tmd": true,
+      "sha256": "d02f71f9f4c1593d174046d2a75e9d3996f471524ca86f4d890c7afd3f13ab32",
+      "dol_structure": false,
+      "markers": [],
+      "static_routes": []
+    },
+    {
+      "index": 1,
+      "content_id": "0000005e",
+      "shared": false,
+      "bytes": 3530912,
+      "sha1_matches_tmd": true,
+      "sha256": "aff20704bd4cf9025e34382e185b0936e9ebc6e047a3431f21a445165c9dc898",
+      "dol_structure": true,
+      "markers": [
+        "ECommerceInterface",
+        "ECProgress",
+        "GetECConfig",
+        "CheckDeviceStatus",
+        "CheckRegistration",
+        "SyncRegistration"
+      ],
+      "static_routes": [
+        {
+          "scheme": "https",
+          "host": "ecs.shop.wii.com",
+          "path": "/ecs/services/ECommerceSOAP"
+        },
+        {
+          "scheme": "https",
+          "host": "oss-auth.shop.wii.com",
+          "path": ""
+        },
+        {
+          "scheme": "https",
+          "host": "oss-auth.shop.wii.com",
+          "path": "/oss/getLog"
+        },
+        {
+          "scheme": "https",
+          "host": "oss-auth.shop.wii.com",
+          "path": "/startup"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "content_id": "0000005f",
+      "shared": false,
+      "bytes": 3442976,
+      "sha1_matches_tmd": true,
+      "sha256": "9e4a171c24782be38a88225fda507b5c17120531cf517a6ebd9bd3f8ee580ead",
+      "dol_structure": false,
+      "markers": [
+        "ECProgress",
+        "CheckDeviceStatus",
+        "CheckRegistration",
+        "SyncRegistration"
+      ],
+      "static_routes": [],
+      "u8_nodes": 58,
+      "page_config_names": [
+        "common.js",
+        "corrupt.html",
+        "error.html",
+        "eula.html",
+        "eulacomp.html",
+        "internet.html",
+        "nwc24error.html",
+        "nwc24fullerror.html",
+        "shop.js",
+        "sound.js",
+        "input.ini",
+        "myfilter.ini",
+        "opera.ini"
+      ]
+    },
+    {
+      "index": 3,
+      "content_id": "00000032",
+      "shared": false,
+      "bytes": 7004,
+      "sha1_matches_tmd": true,
+      "sha256": "684f1f12d3473d2418cc65ad12d04cdf64725dc2b81780e619d14274d536a245",
+      "dol_structure": false,
+      "markers": [],
+      "static_routes": [],
+      "u8_nodes": 3,
+      "page_config_names": []
+    },
+    {
+      "index": 4,
+      "content_id": "00000022",
+      "shared": false,
+      "bytes": 828,
+      "sha1_matches_tmd": true,
+      "sha256": "fc59d6f7502562e8aad5b8e13130d20b6378888ea8dc54947fd581343ae9e172",
+      "dol_structure": false,
+      "markers": [],
+      "static_routes": [],
+      "u8_nodes": 3,
+      "page_config_names": []
+    },
+    {
+      "index": 5,
+      "content_id": "00000055",
+      "shared": false,
+      "bytes": 4374443,
+      "sha1_matches_tmd": true,
+      "sha256": "7cebfa18a7b7525d25a9ebf407b648e13e4fa2470b6c628fd7f1e007adb2faa8",
+      "dol_structure": false,
+      "markers": [],
+      "static_routes": [],
+      "u8_nodes": 2,
+      "page_config_names": []
+    },
+    {
+      "index": 6,
+      "content_id": "00000024",
+      "shared": true,
+      "bytes": 2669044,
+      "sha1_matches_tmd": true,
+      "sha256": "411781fd519fc10cf16197a4f93c6c29d14a8862d17e5a1beacb0272dec3b0f8",
+      "dol_structure": false,
+      "markers": [],
+      "static_routes": [],
+      "u8_nodes": 2,
+      "page_config_names": []
+    },
+    {
+      "index": 7,
+      "content_id": "00000025",
+      "shared": true,
+      "bytes": 2156800,
+      "sha1_matches_tmd": true,
+      "sha256": "9ff4609878d5eb752ef75a5bfa74ed72628b99871ce58a7172a1c9fb3277859f",
+      "dol_structure": false,
+      "markers": [],
+      "static_routes": [],
+      "u8_nodes": 30,
+      "page_config_names": []
+    },
+    {
+      "index": 8,
+      "content_id": "0000003b",
+      "shared": true,
+      "bytes": 370880,
+      "sha1_matches_tmd": true,
+      "sha256": "7884e90122dd7e52f4108a26e52508ef8ad9b667ba5e2e3b0edc6eb25c81c0a1",
+      "dol_structure": false,
+      "markers": [],
+      "static_routes": [],
+      "u8_nodes": 3,
+      "page_config_names": []
+    },
+    {
+      "index": 9,
+      "content_id": "0000003c",
+      "shared": true,
+      "bytes": 3649020,
+      "sha1_matches_tmd": true,
+      "sha256": "4922465314b05b5d61efe9f1176df1cb2363310789095c0eafff3968c1df8665",
+      "dol_structure": false,
+      "markers": [],
+      "static_routes": [],
+      "u8_nodes": 3,
+      "page_config_names": []
+    },
+    {
+      "index": 10,
+      "content_id": "0000003d",
+      "shared": true,
+      "bytes": 1819808,
+      "sha1_matches_tmd": true,
+      "sha256": "e73e6818044f8b8385e32f1d8d2e70007d54f88d8bd0663a2de509d1c4ac9950",
+      "dol_structure": false,
+      "markers": [],
+      "static_routes": [],
+      "u8_nodes": 2,
+      "page_config_names": []
+    },
+    {
+      "index": 11,
+      "content_id": "0000003e",
+      "shared": true,
+      "bytes": 1572320,
+      "sha1_matches_tmd": true,
+      "sha256": "6a1a459aa7898d06cab417834e3edbfb31c34c7651dc8134a8d65e2e377124a7",
+      "dol_structure": false,
+      "markers": [],
+      "static_routes": [],
+      "u8_nodes": 2,
+      "page_config_names": []
+    },
+    {
+      "index": 12,
+      "content_id": "0000003f",
+      "shared": true,
+      "bytes": 272512,
+      "sha1_matches_tmd": true,
+      "sha256": "e97b62c56e68807120102144e9f51fa650a78f017ecd73c9a8712420ba8925dc",
+      "dol_structure": false,
+      "markers": [],
+      "static_routes": [],
+      "u8_nodes": 2,
+      "page_config_names": []
+    },
+    {
+      "index": 13,
+      "content_id": "00000040",
+      "shared": true,
+      "bytes": 606016,
+      "sha1_matches_tmd": true,
+      "sha256": "0657bbbf7ff732ca7ad815540b273716c26fb764c3d162a67e28d94eb55b9bec",
+      "dol_structure": false,
+      "markers": [],
+      "static_routes": [],
+      "u8_nodes": 2,
+      "page_config_names": []
+    },
+    {
+      "index": 14,
+      "content_id": "00000041",
+      "shared": true,
+      "bytes": 53216,
+      "sha1_matches_tmd": true,
+      "sha256": "f70962c64db2bb908a714635642e4da3f6347725d2d8baf0296e137cd731e197",
+      "dol_structure": false,
+      "markers": [],
+      "static_routes": [],
+      "u8_nodes": 2,
+      "page_config_names": []
+    },
+    {
+      "index": 15,
+      "content_id": "00000042",
+      "shared": true,
+      "bytes": 70336,
+      "sha1_matches_tmd": true,
+      "sha256": "0e7f8fab71f620868936765660fde888112021c1a46f1e88e455af97fe9e450c",
+      "dol_structure": false,
+      "markers": [],
+      "static_routes": [],
+      "u8_nodes": 2,
+      "page_config_names": []
+    },
+    {
+      "index": 16,
+      "content_id": "00000043",
+      "shared": true,
+      "bytes": 686468,
+      "sha1_matches_tmd": true,
+      "sha256": "2c644c9e5986a3847f64f53226d7fa296e62e384262d82728c33d97b7ecbab93",
+      "dol_structure": false,
+      "markers": [],
+      "static_routes": [],
+      "u8_nodes": 2,
+      "page_config_names": []
+    },
+    {
+      "index": 17,
+      "content_id": "00000060",
+      "shared": false,
+      "bytes": 328960,
+      "sha1_matches_tmd": true,
+      "sha256": "4b1053d015e8b0ac8e4d206d7ce8236bd1f42d27471081a685848fade6a741bf",
+      "dol_structure": true,
+      "markers": [],
+      "static_routes": []
+    }
+  ],
+  "all_content_hashes_match_tmd": true,
+  "tmd_signature_verified": false,
+  "source_revision_match_verified": false,
+  "static_routes_are_candidates": true,
+  "static_evidence_only": true,
+  "startup_request_order_verified": false,
+  "runtime_or_nand_modified": false
+}

@@ -115,3 +115,12 @@ reported as recovered storefront assets. No installer or make target was run.
 The first implementation boundary is a separate Shop adapter with explicit
 read-only capabilities. No Shop route, TLS interception, account mutation,
 purchase, download or NAND installation was added during this audit.
+
+## Installed-client follow-up
+
+The subsequent [installed-client audit](wii_shop_client_audit_20261024.md)
+identifies Shop version 21 and verifies all 18 installed contents against its
+TMD. Main executable markers overlap this library, and bundled support pages
+and static startup/service URL candidates are recorded. This supplies a
+concrete comparison target; exact source matching and runtime startup behavior
+are still open. Original content and account data are not included in reports.

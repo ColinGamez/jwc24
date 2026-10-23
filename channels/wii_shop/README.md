@@ -16,8 +16,19 @@ python tools/audit_wii_shop_sources.py '<private shop-build-lead directory>'
 python -m unittest tests.test_wii_shop_source_audit
 ```
 
-The next milestone is matching an actual retail client and proving read-only
-startup/catalog browsing in its original UI. Commerce SOAP services require a
+An [installed-client audit](../../research/wii_shop_client_audit_20261024.md)
+now identifies title `0001000248414241` version 21 (IOS 56), verifies all 18
+contents against its TMD and locates bundled support pages plus static startup/
+SOAP URL candidates. Interface markers overlap the recovered library, but an
+exact source-revision match and runtime call order remain unverified.
+
+```powershell
+python tools/audit_wii_shop_client.py '<private Dolphin Wii NAND directory>'
+python -m unittest tests.test_wii_shop_source_audit tests.test_wii_shop_client_audit
+```
+
+The next milestone is capturing that client's startup sequence in an isolated
+profile, then proving read-only startup/catalog browsing. Commerce services require a
 separate adapter; WC24 task/mail support does not implement Shop accounts,
 catalogs, tickets or content installation.
 
