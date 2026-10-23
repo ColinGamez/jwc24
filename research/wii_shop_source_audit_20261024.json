@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "inventory_match_verified": true,
+  "inventory_sha256": "ea7edbe9e4e03f96f24cb3b2ccf45241bbac678be6351877719cab89e453c352",
+  "verified_files": [
+    {
+      "path": "common/lib/ec/ec_connect.cpp",
+      "bytes": 4813,
+      "sha256": "e54cab889d60467bc330d9dd8eb26cc739d0e13cc7a2b17b8608d5f6bfe577df"
+    },
+    {
+      "path": "common/lib/ec/ec_checkReg.cpp",
+      "bytes": 2549,
+      "sha256": "3f3a6846373e3bbc9fc9de1d46f3cef743e390a5c7b4d0abfceb3d5066d4155d"
+    },
+    {
+      "path": "common/lib/ec/ec_register.cpp",
+      "bytes": 11260,
+      "sha256": "9b329bd7fba918f5e775ab78198e91a7d74500fba657855e4c61e5cac4f5f958"
+    },
+    {
+      "path": "common/lib/ec/ec_chkDevStat.cpp",
+      "bytes": 5686,
+      "sha256": "7a403913495666d4c6bcb690bacef9a274b5eb554de6ab6fd4113646822a7460"
+    },
+    {
+      "path": "common/lib/ec/ec_soap.cpp",
+      "bytes": 40736,
+      "sha256": "392f7ab92409347bcbdd558c59fcc0bc50acf398dde55746ef048004846988e3"
+    },
+    {
+      "path": "common/lib/ec/ec_soap.h",
+      "bytes": 9121,
+      "sha256": "2c6c35eca837540d1c7d6d06bc0b52c7d45c2077e93b922707a2624a698e5c89"
+    },
+    {
+      "path": "common/lib/ec/ec_js.cpp",
+      "bytes": 153617,
+      "sha256": "167fd6c0a31eb4eef0cf499731d38bc94c3b180ef654199e10f81495074433f9"
+    },
+    {
+      "path": "common/lib/ec/ec_listTitles.cpp",
+      "bytes": 8223,
+      "sha256": "6541781efe26bbc6959cb2fb68a4ce70af61f496339b6659ed1097057c45d22c"
+    },
+    {
+      "path": "common/lib/ec/ec_listTitleContents.cpp",
+      "bytes": 9196,
+      "sha256": "12bc17e86457b4356493aef2bf45aa2f87ffed5bc6b3cf818c33c072643288a7"
+    },
+    {
+      "path": "common/lib/ec/ec_purchaseTitle.cpp",
+      "bytes": 17239,
+      "sha256": "4ed51ab51a1a0a2a6883d7b08d24c6c90dde49bfd251b1337485a843a5d0e3f4"
+    },
+    {
+      "path": "common/lib/ec/ec_getTitle.cpp",
+      "bytes": 26222,
+      "sha256": "e013f5ec0d112800894d2953b3a61935deccc591a237a995da9f31950bf412a7"
+    },
+    {
+      "path": "common/lib/ec/ec_downloadContents.cpp",
+      "bytes": 3062,
+      "sha256": "faa4491100569ddd6c64a837d6bb5eb3af836d5ad0b0a0761485dc7c6ace6018"
+    },
+    {
+      "path": "common/lib/ec/ec_syncTickets.cpp",
+      "bytes": 18495,
+      "sha256": "162259635fd9c07fb0f4bda1afac049ca7e9299b3d96d89d9619ebf9243a0404"
+    },
+    {
+      "path": "common/lib/ec/ec_getTicketEnvelope.cpp",
+      "bytes": 4993,
+      "sha256": "befc70f13b20b1a6eb522cc587ba057136d651342c9c388b6bbf4d6a38484970"
+    },
+    {
+      "path": "common/lib/ec/ec_getPoints.cpp",
+      "bytes": 4232,
+      "sha256": "d2625c4c5108b936431eda6a66958b1ef36ce68810ef31c559c458dc283de9c3"
+    },
+    {
+      "path": "common/lib/ec/ec_buyPoints.cpp",
+      "bytes": 8298,
+      "sha256": "d1dee985d337135fc665cb0ec7d0b40638e0f1bf2c5b24fd585ea3c2c0dacffd"
+    },
+    {
+      "path": "common/lib/ec/ec_giftTitle.cpp",
+      "bytes": 4998,
+      "sha256": "ea2c2dfd89a08ca8fd583943ac7e3d3100d0e355759c35b65fcfaf9bd3ce0a25"
+    },
+    {
+      "path": "common/lib/ec/ec_acceptGiftTitle.cpp",
+      "bytes": 4154,
+      "sha256": "e36d3ff117261e643a4d21b524394ecad0e09d10fd4120a86f9ab48aab8331bb"
+    },
+    {
+      "path": "common/lib/ec/ec_listContentSets.cpp",
+      "bytes": 6347,
+      "sha256": "13571fd1a8996f4bf197a3c1b8e8f1829b6f8275aef76268fb926082a1cb0ca7"
+    },
+    {
+      "path": "common/lib/ec/ec_listServiceItems.cpp",
+      "bytes": 6532,
+      "sha256": "0d6b6286073e740fcdb560ce38f752532ef28e2fcb31180d124c6611a965692c"
+    },
+    {
+      "path": "devroot/tools/bw/wiishopping.mk",
+      "bytes": 1117,
+      "sha256": "cf386d39c942798cbd5c4a845e250381305f92cd90b19240ba1d932e446a4a99"
+    }
+  ],
+  "literal_soap_calls": [
+    {
+      "file": "common/lib/ec/ec_connect.cpp",
+      "line": 59,
+      "service": "ecs",
+      "action": "GetECConfig"
+    },
+    {
+      "file": "common/lib/ec/ec_checkReg.cpp",
+      "line": 66,
+      "service": "ias",
+      "action": "CheckRegistration"
+    },
+    {
+      "file": "common/lib/ec/ec_register.cpp",
+      "line": 240,
+      "service": "ias",
+      "action": "GetChallenge"
+    },
+    {
+      "file": "common/lib/ec/ec_chkDevStat.cpp",
+      "line": 160,
+      "service": "ecs",
+      "action": "CheckDeviceStatus"
+    },
+    {
+      "file": "common/lib/ec/ec_purchaseTitle.cpp",
+      "line": 413,
+      "service": "ecs",
+      "action": "PurchaseTitle"
+    },
+    {
+      "file": "common/lib/ec/ec_syncTickets.cpp",
+      "line": 119,
+      "service": "ecs",
+      "action": "ListETickets"
+    },
+    {
+      "file": "common/lib/ec/ec_getPoints.cpp",
+      "line": 102,
+      "service": "ecs",
+      "action": "CheckAccountBalance"
+    },
+    {
+      "file": "common/lib/ec/ec_buyPoints.cpp",
+      "line": 164,
+      "service": "ecs",
+      "action": "PurchasePoints"
+    },
+    {
+      "file": "common/lib/ec/ec_giftTitle.cpp",
+      "line": 93,
+      "service": "ecs",
+      "action": "GiftTitle"
+    },
+    {
+      "file": "common/lib/ec/ec_acceptGiftTitle.cpp",
+      "line": 72,
+      "service": "ecs",
+      "action": "AcceptGiftTitle"
+    }
+  ],
+  "dynamic_soap_call_sites": [
+    {
+      "file": "common/lib/ec/ec_register.cpp",
+      "line": 345,
+      "service": "ias"
+    },
+    {
+      "file": "common/lib/ec/ec_listTitles.cpp",
+      "line": 171,
+      "service": "cas"
+    }
+  ],
+  "javascript_globals": [
+    "ECommerceInterface",
+    "ECProgress",
+    "ECCreditCardPayment",
+    "ECECardPayment",
+    "ECAccountPayment",
+    "ECPrice",
+    "ECTitleLimit",
+    "ECTitleLimits",
+    "ECTitleInfo",
+    "ECTitleInfos",
+    "ECTicketInfo",
+    "ECTicketInfos",
+    "ECDeviceInfo",
+    "ECTransactionInfo",
+    "ECTransactionInfos",
+    "trace"
+  ],
+  "build_package_references": [
+    {
+      "variable": "WSHOP_FILE",
+      "filename": "wstrunk1316_repack.zip"
+    },
+    {
+      "variable": "LNDIR_FILE",
+      "filename": "lndir_1.0.1-ead_patch.zip"
+    },
+    {
+      "variable": "OPERA_UPDATE",
+      "filename": "RevoEX-2_2-080806_1338_opera_build-2077-1.zip"
+    }
+  ],
+  "source_review_only": true,
+  "complete_protocol_verified": false,
+  "retail_channel_match_verified": false,
+  "server_implementation_verified": false,
+  "referenced_packages_presence_verified": false
+}

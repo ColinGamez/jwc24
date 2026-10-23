@@ -94,6 +94,9 @@ work. The [early Wii SDK PDF review](research/sdk_pdf_review_20261022.md) covers
 19 platform manuals and their channel-specific uses and limits.
 The [goldmine WC24 follow-up](research/goldmine_wc24_followup_20261022.md)
 records three later archived manuals, postal-tool evidence and shared diagnostics.
+The [Wii Shop research track](channels/wii_shop/README.md) now audits recovered
+commerce-client evidence and maps a read-only startup/browsing milestone.
+It is not a working replacement Shop backend.
 
 TV no Tomo has reached its real program-guide UI with current listings. The
 latest build validated:
