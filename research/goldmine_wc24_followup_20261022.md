@@ -186,3 +186,11 @@ results, duplicate rows, UTF-16 capacities and a cancellation checkpoint are
 covered. This closes the separate-stage-only gap for task-file processing;
 request registration, WC24 delivery/authentication, real storage and UI behavior
 remain unverified. See the postal lookup contract for precise mocked services.
+
+Combined fault injection now covers read/write errors at decrypt/unpack and the
+final processed-file read. Tested failures retain their file-service diagnostic,
+stop later stages and clean up. Processing by itself retains a preexisting ready
+result, but native execution of the accepted-request creator (`0x8002E34C`)
+confirms that it resets that result before submitting the callback. Formatting,
+manager status and queue submission are mocked; real registration and scheduling
+remain unverified. This separates caller reset behavior from worker processing.

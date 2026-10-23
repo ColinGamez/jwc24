@@ -48,6 +48,9 @@ acceptance remain unverified. The original processing orchestrator now also
 passes a combined synthetic task-file test from decryption through address
 selection, including its cancellation checkpoint. WC24 task delivery is not
 part of this test.
+Combined read/write failure checks also verify that later stages stop. The
+original accepted-request creator clears prior address results before queueing;
+queue submission remains mocked in this check.
 These checks are not connected to the live postal route.
 
 With a menu directory loaded, the separate preview API provides:

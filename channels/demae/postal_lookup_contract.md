@@ -165,3 +165,26 @@ This verifies native **task-file processing orchestration**, extending the
 separate stage checks above. It does not establish request registration,
 scheduler/download operation, signed-envelope acceptance, real storage behavior,
 or on-screen address entry. Those remain the boundary before live integration.
+
+## Combined failure propagation and request reset (October 23, 2026)
+
+The combined harness now injects file-service error 5 at decrypt read/write,
+unpack read/write and final processed-file read. Both compression types are
+covered. Each tested failure returns internal status `0x15`, retains the
+service diagnostic 5 and stops before later stages. Stage counts, file-write/
+delete counts, cleanup and allocation guards are checked. Fresh result contexts
+remain unpublished. These internal statuses are not displayed Wii error codes.
+
+When the harness seeds an existing ready result, processing failure or
+cancellation leaves that flag and its old address fields intact. A separate
+native execution check resolves the normal caller boundary: the accepted-request
+creator at `0x8002E34C` clears readiness, sets lookup status 2 and clears the
+address fields **before** submitting the processing callback/context. After
+submission it retains the new requested postcode. Thus the processing routine
+alone must not be treated as a result-reset API.
+
+`verify_request_reset` tests the original accepted-request path with formatting,
+manager lookup/status and queue submission mocked. It verifies the reset at
+submission for zero, a representative postcode and the maximum postcode. This
+does not execute a real queue, thread scheduler or WC24 task registration, and
+does not prove behavior for every rejected or concurrently issued request.
