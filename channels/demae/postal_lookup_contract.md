@@ -268,3 +268,30 @@ This verifies a controlled native worker iteration, not OS thread creation,
 concurrent scheduling, actual task completion or network delivery. Kernel
 synchronization and storage remain mocked. The deliberately supplied task
 success does not establish download-entry registration or authentication.
+
+## Worker task-failure boundary (October 24, 2026)
+
+The task-result mock now also supplies internal statuses `0x28`, `0x29` and
+`0x2A`, with synthetic detail zero or -100. The native worker and diagnostic
+mapper execute unchanged. These are injected internal values, not observed
+real download failures or user-facing Wii error codes.
+
+All tested failures skip the processing callback: no decrypt/unpack/file-read
+stage starts, the encrypted fixture remains untouched, and no new address is
+published. The worker stores the task status, invokes a mocked request-resource
+cleanup service, then natively clears the request/URL buffers, synthetic crypto
+parameters, mount/file labels, capacity, callback and context fields. It restores
+the request-mode byte before returning to the controlled stop checkpoint.
+This checks native field reset; actual cleanup of registered WC24 resources is
+not executed by the mocked cleanup service.
+
+The diagnostic mapper replaces seeded prior diagnostics. Detail zero clears
+the category and SDK-error slots. For the tested detail -100, status `0x29`
+selects category 11; the other two statuses select category 10. A mocked SDK
+error getter supplies -12345, which is retained in the diagnostic slot. These
+numeric branches do not establish semantic category names or specific network
+root causes. Prior address results remain unchanged until the caller resets
+them, as in the earlier processing-failure tests.
+
+Success and failure of real task registration/download, genuine SDK error
+sources, thread scheduling and UI error presentation remain unverified.

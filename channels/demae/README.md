@@ -45,6 +45,8 @@ full-send and empty-receive checks.
 
 The original worker also consumes a queued request and invokes processing in a
 controlled single-message test, with task completion supplied by the harness.
+Simulated task failures skip processing, preserve diagnostics and reset request
+fields; they do not establish meanings for displayed channel error codes.
 Storage, initialization and kernel synchronization use mocks; actual worker
 scheduling is unverified. WC24 registration,
 delivery/authentication, real storage and UI acceptance remain unverified.

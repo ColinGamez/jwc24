@@ -217,3 +217,11 @@ completion is supplied at the download-routine boundary. Processing failures
 and cancellation reach the manager's callback-status field; the observer then
 requests a stop and the native loop exits. Real thread creation/scheduling,
 task completion, registration and network delivery remain unverified.
+
+Worker failure tests now inject internal task statuses `0x28`/`0x29`/`0x2A`.
+Native code skips postal processing, replaces seeded diagnostics and clears
+synthetic request buffers, crypto parameters and callback/context fields. The
+request-resource cleanup service and SDK error getter remain mocked. These
+numeric internal statuses do not establish meanings for displayed channel
+errors or actual download root causes. A previous address result is retained
+until the caller's separately verified reset runs.

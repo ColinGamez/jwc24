@@ -90,6 +90,23 @@ class NativePostalPipelineTests(unittest.TestCase):
                 self.assertFalse(report['new_result_published'])
                 self.assertTrue(report['native_worker_loop_verified'])
 
+    def test_worker_task_failure_skips_processing_and_resets_request(self):
+        for status in (0x28, 0x29, 0x2a):
+            for detail in (0, -100):
+                with self.subTest(status=status, detail=detail):
+                    report = self.check(row(1, ('test', '', '')), 1, worker=True,
+                                        task_status=status, task_detail=detail)
+                    self.assertEqual(report['native_status'], status)
+                    self.assertTrue(report['task_failure_reset_verified'])
+                    self.assertFalse(report['processing_started'])
+                    self.assertFalse(report['new_result_published'])
+
+    def test_failed_task_preserves_prior_result_until_caller_reset(self):
+        report = self.check(row(1, ('test', '', '')), 1, worker=True,
+                            task_status=0x29, task_detail=-100, prior_result=True)
+        self.assertTrue(report['prior_result_retained'])
+        self.assertFalse(report['new_result_published'])
+
     def test_native_request_creator_resets_prior_result(self):
         path = Path(__file__).resolve().parents[1]/'private/demae/v2/main.decompressed.dol'
         if not path.is_file():

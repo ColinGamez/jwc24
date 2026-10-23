@@ -11,7 +11,7 @@ from tools.inspect_demae_address_save import SOURCE_SHA
 
 
 def verify(source, key, iv, ciphertext, postal_code, *, cancelled=False,
-           fault=None, prior_result=False, worker=False):
+           fault=None, prior_result=False, worker=False, task_status=0, task_detail=0):
     if hashlib.sha256(source).hexdigest() != SOURCE_SHA:
         raise ValueError('Address helper executable fingerprint mismatch')
     faults = {None: (3, 2, 2, 5, 1),
@@ -21,6 +21,11 @@ def verify(source, key, iv, ciphertext, postal_code, *, cancelled=False,
     if (type(cancelled) is not bool or type(prior_result) is not bool or type(worker) is not bool
             or fault not in faults or (cancelled and fault is not None)):
         raise ValueError('Invalid synthetic pipeline options')
+    if (type(task_status) is not int or task_status not in (0, 0x28, 0x29, 0x2a)
+            or type(task_detail) is not int or task_detail not in (0, -100)
+            or (task_detail and not task_status)
+            or (task_status and (not worker or cancelled or fault is not None))):
+        raise ValueError('Invalid synthetic task result')
     if not isinstance(key, bytes) or len(key) != 32 or not isinstance(iv, bytes) or len(iv) != 16:
         raise ValueError('Expected synthetic AES-256 key and IV')
     raw = decode_postal_download(ciphertext, key, iv)
@@ -35,7 +40,7 @@ def verify(source, key, iv, ciphertext, postal_code, *, cancelled=False,
     state = {'file': ciphertext, 'handles': {}, 'next_handle': 1, 'allocations': [],
              'freed': [], 'locks': 0, 'unlocks': 0, 'writes': [], 'deletes': 0,
              'mounts': 0, 'unmounts': 0, 'fault_hit': False,
-             'worker_checkpoints': 0, 'task_completions': 0}
+             'worker_checkpoints': 0, 'task_completions': 0, 'request_cleanups': 0}
     guard = b'!'*32
     heap, request, result, cancel = 0x80930000, 0x80900000, 0x80910000, 0x80920000
     manager, queue_buffer = 0x80940000, 0x80970020
@@ -63,8 +68,15 @@ def verify(source, key, iv, ciphertext, postal_code, *, cancelled=False,
         if address == 0x8002cc04:
             if not worker or reg(3) != request or reg(4) != cancel:
                 raise ValueError('Unexpected synthetic task-completion call')
-            word(reg(5), 0)
+            word(reg(5), task_detail & 0xffffffff)
             state['task_completions'] += 1
+            returned = task_status
+        elif address == 0x8002cbb8:
+            if not worker or not task_status or reg(3) != request:
+                raise ValueError('Unexpected worker request cleanup')
+            state['request_cleanups'] += 1
+        elif address == 0x80082714:
+            returned = -12345 & 0xffffffff  # synthetic SDK error, never a real device value
         elif address == 0x8014122c:
             raise ValueError('Unexpected idle sleep in single-message worker experiment')
         elif address == 0x8013d740:
@@ -145,7 +157,8 @@ def verify(source, key, iv, ciphertext, postal_code, *, cancelled=False,
                     0x800a0600, 0x800a0ad0, 0x800a0f6c, 0x8016014c,
                     0x800a0ca4, 0x800a0bac, 0x800a0d40, 0x800a0dcc, 0x800a0fb0,
                     0x80086f9c, 0x8008702c, 0x800a0918, 0x8015fa1c, 0x801601fc,
-                    0x8013d740, 0x8013d768, 0x8014107c, 0x8002cc04, 0x8014122c):
+                    0x8013d740, 0x8013d768, 0x8014107c, 0x8002cc04, 0x8014122c,
+                    0x8002cbb8, 0x80082714):
         cpu.hook_add(UC_HOOK_CODE, hook, begin=address, end=address)
     if worker:
         cpu.hook_add(UC_HOOK_CODE, hook, begin=0x8002df04, end=0x8002df04)
@@ -164,6 +177,12 @@ def verify(source, key, iv, ciphertext, postal_code, *, cancelled=False,
     cpu.mem_write(cancel+4, bytes([int(cancelled)]))
     end = 0x817ff000
     if worker:
+        cpu.mem_write(request, b'synthetic-request\0')
+        cpu.mem_write(request+0x100, b'\x01synthetic-url\0')
+        cpu.mem_write(request+0x231, b'synthetic-mount\0')
+        cpu.mem_write(request+0x271, b'synthetic-file\0')
+        if task_status:
+            cpu.mem_write(manager+0x764, b'!'*12)
         cpu.mem_write(queue_buffer-32, guard+bytes(8)+guard)
         word(manager+0x628, 2)
         word(manager+0x35c, 0)
@@ -184,7 +203,7 @@ def verify(source, key, iv, ciphertext, postal_code, *, cancelled=False,
         cpu.reg_write(UC_PPC_REG_0+register, value)
     cpu.reg_write(UC_PPC_REG_LR, end)
     cpu.emu_start(0x8002de70 if worker else 0x8002e7c8, end, count=30_000_000)
-    expected_status = 0x15 if fault else int(cancelled)
+    expected_status = task_status or (0x15 if fault else int(cancelled))
     if cpu.reg_read(UC_PPC_REG_PC) != end or reg(3) != (0 if worker else expected_status):
         raise ValueError('Native processing orchestration status differs')
     if worker:
@@ -195,7 +214,22 @@ def verify(source, key, iv, ciphertext, postal_code, *, cancelled=False,
                 or bytes(cpu.mem_read(queue_buffer-32, 32)) != guard
                 or bytes(cpu.mem_read(queue_buffer+8, 32)) != guard):
             raise ValueError('Native worker queue, status or stop sequence differs')
-    completed = not cancelled and fault is None
+        if task_status:
+            category = 0 if task_detail == 0 else (11 if task_status == 0x29 else 10)
+            diagnostics = struct.unpack('>III', cpu.mem_read(manager+0x764, 12))
+            wanted_diagnostics = (task_detail & 0xffffffff, category,
+                                  0 if task_detail == 0 else -12345 & 0xffffffff)
+            if diagnostics != wanted_diagnostics:
+                raise ValueError('Native task diagnostics differ')
+            if (state['request_cleanups'] != 1 or state['file'] != ciphertext
+                    or bytes(cpu.mem_read(request, 0x100)) != bytes(0x100)
+                    or bytes(cpu.mem_read(request+0x101, 0x100)) != bytes(0x100)
+                    or bytes(cpu.mem_read(request+0x201, 48)) != bytes(48)
+                    or bytes(cpu.mem_read(request+0x231, 0x80)) != bytes(0x80)
+                    or bytes(cpu.mem_read(request+0x2b4, 12)) != bytes(12)
+                    or bytes(cpu.mem_read(request+0x2c0, 1)) != b'\x01'):
+                raise ValueError('Failed native task did not reset synthetic request fields')
+    completed = not cancelled and fault is None and not task_status
     ready = bytes(cpu.mem_read(result+0x28, 1)) == b'\x01'
     if ready != (completed or prior_result):
         raise ValueError('Native result readiness differs')
@@ -225,7 +259,8 @@ def verify(source, key, iv, ciphertext, postal_code, *, cancelled=False,
     for address, size in state['allocations']:
         if bytes(cpu.mem_read(address-32, 32)) != guard or bytes(cpu.mem_read(address+size, 32)) != guard:
             raise ValueError('Native pipeline allocation guard changed')
-    mounts, writes, deletes, allocations, locks = (1, 1, 1, 2, 1) if cancelled else faults[fault]
+    mounts, writes, deletes, allocations, locks = ((0, 0, 0, 0, 0) if task_status
+                                                else (1, 1, 1, 2, 1) if cancelled else faults[fault])
     if len(state['writes']) != writes or state['deletes'] != deletes:
         raise ValueError('Native pipeline intermediate file sequence differs')
     if (state['mounts'] != mounts or state['locks'] != locks
@@ -236,6 +271,8 @@ def verify(source, key, iv, ciphertext, postal_code, *, cancelled=False,
             'native_ready_flag': ready, 'new_result_published': completed,
             'native_orchestration_mocked': False, 'native_processing_mocked': False,
             'native_worker_loop_verified': worker, 'worker_entry_manually_invoked': worker,
+            'synthetic_task_status': task_status, 'task_failure_reset_verified': bool(task_status),
+            'processing_started': not bool(task_status),
             'task_completion_mocked': worker, 'real_thread_scheduling_verified': False,
             'filesystem_heap_locks_initialization_mocked': True, 'cleanup_verified': True,
             'wc24_download_verified': False, 'native_ui_verified': False}
