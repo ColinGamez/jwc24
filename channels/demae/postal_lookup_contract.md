@@ -107,3 +107,34 @@ not establish that all inputs accepted by Python will pass the Wii consumer.
 Remaining acceptance work includes the filesystem wrapper's failure paths,
 the complete native pipeline and actual WC24 delivery/authentication. No live
 route or emulator profile is changed by these offline checks.
+
+## Native decompression file wrapper (October 23, 2026)
+
+`tools.verify_demae_postal_unpack.verify` now executes the wrapper at
+`0x8002D044`, its size reader and bounded decompressor. Only filesystem and
+heap calls are mocked. The stock call configuration is used: no post-decode
+transform and no source deletion. Original software is required privately;
+native tests skip when it is absent, and a fingerprint mismatch is rejected.
+
+Synthetic LZ10/LZ11 data, with and without trailing padding, produces the exact
+expected output file bytes. Allocation guards remain unchanged. Injected faults
+cover either allocation, source/destination opening, reading, short reads,
+writing and either close. The harness checks that all allocated buffers are
+freed, handles are closed and the mount is released on the tested paths.
+Close failures are injected once; cleanup's retry succeeds. Persistent close
+failures and actual filesystem behavior are not covered.
+
+Input shorter than eight bytes, input exceeding the configured capacity and
+declared output exceeding that capacity return `0x17`. Allocation failure
+returns `0x18`; native decoder rejection maps to `0x1C`. The tested file-service
+error value 5 maps to `0x15`, while failed opens and short reads return `0x14`.
+These are internal return values, not displayed Wii error codes.
+
+The destination-close failure occurs after the output bytes have been written.
+A returned error therefore does not guarantee that output is absent or rolled
+back. Any future live recovery logic must account for that distinction. No
+transactional storage behavior is established by mocked I/O.
+
+This completes separate synthetic execution checks for decrypt/strip, unpack
+and record lookup. The complete native request orchestration, real storage,
+WC24 envelope authentication/delivery and UI behavior remain unverified.

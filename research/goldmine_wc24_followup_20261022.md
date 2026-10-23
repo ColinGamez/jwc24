@@ -169,3 +169,11 @@ truncation, invalid references and trailing padding. The native consumer
 rejects more than 32 unused trailing bytes. An independent Python decoder fix
 makes all truncated LZ11 token forms raise `ValueError` consistently. The
 filesystem decompression wrapper and full native download path remain open.
+
+Subsequent synthetic execution now covers that decompression wrapper at
+`0x8002D044`, including file open/read/write/close and allocation failures.
+The original wrapper, size reader and decoder execute with only file/heap
+services mocked. Expected output, allocation guards and cleanup pass for the
+tested cases. A destination-close error follows an already completed write;
+it does not imply that the output was rolled back. Complete native request
+orchestration, real storage and WC24 delivery/authentication remain open.
