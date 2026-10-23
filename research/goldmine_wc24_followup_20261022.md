@@ -153,3 +153,11 @@ checking the magic and minimum length; buffer-offset validation remains a
 deliberate safeguard in our independent decoder. Synthetic LZ10/LZ11 encrypted
 fixtures now exercise that decoder through exact/fallback/missing record
 selection. These checks do not establish native download callback acceptance.
+
+A further harness now executes the original decrypt-and-strip callback at
+`0x8002D370` with synthetic file I/O, heap and lock services. Native AES and
+the native header gate produce the expected compressed intermediate bytes,
+including trailing block padding, for synthetic LZ10 and LZ11 inputs. Size,
+header and allocation failures release their resources in the tested paths.
+Native decompression and real download acceptance remain separate open checks;
+the full scope is recorded in the postal lookup contract linked above.

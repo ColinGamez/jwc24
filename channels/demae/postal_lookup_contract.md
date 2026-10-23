@@ -56,3 +56,27 @@ fixtures with an explicitly supplied test key/IV, decodes them, then checks
 exact, alternative and missing lookup results. This connects the independent
 offline components; it does not execute the native download callback or prove
 transport authentication, real-Wii acceptance or UI behavior.
+
+## Native decrypt-and-strip callback (October 23, 2026)
+
+`tools.verify_demae_postal_callback.verify` now executes the original callback
+at `0x8002D370`, including native AES initialization/decryption and the header
+gate, against independently encrypted synthetic fixtures. Filesystem, heap,
+lock services and debug output are mocked; original keys are not used.
+
+The callback writes the decrypted bytes after the header offset to an
+intermediate file. Synthetic LZ10 and LZ11 fixtures confirm byte-for-byte output
+including trailing block-alignment padding. This callback does **not** perform
+decompression; that is a later processing stage.
+
+Failure checks cover ciphertext shorter than a block, incomplete blocks,
+input exceeding the configured capacity, bad header magic and failures of
+either allocation. Observed native return values are `0x17` for size rejection,
+`0x18` for allocation failure and `0x1B` for header rejection. These internal
+return values are not user-facing Wii error codes. The harness verifies that
+allocated buffers are freed, opened handles closed and locks released on these
+paths. Unsafe header offsets are excluded before emulation.
+
+This narrows the unverified boundary to subsequent decompression/storage and
+the surrounding download transport. Mocked file I/O does not establish real
+filesystem behavior, signed-envelope acceptance, authenticity or UI operation.
