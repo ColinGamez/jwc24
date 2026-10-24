@@ -63,9 +63,12 @@ class ShopPreviewServerTests(unittest.TestCase):
         self.assertEqual(self.app.get('/ready?w=640&h=480&bridge=1&music=1', 'opera')[0], 204)
         status = json.loads(self.app.get('/healthz')[2])
         self.assertEqual(status['last_ready'], {'w': 640, 'h': 480, 'bridge': 1, 'music': 1, 'agent': 'opera'})
+        self.app.get('/ready?w=608&h=456&bridge=1&music=1&keyboard=1', 'opera')
+        self.assertEqual(json.loads(self.app.get('/healthz')[2])['last_ready']['keyboard'], 1)
         for target in ('/ready?w=0&h=480&bridge=1&music=1', '/catalog?offset=-1',
                        '/catalog?q=a&q=b', '/catalog?offset=4294967296',
-                       '/catalog?category=Invalid', '/catalog?q='+'a'*121):
+                       '/catalog?category=Invalid', '/catalog?q='+'a'*121,
+                       '/ready?w=608&h=456&bridge=1&music=1&keyboard=2'):
             with self.subTest(target=target), self.assertRaises(ValueError):
                 self.app.get(target)
 

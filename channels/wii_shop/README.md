@@ -1,10 +1,12 @@
 # Wii Shop research
 
-Updated October 24, 2026. A [local browsing checkpoint](runtime_preview.md) now
+Updated October 25, 2026. A [local browsing checkpoint](runtime_preview.md) now
 runs through the original Shop browser in an isolated Dolphin profile. It serves
 844 grouped Japan titles over loopback HTTPS. The initial connectivity screen
-was confirmed in-channel; the current renderer uses archived Shop layouts and
-artwork and still needs its native visual check. Purchases/downloads and a
+was confirmed in-channel; the archived three-panel home has since been checked
+in Dolphin's native frame output. The preview now includes the archived category
+menus and 821 title-specific images. Keyboard entry and category/detail interaction
+still need hands-on checks. Purchases/downloads and a
 complete replacement Shop service remain unfinished.
 
 The first [source audit](../../research/wii_shop_audit_20261024.md) verifies

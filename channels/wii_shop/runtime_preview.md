@@ -1,10 +1,12 @@
 # Local Shop browsing checkpoint
 
-Updated October 24, 2026. The original v21 Shop browser has reached JWC24's
+Updated October 25, 2026. The original v21 Shop browser has reached JWC24's
 loopback HTTPS service in Dolphin. The initial connectivity screen rendered at
 608 × 456 and reported successful native Shop/sound initialization; the user
 also confirmed it visually. That handmade screen has been removed. The current
-renderer binds the catalog into archived Shop layouts and artwork.
+renderer binds the catalog into archived Shop layouts and artwork. The archived
+three-panel home has now also been inspected in Dolphin's own frame output at
+640 × 480, with the browser viewport reporting 608 × 456.
 
 This is a read-only browsing experiment in a privately patched Dolphin profile.
 It is not the clean-WAD restoration milestone, an acquisition service or a
@@ -12,9 +14,10 @@ working replacement for Shop accounts, points, tickets or installation.
 
 ## Pages and original artwork
 
-The local pack contains 67 resources from the
+The current local pack (`artwork-v2`) contains 71 resources from the
 [Shop website archive](https://wiishopchannel.net/): `W_03.html`, `B_04.html`,
-`B_05.html`, shared CSS, button graphics, shadows and other page artwork.
+`B_05.html`, category menus `B_01.html` / `B_27.html`, shared CSS, button graphics,
+shadows and other page artwork.
 The three-panel home, catalog-card and detail-page layouts come from those
 files. The archive contains later edits; this is not a claim of an untouched
 Nintendo server snapshot. Two shared images, `spacer.gif` and
@@ -24,16 +27,30 @@ Archived scripts and event handlers are discarded. A small ES3 adapter handles
 native Shop/sound/keyboard objects, hover changes and local navigation. Catalog
 names and links are escaped before insertion. Japanese labels and read-only
 status messages replace unavailable server values. Unknown points, publishers,
-dates and player counts are not invented. Title-specific pictures are not yet
-imported; unavailable images use the original transparent spacer. The Wii
+dates and player counts are not invented. A separate title-ID-addressed image
+import found **821 valid title images** for the 844-title snapshot. The other
+23 requests were unavailable or invalid in this fetch and retain the original
+transparent spacer. No replacement pictures are generated. The Wii
 Channels panel currently leads to the scope explanation because this snapshot
 only contains mapped Japan WiiWare/Virtual Console candidates.
 
 Original HTML, CSS, images and software remain under `private/`. Git contains
 the importer, bindings and tests. Each cached resource has a source URL, length
-and SHA-256; altered resources are rejected before serving. The archived layout
-update still needs an in-channel visual check. The earlier native boot proof
-belongs to the initial connectivity screen, not to this later artwork update.
+and SHA-256; altered resources are rejected before serving. Title image mappings
+also retain the catalog digest and exact archive URL, with bounded byte sizes,
+dimensions and image-format validation. The native frame confirms the archived
+home; category navigation, keyboard entry and detail-page interaction still need
+hands-on checks in the channel.
+
+The home now opens the archived WiiWare/Virtual Console selection menus before
+listing titles. Their original button geometry and artwork are retained. The
+working bindings provide a software list, WiiWare demos and the original search
+banner's input with a native keyboard call. Search uses the catalog's normalized
+name filter and preserves the category. Back links return from details to the
+same filtered page and from the list to its category menu. Popularity/release-date
+ranking and publisher/genre metadata remain unavailable: those controls do not
+invent rankings or metadata. The current list/demo labels are adapted to these
+available data fields rather than claiming the complete original menu behavior.
 
 ## Profile and credentials
 
@@ -84,6 +101,7 @@ installation. Close Dolphin before making the initial profile copy.
 
 ```powershell
 python -m tools.import_wii_shop_artwork
+python -m tools.import_wii_shop_title_artwork
 python -m tools.prepare_wii_shop_preview
 python -m tools.prepare_vwii_credentials --otp '<your Wii U backup>\otp.bin'+powershell -File tools/start_wii_shop_preview.ps1
 ```
@@ -98,6 +116,12 @@ Browse categories, scroll the catalog, open a title and return to the list.
 Acquisition/account controls lead to the scope explanation or remain unavailable;
 they do not contact payment or account services.
 
-Validation: 60 Shop tests pass. All 85 catalog pages and 844 title pages were
+The image importer uses Pillow from the existing `artwork` optional dependency.
+Normal preview launches explicitly disable frame dumping; temporary test videos
+were removed after retaining a private native proof image.
+
+Validation: 67 Shop tests pass. All 85 catalog pages and 844 title pages were
 rendered against the real snapshot; title links cover all 844 grouped IDs once.
-See [the measured report](../../research/wii_shop_preview_validation_20261024.json).
+All 821 available image routes were checked. See the
+[updated artwork report](../../research/wii_shop_artwork_validation_20261025.json)
+and [initial transport report](../../research/wii_shop_preview_validation_20261024.json).

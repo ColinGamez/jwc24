@@ -22,7 +22,7 @@ class Elements(HTMLParser):
 
 class ShopArtworkTests(unittest.TestCase):
     def pack(self):
-        root = Path('private/wii_shop/artwork-v1')
+        root = Path('private/wii_shop/artwork-v2')
         if not (root/'manifest.json').is_file():
             self.skipTest('Private archived artwork pack unavailable')
         return Artwork(root)
@@ -50,14 +50,14 @@ class ShopArtworkTests(unittest.TestCase):
         scripts = [attrs.get('src') for tag, attrs in elements if tag == 'script']
         self.assertEqual(scripts, ['/assets/shop.js'])
         links = [attrs.get('href', '') for tag, attrs in elements if tag == 'a']
-        self.assertIn('/catalog?category=WiiWare', links)
-        self.assertIn('/catalog?category=Virtual+Console', links)
+        self.assertIn('/category/wiiware', links)
+        self.assertIn('/category/virtual-console', links)
         self.assertTrue(all(url.startswith('/') for url in links))
 
     def test_all_image_and_stylesheet_references_resolve_in_the_cached_pack(self):
         pack = self.pack()
         app = Application(Catalog([record()]), artwork=pack)
-        for path in ('/', '/catalog', '/title/0001000141424344', '/about'):
+        for path in ('/', '/category/wiiware', '/category/virtual-console', '/catalog', '/title/0001000141424344', '/about'):
             status, _, body = app.get(path)
             self.assertEqual(status, 200)
             for tag, attrs in Elements(body).nodes:
@@ -78,3 +78,21 @@ class ShopArtworkTests(unittest.TestCase):
         body = app.get('/catalog?q=%3Cscript%3E')[2]
         self.assertIn(b'&lt;script&gt;unsafe()', body)
         self.assertNotIn(b'<script>unsafe()', body)
+
+    def test_category_keyboard_search_uses_local_form_and_native_adapter(self):
+        pack = self.pack()
+        for category in ('WiiWare', 'Virtual Console'):
+            nodes = Elements(pack.category(category)).nodes
+            forms = [a for t,a in nodes if t == 'form']
+            self.assertEqual(forms, [{'action': '/catalog', 'method': 'get', 'style': 'margin:0'}])
+            entries = [a for t,a in nodes if t == 'input' and a.get('name') == 'q']
+            self.assertEqual(len(entries), 1)
+            self.assertEqual(entries[0]['onmousedown'], 'typeSearch()')
+            self.assertEqual(entries[0]['onchange'], 'submitCatalogSearch(this)')
+            self.assertEqual(entries[0]['maxlength'], '40')
+            self.assertTrue(any(t == 'input' and a.get('name') == 'category' and a.get('value') == category for t,a in nodes))
+
+    def test_catalog_back_returns_to_its_category_menu(self):
+        app = Application(Catalog([record()]), artwork=self.pack())
+        nodes = Elements(app.get('/catalog?category=WiiWare')[2]).nodes
+        self.assertTrue(any(a.get('id') == 'underlinkL' and a.get('href') == '/category/wiiware' for _,a in nodes))

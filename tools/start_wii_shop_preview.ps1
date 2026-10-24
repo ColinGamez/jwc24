@@ -61,6 +61,6 @@ try {
 } finally { Pop-Location }
 if ($ServerOnly) { Write-Output "Local Shop preview ready: $($health.titles) titles"; return }
 if (-not (Test-Path -LiteralPath $DolphinExe -PathType Leaf)) { throw 'Dolphin executable is missing.' }
-Start-Process -FilePath $DolphinExe -ArgumentList @('-u', ('"'+$Profile+'"'), '-n', '0001000248414241') `
+Start-Process -FilePath $DolphinExe -ArgumentList @('-u', ('"'+$Profile+'"'), '-n', '0001000248414241', '-C', 'Dolphin.Movie.DumpFrames=False') `
     -WorkingDirectory (Split-Path -Parent $DolphinExe) -WindowStyle Normal | Out-Null
 Write-Output "Started the private Shop preview with $($health.titles) catalog titles."

@@ -98,8 +98,10 @@ The [Wii Shop track](channels/wii_shop/README.md) now has a
 [local catalog preview](channels/wii_shop/runtime_preview.md) reached by the
 original v21 browser in an isolated Dolphin profile. It binds 844 grouped
 Japan titles from the [MarioCube snapshot](channels/wii_shop/catalog.md) into
-archived Shop page layouts and artwork. The artwork update needs its native
-visual check. This uses privately patched test content; clean-WAD restoration,
+archived Shop page layouts and artwork, including category menus and 821 title
+images. The original three-panel home has been checked in Dolphin's native
+output; keyboard entry and deeper interaction still need hands-on checks.
+This uses privately patched test content; clean-WAD restoration,
 accounts, purchases and installation remain unfinished.
 The [native startup checks](channels/wii_shop/startup_contract.md) now trace
 URL initialization, the `IPL.EULA` config lookup and dispatch to `WWWOpenUrl`

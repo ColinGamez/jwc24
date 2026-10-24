@@ -59,26 +59,33 @@ class Application:
                 status = {'service': 'jwc24-wii-shop-preview', 'titles': len(self.catalog.items),
                           'catalog_sha256': self.digest, 'last_ready': self.last_ready,
                           'archived_artwork': True,
+                          'category_menus_supported': hasattr(self.pages, 'category'),
+                          'title_artwork_titles': len(self.pages.title_artwork.images) if getattr(self.pages, 'title_artwork', None) else 0,
                           'recent_requests': list(self.events), 'downloads_supported': False}
             return 200, 'application/json', json.dumps(status).encode()
         if path == '/ready':
-            if set(query) != {'w', 'h', 'bridge', 'music'}:
+            if set(query) not in ({'w', 'h', 'bridge', 'music'}, {'w', 'h', 'bridge', 'music', 'keyboard'}):
                 raise ValueError('Invalid ready report')
             values = {k: int(v[0]) for k, v in query.items()}
             if not (0 < values['w'] <= 8192 and 0 < values['h'] <= 8192
                     and values['bridge'] in (0, 1) and values['music'] in (0, 1)):
                 raise ValueError('Invalid ready dimensions or flags')
+            if 'keyboard' in values and values['keyboard'] not in (0, 1):
+                raise ValueError('Invalid ready keyboard flag')
             with self.lock:
                 self.last_ready = dict(values, agent=agent)
             return 204, 'text/plain', b''
         if path == '/assets/shop.js':
             return 200, 'text/javascript', JS
-        if path.startswith('/oss/oss/') and hasattr(self.pages, 'asset'):
+        if path.startswith(('/oss/oss/', '/title-artwork/')) and hasattr(self.pages, 'asset'):
             return self.pages.asset(path)
         if path in ('/', '/startup'):
             return 200, 'text/html; charset=utf-8', self.pages.home(len(self.catalog.items))
         if path == '/about':
             return 200, 'text/html; charset=utf-8', self.pages.about()
+        if path in ('/category/wiiware', '/category/virtual-console') and hasattr(self.pages, 'category'):
+            category = 'WiiWare' if path.endswith('/wiiware') else 'Virtual Console'
+            return 200, 'text/html; charset=utf-8', self.pages.category(category)
         if path == '/catalog' or re.fullmatch(r'/title/[0-9A-Fa-f]{16}', path):
             if set(query)-{'offset', 'q', 'category', 'demos'}:
                 raise ValueError('Unsupported catalog query')
@@ -125,7 +132,7 @@ def create_server(address, application, *, cert=None, key=None):
                 route = urlsplit(self.path).path
             except ValueError:
                 route = ''
-            safe_route = route if route in ('/', '/startup', '/catalog', '/about', '/ready') else 'asset' if route.startswith('/assets/') else 'title' if re.fullmatch('/title/[0-9A-Fa-f]{16}', route) else 'other'
+            safe_route = route if route in ('/', '/startup', '/catalog', '/about', '/ready') else 'asset' if route.startswith(('/assets/', '/oss/oss/', '/title-artwork/')) else 'category' if route.startswith('/category/') else 'title' if re.fullmatch('/title/[0-9A-Fa-f]{16}', route) else 'other'
             if route != '/healthz':
                 with application.lock:
                     application.events.append({'route': safe_route, 'status': status, 'agent': agent,
@@ -168,7 +175,8 @@ def main(argv=None):
     parser.add_argument('--key', type=Path)
     parser.add_argument('--check', action='store_true')
     parser.add_argument('--root', type=Path)
-    parser.add_argument('--artwork', type=Path, default=Path('private/wii_shop/artwork-v1'))
+    parser.add_argument('--artwork', type=Path, default=Path('private/wii_shop/artwork-v2'))
+    parser.add_argument('--title-artwork', type=Path, default=Path('private/wii_shop/title-artwork-v1'))
     args = parser.parse_args(argv)
     if args.check:
         context = legacy_tls_context(root=args.root)
@@ -182,7 +190,7 @@ def main(argv=None):
         parser.error('Both TLS certificate and key are required')
     catalog, digest = catalog_from_file(args.catalog)
     from .wii_shop_artwork import Artwork
-    artwork = Artwork(args.artwork)
+    artwork = Artwork(args.artwork, args.title_artwork, digest)
     server = create_server(('127.0.0.1', args.port), Application(catalog, digest, artwork), cert=args.cert, key=args.key)
     print(f'JWC24 Shop preview ready: {len(catalog.items)} titles', flush=True)
     try:

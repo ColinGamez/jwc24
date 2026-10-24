@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "catalog_sha256": "054c7e0a25cd6c0c83aa5b012ff73c685ec0659c8ba9ab94d48fa66cf443aa31",
+  "catalog_titles": 844,
+  "catalog_pages_checked": 85,
+  "title_pages_checked": 844,
+  "title_images": 821,
+  "missing_or_invalid_images": 23,
+  "archived_resources": 71,
+  "category_menu_layouts": 2,
+  "catalog_image_routes_checked": 821,
+  "native_home_visual_verified": true,
+  "native_render_size": [
+    640,
+    480
+  ],
+  "native_browser_viewport": [
+    608,
+    456
+  ],
+  "native_keyboard_input_tested": false,
+  "acquisition_supported": false,
+  "actual_wii_backup_used": false
+}

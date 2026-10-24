@@ -13,6 +13,7 @@ from pathlib import Path
 import posixpath
 import re
 from urllib.parse import urlencode
+from .wii_shop_title_artwork import TitleArtwork
 
 VOID = {'img', 'input', 'br', 'hr', 'meta', 'link', 'area', 'base', 'wbr', 'source'}
 
@@ -85,7 +86,8 @@ class Tree(HTMLParser):
 class Artwork:
     page_size = 10
 
-    def __init__(self, root):
+    def __init__(self, root, title_artwork=None, catalog_digest=None):
+        self.title_artwork = TitleArtwork(title_artwork, catalog_digest) if title_artwork else None
         root = Path(root).resolve()
         manifest_path = root/'manifest.json'
         if manifest_path.stat().st_size > 200000:
@@ -102,11 +104,13 @@ class Artwork:
             if hashlib.sha256(data).hexdigest() != row['sha256'] or len(data) != row['bytes']:
                 raise ValueError('Artwork fingerprint mismatch')
             self.files[path] = data
-        for name in ('W_03.html', 'B_04.html', 'B_05.html'):
+        for name in ('W_03.html', 'B_01.html', 'B_27.html', 'B_04.html', 'B_05.html'):
             if '/oss/serv/'+name not in self.files:
                 raise ValueError('Missing archived layout')
 
     def asset(self, path):
+        if path.startswith('/title-artwork/') and self.title_artwork:
+            return self.title_artwork.asset(path)
         normalized = posixpath.normpath(path)
         if normalized.startswith('/oss/oss/') and normalized in self.files:
             return 200, mimetypes.guess_type(normalized)[0] or 'application/octet-stream', self.files[normalized]
@@ -114,9 +118,9 @@ class Artwork:
 
     def _route(self, href):
         if 'B_01' in href:
-            return '/catalog?category=Virtual+Console'
+            return '/category/virtual-console'
         if 'B_27' in href:
-            return '/catalog?category=WiiWare'
+            return '/category/wiiware'
         if 'B_05' in href:
             match = re.search(r'titleId=([0-9A-Fa-f]{16})', href)
             return '/title/'+match[1] if match else '/about'
@@ -140,6 +144,8 @@ class Artwork:
                     for old, new in (('Virtual Console', 'バーチャルコンソール'),
                                      ('Wii Channels', 'Wiiチャンネル'), ('Add Wii Points', 'Wiiポイントの追加'),
                                      ('Account Activity', 'ご利用記録'), ('Settings and Features', '設定・特典'),
+                                     ('Wii Points', 'Wiiポイント'), ('Release Date', '配信日'),
+                                     ('Publisher', 'メーカー'), ('Players', 'プレイ人数'),
                                      ('Titles You’ve Downloaded', '購入済みソフト'),
                                      ('Wii Shop Channel', 'Wiiショッピングチャンネル')):
                         child = child.replace(old, new)
@@ -158,7 +164,7 @@ class Artwork:
         root.text('currentBalance', '－')
         for suffix in ('', 'L', 'R'):
             root.display('underButton'+suffix, suffix == 'L')
-        root.text('underwordL', 'もどる')
+        self._button_label(root, 'underwordL', 'もどる')
         anchor = root.find('underlinkL')
         if anchor:
             anchor.attrs['href'] = '/'
@@ -170,6 +176,12 @@ class Artwork:
             if node:
                 node.attrs['onclick'] = "window.location.href='/'"
         return root, styles
+
+    def _button_label(self, root, identifier, text):
+        node = root.find(identifier)
+        if node:
+            node.children = [Node('table', {'width': '100%', 'height': '100%', 'cellspacing': '0', 'cellpadding': '0'},
+                [Node('tr', {}, [Node('td', {'align': 'center', 'valign': 'middle'}, [text])])])]
 
     def _finish(self, root, styles, extra=''):
         css = '<link rel="stylesheet" type="text/css" href="/oss/oss/common/css/oss.css">'
@@ -183,7 +195,7 @@ class Artwork:
     def home(self, _count):
         root, styles = self._base('W_03.html')
         root.text('W_03-title', 'Wiiショッピングチャンネル')
-        root.text('underwordL', 'Wiiメニューへ')
+        self._button_label(root, 'underwordL', 'Wiiメニューへ')
         root.find('underlinkL').attrs['onclick'] = 'return leaveShop()'
         # Original three-panel layout, original normal/hover artwork.
         for trigger, image in (('spacer01', 'Image1'), ('spacer07', 'Image7'), ('spacer02', 'Image2'),
@@ -201,6 +213,35 @@ class Artwork:
         if hover in self.files:
             target.attrs['onmouseover'] = 'previewHover('+json.dumps(image)+','+json.dumps(hover)+');soundEffect(2)'
             target.attrs['onmouseout'] = 'previewHover('+json.dumps(image)+','+json.dumps(normal)+')'
+
+    def category(self, category):
+        root, styles = self._base('B_27.html' if category == 'WiiWare' else 'B_01.html')
+        root.text('text00-01', 'Wiiウェア' if category == 'WiiWare' else 'バーチャルコンソール')
+        root.text('text00-02', 'Wiiならではのオリジナルソフト。' if category == 'WiiWare' else '懐かしいゲームをWiiで。')
+        root.text('text01', '人気のソフト')
+        root.text('text02', '新着ソフト')
+        root.text('text03', 'ソフト一覧')
+        root.text('text04', 'ソフト名でさがす')
+        root.text('text05', '体験版')
+        for number in ('01', '02', '03', '04', '05'):
+            self._hover(root, 'spacer'+number, 'Image'+number)
+        for identifier, filters in (('spacer03', {'category': category}),
+                                     ('spacer05', {'category': category, 'demos': 'only'})):
+            node = root.find(identifier)
+            if node:
+                anchor = next((n for n in node.walk() if n.tag == 'a'), None)
+                if anchor:
+                    anchor.attrs['href'] = '/catalog?'+urlencode(filters)
+        # The original search banner contains an invisible keyboard input.
+        slot = root.find('spacer04')
+        if slot:
+            entry = next((n for n in slot.walk() if n.tag == 'input'), None)
+            if entry:
+                entry.attrs.update(name='q', maxlength='40', onmousedown='typeSearch()',
+                                   onchange='submitCatalogSearch(this)')
+                hidden = Node('input', {'type': 'hidden', 'name': 'category', 'value': category})
+                slot.children = [Node('form', {'action': '/catalog', 'method': 'get', 'style': 'margin:0'}, [hidden, entry])]
+        return self._finish(root, styles)
 
     def browse(self, result, options):
         root, styles = self._base('B_04.html')
@@ -225,12 +266,19 @@ class Artwork:
                 raise ValueError('Unsupported archived row data field')
             card = Tree(re.sub(r'\$\{(.*?)\}', value, match[1], flags=re.S)).root
             self._sanitize(card)
+            picture = card.find('ImageforCatalogpage')
+            if picture and self.title_artwork:
+                image = next((n for n in picture.walk() if n.tag == 'img'), None)
+                if image:
+                    image.attrs['src'] = self.title_artwork.url(item['title_id'])
             self._hover(card, 'spacer', 'Image'+str(index+1))
             for node in card.walk():
                 if node.tag == 'a':
                     node.attrs['href'] = '/title/'+item['title_id']+'?'+urlencode({k:v for k,v in options.items() if v is not None})
             cards.extend(card.children)
         root.find('catalogFrame').children = cards
+        if options['category']:
+            root.find('underlinkL').attrs['href'] = '/category/'+('wiiware' if options['category'] == 'WiiWare' else 'virtual-console')
         root.display('notFound', not bool(cards))
         if not cards:
             root.text('notFound', '該当するソフトがありません。')
@@ -256,8 +304,11 @@ class Artwork:
         root.text('notAvailableMsg', 'カタログ閲覧プレビューです。ダウンロードは準備中です。')
         for identifier, text in (('Title1', item['names'][0][:38]), ('Title2', item['names'][0][38:76]),
                                  ('PublisherName', '－'), ('ReleaseDate', '－'), ('NumPlayers', '－'),
-                                 ('Console', item['category']), ('price', '－')):
+                                 ('Console', 'Wiiウェア' if item['category'] == 'WiiWare' else 'バーチャルコンソール'), ('price', '－')):
             root.text(identifier, text)
+        thumbnail = root.find('Thumbnail')
+        if thumbnail and self.title_artwork:
+            thumbnail.attrs['src'] = self.title_artwork.url(item['title_id'])
         root.find('underlinkL').attrs['href'] = '/catalog?'+urlencode({k:v for k,v in options.items() if v is not None})
         return self._finish(root, styles)
 
