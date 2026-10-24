@@ -67,3 +67,11 @@ sheet/header. It rejects catalog-cell formulas and unsupported worksheet paths.
 All 2,900 selected rows were independently compared with a read-only workbook
 reader and agreed exactly. No binary title downloads, ticket import or native
 catalog changes occur during this mapping step.
+
+## Offline browsing queries
+
+The [catalog query layer](catalog_contract.md) groups mapped listings by title
+ID without selecting an installation version. It supports stable pagination,
+name search, category/demo filters and exact-ID queries. The first snapshot
+contains 844 distinct mapped Japan IDs; all source variants remain visible.
+It neither supplies owned-title information nor implements the retail page flow.

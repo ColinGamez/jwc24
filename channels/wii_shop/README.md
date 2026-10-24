@@ -44,3 +44,8 @@ title-ID mapping remain unfinished.
 The metadata workbook now supplies source-reported IDs for 862 Japan candidates,
 with row/hash provenance. Those mappings are not TMD-verified; missing and
 conflicting entries stay unresolved.
+
+The [catalog contract review](catalog_contract.md) separates library catalog
+calls from native owned-title information. An offline query tool now groups
+the mapped Japan listings into 844 distinct source-reported IDs, preserving
+all versions and provenance. It is not yet a native catalog endpoint or UI.

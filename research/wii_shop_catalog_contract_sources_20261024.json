@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "inventory_match_verified": true,
+  "inventory_sha256": "ea7edbe9e4e03f96f24cb3b2ccf45241bbac678be6351877719cab89e453c352",
+  "verified_files": [
+    {
+      "path": "common/lib/ec/ec_list.cpp",
+      "bytes": 1189,
+      "sha256": "420baf5eb98031209a1c81796340ae405f6a34b9588d5885dd55183314f1669f"
+    },
+    {
+      "path": "common/lib/ec/ec_listTitles.h",
+      "bytes": 2976,
+      "sha256": "4fbc8c7245fe782f71b89f5ec21003c4ebc66b7fcad298b8ce72e659b2f53299"
+    },
+    {
+      "path": "common/lib/ec/ec_listTitles.cpp",
+      "bytes": 8223,
+      "sha256": "6541781efe26bbc6959cb2fb68a4ce70af61f496339b6659ed1097057c45d22c"
+    },
+    {
+      "path": "common/lib/ec/ec_soap.cpp",
+      "bytes": 40736,
+      "sha256": "392f7ab92409347bcbdd558c59fcc0bc50acf398dde55746ef048004846988e3"
+    },
+    {
+      "path": "common/lib/ec/ec_js.cpp",
+      "bytes": 153617,
+      "sha256": "167fd6c0a31eb4eef0cf499731d38bc94c3b180ef654199e10f81495074433f9"
+    },
+    {
+      "path": "common/lib/ec/ec_api.cpp",
+      "bytes": 21105,
+      "sha256": "3ce30e3867b34f9fac038a9214bcb8302f6c0b6f614b686ab3c4c771d0d1d927"
+    },
+    {
+      "path": "common/lib/ec/ec_listTitleContents.cpp",
+      "bytes": 9196,
+      "sha256": "12bc17e86457b4356493aef2bf45aa2f87ffed5bc6b3cf818c33c072643288a7"
+    }
+  ],
+  "literal_soap_calls": [],
+  "dynamic_soap_call_sites": [
+    {
+      "file": "common/lib/ec/ec_listTitles.cpp",
+      "line": 171,
+      "service": "cas"
+    }
+  ],
+  "javascript_globals": [
+    "ECommerceInterface",
+    "ECProgress",
+    "ECCreditCardPayment",
+    "ECECardPayment",
+    "ECAccountPayment",
+    "ECPrice",
+    "ECTitleLimit",
+    "ECTitleLimits",
+    "ECTitleInfo",
+    "ECTitleInfos",
+    "ECTicketInfo",
+    "ECTicketInfos",
+    "ECDeviceInfo",
+    "ECTransactionInfo",
+    "ECTransactionInfos",
+    "trace"
+  ],
+  "build_package_references": [],
+  "source_review_only": true,
+  "complete_protocol_verified": false,
+  "retail_channel_match_verified": false,
+  "server_implementation_verified": false,
+  "referenced_packages_presence_verified": false
+}
