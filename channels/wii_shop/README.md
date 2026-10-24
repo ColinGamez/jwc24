@@ -1,5 +1,12 @@
 # Wii Shop research
 
+The latest [detail/controller recovery](captured_titles.md) enables 834 captured
+detail information panels and 836 original controller pages. Game-specific
+ratings, controller art, genre/player/platform and date text are retained.
+There are still ten legacy detail fallbacks and eight unavailable controller pages.
+All 1,670 enabled routes pass live HTTPS checks; full restoration remains
+unfinished under the [completion criteria](completion.md).
+
 The [captured catalog update](captured_catalog.md) now uses the historical list
 markup, scroll frame and paging controls. It preserves 776 original catalog
 title-line sets and restores the original key handler and paging wrap. The

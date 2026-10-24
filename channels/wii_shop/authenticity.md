@@ -18,12 +18,12 @@ remain in `jwc24/wii_shop_artwork.py` and its adapter:
 
 | Area | Current deviation | Required work |
 | --- | --- | --- |
-| Page source | Home and populated catalog lists now use reviewed 2019 captures; category/detail and empty-result/explanation pages still use a modified interactive archive | Integrate remaining captured states and corroborate their behavior |
+| Page source | Home, populated lists, 834 detail views and 836 controller pages use reviewed captures; category, ten detail fallbacks and empty-result/explanation pages still use a modified interactive archive | Integrate remaining captured states and corroborate their behavior |
 | Text | Home labels are corroborated by Nintendo's screenshot and native properties; other pages still have adapted translations/descriptions and decoding substitutions | Recover remaining original Japanese copy and correct source encoding |
 | Controls | Publisher/genre functions are repurposed as list/demo filters; unsupported links lead to a custom explanation | Preserve the original meaning and implement the corresponding data and flow |
 | Account/title fields | Captured names/publishers now cover 835 IDs and historical points cover 774; balance, other fields and uncovered entries remain unknown | Recover remaining facts, distinguish original-game and Wii release dates, and implement native account state |
 | Images | Captured page references now distinguish 776 catalog icons and 835 detail images; 68 icon slots and nine detail slots still use a transparent spacer | Recover missing role-specific references/images and verify native rendering; do not count blank images as completion |
-| Details | Download/ownership controls are hidden and a custom preparation message is inserted | Restore original controls and implement their actual behavior |
+| Details | Captured information panels now preserve original facts/artwork without the custom notice; transaction/account branches are excluded, while ten earlier views remain | Implement original commerce behavior and recover remaining original pages/resources |
 | Scripts | Unchanged installed Shop/sound/common scripts and a reviewed captured keyboard script now run; storefront bindings/navigation are still adapted | Review the other recovered storefront scripts and verify remaining native behavior |
 | Navigation | Catalog scrolling, paging wrap and 776 original title-line sets are restored; footer/back labels and unmatched-title typography remain adapted | Recover remaining original page states, navigation and text handling |
 
@@ -54,7 +54,12 @@ The [captured catalog update](captured_catalog.md) now restores populated-list
 markup and its original navigation key handler. It preserves original catalog
 title lines for 776 IDs, while 68 use a captured card prototype. The captured
 caption is English; this does not resolve the original Japanese localization.
-Empty-result and detail/category templates remain unfinished.
+The [detail/controller integration](captured_titles.md) now enables 834 original
+information panels and 836 controller pages, with verified local return paths.
+Ten detail routes retain the earlier view, including one with a missing CERO
+descriptor; no other rating system's icon is substituted. Empty-result/category
+templates, complete Japanese copy, commerce and current native visual checks
+remain on the [completion list](completion.md).
 
 ## Nintendo collection follow-up
 

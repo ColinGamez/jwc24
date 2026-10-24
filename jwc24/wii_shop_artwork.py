@@ -25,6 +25,11 @@ HOME_COPY = {'text01-01': 'バーチャルコンソール', 'text07-01': 'Wiiウ
              'text04-01': 'ご利用記録', 'text05-01': '設定・その他',
              'text06-01': '購入済みソフト'}
 
+# Visible purchase-screen heading in Nintendo's Japanese functions manual,
+# printed p.42 (PDF page 44). This corroborates copy, not a v21 template match.
+# https://www.nintendo.co.jp/wii/support/pdf/wiimanual_functions.pdf
+DETAIL_HEADING = 'ソフトの購入'
+
 
 @dataclass
 class Node:
@@ -95,12 +100,13 @@ class Artwork:
     page_size = 10
 
     def __init__(self, root, title_artwork=None, catalog_digest=None, native_assets=None, captured_scripts=None,
-                 captured_catalog=None):
+                 captured_catalog=None, captured_titles=None):
         self.native_assets = native_assets
         self.captured_scripts = captured_scripts
         self.captured_catalog = captured_catalog
-        if captured_catalog and not captured_scripts:
-            raise ValueError('Captured catalog requires its shared resource pack')
+        self.captured_titles = captured_titles
+        if (captured_catalog or captured_titles) and not captured_scripts:
+            raise ValueError('Captured pages require their shared resource pack')
         self.title_artwork = TitleArtwork(title_artwork, catalog_digest) if title_artwork else None
         root = Path(root).resolve()
         manifest_path = root/'manifest.json'
@@ -123,6 +129,8 @@ class Artwork:
                 raise ValueError('Missing archived layout')
 
     def asset(self, path):
+        if path == '/assets/captured/controller-mode.js' and self.captured_titles:
+            return self.captured_titles.asset(path)
         if path == '/assets/captured/catalog-navigation.js' and self.captured_catalog:
             return self.captured_catalog.asset(path)
         if path.startswith('/assets/captured/') and self.captured_scripts:
@@ -186,6 +194,9 @@ class Artwork:
         root = Tree(body).root
         if captured_catalog:
             root.find('catalogFrame').children = []
+        return self._prepare(root,captured),styles
+
+    def _prepare(self, root, captured=False):
         self._sanitize(root, captured=captured)
         root.attrs['onload'] = 'initShop()'
         root.text('currentBalance', '－')
@@ -202,7 +213,7 @@ class Artwork:
             node = root.find(target)
             if node:
                 node.attrs['onclick'] = "window.location.href='/'"
-        return root, styles
+        return root
 
     def _button_label(self, root, identifier, text):
         node = root.find(identifier)
@@ -210,19 +221,25 @@ class Artwork:
             node.children = [Node('table', {'width': '100%', 'height': '100%', 'cellspacing': '0', 'cellpadding': '0'},
                 [Node('tr', {}, [Node('td', {'align': 'center', 'valign': 'middle'}, [text])])])]
 
-    def _finish(self, root, styles, extra='', captured_home=False, captured_catalog=False):
+    def _finish(self, root, styles, extra='', captured_home=False, captured_catalog=False,
+                captured_stylesheets=None, page_script=None):
         css_url = self.captured_scripts.resource_url('/oss/oss/common/css/oss.css') if captured_home else '/oss/oss/common/css/oss.css'
         css = '<link rel="stylesheet" type="text/css" href="'+css_url+'">'
         if captured_catalog:
             css = ''.join('<link rel="stylesheet" type="text/css" href="'+self.captured_scripts.resource_url(path)+'">'
                           for path in self.captured_catalog.stylesheets)
-        if root.find('purchasePage'):
+        if captured_stylesheets:
+            css = ''.join('<link rel="stylesheet" type="text/css" href="'+self.captured_scripts.resource_url(path)+'">'
+                          for path in captured_stylesheets)
+        if root.find('purchasePage') and not captured_stylesheets:
             css += '<link rel="stylesheet" type="text/css" href="/oss/oss/common/css/B_05.css">'
         scripts = self.native_assets.script_tags() if self.native_assets else ''
         if self.captured_scripts:
             scripts += self.captured_scripts.script_tags()
         if captured_catalog:
             scripts += '<script type="text/javascript" src="/assets/captured/catalog-navigation.js"></script>'
+        if page_script:
+            scripts += '<script type="text/javascript" src="'+page_script+'"></script>'
         return ('<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">'
                 '<title></title>'+css+'<style type="text/css">'+styles+
                 '</style>'+scripts+'<script type="text/javascript" src="/assets/shop.js"></script></head>'+
@@ -248,12 +265,12 @@ class Artwork:
             self._hover(root, trigger, image)
         return self._finish(root, styles, captured_home=self.captured_scripts is not None)
 
-    def _hover(self, root, trigger, image):
+    def _hover(self, root, trigger, image, hover=None):
         target, picture = root.find(trigger), root.find(image)
         if not target or not picture:
             return
         normal = picture.attrs.get('src', '')
-        hover = re.sub(r'_a\.(gif|png)$', r'_b.\1', normal)
+        hover = hover or re.sub(r'_a\.(gif|png)$', r'_b.\1', normal)
         if hover in self.files or self.captured_scripts and self.captured_scripts.has_asset(hover):
             target.attrs['onmouseover'] = 'MM_swapImage('+json.dumps(image)+',"",'+json.dumps(hover)+',1);snd.playSE(cSE_Forcus)'
             target.attrs['onmouseout'] = 'MM_swapImgRestore()'
@@ -384,6 +401,10 @@ class Artwork:
         return self._finish(root,styles,captured_catalog=True)
 
     def detail(self, item, options):
+        if self.captured_titles:
+            page = self.captured_titles.page(item['title_id'])
+            if page:
+                return self._captured_detail(item,options,page)
         root, styles = self._base('B_05.html')
         historical = item.get('historical_metadata', {})
         title = historical.get('title', item['names'][0])
@@ -404,6 +425,55 @@ class Artwork:
             thumbnail.attrs['src'] = self.title_artwork.url(item['title_id'], role='detail')
         root.find('underlinkL').attrs['href'] = '/catalog?'+urlencode({k:v for k,v in options.items() if v is not None})
         return self._finish(root, styles)
+
+    def _captured_detail(self, item, options, page):
+        root,styles = page
+        identifier = item['title_id']
+        detail = root.find('details')
+        purchase = root.find('purchasePage')
+        if detail is None or purchase is None:
+            raise ValueError('Original detail structure missing')
+        # Only the original information panel is enabled. Captured transaction,
+        # storage, gift, balance-error and entitlement states are not current.
+        purchase.children = [detail]
+        removed = {'sdErrorDiv','warningMsgs','icrWarningPage','icrExpirePage','sdbuttons','sdErrorNoSizeDiv',
+                   'buyButton','giftButton','downloadedMsg','notAvailableMsg','noTitleMsg','undeliverableMsg'}
+        for node in root.walk():
+            node.children = [child for child in node.children if not isinstance(child,Node) or child.attrs.get('id') not in removed]
+        photo = detail.find('Photo')
+        image = next(node for node in photo.walk() if node.tag == 'img')
+        image.attrs['src'] = '/oss/oss/common/images/spacer.gif'
+        overlay = root.find('Image2control')
+        hover = re.search(r"MM_swapImage\('Image3control','','([^']+)'",overlay.attrs.get('onmouseover','')) if overlay else None
+        root = self._prepare(root,captured=True)
+        root.text('heading',DETAIL_HEADING)
+        self._button_label(root,'underwordL','Back')
+        if self.title_artwork:
+            image.attrs['src'] = self.title_artwork.url(identifier,role='detail')
+        context = urlencode({key:value for key,value in options.items() if value is not None})
+        root.find('underlinkL').attrs['href'] = '/catalog?'+context
+        anchor = root.find('ControlAnchor')
+        if identifier in self.captured_titles.controller_rows:
+            anchor.attrs['href'] = '/controller/'+identifier+'?'+context
+            if hover:
+                self._hover(root,'controllerLink','Image3control',self.captured_scripts.resource_url(hover[1]))
+        else:
+            root.display('controllerLink',False)
+        return self._finish(root,styles,captured_stylesheets=self.captured_titles.detail_stylesheets)
+
+    def controller(self, item, options):
+        page = self.captured_titles.page(item['title_id'],'controller') if self.captured_titles else None
+        if page is None:
+            return None
+        root,styles = page
+        root = self._prepare(root,captured=True)
+        root.text('B08headingMessage',self.captured_titles.controller_caption)
+        self._button_label(root,'underwordL','Back')
+        root.attrs['onload'] = 'initShop();applyControllerMode();'
+        context = urlencode({key:value for key,value in options.items() if value is not None})
+        root.find('underlinkL').attrs['href'] = '/title/'+item['title_id']+'?'+context
+        return self._finish(root,styles,captured_stylesheets=self.captured_titles.controller_stylesheets,
+                            page_script='/assets/captured/controller-mode.js')
 
     def about(self):
         root, styles = self._base('B_04.html', legacy=True)

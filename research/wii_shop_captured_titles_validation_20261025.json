@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "source": "https://archive.org/details/WiiShopChannelBackup",
+  "title_index_sha256": "995af43903e72e0bc4d61f4c468acbf23052285ecb8757e0bcea3e4bf1b5d485",
+  "support_manifest_sha256": "c4a430e6f4068b355daa46322a06fc507f136daed1dde5ca6974161e704bdcdf",
+  "controller_capture_files": 837,
+  "controller_capture_bytes": 29874331,
+  "live_captured_detail_pages": 834,
+  "live_captured_controller_pages": 836,
+  "live_detail_controller_links": 834,
+  "legacy_detail_fallbacks": 10,
+  "missing_controller_pages": 8,
+  "detail_dependency_exclusions": 1,
+  "controller_identity_or_dependency_exclusions": 1,
+  "index_validation_revision": 2,
+  "missing_detail_resource_paths": [
+    "/oss/oss/common/images/Pic_Rating/CERO/cd05.gif"
+  ],
+  "live_dependencies": 882,
+  "certificate_verification": true,
+  "original_information_fields_and_context_verified": true,
+  "japanese_detail_heading_screenshot_corroborated": true,
+  "japanese_manual_sha256": "1ff816b91dc7d01afe524b551dc0bc256902ba547a7c678ba61fc0f8f3d65c5d",
+  "transaction_and_account_scripts_enabled": false,
+  "controller_compatibility_vm_verified": true,
+  "controller_script_sha256": "df53f7a73c0291a7713b35e9c3539ad11797e895a776d5d125f12645a0a56715",
+  "native_visual_verified": false,
+  "original_japanese_interface_copy_verified": false,
+  "shop_tests_passed": 111,
+  "credential_tests_passed": 2,
+  "complete_original_storefront_verified": false
+}

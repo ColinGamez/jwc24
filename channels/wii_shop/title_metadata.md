@@ -26,6 +26,9 @@ Some captured dates refer to an original game release, such as a 1980s arcade
 release. They are retained as `captured_display_date`, not promoted to the Wii
 release-date field. Player, platform and genre text is also retained for review;
 it is not automatically relabeled into Japanese UI fields.
+The later [detail-page recovery](captured_titles.md) preserves these fields in
+their original captured structures and wording, without inferring a Wii release
+date from them.
 
 ## Preview behavior
 

@@ -73,6 +73,10 @@ class Application:
                           'captured_catalog_layout': bool(getattr(self.pages, 'captured_catalog', None)),
                           'captured_catalog_manifest_sha256': self.pages.captured_catalog.manifest_sha256 if getattr(self.pages,'captured_catalog',None) else None,
                           'captured_catalog_title_rows': len(self.pages.captured_catalog.panels) if getattr(self.pages,'captured_catalog',None) else 0,
+                          'captured_detail_titles': len(self.pages.captured_titles.detail_rows) if getattr(self.pages,'captured_titles',None) else 0,
+                          'captured_controller_titles': len(self.pages.captured_titles.controller_rows) if getattr(self.pages,'captured_titles',None) else 0,
+                          'captured_title_support_manifest_sha256': self.pages.captured_titles.support_manifest_sha256 if getattr(self.pages,'captured_titles',None) else None,
+                          'captured_title_index_sha256': self.pages.captured_titles.index_sha256 if getattr(self.pages,'captured_titles',None) else None,
                           'category_menus_supported': hasattr(self.pages, 'category'),
                           'title_artwork_titles': len(self.pages.title_artwork.images) if getattr(self.pages, 'title_artwork', None) else 0,
                           'title_detail_artwork_titles': len(self.pages.title_artwork.detail_images) if getattr(self.pages, 'title_artwork', None) else 0,
@@ -103,7 +107,7 @@ class Application:
         if path in ('/category/wiiware', '/category/virtual-console') and hasattr(self.pages, 'category'):
             category = 'WiiWare' if path.endswith('/wiiware') else 'Virtual Console'
             return 200, 'text/html; charset=utf-8', self.pages.category(category)
-        if path == '/catalog' or re.fullmatch(r'/title/[0-9A-Fa-f]{16}', path):
+        if path == '/catalog' or re.fullmatch(r'/(?:title|controller)/[0-9A-Fa-f]{16}', path):
             if set(query)-{'offset', 'q', 'category', 'demos', 'publisher', 'display_genre', 'platform'}:
                 raise ValueError('Unsupported catalog query')
             options = {k: query.get(k, [default])[0] for k, default in
@@ -112,7 +116,7 @@ class Application:
             options.update({key: query[key][0] for key in ('publisher', 'display_genre', 'platform') if key in query})
             if not 0 <= options['offset'] <= 0xffffffff:
                 raise ValueError('Unsupported offset')
-            title_ids = (path.rsplit('/', 1)[1],) if path.startswith('/title/') else ()
+            title_ids = (path.rsplit('/', 1)[1],) if path.startswith(('/title/','/controller/')) else ()
             result = self.catalog.query(offset=0 if title_ids else options['offset'], limit=self.page_size,
                                         search=options['q'], category=options['category'],
                                         demos=options['demos'], title_ids=title_ids,
@@ -120,7 +124,12 @@ class Application:
             if title_ids:
                 if not result['items']:
                     return 404, 'text/plain', b'Title not found'
-                body = self.pages.detail(result['items'][0], options)
+                if path.startswith('/controller/'):
+                    body = self.pages.controller(result['items'][0],options) if hasattr(self.pages,'controller') else None
+                    if body is None:
+                        return 404,'text/plain',b'Controller page not available'
+                else:
+                    body = self.pages.detail(result['items'][0], options)
             else:
                 body = self.pages.browse(result, options)
             return 200, 'text/html; charset=utf-8', body
@@ -200,6 +209,8 @@ def main(argv=None):
     parser.add_argument('--frontend-capture', type=Path, default=Path('private/wii_shop/frontend-capture-v1'))
     parser.add_argument('--title-metadata', type=Path, default=Path('private/wii_shop/title-metadata-v2/metadata.json'))
     parser.add_argument('--catalog-capture', type=Path, default=Path('private/wii_shop/frontend-japan-catalog-v2'))
+    parser.add_argument('--title-support', type=Path, default=Path('private/wii_shop/frontend-title-support-v1'))
+    parser.add_argument('--title-page-index', type=Path, default=Path('private/wii_shop/title-pages-v2/index.json'))
     args = parser.parse_args(argv)
     if args.check:
         context = legacy_tls_context(root=args.root)
@@ -215,10 +226,12 @@ def main(argv=None):
     from .wii_shop_native_assets import NativeAssets
     from .wii_shop_captured_scripts import CapturedScripts
     from .wii_shop_captured_catalog import CapturedCatalog
+    from .wii_shop_captured_titles import CapturedTitlePages
     capture = CapturedScripts(args.frontend_capture)
     catalog, digest = catalog_from_file(args.catalog, args.title_metadata, capture.manifest_sha256)
     artwork = Artwork(args.artwork, args.title_artwork, digest, NativeAssets(args.native_assets),
-                      capture, CapturedCatalog(args.catalog_capture,{item['title_id'] for item in catalog.items}))
+                      capture, CapturedCatalog(args.catalog_capture,{item['title_id'] for item in catalog.items}),
+                      CapturedTitlePages(capture,catalog.title_metadata,args.title_support,{item['title_id'] for item in catalog.items},args.title_page_index))
     server = create_server(('127.0.0.1', args.port), Application(catalog, digest, artwork), cert=args.cert, key=args.key)
     print(f'JWC24 Shop preview ready: {len(catalog.items)} titles', flush=True)
     try:

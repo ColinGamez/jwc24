@@ -83,6 +83,15 @@ class FrontendBackupInventoryTests(unittest.TestCase):
         self.assertEqual(select_members(rows,set(),japan_catalog_only=True),rows[:1])
         self.assertEqual(select_members(rows,set()),[])
 
+    def test_title_support_selection_requires_exact_region_page_and_known_title(self):
+        prefix = 'oss-auth.shop.wii.com/oss/serv/'
+        paths = ['B_08.jsp?country=JP&titleId=000100014142434A',
+                 'B_08.jsp?country=US&titleId=000100014142434A',
+                 'B_08.jsp?country=JP&titleId=0001000141424342',
+                 'B_07.jsp?country=JP&titleId=000100014142434A']
+        rows = [{'Path':prefix+path,'Size':'100'} for path in paths]
+        self.assertEqual(select_members(rows,{'000100014142434A'},title_support_only=True),rows[:1])
+
     @unittest.skipUnless(Path('C:/Program Files/7-Zip/7z.exe').is_file(), 'Extraction test requires 7-Zip')
     def test_stream_extraction_hashes_url_names_and_detects_wrong_member_boundaries(self):
         PRIVATE.mkdir(exist_ok=True)

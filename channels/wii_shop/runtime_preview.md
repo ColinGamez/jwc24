@@ -28,8 +28,10 @@ The three-panel home, catalog-card and detail-page layouts come from those
 files in the earlier preview. The home now uses the reviewed 2019 capture and
 its matching CSS/images. Populated catalog lists now also use the [reviewed
 historical capture](captured_catalog.md), retaining 776 original catalog title-line
-sets and the original scroll/page-key handler. Category/detail and empty-result/
-explanation pages still use the interactive archive. That archive contains later edits; this is not a claim of an untouched
+sets and the original scroll/page-key handler. The [title-page integration](captured_titles.md)
+replaces 834 detail views and adds 836 controller pages. Category, ten detail
+fallbacks and empty-result/explanation pages still use the interactive archive.
+That archive contains later edits; this is not a claim of an untouched
 Nintendo server snapshot. Two shared images, `spacer.gif` and
 `under_banner_shadow.gif`, also match the installed original channel byte-for-byte.
 
@@ -122,6 +124,9 @@ at `private/wii_shop/title-artwork-v4`. The server and launcher require its
 matching manifest; older flat image packs do not satisfy that check.
 The same import sequence supplies `frontend-japan-catalog-v2`, now required by
 the populated catalog renderer. The launcher checks its running manifest digest.
+Also run the [controller import and title-page index builder](captured_titles.md#reproduction-and-checks)
+to prepare `frontend-title-support-v1` and `title-pages-v2/index.json`. Their
+bindings are required by the updated server and checked by the launcher.
 
 `tools.prepare_wii_shop_preview` copies Config/Wii into a new private profile.
 It audits the source Shop's 18 contents, replaces 20 Shop URL fields with
@@ -194,7 +199,7 @@ The image importer uses Pillow from the existing `artwork` optional dependency.
 Normal preview launches explicitly disable frame dumping; temporary test videos
 were removed after retaining a private native proof image.
 
-Validation: 102 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
+Validation: 111 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
 rendered against the real snapshot; title links cover all 844 grouped IDs once.
 All 1,611 current image routes were checked over verified loopback HTTPS. See the
 [image-role report](../../research/wii_shop_image_roles_validation_20261025.json)
@@ -215,3 +220,7 @@ The [captured catalog report](../../research/wii_shop_captured_catalog_validatio
 adds 85 live catalog pages, 799 dependencies, original title-line preservation,
 835 name searches and original navigation-handler VM checks. Native visual
 verification and complete-original-storefront verification remain outstanding.
+The [detail/controller report](../../research/wii_shop_captured_titles_validation_20261025.json)
+adds all 834 captured detail and 836 controller routes, 882 dependencies and
+game-specific information/return-path preservation. It leaves Japanese copy,
+native visual verification and complete commerce explicitly unfinished.

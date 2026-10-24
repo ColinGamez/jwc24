@@ -46,6 +46,8 @@ Japan. It is retained as captured; this is **not** a recovered Japanese interfac
 localization. Footer/back handling and unavailable account fields are still
 adapted. Original Japanese strings, empty-result behavior, category/detail
 templates, acquisition/account services and native visual checks remain work.
+The later [title-page update](captured_titles.md) now supplies 834 captured detail
+views and 836 controller pages; ten detail fallbacks remain experimental.
 
 ## Validation and reproduction
 

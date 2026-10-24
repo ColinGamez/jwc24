@@ -47,6 +47,10 @@ limits. These are additional private packs, rather than a claim that the full
 archive or original Japanese storefront has been restored.
 The [catalog integration](captured_catalog.md) now uses the reviewed list markup,
 776 original catalog title-line sets and its unchanged navigation key handler.
+The [title-page integration](captured_titles.md) also recovers 837 controller
+captures and enables 834 accepted detail views, with a dependency-checked private
+index. One missing CERO descriptor prevents using its captured detail page;
+that route retains the earlier experiment.
 
 The preview now serves the reviewed captured `keyboard.js` unchanged, with its
 Shift-JIS charset and a pinned SHA-256. It initializes the native keyboard once;

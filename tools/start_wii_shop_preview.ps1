@@ -18,6 +18,8 @@ $catalog = Join-Path $repoRoot 'private\wii_shop\mariocube-catalog-ids.json'
 $titleMetadata = Join-Path $repoRoot 'private\wii_shop\title-metadata-v2\metadata.json'
 $titleArtworkManifest = Join-Path $repoRoot 'private\wii_shop\title-artwork-v4\manifest.json'
 $catalogCaptureManifest = Join-Path $repoRoot 'private\wii_shop\frontend-japan-catalog-v2\manifest.private.json'
+$titleSupportManifest = Join-Path $repoRoot 'private\wii_shop\frontend-title-support-v1\manifest.private.json'
+$titlePageIndex = Join-Path $repoRoot 'private\wii_shop\title-pages-v2\index.json'
 $markerFile = Join-Path $Profile 'preview-profile.json'
 $marker = Get-Content -LiteralPath $markerFile -Raw | ConvertFrom-Json
 $content = Join-Path $Profile 'Wii\title\00010002\48414241\content'
@@ -50,7 +52,7 @@ if (-not $listeners.Count) {
         '--key', ('"'+(Join-Path $Profile 'tls\server.key')+'"'))
     Start-Process -FilePath $python -ArgumentList $arguments -WorkingDirectory $repoRoot -WindowStyle Hidden `
         -RedirectStandardOutput (Join-Path $logs "$stamp.stdout.log") -RedirectStandardError (Join-Path $logs "$stamp.stderr.log") | Out-Null
-    $listenDeadline = [DateTime]::UtcNow.AddSeconds(15)
+    $listenDeadline = [DateTime]::UtcNow.AddSeconds(30)
     while (-not @(Get-NetTCPConnection -LocalPort 18443 -State Listen -ErrorAction SilentlyContinue).Count) {
         if ([DateTime]::UtcNow -ge $listenDeadline) { throw 'Local Shop preview did not start; inspect the private preview logs.' }
         Start-Sleep -Milliseconds 200
@@ -67,6 +69,12 @@ try {
     if (-not $health.captured_home_layout) { throw 'Restart the preview service with the reviewed historical home layout.' }
     if (-not $health.captured_catalog_layout -or $health.captured_catalog_manifest_sha256 -ne (Get-FileHash -LiteralPath $catalogCaptureManifest -Algorithm SHA256).Hash.ToLowerInvariant()) {
         throw 'Restart the preview service with the matching historical catalog capture.'
+    }
+    if (-not $health.captured_detail_titles -or $health.captured_title_support_manifest_sha256 -ne (Get-FileHash -LiteralPath $titleSupportManifest -Algorithm SHA256).Hash.ToLowerInvariant()) {
+        throw 'Restart the preview service with the matching historical title/support pages.'
+    }
+    if ($health.captured_title_index_sha256 -ne (Get-FileHash -LiteralPath $titlePageIndex -Algorithm SHA256).Hash.ToLowerInvariant()) {
+        throw 'Restart the preview service with the matching title-page index.'
     }
     if (-not $health.historical_title_metadata -or $health.historical_title_metadata_sha256 -ne (Get-FileHash -LiteralPath $titleMetadata -Algorithm SHA256).Hash.ToLowerInvariant()) {
         throw 'Restart the preview service with the matching historical title metadata.'

@@ -129,6 +129,10 @@ Populated lists now use the [captured catalog layout](channels/wii_shop/captured
 including 776 original title-line sets and its original scrolling/page-key handler.
 The remaining title typography, Japanese interface copy and empty-result state
 still need recovery; the updated layout has not been visually checked in Dolphin.
+The [detail/controller update](channels/wii_shop/captured_titles.md) restores
+834 captured detail views and 836 controller pages. All 1,670 routes and 882
+dependencies were checked over verified local HTTPS. Full Japanese fidelity
+and account/download/install services remain on the explicit [completion list](channels/wii_shop/completion.md).
 This uses privately patched test content; clean-WAD restoration,
 accounts, purchases and installation remain unfinished.
 The [native startup checks](channels/wii_shop/startup_contract.md) now trace
