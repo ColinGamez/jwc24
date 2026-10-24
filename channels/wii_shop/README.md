@@ -50,7 +50,9 @@ calls from native owned-title information. An offline query tool now groups
 the mapped Japan listings into 844 distinct source-reported IDs, preserving
 all versions and provenance. It is not yet a native catalog endpoint or UI.
 
-The first [native URL-builder checks](startup_contract.md) now execute v21's
-original builder and formatter with synthetic inputs. Base selection,
-concatenation and buffer bounds pass; the ordinary launch suffix and browser
-request order are still unverified.
+The [native URL/navigation checks](startup_contract.md) now execute v21's
+original builder, formatter, URL initializer, import loop, entry branch and
+browser-dispatch thunk with synthetic state. Mode 0 with zero or one argument
+retains the bare host, and the selected URL reaches the `WWWOpenUrl` callback.
+Browser/configuration dependencies are stubbed. Actual launch parameters,
+HTTP requests and browser rendering remain unverified.
