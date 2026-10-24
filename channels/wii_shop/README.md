@@ -62,3 +62,8 @@ indexed lookup and record parser run on synthetic cache records through URL
 selection and dispatch. Missing/wrongly typed records select the bundled EULA
 page, while nonzero boolean bytes preserve the Shop URL. Config loading and
 browser/OS dependencies remain outside these checks; no user EULA state changes.
+
+The [EULA/manual browser commands](bridge_contract.md) now run through the native
+property getter, callback, pending-request setter, AREA decoder and dispatcher
+up to an intercepted title launch. Regional destinations and preservation of
+existing requests are checked. Actual channel transitions remain unverified.

@@ -102,9 +102,10 @@ inspect nor modify the user's NAND configuration or EULA state.
 
 The installed index-2 resource archive supplies corroborating static UI evidence:
 `eula.html` calls `shop.jumpToEULAViewer()` and `eulacomp.html` calls
-`shop.jumpToManualChannel()`. Those names are browser-call candidates from the
-page bodies; their native implementations and resulting channel transitions
-remain unexecuted. The pages are bundled support UI, not recovered catalog pages.
+`shop.jumpToManualChannel()`. Their [native command paths](bridge_contract.md)
+now execute through method lookup, pending-request selection and an intercepted
+title-launch boundary. The browser and destination channels remain unexecuted.
+The pages are bundled support UI, not recovered catalog pages.
 
 Reproduce the checks with the private installed v21 executable available:
 
@@ -126,7 +127,7 @@ configuration, but its listed `opera.ini` does not supply a home URL. Therefore
 neither those literals nor the isolated routines prove the main storefront HTTP
 request or its redirect chain.
 
-Next is identifying the real launch parameters and tracing the EULA-viewer
-transition, then capturing browser requests in a controlled runtime profile. No
+Next is identifying the real launch parameters and verifying the channel handoff
+in a controlled runtime profile, then capturing browser requests. No
 network redirect, replacement page, TLS modification or channel patch is
 implemented by this offline work. Derived disassembly remains private.

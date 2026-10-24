@@ -104,6 +104,8 @@ The [native startup checks](channels/wii_shop/startup_contract.md) now trace
 URL initialization, the `IPL.EULA` config lookup and dispatch to `WWWOpenUrl`
 with synthetic state; actual browser requests and storefront rendering still
 need runtime verification.
+The [EULA/manual command checks](channels/wii_shop/bridge_contract.md) also trace
+native requests through regional title selection up to an intercepted launch.
 
 TV no Tomo has reached its real program-guide UI with current listings. The
 latest build validated:
