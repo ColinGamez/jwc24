@@ -1,12 +1,16 @@
 from http.client import HTTPConnection
 import json
 import threading
+from pathlib import Path
+import tempfile
 import unittest
 from urllib.parse import urlsplit, parse_qs
 
 from jwc24.wii_shop_browse import Catalog
 from jwc24.wii_shop_server import Application, create_server
 from tests.test_wii_shop_browse import record
+from tests import test_wii_shop_title_metadata as metadata_fixture
+from jwc24.wii_shop_title_metadata import TitleMetadata
 
 
 class DataRenderer:
@@ -98,3 +102,23 @@ class ShopPreviewServerTests(unittest.TestCase):
     def test_listener_rejects_non_loopback_binding(self):
         with self.assertRaises(ValueError):
             create_server(('0.0.0.0', 0), self.app)
+
+    def test_historical_group_filters_preserve_detail_context_and_reject_unmapped_genre_codes(self):
+        fixture = metadata_fixture.HistoricalTitleMetadataTests()
+        with tempfile.TemporaryDirectory() as directory:
+            metadata = TitleMetadata(fixture.metadata(Path(directory)), 'a'*64)
+            app = Application(Catalog([record(category_label='Virtual Console')], title_metadata=metadata), artwork=DataRenderer())
+            filters = {'publisher':'Example & Co', 'platform':'VCA', 'display_genre':'Action',
+                       'category':'Virtual Console'}
+            from urllib.parse import urlencode
+            query = urlencode(filters)
+            result = json.loads(app.get('/catalog?'+query)[2])
+            self.assertEqual(result['result']['total'], 1)
+            identifier = result['result']['items'][0]['title_id']
+            detail = json.loads(app.get('/title/'+identifier+'?'+query)[2])
+            for key, value in filters.items():
+                self.assertEqual(detail['options'][key], value)
+            self.assertEqual(json.loads(app.get('/catalog?publisher=Missing')[2])['result']['total'], 0)
+            for target in ('/catalog?genre=ACTION','/catalog?publisher=a&publisher=b','/catalog?display_genre='):
+                with self.assertRaises(ValueError):
+                    app.get(target)

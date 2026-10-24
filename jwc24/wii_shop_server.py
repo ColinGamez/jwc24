@@ -65,12 +65,16 @@ class Application:
                           'catalog_sha256': self.digest, 'last_ready': self.last_ready,
                           'historical_title_metadata': len(self.catalog.title_metadata.records) if self.catalog.title_metadata else 0,
                           'historical_title_metadata_sha256': self.catalog.title_metadata.digest if self.catalog.title_metadata else None,
+                          'catalog_group_filters': sorted(self.catalog.facet_fields),
                           'archived_artwork': True,
                           'native_original_scripts': bool(getattr(self.pages, 'native_assets', None)),
                           'captured_keyboard_script': bool(getattr(self.pages, 'captured_scripts', None)),
                           'captured_home_layout': bool(getattr(getattr(self.pages, 'captured_scripts', None), 'home_html', None)),
                           'category_menus_supported': hasattr(self.pages, 'category'),
                           'title_artwork_titles': len(self.pages.title_artwork.images) if getattr(self.pages, 'title_artwork', None) else 0,
+                          'title_detail_artwork_titles': len(self.pages.title_artwork.detail_images) if getattr(self.pages, 'title_artwork', None) else 0,
+                          'title_artwork_source': self.pages.title_artwork.source if getattr(self.pages, 'title_artwork', None) else None,
+                          'title_artwork_manifest_sha256': self.pages.title_artwork.digest if getattr(self.pages, 'title_artwork', None) else None,
                           'recent_requests': list(self.events), 'downloads_supported': False}
             return 200, 'application/json', json.dumps(status).encode()
         if path == '/ready':
@@ -97,17 +101,19 @@ class Application:
             category = 'WiiWare' if path.endswith('/wiiware') else 'Virtual Console'
             return 200, 'text/html; charset=utf-8', self.pages.category(category)
         if path == '/catalog' or re.fullmatch(r'/title/[0-9A-Fa-f]{16}', path):
-            if set(query)-{'offset', 'q', 'category', 'demos'}:
+            if set(query)-{'offset', 'q', 'category', 'demos', 'publisher', 'display_genre', 'platform'}:
                 raise ValueError('Unsupported catalog query')
             options = {k: query.get(k, [default])[0] for k, default in
                        (('q', ''), ('category', None), ('demos', 'all'), ('offset', '0'))}
             options['offset'] = int(options['offset'])
+            options.update({key: query[key][0] for key in ('publisher', 'display_genre', 'platform') if key in query})
             if not 0 <= options['offset'] <= 0xffffffff:
                 raise ValueError('Unsupported offset')
             title_ids = (path.rsplit('/', 1)[1],) if path.startswith('/title/') else ()
             result = self.catalog.query(offset=0 if title_ids else options['offset'], limit=self.page_size,
                                         search=options['q'], category=options['category'],
-                                        demos=options['demos'], title_ids=title_ids)
+                                        demos=options['demos'], title_ids=title_ids,
+                                        **{key: options[key] for key in ('publisher', 'display_genre', 'platform') if key in options})
             if title_ids:
                 if not result['items']:
                     return 404, 'text/plain', b'Title not found'
@@ -186,7 +192,7 @@ def main(argv=None):
     parser.add_argument('--check', action='store_true')
     parser.add_argument('--root', type=Path)
     parser.add_argument('--artwork', type=Path, default=Path('private/wii_shop/artwork-v2'))
-    parser.add_argument('--title-artwork', type=Path, default=Path('private/wii_shop/title-artwork-v1'))
+    parser.add_argument('--title-artwork', type=Path, default=Path('private/wii_shop/title-artwork-v4'))
     parser.add_argument('--native-assets', type=Path, default=Path('private/wii_shop/native-assets-v1'))
     parser.add_argument('--frontend-capture', type=Path, default=Path('private/wii_shop/frontend-capture-v1'))
     parser.add_argument('--title-metadata', type=Path, default=Path('private/wii_shop/title-metadata-v2/metadata.json'))

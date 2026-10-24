@@ -61,6 +61,28 @@ class FrontendBackupInventoryTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'fingerprint'):
                 CapturedScripts(root)
 
+    def test_navigation_selection_excludes_product_pages_scripts_and_zero_length_responses(self):
+        prefix = 'oss-auth.shop.wii.com/oss/'
+        rows = [{'Path': prefix+path, 'Size': str(size)} for path, size in
+                (('serv/B_03.jsp', 42), ('serv/B_16.jsp', 42), ('serv/W_02_1.jsp?language=jp', 42),
+                 ('serv/B_05.jsp?titleId=000100014142434A&country=JP', 42), ('serv/B_04.jsp', 42),
+                 ('serv/B_17.jsp', 0), ('oss/common/script.js', 42), ('serv/urls.sh', 42))]
+        self.assertEqual(select_members(rows, set(), navigation_only=True), rows[:3])
+
+    def test_title_image_selection_follows_explicit_file_ids_and_excludes_other_payloads(self):
+        prefix='oss-auth.shop.wii.com/oss/ccs/000100014142434A/'
+        rows=[{'Path':prefix+name,'Size':'100'} for name in ('FFFD0001','FFFD0005','00000001','tmd')]
+        chosen=select_members(rows,{'000100014142434A'},title_images_only=True,image_members={prefix+'FFFD0005'})
+        self.assertEqual(chosen,[rows[1]])
+        self.assertEqual(select_members(rows,{'000100014142434A'},title_images_only=True),[rows[0]])
+
+    def test_large_japanese_all_titles_page_is_bounded_and_region_specific(self):
+        prefix = 'oss-auth.shop.wii.com/oss/serv/B_04.jsp?country='
+        rows = [{'Path':prefix+region,'Size':str(size)} for region,size in
+                (('JP&all=true',6*1024*1024),('US&all=true',6*1024*1024),('JP',9*1024*1024))]
+        self.assertEqual(select_members(rows,set(),japan_catalog_only=True),rows[:1])
+        self.assertEqual(select_members(rows,set()),[])
+
     @unittest.skipUnless(Path('C:/Program Files/7-Zip/7z.exe').is_file(), 'Extraction test requires 7-Zip')
     def test_stream_extraction_hashes_url_names_and_detects_wrong_member_boundaries(self):
         PRIVATE.mkdir(exist_ok=True)

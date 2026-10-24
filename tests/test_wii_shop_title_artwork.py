@@ -13,16 +13,17 @@ from jwc24.wii_shop_browse import Catalog
 from jwc24.wii_shop_server import Application
 from tools.import_wii_shop_title_artwork import image_info, fetch
 from tests.test_wii_shop_browse import record
+from jwc24.wii_shop_captured_scripts import ARCHIVE_SHA1, SOURCE
 
 
 @unittest.skipUnless(importlib.util.find_spec('PIL'), 'Artwork image validation requires Pillow')
 class ShopTitleArtworkTests(unittest.TestCase):
     identifier = '0001000141424344'
 
-    def image(self):
+    def image(self, format_name='GIF'):
         from PIL import Image
         stream = BytesIO()
-        Image.new('RGB', (160, 120), 'white').save(stream, format='GIF')
+        Image.new('RGB', (160, 120), 'white').save(stream, format=format_name)
         return stream.getvalue()
 
     def cache(self, root, data):
@@ -66,7 +67,35 @@ class ShopTitleArtworkTests(unittest.TestCase):
                 fetch('../../different')
             request.assert_not_called()
 
-    def test_original_catalog_and_detail_slots_use_the_same_title_bound_image(self):
+    def test_historical_roles_preserve_different_original_bytes_and_require_page_provenance(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data = self.image('BMP')
+            self.cache(root, data)
+            path = root/'manifest.json'
+            manifest = json.loads(path.read_text())
+            manifest.update(source=SOURCE, archive_sha1=ARCHIVE_SHA1, capture_manifest_sha256='a'*64)
+            row = manifest['images'][self.identifier]
+            row.pop('url')
+            row.update(member='oss-auth.shop.wii.com/oss/ccs/'+self.identifier+'/FFFD0000',reference_catalog_sha256='b'*64)
+            detail = self.image()
+            filename = self.identifier+'.detail.img'
+            (root/filename).write_bytes(detail)
+            manifest['detail_images'] = {self.identifier:dict(image_info(detail), file=filename,bytes=len(detail),
+                sha256=hashlib.sha256(detail).hexdigest(),member='oss-auth.shop.wii.com/oss/ccs/'+self.identifier+'/FFFD0005',
+                reference_detail_sha256='c'*64)}
+            path.write_text(json.dumps(manifest))
+            pack = TitleArtwork(root,'synthetic')
+            self.assertEqual(pack.asset(pack.url(self.identifier)), (200,'image/bmp',data))
+            self.assertEqual(pack.source,SOURCE)
+            self.assertEqual(pack.asset(pack.url(self.identifier,role='detail')),(200,'image/gif',detail))
+            self.assertNotEqual(pack.url(self.identifier),pack.url(self.identifier,role='detail'))
+            row.pop('reference_catalog_sha256')
+            path.write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ValueError,'catalog provenance'):
+                TitleArtwork(root,'synthetic')
+
+    def test_original_catalog_and_detail_slots_use_distinct_routes(self):
         original = Path('private/wii_shop/artwork-v2')
         if not (original/'manifest.json').is_file():
             self.skipTest('Private original page fixtures unavailable')
@@ -78,4 +107,5 @@ class ShopTitleArtworkTests(unittest.TestCase):
                 with self.subTest(path=path):
                     body = app.get(path)[2]
                     self.assertIn(('/title-artwork/'+self.identifier).encode(), body)
+                    self.assertEqual(('/title-artwork/'+self.identifier+'/detail').encode() in body,path.startswith('/title/'))
             self.assertEqual(app.get('/title-artwork/'+self.identifier)[0], 200)

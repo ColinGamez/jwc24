@@ -102,8 +102,9 @@ The [Wii Shop track](channels/wii_shop/README.md) now has a
 [local catalog preview](channels/wii_shop/runtime_preview.md) reached by the
 original v21 browser in an isolated Dolphin profile. It binds 844 grouped
 Japan titles from the [MarioCube snapshot](channels/wii_shop/catalog.md) into
-archived Shop page layouts and artwork, including category menus and 821 title
-images. An earlier three-panel home was checked in Dolphin's native output;
+archived Shop page layouts and artwork, including category menus and separate
+[historical image roles](channels/wii_shop/image_roles.md): 776 catalog icons
+and 835 detail images. An earlier three-panel home was checked in Dolphin's native output;
 the current historical-template update, keyboard entry and deeper interaction
 still need hands-on checks.
 The latest update loads three unchanged bundled scripts and uses the native
@@ -120,6 +121,10 @@ Accepted [historical title data](channels/wii_shop/title_metadata.md) now suppli
 835 captured names/publishers and 774 point amounts, with captured names also
 searchable. These are historical records; current offers and ownership remain
 unknown.
+The [category contract review](channels/wii_shop/category_contract.md) adds
+source-backed backend filters for publishers/platforms and raw genre text;
+the original Japanese picker flow remains unfinished. All 1,611 available image
+routes preserve captured bytes, with 68 icon gaps and nine detail-image gaps.
 This uses privately patched test content; clean-WAD restoration,
 accounts, purchases and installation remain unfinished.
 The [native startup checks](channels/wii_shop/startup_contract.md) now trace

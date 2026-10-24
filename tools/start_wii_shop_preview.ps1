@@ -16,6 +16,7 @@ if (-not $Profile.StartsWith($privateRoot + '\', [StringComparison]::OrdinalIgno
 $python = Join-Path $repoRoot '.venv\Scripts\python.exe'
 $catalog = Join-Path $repoRoot 'private\wii_shop\mariocube-catalog-ids.json'
 $titleMetadata = Join-Path $repoRoot 'private\wii_shop\title-metadata-v2\metadata.json'
+$titleArtworkManifest = Join-Path $repoRoot 'private\wii_shop\title-artwork-v4\manifest.json'
 $markerFile = Join-Path $Profile 'preview-profile.json'
 $marker = Get-Content -LiteralPath $markerFile -Raw | ConvertFrom-Json
 $content = Join-Path $Profile 'Wii\title\00010002\48414241\content'
@@ -61,6 +62,9 @@ try {
     if (-not $health.captured_home_layout) { throw 'Restart the preview service with the reviewed historical home layout.' }
     if (-not $health.historical_title_metadata -or $health.historical_title_metadata_sha256 -ne (Get-FileHash -LiteralPath $titleMetadata -Algorithm SHA256).Hash.ToLowerInvariant()) {
         throw 'Restart the preview service with the matching historical title metadata.'
+    }
+    if ($health.title_artwork_source -ne 'https://archive.org/details/WiiShopChannelBackup' -or $health.title_artwork_manifest_sha256 -ne (Get-FileHash -LiteralPath $titleArtworkManifest -Algorithm SHA256).Hash.ToLowerInvariant()) {
+        throw 'Restart the preview service with the matching historical title artwork pack.'
     }
     if ($health.catalog_sha256 -ne (Get-FileHash -LiteralPath $catalog -Algorithm SHA256).Hash.ToLowerInvariant()) {
         throw 'Running preview has a different catalog snapshot.'

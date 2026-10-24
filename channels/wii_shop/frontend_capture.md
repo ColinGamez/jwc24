@@ -40,6 +40,12 @@ checks. Original bodies and captured query strings are excluded from Git.
 
 ## Keyboard integration
 
+Later bounded selections recover 95 navigation/setup captures, 90 Japan-region
+catalog captures and 1,611 referenced image members. See the [category contract](category_contract.md)
+and [image-role checks](image_roles.md) for counts, missing pages and integration
+limits. These are additional private packs, rather than a claim that the full
+archive or original Japanese storefront has been restored.
+
 The preview now serves the reviewed captured `keyboard.js` unchanged, with its
 Shift-JIS charset and a pinned SHA-256. It initializes the native keyboard once;
 the service adapter uses that object and its original constants. The captured

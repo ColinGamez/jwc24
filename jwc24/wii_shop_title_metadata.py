@@ -8,7 +8,7 @@ import re
 
 from .wii_shop_captured_scripts import ARCHIVE_SHA1, SOURCE
 
-FIELDS = ('TitleName1', 'Publisher', 'date', 'Players', 'DisplayCategory', 'Platform', 'price')
+FIELDS = ('TitleName1', 'Publisher', 'date', 'Players', 'DisplayCategory', 'Platform', 'price', 'Photo')
 VOID = {'img', 'input', 'br', 'hr', 'meta', 'link', 'area', 'base', 'wbr', 'source'}
 
 
@@ -16,6 +16,7 @@ class DetailFields(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.stack, self.active, self.fields = [], [], {}
+        self.photo_sources = []
         self.ignored = 0
 
     def handle_starttag(self, tag, attrs):
@@ -26,6 +27,8 @@ class DetailFields(HTMLParser):
                 raise ValueError('Duplicate captured display field')
             self.fields[selected] = []
             self.active.append(selected)
+        if tag == 'img' and 'Photo' in self.active and not self.ignored:
+            self.photo_sources.append(dict(attrs).get('src', ''))
         if tag == 'br' and not self.ignored:
             for field in self.active:
                 self.fields[field].append(' ')

@@ -22,7 +22,7 @@ remain in `jwc24/wii_shop_artwork.py` and its adapter:
 | Text | Home labels are corroborated by Nintendo's screenshot and native properties; other pages still have adapted translations/descriptions and decoding substitutions | Recover remaining original Japanese copy and correct source encoding |
 | Controls | Publisher/genre functions are repurposed as list/demo filters; unsupported links lead to a custom explanation | Preserve the original meaning and implement the corresponding data and flow |
 | Account/title fields | Captured names/publishers now cover 835 IDs and historical points cover 774; balance, other fields and uncovered entries remain unknown | Recover remaining facts, distinguish original-game and Wii release dates, and implement native account state |
-| Images | 23 title images are unavailable in the current fetch; missing resources use a transparent spacer | Recover the correct images and verify title association; do not count blank images as completion |
+| Images | Captured page references now distinguish 776 catalog icons and 835 detail images; 68 icon slots and nine detail slots still use a transparent spacer | Recover missing role-specific references/images and verify native rendering; do not count blank images as completion |
 | Details | Download/ownership controls are hidden and a custom preparation message is inserted | Restore original controls and implement their actual behavior |
 | Scripts | Unchanged installed Shop/sound/common scripts and a reviewed captured keyboard script now run; storefront bindings/navigation are still adapted | Review the other recovered storefront scripts and verify remaining native behavior |
 | Navigation | Footer visibility, back labels and title line splitting are overridden | Recover the original page states, navigation and text handling |
@@ -96,9 +96,13 @@ dataset. These are concrete signs that the cached pages are not an untouched
 retail-era server snapshot. Source URLs and SHA-256 checks protect the local
 cache against alteration; they do not establish historical authenticity.
 
-The 821 downloaded title images retain source-reported title-ID associations.
-Their successful decoding and route checks do not independently verify their
-Nintendo provenance or association against original title metadata.
+The earlier 821-image cache used source-reported title-ID associations and one
+file ID for both roles. The [historical image update](image_roles.md) now checks
+catalog-panel links and accepted detail `Photo` references, preserving separate
+role-specific bytes. This establishes agreement with the collector captures,
+not Nintendo signatures or complete native rendering. The original category
+flow also remains unfinished; the new [backend filters](category_contract.md)
+are not a recovered picker UI.
 
 ## Reproduce the read-only comparison
 

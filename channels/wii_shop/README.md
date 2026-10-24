@@ -1,5 +1,12 @@
 # Wii Shop research
 
+The latest [image-role recovery](image_roles.md) separates 776 captured catalog
+icons from 835 detail images, retaining exact bytes and original page references.
+It also accepts original BMP payloads. There are still 68 icon gaps and nine
+detail-image gaps. The [category contract review](category_contract.md) adds
+backend publisher/platform/raw-genre filters while recording missing original
+picker pages; the original Japanese category UI remains unfinished.
+
 The [title metadata update](title_metadata.md) now populates 835 captured
 product names/publishers and 774 historical point amounts. It verifies internal
 title IDs against captured requests and enables search by those names. One
@@ -26,7 +33,7 @@ runs through the original Shop browser in an isolated Dolphin profile. It serves
 was confirmed in-channel; an earlier three-panel home was checked
 in Dolphin's native frame output. The updated captured home still needs a
 native visual check. The preview includes the archived category
-menus and 821 title-specific images. Keyboard entry and category/detail interaction
+menus and the historical image roles above. Keyboard entry and category/detail interaction
 still need hands-on checks. Purchases/downloads and a
 complete replacement Shop service remain unfinished.
 

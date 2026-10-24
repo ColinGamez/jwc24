@@ -50,17 +50,18 @@ dates and player counts are not invented.
 The [historical title cache](title_metadata.md) now supplies accepted captured
 names/publishers for 835 IDs and point amounts for 774. Current offers and
 ownership remain unknown; captured dates are not treated as Wii release dates.
-A separate title-ID-addressed image
-import found **821 valid title images** for the 844-title snapshot. The other
-23 requests were unavailable or invalid in this fetch and retain the original
-transparent spacer. No replacement pictures are generated. The Wii
+A [historical image-role cache](image_roles.md) now supplies **776 catalog icons**
+and **835 detail images**, using separate references from captured list/detail
+pages. The previous single-image mapping was incorrect for many slots. There
+are still 68 icon gaps and nine detail-image gaps using the original transparent
+spacer; these remain unfinished work. No replacement pictures are generated. The Wii
 Channels panel currently leads to the scope explanation because this snapshot
 only contains mapped Japan WiiWare/Virtual Console candidates.
 
 Original HTML, CSS, images and software remain under `private/`. Git contains
 the importer, bindings and tests. Each cached resource has a source URL, length
 and SHA-256; altered resources are rejected before serving. Title image mappings
-also retain the catalog digest and exact archive URL, with bounded byte sizes,
+also retain the catalog digest, exact archive member and referencing-page hash, with bounded byte sizes,
 dimensions and image-format validation. The native frame confirms the archived
 home; category navigation, keyboard entry and detail-page interaction still need
 hands-on checks in the channel.
@@ -71,7 +72,10 @@ working bindings provide a software list, WiiWare demos and the original search
 banner's input with a native keyboard call. Search uses the catalog's normalized
 name filter and preserves the category. Back links return from details to the
 same filtered page and from the list to its category menu. Popularity/release-date
-ranking and complete publisher/genre browsing remain unimplemented. Captured
+ranking and complete publisher/genre browsing remain unimplemented. The
+[category backend](category_contract.md) supports exact publisher/platform/raw
+genre-text filters and preserves them through list/detail/back navigation;
+original picker UI and genre-code mappings remain unfinished. Captured
 publisher names now populate individual items. The current list/demo labels are adapted to these
 available data fields rather than claiming the complete original menu behavior.
 
@@ -107,6 +111,10 @@ to prepare `private/wii_shop/title-metadata-v2/metadata.json`. The service requi
 that cache to match both the catalog and capture-manifest fingerprints. The
 launcher also compares its running digest with the local file. See the
 [acceptance checks and limits](title_metadata.md).
+
+Also prepare the [separate historical image roles](image_roles.md#reproduce-privately)
+at `private/wii_shop/title-artwork-v4`. The server and launcher require its
+matching manifest; older flat image packs do not satisfy that check.
 
 `tools.prepare_wii_shop_preview` copies Config/Wii into a new private profile.
 It audits the source Shop's 18 contents, replaces 20 Shop URL fields with
@@ -155,12 +163,15 @@ installation. Close Dolphin before making the initial profile copy.
 
 ```powershell
 python -m tools.import_wii_shop_artwork
-python -m tools.import_wii_shop_title_artwork
 python -m tools.import_wii_shop_native_assets '<original installed Dolphin Wii directory>'
 python -m tools.prepare_wii_shop_preview
 python -m tools.prepare_vwii_credentials --otp '<your Wii U backup>\otp.bin'
 powershell -File tools/start_wii_shop_preview.ps1
 ```
+
+Prepare the captured frontend, metadata and historical image-role caches using
+the linked procedures before the first launch. The old modified-site title-image
+import is retained for comparison and is no longer the default runtime pack.
 
 The import/preparation tools refuse existing destination packs/profiles or
 credential files. Do not rerun them over a working profile. For subsequent
@@ -176,10 +187,10 @@ The image importer uses Pillow from the existing `artwork` optional dependency.
 Normal preview launches explicitly disable frame dumping; temporary test videos
 were removed after retaining a private native proof image.
 
-Validation: 85 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
+Validation: 95 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
 rendered against the real snapshot; title links cover all 844 grouped IDs once.
-All 821 available image routes were checked. See the
-[updated artwork report](../../research/wii_shop_artwork_validation_20261025.json)
+All 1,611 current image routes were checked over verified loopback HTTPS. See the
+[image-role report](../../research/wii_shop_image_roles_validation_20261025.json)
 and [initial transport report](../../research/wii_shop_preview_validation_20261024.json).
 The [native script update report](../../research/wii_shop_native_scripts_validation_20261025.json)
 separately records exact bytes served over verified loopback TLS, script load

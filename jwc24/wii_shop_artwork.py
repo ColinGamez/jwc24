@@ -346,7 +346,7 @@ class Artwork:
             root.text(identifier, text)
         thumbnail = root.find('Thumbnail')
         if thumbnail and self.title_artwork:
-            thumbnail.attrs['src'] = self.title_artwork.url(item['title_id'])
+            thumbnail.attrs['src'] = self.title_artwork.url(item['title_id'], role='detail')
         root.find('underlinkL').attrs['href'] = '/catalog?'+urlencode({k:v for k,v in options.items() if v is not None})
         return self._finish(root, styles)
 

@@ -10,6 +10,13 @@ def folded(value):
 
 
 class Catalog:
+    facet_fields = {'publisher': 'publisher', 'display_genre': 'captured_genre_text',
+                    'platform': 'captured_platform_text'}
+    # Codes observed in captured B_03 links, paired with captured detail labels.
+    platform_codes = {'FC/NES': 'NES', 'SFC/SNES': 'Super NES', 'N64': 'Nintendo 64',
+                      'PCE/TG16': 'TurboGrafx16', 'MD/GEN': 'Sega Genesis',
+                      'MASTER': 'MASTER SYSTEM', 'VCA': 'Virtual Console Arcade',
+                      'NEOGEO': 'NEOGEO', 'WIIWARE': 'WiiWare', 'WII': 'Wii Channels'}
     def __init__(self, records, *, title_metadata=None):
         self.title_metadata = title_metadata
         if not isinstance(records, list) or len(records) > 20000:
@@ -68,21 +75,40 @@ class Catalog:
                 self.items[-1]['historical_metadata'] = historical
         self.items.sort(key=lambda r: (folded(r['names'][0]), r['title_id']))
 
-    def query(self, *, offset=0, limit=20, search='', category=None, demos='all', title_ids=()):
+    def facets(self, kind, *, category=None):
+        if kind not in self.facet_fields or category not in (None, 'WiiWare', 'Virtual Console'):
+            raise ValueError('Unsupported catalog grouping')
+        counts = defaultdict(int)
+        for item in self.items:
+            if category and item['category'] != category:
+                continue
+            value = item.get('historical_metadata', {}).get(self.facet_fields[kind])
+            if value:
+                counts[value] += 1
+        return [{'value': value, 'count': counts[value]} for value in sorted(counts, key=lambda v: (folded(v), v))]
+
+    def query(self, *, offset=0, limit=20, search='', category=None, demos='all', title_ids=(),
+              publisher=None, display_genre=None, platform=None):
+        filters = {'publisher': publisher, 'display_genre': display_genre, 'platform': platform}
         if (type(offset) is not int or not 0 <= offset <= 0xffffffff
                 or type(limit) is not int or not 1 <= limit <= 50
                 or not isinstance(search, str) or len(search) > 120
                 or category not in (None, 'WiiWare', 'Virtual Console')
                 or demos not in ('all', 'exclude', 'only')
+                or any(value is not None and (not isinstance(value, str) or not value.strip() or len(value) > 120)
+                       for value in filters.values())
                 or not isinstance(title_ids, (tuple, list)) or len(title_ids) > 100
                 or any(not isinstance(t, str) or not re.fullmatch(r'[0-9A-Fa-f]{16}', t) for t in title_ids)):
             raise ValueError('Unsupported catalog query')
+        filters['platform'] = self.platform_codes.get(platform, platform)
         wanted = {t.upper() for t in title_ids}
         needle = folded(search)
         matches = [r for r in self.items
                    if (not category or r['category'] == category)
                    and (demos == 'all' or r['is_demo'] == (demos == 'only'))
                    and (not wanted or r['title_id'] in wanted)
+                   and all(value is None or r.get('historical_metadata', {}).get(self.facet_fields[kind]) == value
+                           for kind, value in filters.items())
                    and (not needle or any(needle in folded(name) for name in r['names']))]
         total = len(matches)
         return {'total': total, 'offset': offset, 'limit': limit,

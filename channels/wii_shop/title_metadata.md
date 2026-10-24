@@ -35,6 +35,11 @@ filter. Original source listing names and all version variants remain present;
 no installation version is selected. Catalog `price` and `owned` remain unknown.
 The accepted amounts live separately under `historical_metadata.points`.
 
+The [category backend](category_contract.md) can now filter accepted publisher,
+platform and freeform genre descriptions. The [image cache](image_roles.md)
+uses separate source references for catalog icons and detail `Photo` elements.
+Neither update establishes a complete original Japanese category flow.
+
 The cache is bound to both the catalog digest and capture-manifest digest.
 The server checks that pairing, and the launcher checks the running metadata
 digest against the local file. Raw captured bodies and the derived title-data

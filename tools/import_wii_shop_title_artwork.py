@@ -25,7 +25,7 @@ def image_info(data):
     if not data or len(data) > 512*1024:
         raise ValueError('Title image exceeds byte bounds')
     with Image.open(BytesIO(data)) as image:
-        if image.format not in ('GIF', 'PNG', 'JPEG') or not (0 < image.width <= 1024 and 0 < image.height <= 1024):
+        if image.format not in ('GIF', 'PNG', 'JPEG', 'BMP') or not (0 < image.width <= 1024 and 0 < image.height <= 1024):
             raise ValueError('Unexpected title image format/dimensions')
         result = {'format': image.format, 'width': image.width, 'height': image.height}
         image.verify()

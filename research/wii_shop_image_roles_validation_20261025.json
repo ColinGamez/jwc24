@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "source": "https://archive.org/details/WiiShopChannelBackup",
+  "archive_sha1": "e20c789c86bd602d7af3816d105c3f62ab504374",
+  "catalog_sha256": "054c7e0a25cd6c0c83aa5b012ff73c685ec0659c8ba9ab94d48fa66cf443aa31",
+  "image_requests_sha256": "93eaa00da10ab0d5860cffe3d54dab71ab15c7a9a6b316c58e5662f4f2d30ffd",
+  "image_capture_manifest_sha256": "8cf20724378ba8fa67fe2b33c7595a3231554c5c8004709ee442960dc7aa4e44",
+  "artwork_manifest_sha256": "528d1fbaead109cd0b789cb4bac60ea09b8bce880fdd750cae8b458db8fec9d2",
+  "japan_catalog_capture_files": 90,
+  "japan_catalog_capture_bytes": 15778966,
+  "catalog_reference_titles": 776,
+  "detail_reference_titles": 835,
+  "captured_image_members": 1611,
+  "captured_image_bytes": 13265399,
+  "catalog_images": 776,
+  "detail_images": 835,
+  "missing_catalog_images": 68,
+  "missing_detail_images": 9,
+  "formats": {
+    "images": {
+      "GIF": 761,
+      "BMP": 15
+    },
+    "detail_images": {
+      "GIF": 820,
+      "BMP": 15
+    }
+  },
+  "titles_with_different_catalog_detail_bytes": 769,
+  "unchanged_captured_bytes_verified": true,
+  "generated_replacement_images": false,
+  "rendered_catalog_pages": 85,
+  "rendered_title_pages": 844,
+  "verified_loopback_tls_image_routes": 1611,
+  "certificate_verification": true,
+  "native_visual_verified": false,
+  "complete_original_storefront_verified": false,
+  "shop_tests_passed": 95,
+  "credential_tests_passed": 2
+}
