@@ -41,3 +41,6 @@ Shop behavior are implemented yet.
 27-page snapshot retains 3,062 listings and 915 Japan-labeled browse candidates.
 No title binaries were downloaded. Native catalog integration and verified
 title-ID mapping remain unfinished.
+The metadata workbook now supplies source-reported IDs for 862 Japan candidates,
+with row/hash provenance. Those mappings are not TMD-verified; missing and
+conflicting entries stay unresolved.

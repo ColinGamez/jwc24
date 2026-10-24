@@ -37,3 +37,33 @@ It is a discovery catalog, not yet connected to the native CAS/catalog
 interface. Next steps are verified title-ID mapping, source-version handling
 and original-channel catalog rendering. Content delivery/installation remains
 a separate integration target.
+
+## Source-reported title IDs
+
+The directory's [metadata workbook](https://repo.mariocube.com/WADs/_WiiWare%2C%20VC%2C%20DLC%2C%20Channels%20%26%20IOS/WAD%20Info.xlsx)
+contains 2,900 rows in `database`. The mapper reads only columns A:D: filename,
+title ID, version and region. Other workbook columns are not exported into the
+catalog. The source workbook remains unchanged under `private/`.
+
+The first mapping enriches **2,597 of 3,062 listings**, including **862 of 915
+Japan browse candidates**. Among the remaining Japan candidates, 51 lack exact
+filename matches and two have region conflicts. Across all listings, 399 lack
+matches and 66 have region conflicts. No approximate name or cross-region match
+is chosen. A source worksheet is not independent proof of a title's contents.
+
+`title_id_status=source_metadata` distinguishes a workbook match from TMD
+verification. Each match records the source URL, workbook SHA-256, sheet,
+columns and row. Version zero is preserved. Invalid IDs/versions, duplicate
+filenames and region conflicts remain unresolved with an explicit reason.
+Prices and publisher data are not invented. Installation stays unsupported.
+
+```powershell
+python -m tools.map_wii_shop_catalog_ids private/wii_shop/mariocube-catalog.json "private/wii_shop/WAD Info.xlsx" --output private/wii_shop/mariocube-catalog-ids.json
+python -m unittest tests.test_wii_shop_catalog_ids
+```
+
+The read-only XLSX reader uses bounded ZIP/XML parsing and requires the expected
+sheet/header. It rejects catalog-cell formulas and unsupported worksheet paths.
+All 2,900 selected rows were independently compared with a read-only workbook
+reader and agreed exactly. No binary title downloads, ticket import or native
+catalog changes occur during this mapping step.
