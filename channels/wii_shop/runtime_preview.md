@@ -5,6 +5,13 @@ controls and placeholder values/images. It does not meet the owner's original
 experience requirement. The [authenticity audit](authenticity.md) records those
 gaps and the evidence needed to resolve them.
 
+The latest [description recovery](descriptions.md) restores 835 More Details
+pages and 1,670 original screenshots. Its verified detail buttons return to the
+same title/list context, and the captured scroll-only handler runs without the
+account initialization script. Nonblank zero-match name queries use the
+[captured generic no-results view](../../research/wii_shop_navigation_recovery_20261025.md).
+Exact Japanese keyword/search-again behavior remains unverified.
+
 Updated October 25, 2026. The original v21 Shop browser has reached JWC24's
 loopback HTTPS service in Dolphin. The initial connectivity screen rendered at
 608 × 456 and reported successful native Shop/sound initialization; the user
@@ -30,10 +37,17 @@ its matching CSS/images. Populated catalog lists now also use the [reviewed
 historical capture](captured_catalog.md), retaining 776 original catalog title-line
 sets and the original scroll/page-key handler. The [title-page integration](captured_titles.md)
 replaces 834 detail views and adds 836 controller pages. Category, ten detail
-fallbacks and empty-result/explanation pages still use the interactive archive.
+fallbacks, non-keyword/out-of-range states and explanation pages still use the interactive archive.
 That archive contains later edits; this is not a claim of an untouched
 Nintendo server snapshot. Two shared images, `spacer.gif` and
 `under_banner_shadow.gif`, also match the installed original channel byte-for-byte.
+
+Rendered stylesheet links now use the captured global/detail CSS even on the
+remaining experimental templates. The modified global CSS added three web-font
+rules referencing an unavailable `font2.ttf`; the captured stylesheet keeps the
+original native font declarations. Captured inline CSS common-image URLs also
+resolve through the captured asset pack. This removes the recreation's font
+dependency without claiming that the remaining experimental HTML is original.
 
 Third-party archived scripts and event handlers are discarded. Three unchanged
 scripts from the installed v21 resource archive (`sound.js`, `common.js`,
@@ -128,6 +142,18 @@ Also run the [controller import and title-page index builder](captured_titles.md
 to prepare `frontend-title-support-v1` and `title-pages-v2/index.json`. Their
 bindings are required by the updated server and checked by the launcher.
 
+Import the all-region catalog evidence and the description pack into new private
+directories before starting the latest service:
+
+```powershell
+python -m tools.import_wii_shop_frontend_capture '<private archive.7z>' --listing '<private listing.txt>' --catalog-only --output private/wii_shop/frontend-all-catalog-v1
+python -m tools.import_wii_shop_descriptions '<private archive.7z>' --listing '<private listing.txt>' --output private/wii_shop/descriptions-v2
+```
+
+The first supplies the pinned generic no-results view; the second recovers only
+source-proven B05/B06 pairs and their exact referenced screenshots. Both manifest
+digests are checked by the launcher. Existing outputs are refused.
+
 `tools.prepare_wii_shop_preview` copies Config/Wii into a new private profile.
 It audits the source Shop's 18 contents, replaces 20 Shop URL fields with
 `https://127.0.0.1:18443`, and changes the copied Opera URL filter and CA store.
@@ -199,7 +225,7 @@ The image importer uses Pillow from the existing `artwork` optional dependency.
 Normal preview launches explicitly disable frame dumping; temporary test videos
 were removed after retaining a private native proof image.
 
-Validation: 111 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
+Validation: 174 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
 rendered against the real snapshot; title links cover all 844 grouped IDs once.
 All 1,611 current image routes were checked over verified loopback HTTPS. See the
 [image-role report](../../research/wii_shop_image_roles_validation_20261025.json)
@@ -224,3 +250,9 @@ The [detail/controller report](../../research/wii_shop_captured_titles_validatio
 adds all 834 captured detail and 836 controller routes, 882 dependencies and
 game-specific information/return-path preservation. It leaves Japanese copy,
 native visual verification and complete commerce explicitly unfinished.
+The [combined integration report](../../research/wii_shop_parallel_integration_validation_20261025.json)
+checks all 835 description routes, 1,670 original screenshots, 834 More Details
+links, all catalog/detail/controller pages, generic no-results cases and shared
+dependencies over verified local HTTPS. The [SOAP codec](soap_contract.md) and
+[partial manual reader](manual_recovery.md) remain disconnected from live
+account/manual routes. Native visual verification is still outstanding.

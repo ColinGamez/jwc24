@@ -82,6 +82,9 @@ class FrontendBackupInventoryTests(unittest.TestCase):
                 (('JP&all=true',6*1024*1024),('US&all=true',6*1024*1024),('JP',9*1024*1024))]
         self.assertEqual(select_members(rows,set(),japan_catalog_only=True),rows[:1])
         self.assertEqual(select_members(rows,set()),[])
+        self.assertEqual(select_members(rows,set(),catalog_only=True),rows[:2])
+        with self.assertRaises(ValueError):
+            select_members(rows,set(),catalog_only=True,japan_catalog_only=True)
 
     def test_title_support_selection_requires_exact_region_page_and_known_title(self):
         prefix = 'oss-auth.shop.wii.com/oss/serv/'

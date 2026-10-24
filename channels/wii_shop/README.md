@@ -1,5 +1,18 @@
 # Wii Shop research
 
+The latest [More Details recovery](descriptions.md) enables 835 original game
+descriptions and 1,670 source-referenced screenshots, including alternative
+image file IDs. The original scroll handler, focus and detail/back context are
+preserved. A [captured generic no-results view](../../research/wii_shop_navigation_recovery_20261025.md)
+now handles nonblank zero-match name queries; its Japanese keyword/search-again
+state remains unverified. Out-of-range pages are distinguished from no matches.
+
+Parallel source work adds an [offline CAS codec](soap_contract.md) and a bounded
+[manual importer/reader](manual_recovery.md). Neither enables account operations
+or a new manual control; the recovered guide is incomplete. The [all-region
+catalog review](../../research/wii_shop_catalog_regions_validation_20261025.json)
+found no additional Japanese title/icon associations beyond the existing 776.
+
 The latest [detail/controller recovery](captured_titles.md) enables 834 captured
 detail information panels and 836 original controller pages. Game-specific
 ratings, controller art, genre/player/platform and date text are retained.
@@ -11,7 +24,7 @@ The [captured catalog update](captured_catalog.md) now uses the historical list
 markup, scroll frame and paging controls. It preserves 776 original catalog
 title-line sets and restores the original key handler and paging wrap. The
 remaining 68 titles use a captured card prototype. Japanese interface copy,
-empty-result behavior and native visual checks remain unfinished.
+exact Japanese empty-result behavior and native visual checks remain unfinished.
 
 The latest [image-role recovery](image_roles.md) separates 776 captured catalog
 icons from 835 detail images, retaining exact bytes and original page references.

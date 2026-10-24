@@ -11,6 +11,7 @@ from jwc24.wii_shop_browse import Catalog
 from jwc24.wii_shop_server import Application
 from jwc24.wii_shop_native_assets import NativeAssets, PREFIX, SCRIPTS
 from jwc24.wii_shop_captured_scripts import CapturedScripts, KEYBOARD_URL
+from jwc24.wii_shop_captured_empty import CapturedEmpty
 from jwc24.wii_shop_title_metadata import TitleMetadata
 from tests import test_wii_shop_title_metadata as metadata_fixture
 from tests.test_wii_shop_browse import record
@@ -136,6 +137,50 @@ class ShopArtworkTests(unittest.TestCase):
         app = Application(Catalog([record()]), artwork=self.pack())
         nodes = Elements(app.get('/catalog?category=WiiWare')[2]).nodes
         self.assertTrue(any(a.get('id') == 'underlinkL' and a.get('href') == '/category/wiiware' for _,a in nodes))
+
+    def test_experimental_pages_also_use_original_captured_stylesheets(self):
+        artwork = self.pack()
+        app = Application(Catalog([record()]),artwork=artwork)
+        for path in ('/category/wiiware','/category/virtual-console','/title/0001000141424344','/about','/catalog?q=unmatched'):
+            links=[attrs['href'] for tag,attrs in Elements(app.get(path)[2]).nodes if tag=='link']
+            self.assertTrue(links,path)
+            for link in links:
+                self.assertTrue(link.startswith('/assets/captured/'),link)
+                status,_,data=app.get(link)
+                self.assertEqual(status,200)
+                self.assertNotIn(b'font2.ttf',data)
+
+    def test_empty_name_search_uses_the_captured_notice_without_a_replacement_screen(self):
+        artwork = self.pack()
+        root = Path('private/wii_shop/frontend-all-catalog-v1')
+        if not (root/'manifest.private.json').is_file():
+            self.skipTest('Private all-region catalog captures unavailable')
+        artwork.captured_empty = CapturedEmpty(root,artwork.captured_scripts)
+        artwork.files['/oss/serv/B_04.html'] = b'not a usable modified template'
+        app = Application(Catalog([record()]),artwork=artwork)
+        body = app.get('/catalog?category=WiiWare&q=unmatched-name')[2]
+        tree = Tree(body.decode()).root
+        self.assertIsNone(tree.find('catalogFrame'))
+        self.assertIsNone(tree.find('notFound'))
+        self.assertIn(b'Your search did not return any results.',body)
+        self.assertEqual(tree.find('underlinkL').attrs['href'],'/category/wiiware')
+        self.assertNotIn(b'unmatched-name',body)
+        for tag,attrs in Elements(body).nodes:
+            path = attrs.get('src') if tag in ('img','input','script') else attrs.get('href') if tag=='link' else None
+            if path:
+                self.assertEqual(app.get(path)[0],200,path)
+
+    def test_captured_search_notice_does_not_treat_out_of_range_or_blank_queries_as_no_matches(self):
+        artwork = self.pack()
+        root = Path('private/wii_shop/frontend-all-catalog-v1')
+        if not (root/'manifest.private.json').is_file():
+            self.skipTest('Private all-region catalog captures unavailable')
+        artwork.captured_empty = CapturedEmpty(root,artwork.captured_scripts)
+        app = Application(Catalog([record(name='Game')]),artwork=artwork)
+        for path in ('/catalog?q=Game&offset=10','/catalog?q=%20%20%20'):
+            with self.subTest(path=path):
+                body = app.get(path)[2]
+                self.assertNotIn(b'Your search did not return any results.',body)
 
     def test_historical_title_publisher_and_points_render_without_relabeling_original_release_date(self):
         pack = self.pack()

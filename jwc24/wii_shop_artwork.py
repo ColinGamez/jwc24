@@ -5,6 +5,7 @@ Shop scripts initialize native objects before JWC24's service adapter runs.
 Original page bodies, scripts, styles and images remain under private/.
 """
 from dataclasses import dataclass, field
+from copy import deepcopy
 import hashlib
 from html import escape
 from html.parser import HTMLParser
@@ -100,12 +101,14 @@ class Artwork:
     page_size = 10
 
     def __init__(self, root, title_artwork=None, catalog_digest=None, native_assets=None, captured_scripts=None,
-                 captured_catalog=None, captured_titles=None):
+                 captured_catalog=None, captured_titles=None, captured_empty=None, descriptions=None):
         self.native_assets = native_assets
         self.captured_scripts = captured_scripts
         self.captured_catalog = captured_catalog
         self.captured_titles = captured_titles
-        if (captured_catalog or captured_titles) and not captured_scripts:
+        self.captured_empty = captured_empty
+        self.descriptions = descriptions
+        if (captured_catalog or captured_titles or captured_empty or descriptions) and not captured_scripts:
             raise ValueError('Captured pages require their shared resource pack')
         self.title_artwork = TitleArtwork(title_artwork, catalog_digest) if title_artwork else None
         root = Path(root).resolve()
@@ -129,6 +132,8 @@ class Artwork:
                 raise ValueError('Missing archived layout')
 
     def asset(self, path):
+        if self.descriptions and (path.startswith('/oss/ccs/') or path == '/assets/captured/description-scroll.js'):
+            return self.descriptions.asset(path)
         if path == '/assets/captured/controller-mode.js' and self.captured_titles:
             return self.captured_titles.asset(path)
         if path == '/assets/captured/catalog-navigation.js' and self.captured_catalog:
@@ -161,6 +166,8 @@ class Artwork:
             for key in list(node.attrs):
                 if key.lower().startswith('on'):
                     del node.attrs[key]
+            if captured and 'style' in node.attrs:
+                node.attrs['style'] = self._captured_css(node.attrs['style'])
             if 'href' in node.attrs:
                 node.attrs['href'] = self._route(node.attrs['href'])
                 node.attrs['onclick'] = 'snd.playSE(cSE_Decide)'
@@ -179,6 +186,15 @@ class Artwork:
                                      ('Wii Shop Channel', 'Wiiショッピングチャンネル')):
                         child = child.replace(old, new)
                     node.children[index] = child.replace('\ufffd', '・')
+
+    def _captured_css(self, value):
+        # Absolute CSS image paths must use the same captured pack validated
+        # for this page, rather than the older modified web asset bundle.
+        def resource(match):
+            path = self.captured_scripts.resource_url(match[2])
+            return 'url('+match[1]+path+match[1]+')'
+        return re.sub(r'''url\(\s*(["\x27]?)(/oss/oss/common/[^)"\x27\s]+)\1\s*\)''',
+                      resource,value,flags=re.I)
 
     def _base(self, name, legacy=False):
         captured_catalog = name == 'B_04.html' and self.captured_catalog is not None and not legacy
@@ -223,7 +239,9 @@ class Artwork:
 
     def _finish(self, root, styles, extra='', captured_home=False, captured_catalog=False,
                 captured_stylesheets=None, page_script=None):
-        css_url = self.captured_scripts.resource_url('/oss/oss/common/css/oss.css') if captured_home else '/oss/oss/common/css/oss.css'
+        if captured_home or captured_catalog or captured_stylesheets:
+            styles = self._captured_css(styles)
+        css_url = self.captured_scripts.resource_url('/oss/oss/common/css/oss.css') if self.captured_scripts else '/oss/oss/common/css/oss.css'
         css = '<link rel="stylesheet" type="text/css" href="'+css_url+'">'
         if captured_catalog:
             css = ''.join('<link rel="stylesheet" type="text/css" href="'+self.captured_scripts.resource_url(path)+'">'
@@ -232,7 +250,8 @@ class Artwork:
             css = ''.join('<link rel="stylesheet" type="text/css" href="'+self.captured_scripts.resource_url(path)+'">'
                           for path in captured_stylesheets)
         if root.find('purchasePage') and not captured_stylesheets:
-            css += '<link rel="stylesheet" type="text/css" href="/oss/oss/common/css/B_05.css">'
+            detail_css = self.captured_scripts.resource_url('/oss/oss/common/css/B_05.css') if self.captured_scripts else '/oss/oss/common/css/B_05.css'
+            css += '<link rel="stylesheet" type="text/css" href="'+detail_css+'">'
         scripts = self.native_assets.script_tags() if self.native_assets else ''
         if self.captured_scripts:
             scripts += self.captured_scripts.script_tags()
@@ -306,11 +325,22 @@ class Artwork:
     def browse(self, result, options):
         if self.captured_catalog and result['items']:
             return self._captured_browse(result,options)
+        if self.captured_empty and result['total'] == 0 and options['q'].strip():
+            return self._captured_no_results(options)
         return self._legacy_browse(result,options)
 
+    def _captured_no_results(self, options):
+        capture = self.captured_empty
+        root = self._prepare(deepcopy(capture.parsed_root),captured=True)
+        root.text('listinfo',capture.caption)
+        if options['category']:
+            root.find('underlinkL').attrs['href'] = '/category/'+('wiiware' if options['category']=='WiiWare' else 'virtual-console')
+        styles = '\n'.join(re.findall(r'<style[^>]*>(.*?)</style>',capture.layout_html.decode('utf-8-sig'),re.I|re.S))
+        return self._finish(root,styles,captured_stylesheets=capture.stylesheets)
+
     def _legacy_browse(self, result, options):
-        # Keep the earlier empty-result experiment until its original state is
-        # recovered, rather than inventing an empty state in the captured page.
+        # Non-keyword and out-of-range experimental states still lack their
+        # original Japanese flow; preserve the existing fallback for those.
         root, styles = self._base('B_04.html',legacy=True)
         root.text('text01-01', {'WiiWare': 'Wiiウェア', 'Virtual Console': 'バーチャルコンソール'}.get(options['category'], 'ソフトカタログ'))
         source = self.files['/oss/serv/B_04.html'].decode('utf-8', errors='replace')
@@ -459,7 +489,38 @@ class Artwork:
                 self._hover(root,'controllerLink','Image3control',self.captured_scripts.resource_url(hover[1]))
         else:
             root.display('controllerLink',False)
+        description = self.descriptions.rows.get(identifier) if self.descriptions else None
+        if description and description['detail_proof']['sha256'] == item['historical_metadata']['capture_sha256']:
+            root.display('underButtonR',True)
+            self._button_label(root,'underwordR','More Details')
+            root.find('underlinkR').attrs['href'] = '/description/'+identifier+'?'+context
+            self._hover(root,'underspacerR','underImgR')
         return self._finish(root,styles,captured_stylesheets=self.captured_titles.detail_stylesheets)
+
+    def description(self, item, options):
+        page = self.descriptions.page(item['title_id']) if self.descriptions else None
+        if page is None:
+            return None
+        root,styles,stylesheets = page
+        content_links = [(node,node.attrs['href']) for node in root.find('goodsfree').walk()
+                         if node.tag == 'a' and 'href' in node.attrs]
+        screenshots = [(node,node.attrs['src']) for node in root.walk()
+                       if node.tag == 'img' and node.attrs.get('src','').startswith('/oss/ccs/')]
+        for node,_ in screenshots:
+            node.attrs['src'] = '/oss/oss/common/images/spacer.gif'
+        root = self._prepare(root,captured=True)
+        for node,href in content_links:
+            node.attrs['href'] = href
+        for node,path in screenshots:
+            node.attrs['src'] = path
+        root.attrs['onkeypress'] = "kdown('goodsfree');"
+        root.attrs['onload'] = "initShop();document.getElementById('goodsfree').focus();"
+        self._button_label(root,'underwordL','Back')
+        context = urlencode({key:value for key,value in options.items() if value is not None})
+        root.find('underlinkL').attrs.update(href='/title/'+item['title_id']+'?'+context,
+                                           onclick='snd.playSE(cSE_Cancel)')
+        return self._finish(root,styles,captured_stylesheets=stylesheets,
+                            page_script='/assets/captured/description-scroll.js')
 
     def controller(self, item, options):
         page = self.captured_titles.page(item['title_id'],'controller') if self.captured_titles else None

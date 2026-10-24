@@ -51,6 +51,10 @@ The [title-page integration](captured_titles.md) also recovers 837 controller
 captures and enables 834 accepted detail views, with a dependency-checked private
 index. One missing CERO descriptor prevents using its captured detail page;
 that route retains the earlier experiment.
+The subsequent [description recovery](descriptions.md) supplies 835 B06 pages
+and 1,670 exact source-referenced screenshots. The [all-region catalog audit](../../research/wii_shop_navigation_recovery_20261025.md)
+also identifies a genuine generic no-results view. Original Japanese category
+pages/search-again and the Shop operations guide remain absent from this backup.
 
 The preview now serves the reviewed captured `keyboard.js` unchanged, with its
 Shift-JIS charset and a pinned SHA-256. It initializes the native keyboard once;

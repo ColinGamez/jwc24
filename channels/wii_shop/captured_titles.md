@@ -51,6 +51,11 @@ balance-error branches are excluded. Their recorded states do not describe the
 visitor's account. No invented availability notice, balance, ownership or
 purchase confirmation is added. Acquisition controls remain unfinished work.
 
+The later [B06 description integration](descriptions.md) also restores the
+captured More Details footer when its source-page hash and target agree. This
+opens original game descriptions/screenshots and returns to the same detail
+context; it is not a manual, purchase or installation operation.
+
 Controller routes return to the same detail with list/search/filter context
 preserved; details return to the corresponding catalog context. Only local
 read-only routes are served. Source trees are copied before adaptation and a

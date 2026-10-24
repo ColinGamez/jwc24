@@ -34,8 +34,8 @@ def verify_archive(path):
 
 
 def select_members(rows, title_ids, *, navigation_only=False, title_images_only=False, image_members=None,
-                   japan_catalog_only=False, title_support_only=False):
-    if sum((navigation_only, title_images_only, japan_catalog_only, title_support_only)) > 1:
+                   japan_catalog_only=False, title_support_only=False, catalog_only=False):
+    if sum((navigation_only, title_images_only, japan_catalog_only, title_support_only, catalog_only)) > 1:
         raise ValueError('Select one capture review mode')
     selected, navigation, seen = [], Counter(), set()
     for row in rows:
@@ -43,7 +43,7 @@ def select_members(rows, title_ids, *, navigation_only=False, title_images_only=
         if row.get('Folder') == '+' or row.get('Attributes', '').startswith('D'):
             continue
         size = int(row['Size'])
-        if not 0 < size <= (8 if japan_catalog_only else 2)*1024*1024:
+        if not 0 < size <= (8 if japan_catalog_only or catalog_only else 2)*1024*1024:
             continue
         if title_support_only:
             base, _, query = path.rsplit('/',1)[-1].partition('?')
@@ -55,9 +55,9 @@ def select_members(rows, title_ids, *, navigation_only=False, title_images_only=
                 seen.add(path)
                 selected.append(row)
             continue
-        if japan_catalog_only:
+        if japan_catalog_only or catalog_only:
             base, _, query = path.rsplit('/', 1)[-1].partition('?')
-            if '/oss/serv/' in path and base == 'B_04.jsp' and parse_qs(query).get('country') == ['JP']:
+            if '/oss/serv/' in path and base == 'B_04.jsp' and (catalog_only or parse_qs(query).get('country') == ['JP']):
                 if path in seen or row.get('Symbolic Link') or row.get('Hard Link') or row.get('Encrypted', '-') != '-':
                     raise ValueError('Duplicate, linked or encrypted catalog member')
                 seen.add(path)
@@ -159,6 +159,7 @@ def main(argv=None):
     mode.add_argument('--title-images-only', action='store_true')
     mode.add_argument('--japan-catalog-only', action='store_true')
     mode.add_argument('--title-support-only', action='store_true')
+    mode.add_argument('--catalog-only', action='store_true', help='Review catalog captures from every captured region')
     parser.add_argument('--image-requests', type=Path)
     args = parser.parse_args(argv)
     archive_sha256 = verify_archive(args.archive)
@@ -182,13 +183,14 @@ def main(argv=None):
     with args.listing.open(encoding='utf-8-sig') as stream:
         selected = select_members(listing_rows(stream), ids, navigation_only=args.navigation_only,
                                   title_images_only=args.title_images_only, image_members=image_members,
-                                  japan_catalog_only=args.japan_catalog_only, title_support_only=args.title_support_only)
+                                  japan_catalog_only=args.japan_catalog_only, title_support_only=args.title_support_only,
+                                  catalog_only=args.catalog_only)
     if not selected:
         raise ValueError('No captures selected')
     files = extract_selected(args.archive.resolve(), selected, args.output, args.sevenzip)
     manifest = {'schema_version': 1, 'source': SOURCE, 'archive_sha1': ARCHIVE_SHA1,
                 'archive_sha256': archive_sha256, 'files': files,
-                'selection': 'title-support' if args.title_support_only else 'japan-catalog' if args.japan_catalog_only else 'title-images' if args.title_images_only else 'navigation' if args.navigation_only else 'initial',
+                'selection': 'catalog' if args.catalog_only else 'title-support' if args.title_support_only else 'japan-catalog' if args.japan_catalog_only else 'title-images' if args.title_images_only else 'navigation' if args.navigation_only else 'initial',
                 'complete_original_storefront_verified': False}
     (args.output/'manifest.private.json').write_text(json.dumps(manifest, indent=2)+'\n', encoding='utf-8', newline='\n')
     print(json.dumps({'captured_files': len(files), 'captured_bytes': sum(f['bytes'] for f in files),

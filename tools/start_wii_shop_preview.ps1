@@ -20,6 +20,8 @@ $titleArtworkManifest = Join-Path $repoRoot 'private\wii_shop\title-artwork-v4\m
 $catalogCaptureManifest = Join-Path $repoRoot 'private\wii_shop\frontend-japan-catalog-v2\manifest.private.json'
 $titleSupportManifest = Join-Path $repoRoot 'private\wii_shop\frontend-title-support-v1\manifest.private.json'
 $titlePageIndex = Join-Path $repoRoot 'private\wii_shop\title-pages-v2\index.json'
+$catalogEvidenceManifest = Join-Path $repoRoot 'private\wii_shop\frontend-all-catalog-v1\manifest.private.json'
+$descriptionManifest = Join-Path $repoRoot 'private\wii_shop\descriptions-v2\manifest.private.json'
 $markerFile = Join-Path $Profile 'preview-profile.json'
 $marker = Get-Content -LiteralPath $markerFile -Raw | ConvertFrom-Json
 $content = Join-Path $Profile 'Wii\title\00010002\48414241\content'
@@ -69,6 +71,12 @@ try {
     if (-not $health.captured_home_layout) { throw 'Restart the preview service with the reviewed historical home layout.' }
     if (-not $health.captured_catalog_layout -or $health.captured_catalog_manifest_sha256 -ne (Get-FileHash -LiteralPath $catalogCaptureManifest -Algorithm SHA256).Hash.ToLowerInvariant()) {
         throw 'Restart the preview service with the matching historical catalog capture.'
+    }
+    if (-not $health.captured_no_results_layout -or $health.captured_no_results_manifest_sha256 -ne (Get-FileHash -LiteralPath $catalogEvidenceManifest -Algorithm SHA256).Hash.ToLowerInvariant()) {
+        throw 'Restart the preview service with the matching historical no-results capture.'
+    }
+    if (-not $health.captured_description_titles -or $health.captured_description_manifest_sha256 -ne (Get-FileHash -LiteralPath $descriptionManifest -Algorithm SHA256).Hash.ToLowerInvariant()) {
+        throw 'Restart the preview service with the matching historical description pack.'
     }
     if (-not $health.captured_detail_titles -or $health.captured_title_support_manifest_sha256 -ne (Get-FileHash -LiteralPath $titleSupportManifest -Algorithm SHA256).Hash.ToLowerInvariant()) {
         throw 'Restart the preview service with the matching historical title/support pages.'

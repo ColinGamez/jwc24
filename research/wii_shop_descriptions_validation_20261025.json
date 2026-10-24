@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-25",
+  "source": "https://archive.org/details/WiiShopChannelBackup",
+  "archive_sha1": "e20c789c86bd602d7af3816d105c3f62ab504374",
+  "archive_sha256": "f7f349b8baf06f0f77ba6d413ed87e535378bc746084e24c7d5f59273acacda0",
+  "archive_checksum_verified": true,
+  "listing_sha256": "545c3700d4f05f7880f178e7fd945b138e8bca8e8b15a694bbeef2628f406aa1",
+  "catalog_sha256": "054c7e0a25cd6c0c83aa5b012ff73c685ec0659c8ba9ab94d48fa66cf443aa31",
+  "catalog_title_count": 844,
+  "private_pack": "private/wii_shop/descriptions-v2",
+  "validation_revision": 2,
+  "pack_manifest_sha256": "6066c22b4d5869118e500480a261589f38a074dbbb0f65f5bd408bb8e51affc7",
+  "source_stage_reused_from_manifest_sha256": "3f271f1b9b64f3ebb92eef96035f099d687387b14ed2f2e77c5523a06bd63ffd",
+  "source_page_count": 1673,
+  "eligible_descriptions": 835,
+  "excluded_descriptions": 9,
+  "exclusion_reasons": {
+    "missing-b05-or-b06-source-page": 8,
+    "Captured request and internal title ID disagree": 1
+  },
+  "screenshot_count": 1670,
+  "pack_bytes": 109637952,
+  "screenshot_formats": {
+    "GIF": 1642,
+    "BMP": 27,
+    "JPEG": 1
+  },
+  "screenshot_dimensions": {
+    "160x120": 1626,
+    "600x480": 1,
+    "160x140": 2,
+    "256x224": 2,
+    "512x384": 1,
+    "96x72": 1,
+    "162x121": 2,
+    "160x115": 2,
+    "160x121": 2,
+    "160x111": 2,
+    "640x480": 2,
+    "598x449": 1,
+    "640x448": 2,
+    "147x120": 24
+  },
+  "absent_screenshots": 0,
+  "invalid_screenshots": 0,
+  "b05_b06_display_title_differences_preserved": 266,
+  "goodsfree_active_element_counts": {},
+  "eligible_inline_css_url_count": 0,
+  "all_recovered_b06_activity_audit": {
+    "pages": 837,
+    "active_elements": 0,
+    "inline_css_urls": 0,
+    "back_button_variants": [
+      {
+        "label": "Back",
+        "target": "javascript:showBack()",
+        "sound": "snd.playSE(cSE_Cancel)",
+        "count": 837
+      }
+    ]
+  },
+  "scroll_reference_page_sha256": "f72fd8ed3b3cf41d686dc21c7d3f1834b4cedf96377f8c4759fefe9c3e335d22",
+  "scroll_subset_sha256": "e3c84935e0f4f13d0e6376a1bae14d54154f42fd402822547994838d23c429ae",
+  "scroll_subset_bytes": 304,
+  "shared_capture_manifest_sha256": "cfa89ef974455e13d31b37b3c7a3c34599dfd4498c48979105262c2dff75cb8e",
+  "startup_seconds": 0.079144,
+  "complete_final_code_sweep_seconds": 15.451815,
+  "final_code_pages_verified": 835,
+  "final_code_screenshots_verified": 1670,
+  "tests": {
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_wii_shop_descriptions -v",
+    "passed": 19
+  },
+  "scripts_executed": false,
+  "shop_routes_changed_by_component": false,
+  "browser_or_wii_description_flow_verified": false,
+  "original_japanese_common_labels_fully_verified": false,
+  "complete_original_storefront_verified": false,
+  "provenance_limit": "Collector archive checksum and internal title/page/image consistency; not independent Nintendo provenance, a retail-v21 match, ownership or entitlement.",
+  "final_revision_enforced": true,
+  "fresh_final_code_startup_seconds": 0.081111,
+  "fresh_final_code_sample_titles_verified": 3
+}

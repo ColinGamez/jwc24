@@ -1,0 +1,26 @@
+{
+  "capture_files": 347,
+  "by_country": {
+    "unspecified": 0,
+    "AU": 0,
+    "GB": 0,
+    "JP": 776,
+    "KR": 0,
+    "US": 0
+  },
+  "source_bound_titles": 776,
+  "extra_titles": 0,
+  "conflicting_titles": 0,
+  "schema_version": 1,
+  "source": "https://archive.org/details/WiiShopChannelBackup",
+  "archive_sha1": "e20c789c86bd602d7af3816d105c3f62ab504374",
+  "catalog_sha256": "054c7e0a25cd6c0c83aa5b012ff73c685ec0659c8ba9ab94d48fa66cf443aa31",
+  "capture_manifest_sha256": "61053cccb807fa22423960bda15066c13dfa8db5627379a6a909512d0a7befc5",
+  "captured_bytes": 58170234,
+  "reference_baseline_sha256": "93eaa00da10ab0d5860cffe3d54dab71ab15c7a9a6b316c58e5662f4f2d30ffd",
+  "exact_title_link_and_image_id_required": true,
+  "foreign_title_substitution": false,
+  "missing_japan_catalog_icon_references": 68,
+  "native_visual_verified": false,
+  "complete_original_storefront_verified": false
+}

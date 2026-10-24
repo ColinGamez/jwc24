@@ -71,12 +71,16 @@ class Application:
                           'captured_keyboard_script': bool(getattr(self.pages, 'captured_scripts', None)),
                           'captured_home_layout': bool(getattr(getattr(self.pages, 'captured_scripts', None), 'home_html', None)),
                           'captured_catalog_layout': bool(getattr(self.pages, 'captured_catalog', None)),
+                          'captured_no_results_layout': bool(getattr(self.pages,'captured_empty',None)),
+                          'captured_no_results_manifest_sha256': self.pages.captured_empty.manifest_sha256 if getattr(self.pages,'captured_empty',None) else None,
                           'captured_catalog_manifest_sha256': self.pages.captured_catalog.manifest_sha256 if getattr(self.pages,'captured_catalog',None) else None,
                           'captured_catalog_title_rows': len(self.pages.captured_catalog.panels) if getattr(self.pages,'captured_catalog',None) else 0,
                           'captured_detail_titles': len(self.pages.captured_titles.detail_rows) if getattr(self.pages,'captured_titles',None) else 0,
                           'captured_controller_titles': len(self.pages.captured_titles.controller_rows) if getattr(self.pages,'captured_titles',None) else 0,
                           'captured_title_support_manifest_sha256': self.pages.captured_titles.support_manifest_sha256 if getattr(self.pages,'captured_titles',None) else None,
                           'captured_title_index_sha256': self.pages.captured_titles.index_sha256 if getattr(self.pages,'captured_titles',None) else None,
+                          'captured_description_titles': len(self.pages.descriptions.rows) if getattr(self.pages,'descriptions',None) else 0,
+                          'captured_description_manifest_sha256': self.pages.descriptions.manifest_sha256 if getattr(self.pages,'descriptions',None) else None,
                           'category_menus_supported': hasattr(self.pages, 'category'),
                           'title_artwork_titles': len(self.pages.title_artwork.images) if getattr(self.pages, 'title_artwork', None) else 0,
                           'title_detail_artwork_titles': len(self.pages.title_artwork.detail_images) if getattr(self.pages, 'title_artwork', None) else 0,
@@ -98,7 +102,7 @@ class Application:
             return 204, 'text/plain', b''
         if path == '/assets/shop.js':
             return 200, 'text/javascript', JS
-        if path.startswith(('/assets/native/', '/assets/captured/', '/oss/oss/', '/title-artwork/')) and hasattr(self.pages, 'asset'):
+        if path.startswith(('/assets/native/', '/assets/captured/', '/oss/oss/', '/oss/ccs/', '/title-artwork/')) and hasattr(self.pages, 'asset'):
             return self.pages.asset(path)
         if path in ('/', '/startup'):
             return 200, 'text/html; charset=utf-8', self.pages.home(len(self.catalog.items))
@@ -107,7 +111,7 @@ class Application:
         if path in ('/category/wiiware', '/category/virtual-console') and hasattr(self.pages, 'category'):
             category = 'WiiWare' if path.endswith('/wiiware') else 'Virtual Console'
             return 200, 'text/html; charset=utf-8', self.pages.category(category)
-        if path == '/catalog' or re.fullmatch(r'/(?:title|controller)/[0-9A-Fa-f]{16}', path):
+        if path == '/catalog' or re.fullmatch(r'/(?:title|controller|description)/[0-9A-Fa-f]{16}', path):
             if set(query)-{'offset', 'q', 'category', 'demos', 'publisher', 'display_genre', 'platform'}:
                 raise ValueError('Unsupported catalog query')
             options = {k: query.get(k, [default])[0] for k, default in
@@ -116,7 +120,7 @@ class Application:
             options.update({key: query[key][0] for key in ('publisher', 'display_genre', 'platform') if key in query})
             if not 0 <= options['offset'] <= 0xffffffff:
                 raise ValueError('Unsupported offset')
-            title_ids = (path.rsplit('/', 1)[1],) if path.startswith(('/title/','/controller/')) else ()
+            title_ids = (path.rsplit('/', 1)[1],) if path.startswith(('/title/','/controller/','/description/')) else ()
             result = self.catalog.query(offset=0 if title_ids else options['offset'], limit=self.page_size,
                                         search=options['q'], category=options['category'],
                                         demos=options['demos'], title_ids=title_ids,
@@ -124,7 +128,11 @@ class Application:
             if title_ids:
                 if not result['items']:
                     return 404, 'text/plain', b'Title not found'
-                if path.startswith('/controller/'):
+                if path.startswith('/description/'):
+                    body = self.pages.description(result['items'][0],options) if hasattr(self.pages,'description') else None
+                    if body is None:
+                        return 404,'text/plain',b'Description page not available'
+                elif path.startswith('/controller/'):
                     body = self.pages.controller(result['items'][0],options) if hasattr(self.pages,'controller') else None
                     if body is None:
                         return 404,'text/plain',b'Controller page not available'
@@ -211,6 +219,8 @@ def main(argv=None):
     parser.add_argument('--catalog-capture', type=Path, default=Path('private/wii_shop/frontend-japan-catalog-v2'))
     parser.add_argument('--title-support', type=Path, default=Path('private/wii_shop/frontend-title-support-v1'))
     parser.add_argument('--title-page-index', type=Path, default=Path('private/wii_shop/title-pages-v2/index.json'))
+    parser.add_argument('--catalog-evidence-capture', type=Path, default=Path('private/wii_shop/frontend-all-catalog-v1'))
+    parser.add_argument('--descriptions', type=Path, default=Path('private/wii_shop/descriptions-v2'))
     args = parser.parse_args(argv)
     if args.check:
         context = legacy_tls_context(root=args.root)
@@ -227,11 +237,15 @@ def main(argv=None):
     from .wii_shop_captured_scripts import CapturedScripts
     from .wii_shop_captured_catalog import CapturedCatalog
     from .wii_shop_captured_titles import CapturedTitlePages
+    from .wii_shop_captured_empty import CapturedEmpty
+    from .wii_shop_descriptions import Descriptions
     capture = CapturedScripts(args.frontend_capture)
     catalog, digest = catalog_from_file(args.catalog, args.title_metadata, capture.manifest_sha256)
     artwork = Artwork(args.artwork, args.title_artwork, digest, NativeAssets(args.native_assets),
                       capture, CapturedCatalog(args.catalog_capture,{item['title_id'] for item in catalog.items}),
-                      CapturedTitlePages(capture,catalog.title_metadata,args.title_support,{item['title_id'] for item in catalog.items},args.title_page_index))
+                      CapturedTitlePages(capture,catalog.title_metadata,args.title_support,{item['title_id'] for item in catalog.items},args.title_page_index),
+                      CapturedEmpty(args.catalog_evidence_capture,capture),
+                      Descriptions(args.descriptions,digest,{item['title_id'] for item in catalog.items},shared_paths=capture.shared))
     server = create_server(('127.0.0.1', args.port), Application(catalog, digest, artwork), cert=args.cert, key=args.key)
     print(f'JWC24 Shop preview ready: {len(catalog.items)} titles', flush=True)
     try:

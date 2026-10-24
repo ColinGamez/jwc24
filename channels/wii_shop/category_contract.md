@@ -29,6 +29,13 @@ are absent from this collector backup. The modified interactive archive has a
 WiiWare menu, but it does not resolve the missing original Japanese captures.
 Recovering those pages, Japanese strings and native interactions remains work.
 
+The later [all-region audit](../../research/wii_shop_navigation_recovery_20261025.md)
+found a genuine generic no-results view. Nonblank name queries with zero total
+matches now reuse its captured markup and English notice. It was recorded from
+title-ID selectors, so this does not establish the exact Japanese keyword or
+search-again flow. Out-of-range pages and blank queries retain their existing
+experimental behavior rather than being labeled as zero-match searches.
+
 The [contract report](../../research/wii_shop_category_contract_validation_20261025.json)
 records group coverage, all-group pagination checks and three live HTTPS
 filter/detail/back checks. It explicitly leaves the original picker UI, genre

@@ -3,8 +3,9 @@
 October 25, 2026. Populated catalog lists now use the reviewed historical
 `B_04.jsp` template and captured shared CSS/images. They no longer depend on
 the modified interactive archive's JavaScript row template. The previous
-renderer remains available for its existing empty-result and explanation pages;
-those original states have not yet been recovered.
+renderer remains available for non-keyword/out-of-range and explanation states.
+Nonblank zero-match name queries now use a [captured generic no-results layout](../../research/wii_shop_navigation_recovery_20261025.md);
+the exact Japanese keyword/search-again flow remains unverified.
 
 ## What is preserved
 

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "catalog_sha256": "054c7e0a25cd6c0c83aa5b012ff73c685ec0659c8ba9ab94d48fa66cf443aa31",
+  "description_manifest_sha256": "6066c22b4d5869118e500480a261589f38a074dbbb0f65f5bd408bb8e51affc7",
+  "no_results_manifest_sha256": "61053cccb807fa22423960bda15066c13dfa8db5627379a6a909512d0a7befc5",
+  "live_catalog_pages": 85,
+  "unique_catalog_titles": 844,
+  "live_detail_pages": 844,
+  "live_controller_pages": 836,
+  "live_more_details_links": 834,
+  "live_description_pages": 835,
+  "live_original_screenshots": 1670,
+  "live_shared_dependencies": 1685,
+  "verified_https_requests": 7648,
+  "certificate_verification": true,
+  "captured_no_results_category_cases": 3,
+  "out_of_range_and_blank_queries_distinguished": true,
+  "original_description_markup_and_return_context_verified": true,
+  "original_scroll_subset_vm_verified": true,
+  "soap_codec_enabled_as_route": false,
+  "manual_reader_enabled_as_route": false,
+  "captured_commerce_scripts_enabled": false,
+  "native_visual_verified": false,
+  "original_japanese_keyword_search_flow_verified": false,
+  "complete_original_storefront_verified": false,
+  "shop_tests_passed": 174,
+  "credential_tests_passed": 2,
+  "rendered_stylesheets_use_captured_pack": true,
+  "stylesheet_provenance": {
+    "oss.css": {
+      "captured_sha256": "2ac3f9fdb141d89281ae74159e32295f079693a3b8bc1602408b6fc9223e49b0",
+      "legacy_sha256": "382600c689468766b70d971b9e79657750ed85cb267a8bec84c615599dcd05c0",
+      "same_bytes": false
+    },
+    "B_05.css": {
+      "captured_sha256": "04f61c4a21d1c2475ee200111f958b85f1906c8fc0d06d834aab9a2a7fc69dbc",
+      "legacy_sha256": "14d4e1466d52db44b99abfcf678de4e8f4ab993c29506444399e638510aebebb",
+      "same_bytes": false
+    }
+  },
+  "legacy_global_webfont_rules": 3,
+  "captured_global_webfont_rules": 0
+}

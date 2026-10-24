@@ -98,49 +98,29 @@ work. The [early Wii SDK PDF review](research/sdk_pdf_review_20261022.md) covers
 19 platform manuals and their channel-specific uses and limits.
 The [goldmine WC24 follow-up](research/goldmine_wc24_followup_20261022.md)
 records three later archived manuals, postal-tool evidence and shared diagnostics.
-The [Wii Shop track](channels/wii_shop/README.md) now has a
-[local catalog preview](channels/wii_shop/runtime_preview.md) reached by the
-original v21 browser in an isolated Dolphin profile. It binds 844 grouped
-Japan titles from the [MarioCube snapshot](channels/wii_shop/catalog.md) into
-archived Shop page layouts and artwork, including category menus and separate
-[historical image roles](channels/wii_shop/image_roles.md): 776 catalog icons
-and 835 detail images. An earlier three-panel home was checked in Dolphin's native output;
-the current historical-template update, keyboard entry and deeper interaction
-still need hands-on checks.
-The latest update loads three unchanged bundled scripts and uses the native
-title/menu strings and hover helpers. Those changes pass hash and JavaScript
-checks; a fresh Dolphin visual check is still outstanding.
-A separate [2019 storefront capture](channels/wii_shop/frontend_capture.md)
-now supplies thirteen shared scripts and Japan-region detail requests matching
-836 preview IDs. The captured keyboard initializer and observed search settings
-are integrated; full Japanese page and interaction fidelity remains unfinished.
-The home now uses the historical template and matching CSS/images, with visible
-Japanese menu labels corroborated by Nintendo's own screenshot. Search follows
-the captured blur/clear behavior and uses the original input without an added form.
-Accepted [historical title data](channels/wii_shop/title_metadata.md) now supplies
-835 captured names/publishers and 774 point amounts, with captured names also
-searchable. These are historical records; current offers and ownership remain
-unknown.
-The [category contract review](channels/wii_shop/category_contract.md) adds
-source-backed backend filters for publishers/platforms and raw genre text;
-the original Japanese picker flow remains unfinished. All 1,611 available image
-routes preserve captured bytes, with 68 icon gaps and nine detail-image gaps.
-Populated lists now use the [captured catalog layout](channels/wii_shop/captured_catalog.md),
-including 776 original title-line sets and its original scrolling/page-key handler.
-The remaining title typography, Japanese interface copy and empty-result state
-still need recovery; the updated layout has not been visually checked in Dolphin.
-The [detail/controller update](channels/wii_shop/captured_titles.md) restores
-834 captured detail views and 836 controller pages. All 1,670 routes and 882
-dependencies were checked over verified local HTTPS. Full Japanese fidelity
-and account/download/install services remain on the explicit [completion list](channels/wii_shop/completion.md).
-This uses privately patched test content; clean-WAD restoration,
-accounts, purchases and installation remain unfinished.
-The [native startup checks](channels/wii_shop/startup_contract.md) now trace
-URL initialization, the `IPL.EULA` config lookup and dispatch to `WWWOpenUrl`
-with synthetic state. Runtime preview evidence and its limits are recorded
-separately from these offline checks.
-The [EULA/manual command checks](channels/wii_shop/bridge_contract.md) also trace
-native requests through regional title selection up to an intercepted launch.
+The [Wii Shop track](channels/wii_shop/README.md) serves 844 grouped Japan titles
+over loopback HTTPS to the original v21 browser in an isolated Dolphin profile.
+Historical captures now supply the home/list layouts, 834 detail views, 836
+controller pages and [835 More Details pages with 1,670 original screenshots](channels/wii_shop/descriptions.md).
+The preview preserves captured scrolling, paging and return context. A recovered
+generic no-results view replaces the modified template for zero-match name
+queries; its original Japanese keyword-search flow remains unverified.
+
+[Historical metadata](channels/wii_shop/title_metadata.md) supplies 835 captured
+names/publishers and 774 historical point amounts. Separate [image roles](channels/wii_shop/image_roles.md)
+cover 776 list icons and 835 detail images. Missing data, current offers and
+ownership are not invented. Remaining original Japanese/category screens,
+artwork gaps and native visual checks are recorded in the [completion list](channels/wii_shop/completion.md).
+Accounts, purchases, content acquisition and installation remain unfinished.
+
+The [CAS catalog codec](channels/wii_shop/soap_contract.md) is an offline,
+source-backed protocol component without a live account or commerce route.
+[Manual recovery](channels/wii_shop/manual_recovery.md) found a partial Japanese
+game guide but no Shop operations guide; it stays disconnected from the UI.
+[Native startup](channels/wii_shop/startup_contract.md) and [EULA/manual command](channels/wii_shop/bridge_contract.md)
+checks are distinguished from actual browser evidence. Original assets,
+software and device data stay private; current templates still need native
+Dolphin visual verification.
 
 TV no Tomo has reached its real program-guide UI with current listings. The
 latest build validated:
