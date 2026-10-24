@@ -25,6 +25,10 @@ What defines this project is its focus:
   Japan-only channels instead of treating them as later regional additions.
 - **Original WADs stay original.** The target is to revive clean channel
   releases by recreating the services and data formats they expect.
+- **The experience must stay original.** Preserve Japanese assets, copy,
+  layouts, sounds and native flows. Placeholder content, invented metadata and
+  repurposed controls are not finished restoration work. The Shop experiment's
+  remaining [fidelity gaps](channels/wii_shop/authenticity.md) are documented.
 - **The native WC24 path matters.** Downloads go through Dolphin's emulated
   IOS WC24 scheduler, task table, encrypted delivery, and VFF storage.
 - **One foundation, multiple channels.** TV no Tomo is the first proof, while

@@ -1,5 +1,10 @@
 # Local Shop browsing checkpoint
 
+**Fidelity status:** this experiment includes adapted labels, repurposed
+controls and placeholder values/images. It does not meet the owner's original
+experience requirement. The [authenticity audit](authenticity.md) records those
+gaps and the evidence needed to resolve them.
+
 Updated October 25, 2026. The original v21 Shop browser has reached JWC24's
 loopback HTTPS service in Dolphin. The initial connectivity screen rendered at
 608 × 456 and reported successful native Shop/sound initialization; the user

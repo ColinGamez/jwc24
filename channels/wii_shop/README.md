@@ -1,5 +1,10 @@
 # Wii Shop research
 
+**Authenticity requirement:** preserve the original Japanese assets, copy,
+control meanings and flows, with no placeholder or invented replacements.
+The current browsing experiment does not meet that requirement. See the
+[fidelity audit and outstanding work](authenticity.md).
+
 Updated October 25, 2026. A [local browsing checkpoint](runtime_preview.md) now
 runs through the original Shop browser in an isolated Dolphin profile. It serves
 844 grouped Japan titles over loopback HTTPS. The initial connectivity screen
