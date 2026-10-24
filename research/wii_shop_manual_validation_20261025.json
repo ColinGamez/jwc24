@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-25",
+  "source": "https://archive.org/details/WiiShopChannelBackup",
+  "archive_sha1": "e20c789c86bd602d7af3816d105c3f62ab504374",
+  "archive_sha256": "f7f349b8baf06f0f77ba6d413ed87e535378bc746084e24c7d5f59273acacda0",
+  "archive_bytes": 1668780381,
+  "archive_checksum_verified": true,
+  "supplied_listing_sha256": "545c3700d4f05f7880f178e7fd945b138e8bca8e8b15a694bbeef2628f406aa1",
+  "inventory_independently_relisted_from_archive": true,
+  "inventory": {
+    "manual_files": 275505,
+    "manual_declared_bytes": 1733902809,
+    "manual_title_roots": 853,
+    "all_roots_game_title_namespace": true,
+    "shop_title_manual_files": 0,
+    "manual_startup_html_files": 0,
+    "japanese_manual_title_roots": 212,
+    "japanese_manual_files": 16737,
+    "japanese_manual_declared_bytes": 128731400,
+    "japanese_manual_nonempty_indexes": 212,
+    "catalog_titles_with_japanese_index": 194,
+    "b06_nonempty_variants": 9142,
+    "b06_nonempty_japanese_variants": 970,
+    "b06_nonempty_japanese_title_ids": 970,
+    "catalog_titles_with_nonempty_japanese_b06": 837,
+    "b30_nonempty_variants": 0
+  },
+  "catalog_title_count": 844,
+  "catalog_sha256": "054c7e0a25cd6c0c83aa5b012ff73c685ec0659c8ba9ab94d48fa66cf443aa31",
+  "pilot": {
+    "private_pack": "private/wii_shop/manual-japan-pilot-v1",
+    "title_id": "000100015732434A",
+    "files": 52,
+    "bytes": 210144,
+    "extensions": {
+      ".css": 2,
+      ".gif": 14,
+      ".html": 7,
+      ".js": 6,
+      ".png": 23
+    },
+    "manifest_sha256": "e301698e894d2953b00e679aaacfc4eaf1c57b0837a72af876402eab271d82ef",
+    "index_sha256": "5d8da94c18ab2bc59ab197c704710e61b2d097b35b3b57391d314f21a830ba9b",
+    "scripts_executed": false,
+    "active_content_enabled": false,
+    "text_encodings": {
+      "utf-8-sig": 14,
+      "cp932": 1
+    },
+    "decoded_replacement_character_count": 0,
+    "reference_audit_method": "Literal file references with HTML/block comments removed; shared JavaScript URLs resolve against each HTML document. Dynamic/session URLs and actual UI behavior unverified.",
+    "static_referenced_paths": 69,
+    "missing_static_references": [
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/common_data/CHM_common_source_ro/common_button_back_ro.png",
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/common_data/CHM_common_source_ro/common_button_index_ro.png",
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/common_data/CHM_common_source_ro/common_button_next_ro.png",
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/common_data/CHM_common_source_ro/return_index_button_ro.png",
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/index_data/source_pict_index/back_contents_bar_ro.png",
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/index_data/source_pict_index/index_button_ro.png",
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/page_07/page_07.html",
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/page_08/page_08.html",
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/page_09/page_09.html",
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/page_10/page_10.html",
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/page_11/page_11.html",
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/page_12/page_12.html",
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/page_13/page_13.html",
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/page_14/page_14.html",
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/page_15/page_15.html",
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/page_16/page_16.html",
+      "/oss/oss/ext/manual/000100015732434A/FFFD0000/html/000100015732434A/JPN/ja/page_17/page_17.html"
+    ],
+    "external_reference_hosts": [],
+    "language_dispatch_html_index_present": false
+  },
+  "b05_original_footer": {
+    "captured_pages_reviewed": 868,
+    "isFreeIntroEnabled_values": {
+      "false": 865,
+      "": 3
+    },
+    "showManual_call_pages": 0,
+    "true_target": "ext/B_30.jsp?titleId=<same-title>",
+    "otherwise_target": "B_06.jsp?titleId=<same-title>"
+  },
+  "manual_dispatch_evidence": [
+    {
+      "bytes": 25788,
+      "sha256": "e099b24742719d9a74194b785051eefd6a0b9dc740690a9c022ccc80f13dc271"
+    },
+    {
+      "bytes": 21141,
+      "sha256": "dfeae8c17689e8ef9afbaf7177d8214ffee11b587626872bfcc61453be03ec3c"
+    },
+    {
+      "bytes": 14774,
+      "sha256": "9da75f98330df50277b880c5757f224d5e728e1a0b7beaba90f76ae570e73290"
+    }
+  ],
+  "tests": {
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_wii_shop_manual -v",
+    "passed": 10,
+    "regression_command": ".venv/Scripts/python.exe -m unittest tests.test_wii_shop_manual tests.test_wii_shop_frontend_backup -v",
+    "regression_passed": 20
+  },
+  "provenance_limit": "Collector capture fingerprints and internal consistency; no Nintendo signature or complete original guide verification.",
+  "shop_guide_recovered": false,
+  "original_manual_flow_verified_in_browser_or_wii": false,
+  "shop_routes_changed": false,
+  "scripts_executed": false,
+  "complete_original_storefront_verified": false
+}

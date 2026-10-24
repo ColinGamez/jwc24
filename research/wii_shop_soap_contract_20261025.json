@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "inventory_match_verified": true,
+  "inventory_sha256": "ea7edbe9e4e03f96f24cb3b2ccf45241bbac678be6351877719cab89e453c352",
+  "verified_files": [
+    {
+      "path": "common/lib/ec/ec_listTitles.h",
+      "bytes": 2976,
+      "sha256": "4fbc8c7245fe782f71b89f5ec21003c4ebc66b7fcad298b8ce72e659b2f53299"
+    },
+    {
+      "path": "common/lib/ec/ec_listTitles.cpp",
+      "bytes": 8223,
+      "sha256": "6541781efe26bbc6959cb2fb68a4ce70af61f496339b6659ed1097057c45d22c"
+    },
+    {
+      "path": "common/lib/ec/ec_soap.cpp",
+      "bytes": 40736,
+      "sha256": "392f7ab92409347bcbdd558c59fcc0bc50acf398dde55746ef048004846988e3"
+    },
+    {
+      "path": "common/lib/ec/ec_soap.h",
+      "bytes": 9121,
+      "sha256": "2c6c35eca837540d1c7d6d06bc0b52c7d45c2077e93b922707a2624a698e5c89"
+    },
+    {
+      "path": "common/lib/ec/ec_list.cpp",
+      "bytes": 1189,
+      "sha256": "420baf5eb98031209a1c81796340ae405f6a34b9588d5885dd55183314f1669f"
+    }
+  ],
+  "literal_soap_calls": [],
+  "dynamic_soap_call_sites": [
+    {
+      "file": "common/lib/ec/ec_listTitles.cpp",
+      "line": 171,
+      "service": "cas"
+    }
+  ],
+  "javascript_globals": [],
+  "build_package_references": [],
+  "source_review_only": true,
+  "complete_protocol_verified": false,
+  "retail_channel_match_verified": false,
+  "server_implementation_verified": false,
+  "referenced_packages_presence_verified": false,
+  "review_date": "2026-10-25",
+  "component": "jwc24/wii_shop_soap.py",
+  "network_enabled": false,
+  "route_integrated": false,
+  "authentication_implemented": false,
+  "purchase_or_installation_enabled": false,
+  "source_provenance_independently_verified": false,
+  "response_scope": [
+    "explicit total",
+    "explicit title IDs",
+    "explicit native attribute name/value pairs",
+    "optional explicit timestamp"
+  ],
+  "synthetic_fixture_test_count": 15,
+  "evidence": [
+    {
+      "file": "common/lib/ec/ec_listTitles.h",
+      "lines": [
+        80,
+        86
+      ],
+      "finding": "Default CAS operation ListTitles"
+    },
+    {
+      "file": "common/lib/ec/ec_soap.h",
+      "lines": [
+        219,
+        236
+      ],
+      "finding": "Constructor request Version 2.0; supersedes older 1.0 listing comment for this library"
+    },
+    {
+      "file": "common/lib/ec/ec_soap.cpp",
+      "lines": [
+        25,
+        139
+      ],
+      "finding": "SOAP 1.1 request namespace/type, conditional common fields, CAS SOAPAction"
+    },
+    {
+      "file": "common/lib/ec/ec_listTitles.cpp",
+      "lines": [
+        167,
+        210
+      ],
+      "finding": "Offset/limit and repeated attribute/filter/title-ID request fields"
+    },
+    {
+      "file": "common/lib/ec/ec_soap.cpp",
+      "lines": [
+        294,
+        349
+      ],
+      "finding": "Lexical soapenv envelope/body, default CAS namespace on response, optional timestamp and required error code"
+    },
+    {
+      "file": "common/lib/ec/ec_listTitles.cpp",
+      "lines": [
+        220,
+        253
+      ],
+      "finding": "Total required; repeated Titles; partial-result client parsing behavior"
+    },
+    {
+      "file": "common/lib/ec/ec_soap.cpp",
+      "lines": [
+        937,
+        1010
+      ],
+      "finding": "Repeated native attribute Name/Value pairs; no actual attribute-name vocabulary established"
+    },
+    {
+      "file": "common/lib/ec/ec_soap.cpp",
+      "lines": [
+        1129,
+        1240
+      ],
+      "finding": "Per-title ID required; generic content/attribute/rating/pricing blocks optional"
+    },
+    {
+      "file": "common/lib/ec/ec_listTitles.cpp",
+      "lines": [
+        293,
+        304
+      ],
+      "finding": "Initialization, confirmed device key pair, connection and account preconditions"
+    }
+  ],
+  "integration_gaps": [
+    "Exact match to installed Japanese Shop v21 unproven",
+    "Original storefront call path and native attribute names unproven",
+    "No original-client codec execution or response capture",
+    "No authenticated account/device service or authorization",
+    "Filters parsed but not evaluated",
+    "Evidence references are caller assertions, not independent verification",
+    "Historical catalog IDs are not TMD or entitlement evidence",
+    "No pricing/rating/license/availability/ownership/content contract implemented"
+  ]
+}
