@@ -280,6 +280,8 @@ class Artwork:
             raise ValueError('Archived catalog row layout missing')
         cards = []
         for index, item in enumerate(result['items']):
+            historical = item.get('historical_metadata', {})
+            title = historical.get('title', item['names'][0])
             def value(token):
                 expression = token[1]
                 if expression == 'i + 1': return str(index+1)
@@ -287,13 +289,18 @@ class Artwork:
                 if expression == 'isimport': return 'none'
                 if '.id' in expression: return item['title_id']
                 if '.console' in expression: return escape(item['category'])
-                if '.publisher' in expression: return ''
-                if '.title1' in expression: return escape(item['names'][0][:38])
-                if '.title2' in expression: return escape(item['names'][0][38:76])
-                if '.points' in expression: return '－'
+                if '.publisher' in expression: return escape(historical.get('publisher') or '')
+                if '.title1' in expression: return escape(title[:38])
+                if '.title2' in expression: return escape(title[38:76])
+                if '.points' in expression: return format(historical['points'], ',') if historical.get('points') is not None else '－'
                 raise ValueError('Unsupported archived row data field')
             card = Tree(re.sub(r'\$\{(.*?)\}', value, match[1], flags=re.S)).root
             self._sanitize(card)
+            if historical:
+                # Localization applies to the template, not captured product names.
+                card.text('Publisher', historical.get('publisher') or '')
+                card.text('title1_'+str(index+1), title[:38])
+                card.text('title2_'+str(index+1), title[38:76])
             picture = card.find('ImageforCatalogpage')
             if picture and self.title_artwork:
                 image = next((n for n in picture.walk() if n.tag == 'img'), None)
@@ -323,6 +330,8 @@ class Artwork:
 
     def detail(self, item, options):
         root, styles = self._base('B_05.html')
+        historical = item.get('historical_metadata', {})
+        title = historical.get('title', item['names'][0])
         root.text('text01-01', 'ソフトの情報')
         root.display('purchasePage', True)
         root.display('sdbuttons', False)
@@ -330,9 +339,10 @@ class Artwork:
         root.display('downloadedMsg', False)
         root.display('notAvailableMsg', True)
         root.text('notAvailableMsg', 'カタログ閲覧プレビューです。ダウンロードは準備中です。')
-        for identifier, text in (('Title1', item['names'][0][:38]), ('Title2', item['names'][0][38:76]),
-                                 ('PublisherName', '－'), ('ReleaseDate', '－'), ('NumPlayers', '－'),
-                                 ('Console', 'Wiiウェア' if item['category'] == 'WiiWare' else 'バーチャルコンソール'), ('price', '－')):
+        for identifier, text in (('Title1', title[:38]), ('Title2', title[38:76]),
+                                 ('PublisherName', historical.get('publisher') or '－'), ('ReleaseDate', '－'), ('NumPlayers', '－'),
+                                 ('Console', 'Wiiウェア' if item['category'] == 'WiiWare' else 'バーチャルコンソール'),
+                                 ('price', format(historical['points'], ',')+' Wiiポイント' if historical.get('points') is not None else '－')):
             root.text(identifier, text)
         thumbnail = root.find('Thumbnail')
         if thumbnail and self.title_artwork:

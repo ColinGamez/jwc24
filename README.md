@@ -116,6 +116,10 @@ are integrated; full Japanese page and interaction fidelity remains unfinished.
 The home now uses the historical template and matching CSS/images, with visible
 Japanese menu labels corroborated by Nintendo's own screenshot. Search follows
 the captured blur/clear behavior and uses the original input without an added form.
+Accepted [historical title data](channels/wii_shop/title_metadata.md) now supplies
+835 captured names/publishers and 774 point amounts, with captured names also
+searchable. These are historical records; current offers and ownership remain
+unknown.
 This uses privately patched test content; clean-WAD restoration,
 accounts, purchases and installation remain unfinished.
 The [native startup checks](channels/wii_shop/startup_contract.md) now trace

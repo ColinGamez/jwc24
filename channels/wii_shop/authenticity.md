@@ -21,7 +21,7 @@ remain in `jwc24/wii_shop_artwork.py` and its adapter:
 | Page source | Home now uses the reviewed 2019 capture; other pages still use a modified interactive archive | Integrate the remaining captured pages and corroborate their behavior |
 | Text | Home labels are corroborated by Nintendo's screenshot and native properties; other pages still have adapted translations/descriptions and decoding substitutions | Recover remaining original Japanese copy and correct source encoding |
 | Controls | Publisher/genre functions are repurposed as list/demo filters; unsupported links lead to a custom explanation | Preserve the original meaning and implement the corresponding data and flow |
-| Account/title fields | Unknown balance, price, release date and player fields become dashes; publisher is blank | Obtain verified values and implement native account state; do not fabricate values |
+| Account/title fields | Captured names/publishers now cover 835 IDs and historical points cover 774; balance, other fields and uncovered entries remain unknown | Recover remaining facts, distinguish original-game and Wii release dates, and implement native account state |
 | Images | 23 title images are unavailable in the current fetch; missing resources use a transparent spacer | Recover the correct images and verify title association; do not count blank images as completion |
 | Details | Download/ownership controls are hidden and a custom preparation message is inserted | Restore original controls and implement their actual behavior |
 | Scripts | Unchanged installed Shop/sound/common scripts and a reviewed captured keyboard script now run; storefront bindings/navigation are still adapted | Review the other recovered storefront scripts and verify remaining native behavior |
@@ -46,6 +46,10 @@ Japanese menu labels follow Nintendo's official screenshot, correcting
 `設定・特典` to `設定・その他`. These strings are corroborated by that screenshot;
 the screenshot is not a version-specific v21 localization dump. Other page
 labels, native account state and unsupported menu functions remain unresolved.
+The [historical title-data integration](title_metadata.md) now supplies accepted
+names, publishers and point amounts without claiming current offers. One
+request/internal-ID mismatch is excluded, and original-game release dates are
+not substituted into Wii release-date fields.
 
 ## Nintendo collection follow-up
 

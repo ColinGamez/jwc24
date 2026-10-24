@@ -45,7 +45,12 @@ and sound constants. The scripts are served byte-for-byte, with pinned SHA-256
 checks; the replacement adapter remains JWC24 code. Catalog
 names and links are escaped before insertion. Japanese labels and read-only
 status messages replace unavailable server values. Unknown points, publishers,
-dates and player counts are not invented. A separate title-ID-addressed image
+dates and player counts are not invented.
+
+The [historical title cache](title_metadata.md) now supplies accepted captured
+names/publishers for 835 IDs and point amounts for 774. Current offers and
+ownership remain unknown; captured dates are not treated as Wii release dates.
+A separate title-ID-addressed image
 import found **821 valid title images** for the 844-title snapshot. The other
 23 requests were unavailable or invalid in this fetch and retain the original
 transparent spacer. No replacement pictures are generated. The Wii
@@ -66,8 +71,8 @@ working bindings provide a software list, WiiWare demos and the original search
 banner's input with a native keyboard call. Search uses the catalog's normalized
 name filter and preserves the category. Back links return from details to the
 same filtered page and from the list to its category menu. Popularity/release-date
-ranking and publisher/genre metadata remain unavailable: those controls do not
-invent rankings or metadata. The current list/demo labels are adapted to these
+ranking and complete publisher/genre browsing remain unimplemented. Captured
+publisher names now populate individual items. The current list/demo labels are adapted to these
 available data fields rather than claiming the complete original menu behavior.
 
 ## Profile and credentials
@@ -96,6 +101,12 @@ the remaining captured commerce scripts are not enabled. The same reviewed
 pack now supplies the captured home template and 420 validated shared CSS/image
 files through mirrored local paths. Keyboard input and
 the full Japanese prompt/submit/cancel flow remain unverified in Dolphin.
+
+After importing the capture, run `python -m tools.build_wii_shop_title_metadata`
+to prepare `private/wii_shop/title-metadata-v2/metadata.json`. The service requires
+that cache to match both the catalog and capture-manifest fingerprints. The
+launcher also compares its running digest with the local file. See the
+[acceptance checks and limits](title_metadata.md).
 
 `tools.prepare_wii_shop_preview` copies Config/Wii into a new private profile.
 It audits the source Shop's 18 contents, replaces 20 Shop URL fields with
@@ -165,7 +176,7 @@ The image importer uses Pillow from the existing `artwork` optional dependency.
 Normal preview launches explicitly disable frame dumping; temporary test videos
 were removed after retaining a private native proof image.
 
-Validation: 78 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
+Validation: 85 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
 rendered against the real snapshot; title links cover all 844 grouped IDs once.
 All 821 available image routes were checked. See the
 [updated artwork report](../../research/wii_shop_artwork_validation_20261025.json)
@@ -178,3 +189,7 @@ The [captured home report](../../research/wii_shop_captured_home_validation_2026
 records the newer template/style selection, 20 live dependency checks,
 screenshot-backed Japanese copy and search-callback verification. Its native
 visual check remains explicitly outstanding.
+The [title-data report](../../research/wii_shop_title_metadata_validation_20261025.json)
+records all-page checks with the accepted metadata, all 835 captured-name
+searches and three live detail/search pairs. Native visual verification remains
+outstanding.

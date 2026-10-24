@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "catalog_sha256": "054c7e0a25cd6c0c83aa5b012ff73c685ec0659c8ba9ab94d48fa66cf443aa31",
+  "capture_manifest_sha256": "cfa89ef974455e13d31b37b3c7a3c34599dfd4498c48979105262c2dff75cb8e",
+  "historical_metadata_sha256": "1d93073893f6c26e9478083c853cc09468ccab046b6b632a5a2a973fe250eeaf",
+  "catalog_titles": 844,
+  "verified_internal_id_titles": 835,
+  "verified_publishers": 835,
+  "verified_historical_points": 774,
+  "catalog_titles_without_verified_capture": 9,
+  "request_internal_id_mismatches_excluded": 1,
+  "catalog_pages_rendered": 85,
+  "detail_pages_rendered": 844,
+  "original_title_searches_checked": 835,
+  "live_tls_detail_and_title_search_pairs_checked": 3,
+  "captured_dates_not_relabelled_as_wii_release_dates": true,
+  "current_prices_or_ownership_verified": false,
+  "native_visual_verified": false,
+  "shop_and_credential_tests_passed": 87,
+  "complete_original_storefront_verified": false
+}

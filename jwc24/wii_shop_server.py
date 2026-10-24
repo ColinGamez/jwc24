@@ -15,11 +15,16 @@ from .wii_shop_browse import Catalog
 from .wii_shop_native import JS
 
 
-def catalog_from_file(path):
+def catalog_from_file(path, metadata_path=None, capture_digest=None):
     if path.stat().st_size > 32*1024*1024:
         raise ValueError('Catalog exceeds input bound')
     data = path.read_bytes()
-    return Catalog(json.loads(data)['records']), hashlib.sha256(data).hexdigest()
+    digest = hashlib.sha256(data).hexdigest()
+    metadata = None
+    if metadata_path:
+        from .wii_shop_title_metadata import TitleMetadata
+        metadata = TitleMetadata(metadata_path, digest, capture_digest)
+    return Catalog(json.loads(data)['records'], title_metadata=metadata), digest
 
 
 def legacy_tls_context(cert=None, key=None, root=None):
@@ -58,6 +63,8 @@ class Application:
             with self.lock:
                 status = {'service': 'jwc24-wii-shop-preview', 'titles': len(self.catalog.items),
                           'catalog_sha256': self.digest, 'last_ready': self.last_ready,
+                          'historical_title_metadata': len(self.catalog.title_metadata.records) if self.catalog.title_metadata else 0,
+                          'historical_title_metadata_sha256': self.catalog.title_metadata.digest if self.catalog.title_metadata else None,
                           'archived_artwork': True,
                           'native_original_scripts': bool(getattr(self.pages, 'native_assets', None)),
                           'captured_keyboard_script': bool(getattr(self.pages, 'captured_scripts', None)),
@@ -182,6 +189,7 @@ def main(argv=None):
     parser.add_argument('--title-artwork', type=Path, default=Path('private/wii_shop/title-artwork-v1'))
     parser.add_argument('--native-assets', type=Path, default=Path('private/wii_shop/native-assets-v1'))
     parser.add_argument('--frontend-capture', type=Path, default=Path('private/wii_shop/frontend-capture-v1'))
+    parser.add_argument('--title-metadata', type=Path, default=Path('private/wii_shop/title-metadata-v2/metadata.json'))
     args = parser.parse_args(argv)
     if args.check:
         context = legacy_tls_context(root=args.root)
@@ -193,12 +201,13 @@ def main(argv=None):
         return
     if bool(args.cert) != bool(args.key):
         parser.error('Both TLS certificate and key are required')
-    catalog, digest = catalog_from_file(args.catalog)
     from .wii_shop_artwork import Artwork
     from .wii_shop_native_assets import NativeAssets
     from .wii_shop_captured_scripts import CapturedScripts
+    capture = CapturedScripts(args.frontend_capture)
+    catalog, digest = catalog_from_file(args.catalog, args.title_metadata, capture.manifest_sha256)
     artwork = Artwork(args.artwork, args.title_artwork, digest, NativeAssets(args.native_assets),
-                      CapturedScripts(args.frontend_capture))
+                      capture)
     server = create_server(('127.0.0.1', args.port), Application(catalog, digest, artwork), cert=args.cert, key=args.key)
     print(f'JWC24 Shop preview ready: {len(catalog.items)} titles', flush=True)
     try:

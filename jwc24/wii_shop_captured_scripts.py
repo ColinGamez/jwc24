@@ -20,7 +20,9 @@ class CapturedScripts:
         path = root/'manifest.private.json'
         if path.stat().st_size > 2*1024*1024:
             raise ValueError('Oversized capture manifest')
-        manifest = json.loads(path.read_text(encoding='utf-8'))
+        manifest_data = path.read_bytes()
+        self.manifest_sha256 = hashlib.sha256(manifest_data).hexdigest()
+        manifest = json.loads(manifest_data)
         if manifest.get('source') != SOURCE or manifest.get('archive_sha1') != ARCHIVE_SHA1:
             raise ValueError('Unexpected storefront capture source')
         self.root = root

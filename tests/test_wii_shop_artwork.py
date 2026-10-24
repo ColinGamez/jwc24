@@ -11,6 +11,8 @@ from jwc24.wii_shop_browse import Catalog
 from jwc24.wii_shop_server import Application
 from jwc24.wii_shop_native_assets import NativeAssets, PREFIX, SCRIPTS
 from jwc24.wii_shop_captured_scripts import CapturedScripts, KEYBOARD_URL
+from jwc24.wii_shop_title_metadata import TitleMetadata
+from tests import test_wii_shop_title_metadata as metadata_fixture
 from tests.test_wii_shop_browse import record
 
 
@@ -134,3 +136,17 @@ class ShopArtworkTests(unittest.TestCase):
         app = Application(Catalog([record()]), artwork=self.pack())
         nodes = Elements(app.get('/catalog?category=WiiWare')[2]).nodes
         self.assertTrue(any(a.get('id') == 'underlinkL' and a.get('href') == '/category/wiiware' for _,a in nodes))
+
+    def test_historical_title_publisher_and_points_render_without_relabeling_original_release_date(self):
+        pack = self.pack()
+        fixture = metadata_fixture.HistoricalTitleMetadataTests()
+        with tempfile.TemporaryDirectory() as directory:
+            metadata = TitleMetadata(fixture.metadata(Path(directory)), 'a'*64)
+            app = Application(Catalog([record(name='Romanized file name')], title_metadata=metadata), artwork=pack)
+            for path in ('/catalog?q=%E3%83%86%E3%82%B9%E3%83%88', '/title/'+fixture.identifier):
+                body = app.get(path)[2]
+                with self.subTest(page=path):
+                    self.assertIn('テスト &amp; 名前'.encode(), body)
+                    self.assertIn(b'Example &amp; Co', body)
+                    self.assertIn(b'1,000', body)
+                    self.assertNotIn(b'Released 12/13/1984', body)

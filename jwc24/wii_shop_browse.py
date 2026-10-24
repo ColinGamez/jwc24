@@ -10,7 +10,8 @@ def folded(value):
 
 
 class Catalog:
-    def __init__(self, records):
+    def __init__(self, records, *, title_metadata=None):
+        self.title_metadata = title_metadata
         if not isinstance(records, list) or len(records) > 20000:
             raise ValueError('Catalog records exceed browse bounds')
         groups = defaultdict(list)
@@ -50,6 +51,9 @@ class Catalog:
                 raise ValueError('Duplicate source listing identifier')
             variants = sorted(variants, key=lambda r: (r['title_version'], r['catalog_id']))
             names = sorted({r['name'] for r in variants}, key=lambda name: (folded(name), name))
+            historical = title_metadata.get(identifier) if title_metadata else None
+            if historical:
+                names = sorted(set(names+[historical['title']]), key=lambda name: (folded(name), name))
             self.items.append({'title_id': identifier, 'names': names,
                                'category': variants[0]['category_label'], 'is_demo': variants[0]['is_demo'],
                                'versions': sorted({r['title_version'] for r in variants}),
@@ -60,6 +64,8 @@ class Catalog:
                                             for r in variants],
                                'title_id_status': 'source_metadata', 'tmd_verified': False,
                                'owned': None, 'price': None, 'install_supported': False})
+            if historical:
+                self.items[-1]['historical_metadata'] = historical
         self.items.sort(key=lambda r: (folded(r['names'][0]), r['title_id']))
 
     def query(self, *, offset=0, limit=20, search='', category=None, demos='all', title_ids=()):

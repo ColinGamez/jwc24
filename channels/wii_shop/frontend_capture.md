@@ -30,6 +30,9 @@ Japan-region captures contain Japanese title/category data but English
 interface captions. Historical prices are not current purchase offers, and a
 displayed release date may refer to the original game rather than its Wii release.
 These fields need semantic review before feeding the renderer.
+The [subsequent title-field review](title_metadata.md) accepts 835 internal-ID
+matches and 774 cross-checked point amounts. It excludes one ID mismatch and
+leaves ambiguous dates/player/platform fields outside the UI integration.
 
 The [metadata report](../../research/wii_shop_frontend_capture_20261025.json)
 records inventory counts, archive/script fingerprints, review limits and current

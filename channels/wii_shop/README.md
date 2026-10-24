@@ -1,5 +1,10 @@
 # Wii Shop research
 
+The [title metadata update](title_metadata.md) now populates 835 captured
+product names/publishers and 774 historical point amounts. It verifies internal
+title IDs against captured requests and enables search by those names. One
+mismatched capture is excluded; current offers and ownership remain unknown.
+
 The latest [storefront recovery](frontend_capture.md) indexes a 2019 collector
 backup and privately recovers 1,315 selected files, including thirteen shared
 scripts. Japan-region detail requests match 836 of the 844 preview IDs, with
