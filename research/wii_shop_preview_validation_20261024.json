@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "catalog_sha256": "054c7e0a25cd6c0c83aa5b012ff73c685ec0659c8ba9ab94d48fa66cf443aa31",
+  "titles": 844,
+  "catalog_pages_checked": 85,
+  "title_pages_checked": 844,
+  "duplicate_or_missing_title_links": false,
+  "archived_resources": 67,
+  "native_browser_initial_boot": {
+    "viewport_width": 608,
+    "viewport_height": 456,
+    "native_shop_initialized": true,
+    "native_sound_initialization_returned": true,
+    "tls": "TLSv1",
+    "http_keep_alive_required": true,
+    "visual_confirmation": "user screenshot of initial connectivity preview"
+  },
+  "archived_layout_native_visual_confirmation": false,
+  "downloads_supported": false,
+  "personal_data_in_report": false
+}

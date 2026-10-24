@@ -94,16 +94,17 @@ work. The [early Wii SDK PDF review](research/sdk_pdf_review_20261022.md) covers
 19 platform manuals and their channel-specific uses and limits.
 The [goldmine WC24 follow-up](research/goldmine_wc24_followup_20261022.md)
 records three later archived manuals, postal-tool evidence and shared diagnostics.
-The [Wii Shop research track](channels/wii_shop/README.md) now audits recovered
-commerce-client evidence and maps a read-only startup/browsing milestone.
-It is not a working replacement Shop backend.
-Its [MarioCube metadata import](channels/wii_shop/catalog.md) supplies a
-Japan-first discovery snapshot; native catalog rendering and installation
-remain separate, unfinished work.
+The [Wii Shop track](channels/wii_shop/README.md) now has a
+[local catalog preview](channels/wii_shop/runtime_preview.md) reached by the
+original v21 browser in an isolated Dolphin profile. It binds 844 grouped
+Japan titles from the [MarioCube snapshot](channels/wii_shop/catalog.md) into
+archived Shop page layouts and artwork. The artwork update needs its native
+visual check. This uses privately patched test content; clean-WAD restoration,
+accounts, purchases and installation remain unfinished.
 The [native startup checks](channels/wii_shop/startup_contract.md) now trace
 URL initialization, the `IPL.EULA` config lookup and dispatch to `WWWOpenUrl`
-with synthetic state; actual browser requests and storefront rendering still
-need runtime verification.
+with synthetic state. Runtime preview evidence and its limits are recorded
+separately from these offline checks.
 The [EULA/manual command checks](channels/wii_shop/bridge_contract.md) also trace
 native requests through regional title selection up to an intercepted launch.
 

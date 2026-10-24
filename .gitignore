@@ -13,6 +13,9 @@ snapshots/
 *.vff
 /NusDownloader/
 wc24pubk.mod
+keys.bin
+otp.bin
+seeprom.bin
 dolphin-*-quarantine-*/
 /FindHbnjError271110.java
 /ReadHbnjRootName.java
