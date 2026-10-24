@@ -56,9 +56,10 @@ different fingerprint and stops on control flow outside the selected routines.
 - The startup slice `0x800136A8..0x800136F0` accepts only result 1 from the
   prerequisite query at `0x801FE1C0`. It stores that comparison in object byte
   8, then requests initialization through `0x8002F560` and `0x8002F680`. Other
-  tested results (0, 2 and unsigned -1) select the local EULA-page pointer at
-  `0x8035F4E8` instead. The query and both initialization calls are stubs;
-  their real configuration, success/failure and asynchronous work are untested.
+  stubbed results (0, 2 and unsigned -1) select the local EULA-page pointer at
+  `0x8035F4E8` instead. The query can now also execute unchanged against a
+  synthetic config cache, as described below. Both initialization calls remain
+  stubs; their success/failure and asynchronous work are untested.
 - The dispatch thunk at `0x800293A0` loads the browser handle from object offset
   `0x240`, loads the current published URL, and tail-calls `WWWOpenUrl`. Both
   synthetic URL selections reach the callback unchanged, and callback results
@@ -66,10 +67,44 @@ different fingerprint and stops on control flow outside the selected routines.
   no browser or network is invoked.
 
 The harness runs these slices separately. It does not execute all intervening
-initialization, establish their full runtime order, identify the prerequisite
-query's configuration key, or show what happens after a real navigation. The
-local EULA destination is evidence of that branch's role, not proof of the
-query's complete semantics. Every URL used during these tests is synthetic.
+initialization, establish their full runtime order, or show what happens after
+a real navigation. Every URL used during these tests is synthetic.
+
+## Native EULA configuration lookup
+
+The key-name table at `0x8034BBD0` pairs the string `IPL.EULA` with index 7.
+The query at `0x801FE1C0` passes that index to the boolean lookup at
+`0x801FD180`. This identifies the earlier prerequisite without relying on an
+assumed SDK function name or source-version match.
+
+With `eula_config=SyntheticEulaConfig(...)`, the harness executes that getter,
+the indexed lookup, record parser at `0x801FC650`, and native memory-copy/clear
+helpers. Only the two interrupt-control calls are stubbed inside this query.
+The same run continues through the original URL-selection branch and dispatch
+thunk; it does not substitute a result for the getter.
+
+| Synthetic indexed record | Native getter result | Selected URL |
+| --- | --- | --- |
+| Boolean type `0xE0`, value 0 | 0 | Local EULA page |
+| Boolean type `0xE0`, values 1, 2 or 255 | 1 | Existing Shop URL |
+| Missing index entry or unavailable lookup table | 0 | Local EULA page |
+| Byte type `0x60` or unsupported type 0 | 0 | Local EULA page |
+
+The boolean lookup normalizes nonzero bytes to 1. A raw config byte of 2 is
+therefore accepted, unlike an artificial getter result of 2 in the older
+stub-only branch test. Lookup/type failures cause the wrapper to return 0.
+
+`tools.wii_shop_synthetic_config` builds a minimal indexed cache in emulated RAM.
+It validates the original key-name table, then supplies synthetic offsets and
+a serialized `IPL.EULA` record. It does not construct a complete SYSCONF file or
+execute the code that loads, validates and indexes one. These checks neither
+inspect nor modify the user's NAND configuration or EULA state.
+
+The installed index-2 resource archive supplies corroborating static UI evidence:
+`eula.html` calls `shop.jumpToEULAViewer()` and `eulacomp.html` calls
+`shop.jumpToManualChannel()`. Those names are browser-call candidates from the
+page bodies; their native implementations and resulting channel transitions
+remain unexecuted. The pages are bundled support UI, not recovered catalog pages.
 
 Reproduce the checks with the private installed v21 executable available:
 
@@ -91,7 +126,7 @@ configuration, but its listed `opera.ini` does not supply a home URL. Therefore
 neither those literals nor the isolated routines prove the main storefront HTTP
 request or its redirect chain.
 
-Next is identifying the real launch parameters and prerequisite configuration,
-then capturing browser requests in a controlled runtime profile. No
+Next is identifying the real launch parameters and tracing the EULA-viewer
+transition, then capturing browser requests in a controlled runtime profile. No
 network redirect, replacement page, TLS modification or channel patch is
 implemented by this offline work. Derived disassembly remains private.

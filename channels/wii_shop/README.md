@@ -54,5 +54,11 @@ The [native URL/navigation checks](startup_contract.md) now execute v21's
 original builder, formatter, URL initializer, import loop, entry branch and
 browser-dispatch thunk with synthetic state. Mode 0 with zero or one argument
 retains the bare host, and the selected URL reaches the `WWWOpenUrl` callback.
-Browser/configuration dependencies are stubbed. Actual launch parameters,
+Browser and OS dependencies are stubbed. Actual launch parameters,
 HTTP requests and browser rendering remain unverified.
+
+The prerequisite is now identified as the `IPL.EULA` boolean. Its native getter,
+indexed lookup and record parser run on synthetic cache records through URL
+selection and dispatch. Missing/wrongly typed records select the bundled EULA
+page, while nonzero boolean bytes preserve the Shop URL. Config loading and
+browser/OS dependencies remain outside these checks; no user EULA state changes.

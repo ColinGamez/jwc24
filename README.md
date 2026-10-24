@@ -101,8 +101,9 @@ Its [MarioCube metadata import](channels/wii_shop/catalog.md) supplies a
 Japan-first discovery snapshot; native catalog rendering and installation
 remain separate, unfinished work.
 The [native startup checks](channels/wii_shop/startup_contract.md) now trace
-URL initialization and dispatch to `WWWOpenUrl` with synthetic state; actual
-browser requests and storefront rendering still need runtime verification.
+URL initialization, the `IPL.EULA` config lookup and dispatch to `WWWOpenUrl`
+with synthetic state; actual browser requests and storefront rendering still
+need runtime verification.
 
 TV no Tomo has reached its real program-guide UI with current listings. The
 latest build validated:

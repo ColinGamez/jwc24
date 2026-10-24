@@ -95,7 +95,9 @@ under `private/wii_shop/`. No runtime capture was performed in this follow-up.
 The host pointer's consumer leads to builder `0x8002BC10`. Its native
 formatter now passes synthetic Unicorn checks for base selection, concatenation,
 truncation, pointer publication and output guards. This narrows the gap from
-raw URL literals to an executed builder contract. The selected main launch
-suffix and subsequent browser request are still open. See the
+raw URL literals to an executed builder contract. Subsequent checks cover URL
+initialization, mode-zero entry branches, browser import/dispatch and the native
+`IPL.EULA` getter/record parser on synthetic cache state. Actual launch parameters
+and browser requests remain unobserved. See the
 [startup contract](../channels/wii_shop/startup_contract.md) for fingerprints,
 caller leads and exact verification limits.

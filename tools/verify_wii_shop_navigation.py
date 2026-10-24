@@ -1,21 +1,29 @@
 """Execute isolated v21 URL initialization, selection and browser dispatch.
 
 The browser symbol resolver, unrelated constructors, launch-mode query,
-configuration prerequisite and two initialization routines are stubs. No browser
-or network runs. This checks small native contracts, not the complete boot
-sequence or an HTTP request.
+two initialization routines are stubs. The configuration query can run natively
+on a synthetic indexed cache, with critical-section calls stubbed, or return a
+stubbed result. No browser or network runs. This checks small native contracts,
+not the complete boot sequence or an HTTP request.
 """
 import hashlib
 import struct
 
 from tools.verify_wii_shop_url import SOURCE_SHA
+from tools.wii_shop_synthetic_config import (
+    CRITICAL_SECTION_CALLS, EULA_QUERY, NATIVE_QUERY_RANGES, SyntheticEulaConfig,
+)
 
 
-def verify_navigation(source, prerequisite_result, *, callback_result=0, launch_argument_count=0):
+def verify_navigation(source, prerequisite_result=None, *, callback_result=0,
+                      launch_argument_count=0, eula_config=None):
     if hashlib.sha256(source).hexdigest() != SOURCE_SHA:
         raise ValueError('Shop v21 executable fingerprint mismatch')
-    if any(type(value) is not int or not 0 <= value <= 0xffffffff
-           for value in (prerequisite_result, callback_result)):
+    native_query = eula_config is not None
+    if native_query and (type(eula_config) is not SyntheticEulaConfig or prerequisite_result is not None):
+        raise ValueError('Choose a synthetic config or a stubbed prerequisite result')
+    results = (callback_result,) if native_query else (prerequisite_result, callback_result)
+    if any(type(value) is not int or not 0 <= value <= 0xffffffff for value in results):
         raise ValueError('Expected synthetic U32 results')
     if type(launch_argument_count) is not int or launch_argument_count not in (0, 1):
         raise ValueError('This harness checks only zero/one-argument launch branches')
@@ -28,6 +36,8 @@ def verify_navigation(source, prerequisite_result, *, callback_result=0, launch_
     cpu.mem_map(0x80000000, 0x1800000)
     for _, offset, address, size in sections(source):
         cpu.mem_write(address, source[offset:offset+size])
+    if native_query:
+        eula_config.install(cpu)
 
     def word(address):
         return int.from_bytes(cpu.mem_read(address, 4), 'big')
@@ -80,6 +90,7 @@ def verify_navigation(source, prerequisite_result, *, callback_result=0, launch_
     phase = None
     constructor_calls, resolved, initializer_calls, opened = [], [], [], []
     prerequisite_calls = []
+    query_results, critical_section_calls = [], []
     launch_mode_calls = []
     browser_object, browser_handle, module_handle = 0x81003000, 0x81004000, 0x81005000
     write_word(browser_object+0x240, browser_handle)
@@ -108,9 +119,18 @@ def verify_navigation(source, prerequisite_result, *, callback_result=0, launch_
             launch_mode_calls.append(address)
             stub_return(0)
             return
-        elif phase == 'selection' and address == 0x801fe1c0:
+        elif phase == 'selection' and address == EULA_QUERY:
             prerequisite_calls.append(address)
-            stub_return(prerequisite_result)
+            if not native_query:
+                stub_return(prerequisite_result)
+                return
+        elif phase == 'selection' and address == 0x800136ac:
+            query_results.append(register(3))
+        elif phase == 'selection' and native_query and address in CRITICAL_SECTION_CALLS:
+            if address == CRITICAL_SECTION_CALLS[1] and register(3) != 0:
+                raise ValueError('Native query did not restore the stubbed interrupt state')
+            critical_section_calls.append(address)
+            stub_return(0)
             return
         elif phase == 'selection' and address in (0x8002f560, 0x8002f680):
             if register(3) != object_pointer:
@@ -129,7 +149,8 @@ def verify_navigation(source, prerequisite_result, *, callback_result=0, launch_
             'constructors': ((0x801d0910, 0x801d0958), (0x80028ce0, 0x80028cec)),
             'imports': ((0x80028944, 0x80028978),),
             'launch': ((0x80023df0, 0x8002407c), (0x8002bca0, 0x8002bcc0)),
-            'selection': ((0x800136a8, 0x800136f0), (0x80013930, 0x80013950)),
+            'selection': ((0x800136a8, 0x800136f0), (0x80013930, 0x80013950))
+                         + (NATIVE_QUERY_RANGES if native_query else ()),
             'dispatch': ((0x800293a0, 0x800293b4),),
         }
         if not any(start <= address < stop for start, stop in allowed[phase]):
@@ -168,9 +189,17 @@ def verify_navigation(source, prerequisite_result, *, callback_result=0, launch_
 
     phase = 'selection'
     run(0x800136a8, 0x800136f0)
-    accepted = prerequisite_result == 1
+    if native_query:
+        expected_result = int(eula_config.present and eula_config.lookup_ready
+                              and eula_config.record_type == 0xe0 and eula_config.value != 0)
+    else:
+        expected_result = prerequisite_result
+    if (query_results != [expected_result]
+            or critical_section_calls != (list(CRITICAL_SECTION_CALLS) if native_query else [])):
+        raise ValueError('Native EULA query or critical-section calls differ')
+    accepted = expected_result == 1
     expected_pointer, expected_url = (base_pointer, base) if accepted else (eula_pointer, eula)
-    if (prerequisite_calls != [0x801fe1c0]
+    if (prerequisite_calls != [EULA_QUERY]
             or bytes(cpu.mem_read(object_pointer+8, 1)) != bytes([int(accepted)])
             or initializer_calls != ([0x8002f560, 0x8002f680] if accepted else [])
             or word(0x803607d8) != expected_pointer):
@@ -189,13 +218,17 @@ def verify_navigation(source, prerequisite_result, *, callback_result=0, launch_
         'launch_mode': 0, 'launch_argument_count': launch_argument_count,
         'launch_mode_query_mocked': True, 'native_entry_url_branch_mocked': False,
         'open_url_symbol': 'WWWOpenUrl', 'open_url_calls': len(opened),
-        'prerequisite_result': prerequisite_result, 'eula_selected': not accepted,
+        'prerequisite_result': query_results[0], 'eula_selected': not accepted,
         'initializers_stubbed': len(initializer_calls),
         'published_url': expected_url.decode('ascii'),
         'callback_result': callback_result, 'callback_return_forwarded': True,
         'native_url_initializer_mocked': False, 'native_import_loop_mocked': False,
         'native_selection_branch_mocked': False, 'native_dispatch_thunk_mocked': False,
-        'prerequisite_query_mocked': True, 'symbol_resolver_mocked': True,
+        'prerequisite_query_mocked': not native_query, 'symbol_resolver_mocked': True,
+        'config_key': 'IPL.EULA' if native_query else None,
+        'config_cache_synthetic': native_query, 'config_initialization_verified': False,
+        'critical_section_calls_stubbed': len(critical_section_calls),
+        'nand_config_accessed': False,
         'browser_or_network_invoked': False, 'startup_request_verified': False,
         'complete_boot_sequence_verified': False,
     }

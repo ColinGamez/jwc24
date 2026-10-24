@@ -2,6 +2,7 @@ import unittest
 
 from tests import test_wii_shop_url as url_tests
 from tools.verify_wii_shop_navigation import verify_navigation
+from tools.wii_shop_synthetic_config import SyntheticEulaConfig
 
 
 class NativeShopNavigationTests(unittest.TestCase):
@@ -68,3 +69,38 @@ class NativeShopNavigationTests(unittest.TestCase):
                 verify_navigation(source, value)
             with self.subTest(callback=value), self.assertRaisesRegex(ValueError, 'U32'):
                 verify_navigation(source, 1, callback_result=value)
+
+    def test_native_eula_getter_normalizes_config_byte_before_navigation(self):
+        source = self.source()
+        for value in (0, 1, 2, 255):
+            with self.subTest(value=value):
+                report = verify_navigation(source, eula_config=SyntheticEulaConfig(value=value))
+                self.assertEqual(report['prerequisite_result'], int(value != 0))
+                self.assertEqual(report['eula_selected'], value == 0)
+                self.assertEqual(report['config_key'], 'IPL.EULA')
+                self.assertFalse(report['prerequisite_query_mocked'])
+                self.assertEqual(report['critical_section_calls_stubbed'], 2)
+                self.assertFalse(report['nand_config_accessed'])
+
+    def test_native_eula_lookup_returns_false_for_missing_or_wrongly_typed_record(self):
+        source = self.source()
+        for config in (SyntheticEulaConfig(present=False),
+                       SyntheticEulaConfig(lookup_ready=False),
+                       SyntheticEulaConfig(record_type=0x60),
+                       SyntheticEulaConfig(record_type=0)):
+            with self.subTest(config=config):
+                report = verify_navigation(source, eula_config=config, callback_result=0xffffffff)
+                self.assertEqual(report['prerequisite_result'], 0)
+                self.assertTrue(report['eula_selected'])
+                self.assertEqual(report['published_url'], 'file:/synthetic/eula.html')
+                self.assertTrue(report['callback_return_forwarded'])
+
+    def test_synthetic_config_inputs_are_bounded_and_separate_from_stub_results(self):
+        for kwargs in ({'value': -1}, {'value': 256}, {'value': True},
+                       {'present': 1}, {'lookup_ready': 1}, {'record_type': 0xff}):
+            with self.subTest(kwargs=kwargs), self.assertRaises(ValueError):
+                SyntheticEulaConfig(**kwargs)
+        source = self.source()
+        for config in ({}, SyntheticEulaConfig()):
+            with self.assertRaisesRegex(ValueError, 'Choose'):
+                verify_navigation(source, 1, eula_config=config)
