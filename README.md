@@ -97,6 +97,9 @@ records three later archived manuals, postal-tool evidence and shared diagnostic
 The [Wii Shop research track](channels/wii_shop/README.md) now audits recovered
 commerce-client evidence and maps a read-only startup/browsing milestone.
 It is not a working replacement Shop backend.
+Its [MarioCube metadata import](channels/wii_shop/catalog.md) supplies a
+Japan-first discovery snapshot; native catalog rendering and installation
+remain separate, unfinished work.
 
 TV no Tomo has reached its real program-guide UI with current listings. The
 latest build validated:

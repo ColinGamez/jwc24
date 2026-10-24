@@ -36,3 +36,8 @@ Original source/software, device/account data and tickets stay outside Git.
 The checked-in [audit report](../../research/wii_shop_source_audit_20261024.json)
 contains metadata and protocol-name leads only. No server endpoints or runtime
 Shop behavior are implemented yet.
+
+[MarioCube catalog metadata](catalog.md) is now imported separately: the first
+27-page snapshot retains 3,062 listings and 915 Japan-labeled browse candidates.
+No title binaries were downloaded. Native catalog integration and verified
+title-ID mapping remain unfinished.

@@ -74,3 +74,18 @@ Eight focused source/client audit tests pass. They cover provenance drift,
 content size/hash mismatches, invalid shared-map records, URL query/userinfo
 redaction, path containment and bounded DOL entry detection. The installed
 18-content audit was separately run successfully and its metadata recorded.
+
+## Static follow-up: manual-link distinction
+
+The nine absolute `/startup` literals inspected in the main DOL are manual-link
+templates with `initpage=showManual` and an appended title-ID field. Their
+presence does not establish the main storefront entry request. Relative strings
+also reference title/help variants. The earlier route table deliberately omits
+query values, so this distinction requires the fuller private string review.
+
+A candidate immediate-address reference at `0x8008893C` loads the ECS URL at
+`0x80322020` inside the function beginning `0x80088920`. That function also
+forms the nearby `GetECConfig` pointer at `0x80322054`, consistent with the
+reviewed connection-library flow. This is a static comparison lead, not an
+executed request or an exact source/binary match. Derived disassembly stays
+under `private/wii_shop/`. No runtime capture was performed in this follow-up.
