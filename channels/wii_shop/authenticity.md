@@ -18,8 +18,8 @@ remain in `jwc24/wii_shop_artwork.py` and its adapter:
 
 | Area | Current deviation | Required work |
 | --- | --- | --- |
-| Page source | Current renderer uses a modified third-party archive; separate 2019 captures have now been recovered privately | Review and integrate the captured Japanese storefront pages and corroborate their behavior |
-| Text | JWC24 translates labels, supplies category descriptions, and replaces decoding errors with another character | Recover original Japanese copy and correct source encoding |
+| Page source | Home now uses the reviewed 2019 capture; other pages still use a modified interactive archive | Integrate the remaining captured pages and corroborate their behavior |
+| Text | Home labels are corroborated by Nintendo's screenshot and native properties; other pages still have adapted translations/descriptions and decoding substitutions | Recover remaining original Japanese copy and correct source encoding |
 | Controls | Publisher/genre functions are repurposed as list/demo filters; unsupported links lead to a custom explanation | Preserve the original meaning and implement the corresponding data and flow |
 | Account/title fields | Unknown balance, price, release date and player fields become dashes; publisher is blank | Obtain verified values and implement native account state; do not fabricate values |
 | Images | 23 title images are unavailable in the current fetch; missing resources use a transparent spacer | Recover the correct images and verify title association; do not count blank images as completion |
@@ -41,6 +41,11 @@ The [historical storefront capture](frontend_capture.md) adds thirteen captured
 shared scripts and Japan-region detail requests matching 836 preview IDs.
 Its keyboard script and observed search mode/row limit are now integrated;
 the complete original Japanese page/keyboard flow remains unfinished.
+The home now uses the captured markup and matching CSS/images. Its visible
+Japanese menu labels follow Nintendo's official screenshot, correcting
+`設定・特典` to `設定・その他`. These strings are corroborated by that screenshot;
+the screenshot is not a version-specific v21 localization dump. Other page
+labels, native account state and unsupported menu functions remain unresolved.
 
 ## Nintendo collection follow-up
 

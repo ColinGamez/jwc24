@@ -3,8 +3,10 @@
 JS = b'''var nativeShop=null,nativeSound=null,nativeKeyboard=null,connectingText=null;
 function soundEffect(n){try{if(nativeSound)nativeSound.playSE(n);}catch(e){}}
 function leaveShop(){try{if(nativeShop){nativeShop.returnToMenu();return false;}}catch(e){}return true;}
-function typeSearch(){try{if(nativeKeyboard)nativeKeyboard.call(cKT_PredictNoLF,5,false);}catch(e){}}
-function submitCatalogSearch(input){if(input.value){input.form.submit();}}
+function typeSearch(input){input.blur();try{if(nativeKeyboard)nativeKeyboard.call(cKT_PredictNoLF,5,false);}catch(e){}}
+function submitCatalogSearch(input){input.blur();var value=input.value;input.value='';
+if(value){var category=input.getAttribute('data-shop-category');
+window.location.href='/catalog?category='+encodeURIComponent(category)+'&q='+encodeURIComponent(value);}}
 function applyShopStrings(){var nodes=document.getElementsByTagName('span');
 for(var i=0;i<nodes.length;i++){var key=nodes[i].getAttribute('data-shop-string');
 if(key=='title'||key=='menuBtn'){var text=nativeShop[key];

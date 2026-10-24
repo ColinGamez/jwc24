@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "captured_home_template_sha256": "4d204a5bc459d0c8c5df8cbed965ff60461036500af59ffb84560367f5c20aaa",
+  "captured_home_template_selected": true,
+  "captured_shared_resources_loaded": 420,
+  "captured_css_sha256": "2ac3f9fdb141d89281ae74159e32295f079693a3b8bc1602408b6fc9223e49b0",
+  "captured_css_http_content_type": "text/css; charset=UTF-8",
+  "home_dependency_routes_verified_over_tls": 20,
+  "captured_dependency_bytes_match": true,
+  "home_active_embedded_contexts_absent": true,
+  "japanese_home_label_reference": "https://www.nintendo.co.jp/wii/features/shopping_ch/img/screen.jpg",
+  "japanese_home_label_reference_sha256": "fa252491edddae8e1978d3b0d389931f5edab061449097f877c01713223c1146",
+  "japanese_home_labels": {
+    "text01-01": "バーチャルコンソール",
+    "text07-01": "Wiiウェア",
+    "text02-01": "Wiiチャンネル",
+    "text03-01": "Wiiポイントの追加",
+    "text04-01": "ご利用記録",
+    "text05-01": "設定・その他",
+    "text06-01": "購入済みソフト"
+  },
+  "native_title_and_menu_labels_retained": true,
+  "search_blur_clear_nonempty_navigation_verified_with_synthetic_browser": true,
+  "search_standalone_input_structure_retained": true,
+  "shop_and_credentials_tests_passed": 80,
+  "updated_home_dolphin_visual_verified": false,
+  "complete_original_storefront_verified": false
+}

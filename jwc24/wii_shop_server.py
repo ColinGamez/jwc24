@@ -61,6 +61,7 @@ class Application:
                           'archived_artwork': True,
                           'native_original_scripts': bool(getattr(self.pages, 'native_assets', None)),
                           'captured_keyboard_script': bool(getattr(self.pages, 'captured_scripts', None)),
+                          'captured_home_layout': bool(getattr(getattr(self.pages, 'captured_scripts', None), 'home_html', None)),
                           'category_menus_supported': hasattr(self.pages, 'category'),
                           'title_artwork_titles': len(self.pages.title_artwork.images) if getattr(self.pages, 'title_artwork', None) else 0,
                           'recent_requests': list(self.events), 'downloads_supported': False}

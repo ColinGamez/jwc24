@@ -9,9 +9,10 @@ Updated October 25, 2026. The original v21 Shop browser has reached JWC24's
 loopback HTTPS service in Dolphin. The initial connectivity screen rendered at
 608 × 456 and reported successful native Shop/sound initialization; the user
 also confirmed it visually. That handmade screen has been removed. The current
-renderer binds the catalog into archived Shop layouts and artwork. The archived
-three-panel home has now also been inspected in Dolphin's own frame output at
-640 × 480, with the browser viewport reporting 608 × 456.
+renderer binds the catalog into archived Shop layouts and artwork. An earlier
+three-panel home was inspected in Dolphin's own frame output at 640 × 480,
+with the browser viewport reporting 608 × 456. The current captured-home
+template/style update still needs its own native visual check.
 
 This is a read-only browsing experiment in a privately patched Dolphin profile.
 It is not the clean-WAD restoration milestone, an acquisition service or a
@@ -24,7 +25,9 @@ The current local pack (`artwork-v2`) contains 71 resources from the
 `B_05.html`, category menus `B_01.html` / `B_27.html`, shared CSS, button graphics,
 shadows and other page artwork.
 The three-panel home, catalog-card and detail-page layouts come from those
-files. The archive contains later edits; this is not a claim of an untouched
+files in the earlier preview. The home now uses the reviewed 2019 capture and
+its matching CSS/images; the other page layouts still use the interactive
+archive. That archive contains later edits; this is not a claim of an untouched
 Nintendo server snapshot. Two shared images, `spacer.gif` and
 `under_banner_shadow.gif`, also match the installed original channel byte-for-byte.
 
@@ -88,8 +91,10 @@ predates this change.
 The updated service also requires the reviewed private storefront capture at
 `private/wii_shop/frontend-capture-v1`. Its [import procedure](frontend_capture.md#reproduce-privately)
 checks the collector archive and extracts selected files into a hashed store.
-The server serves only the fingerprint-pinned keyboard script from that store;
-the remaining captured commerce scripts are not enabled. Keyboard input and
+Among scripts, the server exposes only the fingerprint-pinned keyboard script from that store;
+the remaining captured commerce scripts are not enabled. The same reviewed
+pack now supplies the captured home template and 420 validated shared CSS/image
+files through mirrored local paths. Keyboard input and
 the full Japanese prompt/submit/cancel flow remain unverified in Dolphin.
 
 `tools.prepare_wii_shop_preview` copies Config/Wii into a new private profile.
@@ -160,7 +165,7 @@ The image importer uses Pillow from the existing `artwork` optional dependency.
 Normal preview launches explicitly disable frame dumping; temporary test videos
 were removed after retaining a private native proof image.
 
-Validation: 77 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
+Validation: 78 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
 rendered against the real snapshot; title links cover all 844 grouped IDs once.
 All 821 available image routes were checked. See the
 [updated artwork report](../../research/wii_shop_artwork_validation_20261025.json)
@@ -169,3 +174,7 @@ The [native script update report](../../research/wii_shop_native_scripts_validat
 separately records exact bytes served over verified loopback TLS, script load
 order and native text bindings. It explicitly leaves the updated Dolphin
 visual check and complete-original-storefront verification outstanding.
+The [captured home report](../../research/wii_shop_captured_home_validation_20261025.json)
+records the newer template/style selection, 20 live dependency checks,
+screenshot-backed Japanese copy and search-callback verification. Its native
+visual check remains explicitly outstanding.

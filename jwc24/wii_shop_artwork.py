@@ -18,6 +18,13 @@ from .wii_shop_title_artwork import TitleArtwork
 
 VOID = {'img', 'input', 'br', 'hr', 'meta', 'link', 'area', 'base', 'wbr', 'source'}
 
+# Visible labels corroborated against Nintendo's Japanese Shop home screenshot:
+# https://www.nintendo.co.jp/wii/features/shopping_ch/img/screen.jpg
+HOME_COPY = {'text01-01': 'バーチャルコンソール', 'text07-01': 'Wiiウェア',
+             'text02-01': 'Wiiチャンネル', 'text03-01': 'Wiiポイントの追加',
+             'text04-01': 'ご利用記録', 'text05-01': '設定・その他',
+             'text06-01': '購入済みソフト'}
+
 
 @dataclass
 class Node:
@@ -135,7 +142,7 @@ class Artwork:
             return '/'
         return '/about'
 
-    def _sanitize(self, root):
+    def _sanitize(self, root, captured=False):
         for node in root.walk():
             for key in list(node.attrs):
                 if key.lower().startswith('on'):
@@ -145,9 +152,10 @@ class Artwork:
                 node.attrs['onclick'] = 'snd.playSE(cSE_Decide)'
             if node.tag in ('img', 'input') and 'src' in node.attrs:
                 source = posixpath.normpath(node.attrs['src'])
-                node.attrs['src'] = source if source in self.files else '/oss/oss/common/images/spacer.gif'
+                node.attrs['src'] = (self.captured_scripts.resource_url(source) if captured
+                                     else source if source in self.files else '/oss/oss/common/images/spacer.gif')
             for index, child in enumerate(node.children):
-                if isinstance(child, str):
+                if isinstance(child, str) and not captured:
                     for old, new in (('Virtual Console', 'バーチャルコンソール'),
                                      ('Wii Channels', 'Wiiチャンネル'), ('Add Wii Points', 'Wiiポイントの追加'),
                                      ('Account Activity', 'ご利用記録'), ('Settings and Features', '設定・特典'),
@@ -159,14 +167,16 @@ class Artwork:
                     node.children[index] = child.replace('\ufffd', '・')
 
     def _base(self, name):
-        source = self.files['/oss/serv/'+name].decode('utf-8', errors='replace')
+        captured = name == 'W_03.html' and self.captured_scripts is not None
+        source = (self.captured_scripts.home_html.decode('utf-8-sig') if captured
+                  else self.files['/oss/serv/'+name].decode('utf-8', errors='replace'))
         styles = '\n'.join(re.findall(r'<style[^>]*>(.*?)</style>', source, re.I | re.S))
         body = source[source.lower().index('<body'):]
         body = re.sub(r'<script\b[^>]*>.*?</script\s*>', '', body, flags=re.I | re.S)
         body = re.sub(r'<!--.*?-->', '', body, flags=re.S)
         body = body[:body.lower().rfind('</body>')]
         root = Tree(body).root
-        self._sanitize(root)
+        self._sanitize(root, captured=captured)
         root.attrs['onload'] = 'initShop()'
         root.text('currentBalance', '－')
         for suffix in ('', 'L', 'R'):
@@ -190,8 +200,9 @@ class Artwork:
             node.children = [Node('table', {'width': '100%', 'height': '100%', 'cellspacing': '0', 'cellpadding': '0'},
                 [Node('tr', {}, [Node('td', {'align': 'center', 'valign': 'middle'}, [text])])])]
 
-    def _finish(self, root, styles, extra=''):
-        css = '<link rel="stylesheet" type="text/css" href="/oss/oss/common/css/oss.css">'
+    def _finish(self, root, styles, extra='', captured_home=False):
+        css_url = self.captured_scripts.resource_url('/oss/oss/common/css/oss.css') if captured_home else '/oss/oss/common/css/oss.css'
+        css = '<link rel="stylesheet" type="text/css" href="'+css_url+'">'
         if root.find('purchasePage'):
             css += '<link rel="stylesheet" type="text/css" href="/oss/oss/common/css/B_05.css">'
         scripts = self.native_assets.script_tags() if self.native_assets else ''
@@ -204,6 +215,14 @@ class Artwork:
 
     def home(self, _count):
         root, styles = self._base('W_03.html')
+        for identifier, label in HOME_COPY.items():
+            root.text(identifier, label)
+        # The unit shares its container with the native balance slot.
+        point = root.find('point')
+        if point:
+            for node in point.walk():
+                node.children = [child.replace('Wii Points', 'Wiiポイント') if isinstance(child, str) else child
+                                 for child in node.children]
         root.find('W_03-title').children = [Node('span', {'data-shop-string': 'title'})]
         self._button_label(root, 'underwordL', Node('span', {'data-shop-string': 'menuBtn'}))
         root.find('underlinkL').attrs['onclick'] = 'return leaveShop()'
@@ -212,7 +231,7 @@ class Artwork:
                                ('spacer03', 'Image3'), ('spacer04', 'Image4'), ('spacer05', 'Image5'),
                                ('spacer06', 'Image6')):
             self._hover(root, trigger, image)
-        return self._finish(root, styles)
+        return self._finish(root, styles, captured_home=self.captured_scripts is not None)
 
     def _hover(self, root, trigger, image):
         target, picture = root.find(trigger), root.find(image)
@@ -220,7 +239,7 @@ class Artwork:
             return
         normal = picture.attrs.get('src', '')
         hover = re.sub(r'_a\.(gif|png)$', r'_b.\1', normal)
-        if hover in self.files:
+        if hover in self.files or self.captured_scripts and self.captured_scripts.has_asset(hover):
             target.attrs['onmouseover'] = 'MM_swapImage('+json.dumps(image)+',"",'+json.dumps(hover)+',1);snd.playSE(cSE_Forcus)'
             target.attrs['onmouseout'] = 'MM_swapImgRestore()'
 
@@ -247,10 +266,9 @@ class Artwork:
         if slot:
             entry = next((n for n in slot.walk() if n.tag == 'input'), None)
             if entry:
-                entry.attrs.update(name='q', maxlength='40', onmousedown='typeSearch()',
+                entry.attrs.update(maxlength='40', onmousedown='typeSearch(this)',
                                    onchange='submitCatalogSearch(this)')
-                hidden = Node('input', {'type': 'hidden', 'name': 'category', 'value': category})
-                slot.children = [Node('form', {'action': '/catalog', 'method': 'get', 'style': 'margin:0'}, [hidden, entry])]
+                entry.attrs['data-shop-category'] = category
         return self._finish(root, styles)
 
     def browse(self, result, options):

@@ -103,8 +103,9 @@ The [Wii Shop track](channels/wii_shop/README.md) now has a
 original v21 browser in an isolated Dolphin profile. It binds 844 grouped
 Japan titles from the [MarioCube snapshot](channels/wii_shop/catalog.md) into
 archived Shop page layouts and artwork, including category menus and 821 title
-images. The original three-panel home has been checked in Dolphin's native
-output; keyboard entry and deeper interaction still need hands-on checks.
+images. An earlier three-panel home was checked in Dolphin's native output;
+the current historical-template update, keyboard entry and deeper interaction
+still need hands-on checks.
 The latest update loads three unchanged bundled scripts and uses the native
 title/menu strings and hover helpers. Those changes pass hash and JavaScript
 checks; a fresh Dolphin visual check is still outstanding.
@@ -112,6 +113,9 @@ A separate [2019 storefront capture](channels/wii_shop/frontend_capture.md)
 now supplies thirteen shared scripts and Japan-region detail requests matching
 836 preview IDs. The captured keyboard initializer and observed search settings
 are integrated; full Japanese page and interaction fidelity remains unfinished.
+The home now uses the historical template and matching CSS/images, with visible
+Japanese menu labels corroborated by Nintendo's own screenshot. Search follows
+the captured blur/clear behavior and uses the original input without an added form.
 This uses privately patched test content; clean-WAD restoration,
 accounts, purchases and installation remain unfinished.
 The [native startup checks](channels/wii_shop/startup_contract.md) now trace

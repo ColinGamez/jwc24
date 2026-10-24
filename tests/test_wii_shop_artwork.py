@@ -1,8 +1,10 @@
 from html.parser import HTMLParser
 from pathlib import Path
+import re
 import tempfile
 import unittest
 import json
+from urllib.parse import urljoin, urlsplit
 
 from jwc24.wii_shop_artwork import Artwork, Tree
 from jwc24.wii_shop_browse import Catalog
@@ -60,6 +62,10 @@ class ShopArtworkTests(unittest.TestCase):
         labels = [a['data-shop-string'] for _, a in elements if 'data-shop-string' in a]
         self.assertCountEqual(labels, ['title', 'menuBtn'])
         self.assertNotIn('Wiiメニューへ'.encode(), pack.home(844))
+        self.assertIn('設定・その他'.encode(), pack.home(844))
+        self.assertNotIn('設定・特典'.encode(), pack.home(844))
+        self.assertIn('Wiiウェア'.encode(), pack.home(844))
+        self.assertTrue(any(a.get('id') == 'currentBalance' for _, a in elements))
         links = [attrs.get('href', '') for tag, attrs in elements if tag == 'a']
         self.assertIn('/category/wiiware', links)
         self.assertIn('/category/virtual-console', links)
@@ -80,6 +86,24 @@ class ShopArtworkTests(unittest.TestCase):
                     with self.subTest(page=path, asset=asset):
                         self.assertEqual(pack.asset(asset)[0], 200)
 
+    def test_home_uses_the_reviewed_capture_and_its_styles_instead_of_edited_template(self):
+        pack = self.pack()
+        pack.files['/oss/serv/W_03.html'] = b'not a usable home template'
+        nodes = Elements(pack.home(844)).nodes
+        stylesheets = [a['href'] for t, a in nodes if t == 'link']
+        self.assertEqual(stylesheets, ['/assets/captured/oss/oss/common/css/oss.css'])
+        css_url = stylesheets[0]
+        status, mime, data = pack.asset(css_url)
+        self.assertEqual(status, 200)
+        css = data.decode('cp932' if 'Shift_JIS' in mime else 'utf-8-sig')
+        for reference in re.findall(r'url\([\"\x27]?([^\"\x27)]+)', css):
+            resolved = urlsplit(urljoin('https://127.0.0.1'+css_url, reference))
+            self.assertEqual(resolved.hostname, '127.0.0.1')
+            path = resolved.path
+            with self.subTest(resource=path):
+                self.assertEqual(pack.asset(path)[0], 200)
+        self.assertEqual(pack.asset('/assets/captured/oss/oss/common/js/oss.js')[0], 404)
+
     def test_archived_rows_bind_filtered_catalog_and_escape_metadata(self):
         pack = self.pack()
         rows = [record(f'00010001{i:08X}', f'Game {i:02}') for i in range(14)]
@@ -93,18 +117,18 @@ class ShopArtworkTests(unittest.TestCase):
         self.assertIn(b'&lt;script&gt;unsafe()', body)
         self.assertNotIn(b'<script>unsafe()', body)
 
-    def test_category_keyboard_search_uses_local_form_and_native_adapter(self):
+    def test_category_keyboard_search_preserves_original_input_and_local_navigation(self):
         pack = self.pack()
         for category in ('WiiWare', 'Virtual Console'):
             nodes = Elements(pack.category(category)).nodes
             forms = [a for t,a in nodes if t == 'form']
-            self.assertEqual(forms, [{'action': '/catalog', 'method': 'get', 'style': 'margin:0'}])
-            entries = [a for t,a in nodes if t == 'input' and a.get('name') == 'q']
+            self.assertEqual(forms, [])
+            entries = [a for t,a in nodes if t == 'input' and a.get('data-shop-category') == category]
             self.assertEqual(len(entries), 1)
-            self.assertEqual(entries[0]['onmousedown'], 'typeSearch()')
+            self.assertEqual(entries[0]['onmousedown'], 'typeSearch(this)')
             self.assertEqual(entries[0]['onchange'], 'submitCatalogSearch(this)')
             self.assertEqual(entries[0]['maxlength'], '40')
-            self.assertTrue(any(t == 'input' and a.get('name') == 'category' and a.get('value') == category for t,a in nodes))
+            self.assertEqual(entries[0]['name'], 'Image04s')
 
     def test_catalog_back_returns_to_its_category_menu(self):
         app = Application(Catalog([record()]), artwork=self.pack())

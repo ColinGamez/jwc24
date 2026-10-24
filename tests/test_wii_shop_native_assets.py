@@ -55,7 +55,7 @@ const picture={src:'original-a.gif'};
 const context={wiiShop:function(){shopCount++;return {title:'native <title>',menuBtn:'native & menu',
 connecting:'connecting',setWallpaper(){},enableHRP(){},endWaiting(){},returnToMenu(){returned++;}};},
 wiiSound:function(){soundCount++;return {playBGM(){music++;},playSE(){}};},
-wiiKeyboard:function(){keyboardCount++;return {call(...args){keyboardCall=args;}};},Image:function(){},window:{innerWidth:608,innerHeight:456},
+wiiKeyboard:function(){keyboardCount++;return {call(...args){keyboardCall=args;}};},Image:function(){},window:{innerWidth:608,innerHeight:456,location:{href:'unchanged'}},
 document:{getElementsByTagName:()=>labels,createTextNode:text=>({text}),documentElement:{},body:{},
 forms:[],getElementById:()=>picture}};
 vm.createContext(context);
@@ -63,7 +63,14 @@ const scripts=JSON.parse(process.argv[1]);
 scripts.forEach(source=>vm.runInContext(source,context));
 context.initShop();
 assert.strictEqual(shopCount,1);assert.strictEqual(soundCount,1);assert.strictEqual(music,1);
-assert.strictEqual(keyboardCount,1);context.typeSearch();assert.deepStrictEqual(keyboardCall,[10,5,false]);
+const input={value:'',blurCount:0,blur(){this.blurCount++;},getAttribute(name){assert.strictEqual(name,'data-shop-category');return 'WiiWare';}};
+assert.strictEqual(keyboardCount,1);context.typeSearch(input);assert.deepStrictEqual(keyboardCall,[10,5,false]);
+assert.strictEqual(input.blurCount,1);
+input.value='\u30bc\u30eb\u30c0 & +?#';context.submitCatalogSearch(input);
+assert.strictEqual(input.value,'');assert.strictEqual(input.blurCount,2);
+assert.strictEqual(context.window.location.href,'/catalog?category=WiiWare&q='+encodeURIComponent('\u30bc\u30eb\u30c0 & +?#'));
+context.window.location.href='unchanged';context.submitCatalogSearch(input);
+assert.strictEqual(context.window.location.href,'unchanged');assert.strictEqual(input.blurCount,3);
 assert.strictEqual(labels[0].text,'native <title>');assert.strictEqual(labels[1].text,'native & menu');
 assert.strictEqual(context.document.title,'native <title>');
 assert.ok(context.window.readyImage.src.endsWith('bridge=1&music=1&keyboard=1'));

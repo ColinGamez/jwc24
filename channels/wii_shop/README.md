@@ -5,6 +5,10 @@ backup and privately recovers 1,315 selected files, including thirteen shared
 scripts. Japan-region detail requests match 836 of the 844 preview IDs, with
 language/field verification still pending. The captured keyboard script and
 observed search mode/row limit are now wired into the preview.
+The home now uses the captured template and its original CSS/images, with
+Japanese labels checked against Nintendo's screenshot. Accepting search clears
+and blurs the input before local navigation; empty changes do not navigate.
+See the [latest home validation](../../research/wii_shop_captured_home_validation_20261025.json).
 
 **Authenticity requirement:** preserve the original Japanese assets, copy,
 control meanings and flows, with no placeholder or invented replacements.
@@ -14,8 +18,9 @@ The current browsing experiment does not meet that requirement. See the
 Updated October 25, 2026. A [local browsing checkpoint](runtime_preview.md) now
 runs through the original Shop browser in an isolated Dolphin profile. It serves
 844 grouped Japan titles over loopback HTTPS. The initial connectivity screen
-was confirmed in-channel; the archived three-panel home has since been checked
-in Dolphin's native frame output. The preview now includes the archived category
+was confirmed in-channel; an earlier three-panel home was checked
+in Dolphin's native frame output. The updated captured home still needs a
+native visual check. The preview includes the archived category
 menus and 821 title-specific images. Keyboard entry and category/detail interaction
 still need hands-on checks. Purchases/downloads and a
 complete replacement Shop service remain unfinished.

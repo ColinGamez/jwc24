@@ -41,14 +41,40 @@ The preview now serves the reviewed captured `keyboard.js` unchanged, with its
 Shift-JIS charset and a pinned SHA-256. It initializes the native keyboard once;
 the service adapter uses that object and its original constants. The captured
 `B_01.jsp` search handler selects predictive input and a five-row limit. Those
-parameters replace the previous guessed mode/limit. The original Japanese
-prompt and complete submit/cancel behavior still need recovery and validation.
+parameters replace the previous guessed mode/limit. The captured input is
+standalone: the adapter now preserves that structure, blurs before opening the
+keyboard, then blurs/clears the accepted text and navigates only when nonempty.
+Local category/query URLs replace the historical server URL; native keyboard
+accept/cancel behavior and the original Japanese prompt remain unverified.
 
 JavaScript VM checks exercise the captured initializer and adapter against
 synthetic native/browser objects. Live loopback HTTPS checks verify the exact
 served bytes, charset and load order. Actual typing, Japanese conversion,
 accept/cancel and navigation still need a Dolphin check. Other captured
 commerce scripts are retained for review and are not enabled in the preview.
+
+## Captured home integration
+
+The home renderer now selects the fingerprint-pinned `W_03.jsp` capture instead
+of the edited interactive archive template. It uses its matching stylesheet
+and image resources through local mirrored paths. The resource loader validates
+420 selected CSS/image files; it does not expose other captured commerce scripts.
+Required home images must exist in that pack, rather than silently falling back
+to a blank spacer. All 20 home dependency routes were checked over verified
+loopback HTTPS, including exact captured bytes and CSS-relative resources.
+
+Visible Japanese menu labels are corroborated against Nintendo's
+[official Shop screenshot](https://www.nintendo.co.jp/wii/features/shopping_ch/img/screen.jpg).
+This corrects the earlier settings-label translation and supplies the Japanese
+WiiWare label. The native client still supplies the title and Wii Menu label.
+The reference image stays private; its hash and label mapping are recorded in
+the [home validation report](../../research/wii_shop_captured_home_validation_20261025.json).
+This is screenshot-backed copy, not a recovered v21 Japanese localization file.
+
+The renderer still adapts navigation, footer visibility and account fields.
+Those changes, unsupported functions and other page templates remain fidelity
+gaps. The latest home has not yet been visually checked in Dolphin; the earlier
+frame evidence predates this template and stylesheet change.
 
 ## Reproduce privately
 
