@@ -45,6 +45,8 @@ catalog captures and 1,611 referenced image members. See the [category contract]
 and [image-role checks](image_roles.md) for counts, missing pages and integration
 limits. These are additional private packs, rather than a claim that the full
 archive or original Japanese storefront has been restored.
+The [catalog integration](captured_catalog.md) now uses the reviewed list markup,
+776 original catalog title-line sets and its unchanged navigation key handler.
 
 The preview now serves the reviewed captured `keyboard.js` unchanged, with its
 Shift-JIS charset and a pinned SHA-256. It initializes the native keyboard once;

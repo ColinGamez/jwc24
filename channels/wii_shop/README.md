@@ -1,5 +1,11 @@
 # Wii Shop research
 
+The [captured catalog update](captured_catalog.md) now uses the historical list
+markup, scroll frame and paging controls. It preserves 776 original catalog
+title-line sets and restores the original key handler and paging wrap. The
+remaining 68 titles use a captured card prototype. Japanese interface copy,
+empty-result behavior and native visual checks remain unfinished.
+
 The latest [image-role recovery](image_roles.md) separates 776 captured catalog
 icons from 835 detail images, retaining exact bytes and original page references.
 It also accepts original BMP payloads. There are still 68 icon gaps and nine

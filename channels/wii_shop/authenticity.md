@@ -18,14 +18,14 @@ remain in `jwc24/wii_shop_artwork.py` and its adapter:
 
 | Area | Current deviation | Required work |
 | --- | --- | --- |
-| Page source | Home now uses the reviewed 2019 capture; other pages still use a modified interactive archive | Integrate the remaining captured pages and corroborate their behavior |
+| Page source | Home and populated catalog lists now use reviewed 2019 captures; category/detail and empty-result/explanation pages still use a modified interactive archive | Integrate remaining captured states and corroborate their behavior |
 | Text | Home labels are corroborated by Nintendo's screenshot and native properties; other pages still have adapted translations/descriptions and decoding substitutions | Recover remaining original Japanese copy and correct source encoding |
 | Controls | Publisher/genre functions are repurposed as list/demo filters; unsupported links lead to a custom explanation | Preserve the original meaning and implement the corresponding data and flow |
 | Account/title fields | Captured names/publishers now cover 835 IDs and historical points cover 774; balance, other fields and uncovered entries remain unknown | Recover remaining facts, distinguish original-game and Wii release dates, and implement native account state |
 | Images | Captured page references now distinguish 776 catalog icons and 835 detail images; 68 icon slots and nine detail slots still use a transparent spacer | Recover missing role-specific references/images and verify native rendering; do not count blank images as completion |
 | Details | Download/ownership controls are hidden and a custom preparation message is inserted | Restore original controls and implement their actual behavior |
 | Scripts | Unchanged installed Shop/sound/common scripts and a reviewed captured keyboard script now run; storefront bindings/navigation are still adapted | Review the other recovered storefront scripts and verify remaining native behavior |
-| Navigation | Footer visibility, back labels and title line splitting are overridden | Recover the original page states, navigation and text handling |
+| Navigation | Catalog scrolling, paging wrap and 776 original title-line sets are restored; footer/back labels and unmatched-title typography remain adapted | Recover remaining original page states, navigation and text handling |
 
 Deleting those substitutions alone would not restore missing functions or
 original material. Keep the experiment distinguishable from the finished
@@ -50,6 +50,11 @@ The [historical title-data integration](title_metadata.md) now supplies accepted
 names, publishers and point amounts without claiming current offers. One
 request/internal-ID mismatch is excluded, and original-game release dates are
 not substituted into Wii release-date fields.
+The [captured catalog update](captured_catalog.md) now restores populated-list
+markup and its original navigation key handler. It preserves original catalog
+title lines for 776 IDs, while 68 use a captured card prototype. The captured
+caption is English; this does not resolve the original Japanese localization.
+Empty-result and detail/category templates remain unfinished.
 
 ## Nintendo collection follow-up
 

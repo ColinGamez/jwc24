@@ -70,6 +70,9 @@ class Application:
                           'native_original_scripts': bool(getattr(self.pages, 'native_assets', None)),
                           'captured_keyboard_script': bool(getattr(self.pages, 'captured_scripts', None)),
                           'captured_home_layout': bool(getattr(getattr(self.pages, 'captured_scripts', None), 'home_html', None)),
+                          'captured_catalog_layout': bool(getattr(self.pages, 'captured_catalog', None)),
+                          'captured_catalog_manifest_sha256': self.pages.captured_catalog.manifest_sha256 if getattr(self.pages,'captured_catalog',None) else None,
+                          'captured_catalog_title_rows': len(self.pages.captured_catalog.panels) if getattr(self.pages,'captured_catalog',None) else 0,
                           'category_menus_supported': hasattr(self.pages, 'category'),
                           'title_artwork_titles': len(self.pages.title_artwork.images) if getattr(self.pages, 'title_artwork', None) else 0,
                           'title_detail_artwork_titles': len(self.pages.title_artwork.detail_images) if getattr(self.pages, 'title_artwork', None) else 0,
@@ -196,6 +199,7 @@ def main(argv=None):
     parser.add_argument('--native-assets', type=Path, default=Path('private/wii_shop/native-assets-v1'))
     parser.add_argument('--frontend-capture', type=Path, default=Path('private/wii_shop/frontend-capture-v1'))
     parser.add_argument('--title-metadata', type=Path, default=Path('private/wii_shop/title-metadata-v2/metadata.json'))
+    parser.add_argument('--catalog-capture', type=Path, default=Path('private/wii_shop/frontend-japan-catalog-v2'))
     args = parser.parse_args(argv)
     if args.check:
         context = legacy_tls_context(root=args.root)
@@ -210,10 +214,11 @@ def main(argv=None):
     from .wii_shop_artwork import Artwork
     from .wii_shop_native_assets import NativeAssets
     from .wii_shop_captured_scripts import CapturedScripts
+    from .wii_shop_captured_catalog import CapturedCatalog
     capture = CapturedScripts(args.frontend_capture)
     catalog, digest = catalog_from_file(args.catalog, args.title_metadata, capture.manifest_sha256)
     artwork = Artwork(args.artwork, args.title_artwork, digest, NativeAssets(args.native_assets),
-                      capture)
+                      capture, CapturedCatalog(args.catalog_capture,{item['title_id'] for item in catalog.items}))
     server = create_server(('127.0.0.1', args.port), Application(catalog, digest, artwork), cert=args.cert, key=args.key)
     print(f'JWC24 Shop preview ready: {len(catalog.items)} titles', flush=True)
     try:

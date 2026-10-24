@@ -26,8 +26,10 @@ The current local pack (`artwork-v2`) contains 71 resources from the
 shadows and other page artwork.
 The three-panel home, catalog-card and detail-page layouts come from those
 files in the earlier preview. The home now uses the reviewed 2019 capture and
-its matching CSS/images; the other page layouts still use the interactive
-archive. That archive contains later edits; this is not a claim of an untouched
+its matching CSS/images. Populated catalog lists now also use the [reviewed
+historical capture](captured_catalog.md), retaining 776 original catalog title-line
+sets and the original scroll/page-key handler. Category/detail and empty-result/
+explanation pages still use the interactive archive. That archive contains later edits; this is not a claim of an untouched
 Nintendo server snapshot. Two shared images, `spacer.gif` and
 `under_banner_shadow.gif`, also match the installed original channel byte-for-byte.
 
@@ -78,6 +80,9 @@ genre-text filters and preserves them through list/detail/back navigation;
 original picker UI and genre-code mappings remain unfinished. Captured
 publisher names now populate individual items. The current list/demo labels are adapted to these
 available data fields rather than claiming the complete original menu behavior.
+Populated lists now restore the captured paging wrap and frame focus. Their
+captured caption remains English, and 68 unmatched titles use a captured card
+prototype. Original Japanese interface copy and native rendering remain work.
 
 ## Profile and credentials
 
@@ -115,6 +120,8 @@ launcher also compares its running digest with the local file. See the
 Also prepare the [separate historical image roles](image_roles.md#reproduce-privately)
 at `private/wii_shop/title-artwork-v4`. The server and launcher require its
 matching manifest; older flat image packs do not satisfy that check.
+The same import sequence supplies `frontend-japan-catalog-v2`, now required by
+the populated catalog renderer. The launcher checks its running manifest digest.
 
 `tools.prepare_wii_shop_preview` copies Config/Wii into a new private profile.
 It audits the source Shop's 18 contents, replaces 20 Shop URL fields with
@@ -187,7 +194,7 @@ The image importer uses Pillow from the existing `artwork` optional dependency.
 Normal preview launches explicitly disable frame dumping; temporary test videos
 were removed after retaining a private native proof image.
 
-Validation: 95 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
+Validation: 102 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
 rendered against the real snapshot; title links cover all 844 grouped IDs once.
 All 1,611 current image routes were checked over verified loopback HTTPS. See the
 [image-role report](../../research/wii_shop_image_roles_validation_20261025.json)
@@ -204,3 +211,7 @@ The [title-data report](../../research/wii_shop_title_metadata_validation_202610
 records all-page checks with the accepted metadata, all 835 captured-name
 searches and three live detail/search pairs. Native visual verification remains
 outstanding.
+The [captured catalog report](../../research/wii_shop_captured_catalog_validation_20261025.json)
+adds 85 live catalog pages, 799 dependencies, original title-line preservation,
+835 name searches and original navigation-handler VM checks. Native visual
+verification and complete-original-storefront verification remain outstanding.

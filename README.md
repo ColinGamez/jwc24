@@ -125,6 +125,10 @@ The [category contract review](channels/wii_shop/category_contract.md) adds
 source-backed backend filters for publishers/platforms and raw genre text;
 the original Japanese picker flow remains unfinished. All 1,611 available image
 routes preserve captured bytes, with 68 icon gaps and nine detail-image gaps.
+Populated lists now use the [captured catalog layout](channels/wii_shop/captured_catalog.md),
+including 776 original title-line sets and its original scrolling/page-key handler.
+The remaining title typography, Japanese interface copy and empty-result state
+still need recovery; the updated layout has not been visually checked in Dolphin.
 This uses privately patched test content; clean-WAD restoration,
 accounts, purchases and installation remain unfinished.
 The [native startup checks](channels/wii_shop/startup_contract.md) now trace

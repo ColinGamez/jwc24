@@ -94,9 +94,13 @@ class Tree(HTMLParser):
 class Artwork:
     page_size = 10
 
-    def __init__(self, root, title_artwork=None, catalog_digest=None, native_assets=None, captured_scripts=None):
+    def __init__(self, root, title_artwork=None, catalog_digest=None, native_assets=None, captured_scripts=None,
+                 captured_catalog=None):
         self.native_assets = native_assets
         self.captured_scripts = captured_scripts
+        self.captured_catalog = captured_catalog
+        if captured_catalog and not captured_scripts:
+            raise ValueError('Captured catalog requires its shared resource pack')
         self.title_artwork = TitleArtwork(title_artwork, catalog_digest) if title_artwork else None
         root = Path(root).resolve()
         manifest_path = root/'manifest.json'
@@ -119,6 +123,8 @@ class Artwork:
                 raise ValueError('Missing archived layout')
 
     def asset(self, path):
+        if path == '/assets/captured/catalog-navigation.js' and self.captured_catalog:
+            return self.captured_catalog.asset(path)
         if path.startswith('/assets/captured/') and self.captured_scripts:
             return self.captured_scripts.asset(path)
         if path.startswith('/assets/native/') and self.native_assets:
@@ -166,9 +172,11 @@ class Artwork:
                         child = child.replace(old, new)
                     node.children[index] = child.replace('\ufffd', '・')
 
-    def _base(self, name):
-        captured = name == 'W_03.html' and self.captured_scripts is not None
-        source = (self.captured_scripts.home_html.decode('utf-8-sig') if captured
+    def _base(self, name, legacy=False):
+        captured_catalog = name == 'B_04.html' and self.captured_catalog is not None and not legacy
+        captured = (name == 'W_03.html' and self.captured_scripts is not None) or captured_catalog
+        source = (self.captured_catalog.layout_html.decode('utf-8-sig') if captured_catalog else
+                  self.captured_scripts.home_html.decode('utf-8-sig') if captured
                   else self.files['/oss/serv/'+name].decode('utf-8', errors='replace'))
         styles = '\n'.join(re.findall(r'<style[^>]*>(.*?)</style>', source, re.I | re.S))
         body = source[source.lower().index('<body'):]
@@ -176,6 +184,8 @@ class Artwork:
         body = re.sub(r'<!--.*?-->', '', body, flags=re.S)
         body = body[:body.lower().rfind('</body>')]
         root = Tree(body).root
+        if captured_catalog:
+            root.find('catalogFrame').children = []
         self._sanitize(root, captured=captured)
         root.attrs['onload'] = 'initShop()'
         root.text('currentBalance', '－')
@@ -200,14 +210,19 @@ class Artwork:
             node.children = [Node('table', {'width': '100%', 'height': '100%', 'cellspacing': '0', 'cellpadding': '0'},
                 [Node('tr', {}, [Node('td', {'align': 'center', 'valign': 'middle'}, [text])])])]
 
-    def _finish(self, root, styles, extra='', captured_home=False):
+    def _finish(self, root, styles, extra='', captured_home=False, captured_catalog=False):
         css_url = self.captured_scripts.resource_url('/oss/oss/common/css/oss.css') if captured_home else '/oss/oss/common/css/oss.css'
         css = '<link rel="stylesheet" type="text/css" href="'+css_url+'">'
+        if captured_catalog:
+            css = ''.join('<link rel="stylesheet" type="text/css" href="'+self.captured_scripts.resource_url(path)+'">'
+                          for path in self.captured_catalog.stylesheets)
         if root.find('purchasePage'):
             css += '<link rel="stylesheet" type="text/css" href="/oss/oss/common/css/B_05.css">'
         scripts = self.native_assets.script_tags() if self.native_assets else ''
         if self.captured_scripts:
             scripts += self.captured_scripts.script_tags()
+        if captured_catalog:
+            scripts += '<script type="text/javascript" src="/assets/captured/catalog-navigation.js"></script>'
         return ('<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">'
                 '<title></title>'+css+'<style type="text/css">'+styles+
                 '</style>'+scripts+'<script type="text/javascript" src="/assets/shop.js"></script></head>'+
@@ -272,7 +287,14 @@ class Artwork:
         return self._finish(root, styles)
 
     def browse(self, result, options):
-        root, styles = self._base('B_04.html')
+        if self.captured_catalog and result['items']:
+            return self._captured_browse(result,options)
+        return self._legacy_browse(result,options)
+
+    def _legacy_browse(self, result, options):
+        # Keep the earlier empty-result experiment until its original state is
+        # recovered, rather than inventing an empty state in the captured page.
+        root, styles = self._base('B_04.html',legacy=True)
         root.text('text01-01', {'WiiWare': 'Wiiウェア', 'Virtual Console': 'バーチャルコンソール'}.get(options['category'], 'ソフトカタログ'))
         source = self.files['/oss/serv/B_04.html'].decode('utf-8', errors='replace')
         match = re.search(r'innerHTML\s*\+=\s*`(.*?)`;', source, re.S)
@@ -328,6 +350,39 @@ class Artwork:
                 node.attrs['href'] = '/catalog?'+urlencode(dict({k:v for k,v in options.items() if v is not None}, offset=offset))
         return self._finish(root, styles)
 
+    def _captured_browse(self, result, options):
+        root, styles = self._base('B_04.html')
+        root.text('listinfo',self.captured_catalog.caption)
+        root.attrs['onkeypress'] = 'kdown();'
+        root.attrs['onload'] = "initShop();document.getElementById('catalogFrame').focus();"
+        cards = []
+        context = {key:value for key,value in options.items() if value is not None}
+        for index,item in enumerate(result['items']):
+            card = self.captured_catalog.card(item,index)
+            self._sanitize(card,captured=True)
+            image = next(node for node in card.find('ImageforCatalogpage').walk() if node.tag == 'img')
+            if self.title_artwork:
+                image.attrs['src'] = self.title_artwork.url(item['title_id'])
+            for node in card.walk():
+                if node.tag == 'a':
+                    node.attrs['href'] = '/title/'+item['title_id']+'?'+urlencode(context)
+            self._hover(card,'spacer','Image'+str(index+1))
+            cards.append(card)
+        root.find('catalogFrame').children = cards
+        count = max(1,(result['total']+self.page_size-1)//self.page_size)
+        current = options['offset']//self.page_size
+        # Captured first/last pages wrap around instead of disabling arrows.
+        page = root.find('page')
+        cell = next(node for node in page.walk() if node.attrs.get('align') == 'center')
+        cell.children = [str(current+1)+'/'+str(count)]
+        for direction,number in (('L',(current-1)%count),('R',(current+1)%count)):
+            arrow = root.find('arrow'+direction)
+            anchor = next(node for node in arrow.walk() if node.tag == 'a')
+            anchor.attrs['href'] = '/catalog?'+urlencode(dict(context,offset=number*self.page_size))
+        if options['category']:
+            root.find('underlinkL').attrs['href'] = '/category/'+('wiiware' if options['category'] == 'WiiWare' else 'virtual-console')
+        return self._finish(root,styles,captured_catalog=True)
+
     def detail(self, item, options):
         root, styles = self._base('B_05.html')
         historical = item.get('historical_metadata', {})
@@ -351,7 +406,7 @@ class Artwork:
         return self._finish(root, styles)
 
     def about(self):
-        root, styles = self._base('B_04.html')
+        root, styles = self._base('B_04.html', legacy=True)
         root.text('text01-01', 'このカタログについて')
         for identifier in ('arrowL', 'arrowR', 'arrowLshadow', 'arrowRshadow', 'notFound', 'page'):
             root.display(identifier, False)
