@@ -89,3 +89,13 @@ forms the nearby `GetECConfig` pointer at `0x80322054`, consistent with the
 reviewed connection-library flow. This is a static comparison lead, not an
 executed request or an exact source/binary match. Derived disassembly stays
 under `private/wii_shop/`. No runtime capture was performed in this follow-up.
+
+## Native URL-builder follow-up
+
+The host pointer's consumer leads to builder `0x8002BC10`. Its native
+formatter now passes synthetic Unicorn checks for base selection, concatenation,
+truncation, pointer publication and output guards. This narrows the gap from
+raw URL literals to an executed builder contract. The selected main launch
+suffix and subsequent browser request are still open. See the
+[startup contract](../channels/wii_shop/startup_contract.md) for fingerprints,
+caller leads and exact verification limits.
