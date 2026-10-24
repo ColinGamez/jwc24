@@ -28,8 +28,15 @@ files. The archive contains later edits; this is not a claim of an untouched
 Nintendo server snapshot. Two shared images, `spacer.gif` and
 `under_banner_shadow.gif`, also match the installed original channel byte-for-byte.
 
-Archived scripts and event handlers are discarded. A small ES3 adapter handles
-native Shop/sound/keyboard objects, hover changes and local navigation. Catalog
+Third-party archived scripts and event handlers are discarded. Three unchanged
+scripts from the installed v21 resource archive (`sound.js`, `common.js`,
+`shop.js`) now initialize the native sound/Shop objects and supply the original
+image-swap helpers. A small ES3 service adapter handles initialization,
+keyboard/search wiring, diagnostics and local navigation. The home heading and
+Wii Menu button use `shop.title` and `shop.menuBtn` from the native client rather
+than handwritten Japanese. Hover handlers use the bundled image-swap functions
+and sound constants. The scripts are served byte-for-byte, with pinned SHA-256
+checks; the replacement adapter remains JWC24 code. Catalog
 names and links are escaped before insertion. Japanese labels and read-only
 status messages replace unavailable server values. Unknown points, publishers,
 dates and player counts are not invented. A separate title-ID-addressed image
@@ -58,6 +65,22 @@ invent rankings or metadata. The current list/demo labels are adapted to these
 available data fields rather than claiming the complete original menu behavior.
 
 ## Profile and credentials
+
+Before starting the updated service, prepare its private native script pack:
+
+```powershell
+python -m tools.import_wii_shop_native_assets '<original installed Dolphin Wii directory>'
+```
+
+This verifies the installed contents against their TMD, requires the known v21
+resource fingerprint and extracts only those three unchanged scripts into a
+new `private/wii_shop/native-assets-v1` directory. It refuses overwrite and
+does not read keys, tickets or account saves. The server requires this pack;
+the launcher rejects an older listener without native scripts. JavaScript VM
+checks verify object initialization, native string binding, image hover/restore
+and returning to the menu with synthetic browser/native dependencies. The new
+script wiring still needs a Dolphin visual check; earlier frame evidence
+predates this change.
 
 `tools.prepare_wii_shop_preview` copies Config/Wii into a new private profile.
 It audits the source Shop's 18 contents, replaces 20 Shop URL fields with
@@ -107,8 +130,10 @@ installation. Close Dolphin before making the initial profile copy.
 ```powershell
 python -m tools.import_wii_shop_artwork
 python -m tools.import_wii_shop_title_artwork
+python -m tools.import_wii_shop_native_assets '<original installed Dolphin Wii directory>'
 python -m tools.prepare_wii_shop_preview
-python -m tools.prepare_vwii_credentials --otp '<your Wii U backup>\otp.bin'+powershell -File tools/start_wii_shop_preview.ps1
+python -m tools.prepare_vwii_credentials --otp '<your Wii U backup>\otp.bin'
+powershell -File tools/start_wii_shop_preview.ps1
 ```
 
 The import/preparation tools refuse existing destination packs/profiles or
@@ -125,8 +150,12 @@ The image importer uses Pillow from the existing `artwork` optional dependency.
 Normal preview launches explicitly disable frame dumping; temporary test videos
 were removed after retaining a private native proof image.
 
-Validation: 67 Shop tests pass. All 85 catalog pages and 844 title pages were
+Validation: 71 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
 rendered against the real snapshot; title links cover all 844 grouped IDs once.
 All 821 available image routes were checked. See the
 [updated artwork report](../../research/wii_shop_artwork_validation_20261025.json)
 and [initial transport report](../../research/wii_shop_preview_validation_20261024.json).
+The [native script update report](../../research/wii_shop_native_scripts_validation_20261025.json)
+separately records exact bytes served over verified loopback TLS, script load
+order and native text bindings. It explicitly leaves the updated Dolphin
+visual check and complete-original-storefront verification outstanding.

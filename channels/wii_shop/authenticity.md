@@ -24,13 +24,39 @@ remain in `jwc24/wii_shop_artwork.py` and its adapter:
 | Account/title fields | Unknown balance, price, release date and player fields become dashes; publisher is blank | Obtain verified values and implement native account state; do not fabricate values |
 | Images | 23 title images are unavailable in the current fetch; missing resources use a transparent spacer | Recover the correct images and verify title association; do not count blank images as completion |
 | Details | Download/ownership controls are hidden and a custom preparation message is inserted | Restore original controls and implement their actual behavior |
-| Scripts | Original handlers are discarded and replaced with a JWC24 ES3 bridge | Verify original scripts and native behavior, limiting necessary adaptation to service compatibility |
+| Scripts | Unchanged installed Shop/sound/common scripts now run, but storefront event bindings and service navigation are still adapted | Recover and verify original storefront scripts and remaining native behavior |
 | Navigation | Footer visibility, back labels and title line splitting are overridden | Recover the original page states, navigation and text handling |
 
 Deleting those substitutions alone would not restore missing functions or
 original material. Keep the experiment distinguishable from the finished
 experience while recovering originals. Do not use another emulator launch as
 proof that these fidelity gaps are solved.
+
+The home heading and Wii Menu button now use the native `shop.title` and
+`shop.menuBtn` properties. Hover/restore uses the installed `common.js` helpers;
+native object construction uses unchanged `shop.js` and `sound.js`. Their pinned
+hashes establish exact equality to the installed v21 scripts. This resolves those
+specific substitutions, not the other text, menu, data or layout gaps above.
+
+## Nintendo collection follow-up
+
+The existing collection does contain the commerce library and the separate
+`shop-browser-source/bw/build/tests/wiishop` customization/test overlay under
+`workbench/wii/channel-hunt/packed-resources/`. The latter includes browser C++
+integration, `ec.js`, example pages and `demo_oss.html`. These are valuable
+original development references. The demo has diagnostic controls and test
+server links; it is not the shipping Japanese storefront and must not be used
+as its replacement UI.
+
+The overlay installs a separate Shop base package before applying its files.
+The recorded dependency is `wstrunk1316_repack.zip`. The collection's existing
+archive-reference search has no filename hit for that package. A fresh physical
+filename search in the Nintendo tree and `D:/Nintendo-Archive` also found only
+`wstrunk1300_notes.conf`, with no `W_03`/`B_27` page files or named Shop/OSS
+archive. The October 22 metadata index has no `/oss/serv` hit. These searches do
+not exclude renamed files, unindexed archive members or other encodings; they
+do not establish that the retail storefront is recovered. No recovered build,
+diagnostic page or internal server link was executed or contacted.
 
 ## Evidence, not appearance
 

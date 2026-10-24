@@ -59,6 +59,7 @@ class Application:
                 status = {'service': 'jwc24-wii-shop-preview', 'titles': len(self.catalog.items),
                           'catalog_sha256': self.digest, 'last_ready': self.last_ready,
                           'archived_artwork': True,
+                          'native_original_scripts': bool(getattr(self.pages, 'native_assets', None)),
                           'category_menus_supported': hasattr(self.pages, 'category'),
                           'title_artwork_titles': len(self.pages.title_artwork.images) if getattr(self.pages, 'title_artwork', None) else 0,
                           'recent_requests': list(self.events), 'downloads_supported': False}
@@ -77,7 +78,7 @@ class Application:
             return 204, 'text/plain', b''
         if path == '/assets/shop.js':
             return 200, 'text/javascript', JS
-        if path.startswith(('/oss/oss/', '/title-artwork/')) and hasattr(self.pages, 'asset'):
+        if path.startswith(('/assets/native/', '/oss/oss/', '/title-artwork/')) and hasattr(self.pages, 'asset'):
             return self.pages.asset(path)
         if path in ('/', '/startup'):
             return 200, 'text/html; charset=utf-8', self.pages.home(len(self.catalog.items))
@@ -177,6 +178,7 @@ def main(argv=None):
     parser.add_argument('--root', type=Path)
     parser.add_argument('--artwork', type=Path, default=Path('private/wii_shop/artwork-v2'))
     parser.add_argument('--title-artwork', type=Path, default=Path('private/wii_shop/title-artwork-v1'))
+    parser.add_argument('--native-assets', type=Path, default=Path('private/wii_shop/native-assets-v1'))
     args = parser.parse_args(argv)
     if args.check:
         context = legacy_tls_context(root=args.root)
@@ -190,7 +192,8 @@ def main(argv=None):
         parser.error('Both TLS certificate and key are required')
     catalog, digest = catalog_from_file(args.catalog)
     from .wii_shop_artwork import Artwork
-    artwork = Artwork(args.artwork, args.title_artwork, digest)
+    from .wii_shop_native_assets import NativeAssets
+    artwork = Artwork(args.artwork, args.title_artwork, digest, NativeAssets(args.native_assets))
     server = create_server(('127.0.0.1', args.port), Application(catalog, digest, artwork), cert=args.cert, key=args.key)
     print(f'JWC24 Shop preview ready: {len(catalog.items)} titles', flush=True)
     try:

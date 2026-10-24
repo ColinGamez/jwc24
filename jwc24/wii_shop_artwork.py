@@ -1,7 +1,8 @@
 """Bind catalog data into locally cached, archived Shop layouts and artwork.
 
-Archived scripts/event handlers are discarded. Only JWC24's small native-bridge
-adapter runs. Original page bodies, styles and images remain under private/.
+Third-party archived scripts/event handlers are discarded. Unchanged installed
+Shop scripts initialize native objects before JWC24's service adapter runs.
+Original page bodies, scripts, styles and images remain under private/.
 """
 from dataclasses import dataclass, field
 import hashlib
@@ -86,7 +87,8 @@ class Tree(HTMLParser):
 class Artwork:
     page_size = 10
 
-    def __init__(self, root, title_artwork=None, catalog_digest=None):
+    def __init__(self, root, title_artwork=None, catalog_digest=None, native_assets=None):
+        self.native_assets = native_assets
         self.title_artwork = TitleArtwork(title_artwork, catalog_digest) if title_artwork else None
         root = Path(root).resolve()
         manifest_path = root/'manifest.json'
@@ -109,6 +111,8 @@ class Artwork:
                 raise ValueError('Missing archived layout')
 
     def asset(self, path):
+        if path.startswith('/assets/native/') and self.native_assets:
+            return self.native_assets.asset(path)
         if path.startswith('/title-artwork/') and self.title_artwork:
             return self.title_artwork.asset(path)
         normalized = posixpath.normpath(path)
@@ -135,7 +139,7 @@ class Artwork:
                     del node.attrs[key]
             if 'href' in node.attrs:
                 node.attrs['href'] = self._route(node.attrs['href'])
-                node.attrs['onclick'] = 'soundEffect(3)'
+                node.attrs['onclick'] = 'snd.playSE(cSE_Decide)'
             if node.tag in ('img', 'input') and 'src' in node.attrs:
                 source = posixpath.normpath(node.attrs['src'])
                 node.attrs['src'] = source if source in self.files else '/oss/oss/common/images/spacer.gif'
@@ -187,15 +191,16 @@ class Artwork:
         css = '<link rel="stylesheet" type="text/css" href="/oss/oss/common/css/oss.css">'
         if root.find('purchasePage'):
             css += '<link rel="stylesheet" type="text/css" href="/oss/oss/common/css/B_05.css">'
+        scripts = self.native_assets.script_tags() if self.native_assets else ''
         return ('<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">'
-                '<title>Wiiショッピングチャンネル</title>'+css+'<style type="text/css">'+styles+
-                '</style><script type="text/javascript" src="/assets/shop.js"></script></head>'+
+                '<title></title>'+css+'<style type="text/css">'+styles+
+                '</style>'+scripts+'<script type="text/javascript" src="/assets/shop.js"></script></head>'+
                 root.render()+extra+'</html>').encode('utf-8')
 
     def home(self, _count):
         root, styles = self._base('W_03.html')
-        root.text('W_03-title', 'Wiiショッピングチャンネル')
-        self._button_label(root, 'underwordL', 'Wiiメニューへ')
+        root.find('W_03-title').children = [Node('span', {'data-shop-string': 'title'})]
+        self._button_label(root, 'underwordL', Node('span', {'data-shop-string': 'menuBtn'}))
         root.find('underlinkL').attrs['onclick'] = 'return leaveShop()'
         # Original three-panel layout, original normal/hover artwork.
         for trigger, image in (('spacer01', 'Image1'), ('spacer07', 'Image7'), ('spacer02', 'Image2'),
@@ -211,8 +216,8 @@ class Artwork:
         normal = picture.attrs.get('src', '')
         hover = re.sub(r'_a\.(gif|png)$', r'_b.\1', normal)
         if hover in self.files:
-            target.attrs['onmouseover'] = 'previewHover('+json.dumps(image)+','+json.dumps(hover)+');soundEffect(2)'
-            target.attrs['onmouseout'] = 'previewHover('+json.dumps(image)+','+json.dumps(normal)+')'
+            target.attrs['onmouseover'] = 'MM_swapImage('+json.dumps(image)+',"",'+json.dumps(hover)+',1);snd.playSE(cSE_Forcus)'
+            target.attrs['onmouseout'] = 'MM_swapImgRestore()'
 
     def category(self, category):
         root, styles = self._base('B_27.html' if category == 'WiiWare' else 'B_01.html')

@@ -14,6 +14,12 @@ menus and 821 title-specific images. Keyboard entry and category/detail interact
 still need hands-on checks. Purchases/downloads and a
 complete replacement Shop service remain unfinished.
 
+The latest fidelity work extracts three unchanged scripts from the installed
+v21 resources, uses native localized title/menu strings and restores the
+bundled hover helpers. Hash checks and JavaScript VM tests verify this wiring;
+a fresh Dolphin visual check remains outstanding. The collection's development
+store example is not the retail storefront. See the [source follow-up](authenticity.md#nintendo-collection-follow-up).
+
 The first [source audit](../../research/wii_shop_audit_20261024.md) verifies
 21 selected recovered client/build files against their local extraction
 inventory. They document an Opera commerce bridge, SOAP service discovery,

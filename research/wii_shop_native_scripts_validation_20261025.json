@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "installed_resource_sha256": "9e4a171c24782be38a88225fda507b5c17120531cf517a6ebd9bd3f8ee580ead",
+  "unchanged_native_scripts_verified_over_loopback_tls": [
+    {
+      "path": "/assets/native/sound.js",
+      "sha256": "1da241101239e20084539267183350d2f066ed8e9500d84eeef6087c27c7988a",
+      "expected_sha256": "1da241101239e20084539267183350d2f066ed8e9500d84eeef6087c27c7988a"
+    },
+    {
+      "path": "/assets/native/common.js",
+      "sha256": "431710d4b723f3875f394fbdb48e7b8e065ba163fbd749c43b7247d55b14fcc3",
+      "expected_sha256": "431710d4b723f3875f394fbdb48e7b8e065ba163fbd749c43b7247d55b14fcc3"
+    },
+    {
+      "path": "/assets/native/shop.js",
+      "sha256": "47d9797ae0bcc68599ca42e4c34c8b576ffc153cdd47d20a9560116201500fc4",
+      "expected_sha256": "47d9797ae0bcc68599ca42e4c34c8b576ffc153cdd47d20a9560116201500fc4"
+    }
+  ],
+  "native_script_load_order_verified": true,
+  "localized_home_bindings_present": true,
+  "javascript_vm_behavior_verified": true,
+  "shop_and_credentials_tests_passed": 73,
+  "updated_scripts_dolphin_visual_verified": false,
+  "complete_original_storefront_verified": false
+}

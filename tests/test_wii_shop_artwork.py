@@ -7,6 +7,7 @@ import json
 from jwc24.wii_shop_artwork import Artwork, Tree
 from jwc24.wii_shop_browse import Catalog
 from jwc24.wii_shop_server import Application
+from jwc24.wii_shop_native_assets import NativeAssets, PREFIX, SCRIPTS
 from tests.test_wii_shop_browse import record
 
 
@@ -25,7 +26,10 @@ class ShopArtworkTests(unittest.TestCase):
         root = Path('private/wii_shop/artwork-v2')
         if not (root/'manifest.json').is_file():
             self.skipTest('Private archived artwork pack unavailable')
-        return Artwork(root)
+        native = Path('private/wii_shop/native-assets-v1')
+        if not (native/'manifest.json').is_file():
+            self.skipTest('Private native script pack unavailable')
+        return Artwork(root, native_assets=NativeAssets(native))
 
     def test_legacy_void_and_nested_elements_keep_their_structure(self):
         root = Tree('<body><div id="a"><img src="x"><br><span>A &amp; B</span></div></body>').root
@@ -48,7 +52,10 @@ class ShopArtworkTests(unittest.TestCase):
         for name in ('top_buy_vc_a.png', 'top_buy_wiiware_a.png', 'top_buy_wiichannel_a.png'):
             self.assertTrue(any(path.endswith(name) for path in images))
         scripts = [attrs.get('src') for tag, attrs in elements if tag == 'script']
-        self.assertEqual(scripts, ['/assets/shop.js'])
+        self.assertEqual(scripts, [PREFIX+name for name in SCRIPTS]+['/assets/shop.js'])
+        labels = [a['data-shop-string'] for _, a in elements if 'data-shop-string' in a]
+        self.assertCountEqual(labels, ['title', 'menuBtn'])
+        self.assertNotIn('Wiiメニューへ'.encode(), pack.home(844))
         links = [attrs.get('href', '') for tag, attrs in elements if tag == 'a']
         self.assertIn('/category/wiiware', links)
         self.assertIn('/category/virtual-console', links)
@@ -61,7 +68,10 @@ class ShopArtworkTests(unittest.TestCase):
             status, _, body = app.get(path)
             self.assertEqual(status, 200)
             for tag, attrs in Elements(body).nodes:
-                asset = attrs.get('src') if tag in ('img', 'input') else attrs.get('href') if tag == 'link' else None
+                asset = attrs.get('src') if tag in ('img', 'input', 'script') else attrs.get('href') if tag == 'link' else None
+                if asset == '/assets/shop.js':
+                    self.assertEqual(app.get(asset)[0], 200)
+                    continue
                 if asset:
                     with self.subTest(page=path, asset=asset):
                         self.assertEqual(pack.asset(asset)[0], 200)

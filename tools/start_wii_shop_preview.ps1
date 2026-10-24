@@ -55,6 +55,7 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Local TLS preview health check failed; Dolphin was not launched.' }
     $health = $healthJson | ConvertFrom-Json
     if (-not $health.archived_artwork) { throw 'The running service does not have archived Shop artwork enabled.' }
+    if (-not $health.native_original_scripts) { throw 'Restart the preview service with the unchanged native Shop scripts pack.' }
     if ($health.catalog_sha256 -ne (Get-FileHash -LiteralPath $catalog -Algorithm SHA256).Hash.ToLowerInvariant()) {
         throw 'Running preview has a different catalog snapshot.'
     }

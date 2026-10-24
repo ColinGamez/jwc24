@@ -105,6 +105,9 @@ Japan titles from the [MarioCube snapshot](channels/wii_shop/catalog.md) into
 archived Shop page layouts and artwork, including category menus and 821 title
 images. The original three-panel home has been checked in Dolphin's native
 output; keyboard entry and deeper interaction still need hands-on checks.
+The latest update loads three unchanged bundled scripts and uses the native
+title/menu strings and hover helpers. Those changes pass hash and JavaScript
+checks; a fresh Dolphin visual check is still outstanding.
 This uses privately patched test content; clean-WAD restoration,
 accounts, purchases and installation remain unfinished.
 The [native startup checks](channels/wii_shop/startup_contract.md) now trace
