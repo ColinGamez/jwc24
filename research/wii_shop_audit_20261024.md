@@ -89,8 +89,10 @@ The reviewed makefile refers to:
 - `RevoEX-2_2-080806_1338_opera_build-2077-1.zip`: Opera update dependency.
 - `lndir_1.0.1-ead_patch.zip`: build/tooling dependency.
 
-The existing index search for `wstrunk` found a notes-file lead, not the named
-package itself. This is a snapshot/index result, not proof that all archives
+Correction from October 25: the index's `wstrunk1300_notes.conf` hit is under
+`vcs-history/control/seed/` and explicitly marked synthetic. It is a scanner
+fixture, not a genuine package/version lead. The real base-package reference
+remains the verified installer above. This is a snapshot/index result, not proof that all archives
 have been exhaustively searched. The build-script references must not be
 reported as recovered storefront assets. No installer or make target was run.
 

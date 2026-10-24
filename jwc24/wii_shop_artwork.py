@@ -87,8 +87,9 @@ class Tree(HTMLParser):
 class Artwork:
     page_size = 10
 
-    def __init__(self, root, title_artwork=None, catalog_digest=None, native_assets=None):
+    def __init__(self, root, title_artwork=None, catalog_digest=None, native_assets=None, captured_scripts=None):
         self.native_assets = native_assets
+        self.captured_scripts = captured_scripts
         self.title_artwork = TitleArtwork(title_artwork, catalog_digest) if title_artwork else None
         root = Path(root).resolve()
         manifest_path = root/'manifest.json'
@@ -111,6 +112,8 @@ class Artwork:
                 raise ValueError('Missing archived layout')
 
     def asset(self, path):
+        if path.startswith('/assets/captured/') and self.captured_scripts:
+            return self.captured_scripts.asset(path)
         if path.startswith('/assets/native/') and self.native_assets:
             return self.native_assets.asset(path)
         if path.startswith('/title-artwork/') and self.title_artwork:
@@ -192,6 +195,8 @@ class Artwork:
         if root.find('purchasePage'):
             css += '<link rel="stylesheet" type="text/css" href="/oss/oss/common/css/B_05.css">'
         scripts = self.native_assets.script_tags() if self.native_assets else ''
+        if self.captured_scripts:
+            scripts += self.captured_scripts.script_tags()
         return ('<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">'
                 '<title></title>'+css+'<style type="text/css">'+styles+
                 '</style>'+scripts+'<script type="text/javascript" src="/assets/shop.js"></script></head>'+

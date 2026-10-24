@@ -108,6 +108,10 @@ output; keyboard entry and deeper interaction still need hands-on checks.
 The latest update loads three unchanged bundled scripts and uses the native
 title/menu strings and hover helpers. Those changes pass hash and JavaScript
 checks; a fresh Dolphin visual check is still outstanding.
+A separate [2019 storefront capture](channels/wii_shop/frontend_capture.md)
+now supplies thirteen shared scripts and Japan-region detail requests matching
+836 preview IDs. The captured keyboard initializer and observed search settings
+are integrated; full Japanese page and interaction fidelity remains unfinished.
 This uses privately patched test content; clean-WAD restoration,
 accounts, purchases and installation remain unfinished.
 The [native startup checks](channels/wii_shop/startup_contract.md) now trace

@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "source": "https://archive.org/details/WiiShopChannelBackup",
+  "capture_files": 334441,
+  "declared_uncompressed_bytes": 8170304740,
+  "extensions": {
+    "(none)": 21298,
+    ".bmp": 42,
+    ".css": 5960,
+    ".gif": 5537,
+    ".html": 33101,
+    ".ico": 1,
+    ".jpg": 542,
+    ".js": 5133,
+    ".jsp": 37191,
+    ".png": 225631,
+    ".sh": 5
+  },
+  "navigation_page_basenames": {
+    "B_01.jsp": 1,
+    "B_02.jsp": 3,
+    "B_03.jsp": 1,
+    "B_04.jsp": 347,
+    "B_05.jsp": 9208,
+    "B_06.jsp": 9142,
+    "B_07.jsp": 9169,
+    "B_08.jsp": 9158,
+    "B_09.jsp": 4,
+    "B_10.jsp": 4,
+    "B_13.jsp": 1,
+    "B_16.jsp": 1,
+    "B_19.jsp": 1,
+    "B_28.jsp": 2,
+    "B_31.jsp": 1,
+    "CheckRegistered.jsp": 1,
+    "Register.jsp": 1,
+    "W_01.jsp": 1,
+    "W_02.jsp": 35,
+    "W_03.jsp": 1,
+    "W_04.jsp": 1,
+    "index.html": 3083,
+    "index.jsp": 1
+  },
+  "regional_filename_hints": {
+    "country=AU": 80,
+    "country=CA": 3574,
+    "country=DE": 3633,
+    "country=ES": 3631,
+    "country=FR": 3628,
+    "country=GB": 3755,
+    "country=IT": 3632,
+    "country=JP": 3995,
+    "country=KR": 198,
+    "country=MX": 3573,
+    "country=NL": 3688,
+    "country=US": 3683,
+    "language=DE": 3634,
+    "language=EN": 7306,
+    "language=ES": 7214,
+    "language=FR": 7215,
+    "language=IT": 3634,
+    "language=JA": 6,
+    "language=JP": 18,
+    "language=NL": 3631
+  },
+  "query_strings_emitted": false,
+  "complete_original_storefront_verified": false,
+  "archive_bytes": 1668780381,
+  "archive_sha1": "e20c789c86bd602d7af3816d105c3f62ab504374",
+  "archive_sha256": "f7f349b8baf06f0f77ba6d413ed87e535378bc746084e24c7d5f59273acacda0",
+  "selected_files": 1315,
+  "selected_bytes": 66646973,
+  "selected_unique_file_hashes": 1278,
+  "japanese_region_detail_captures": 868,
+  "distinct_source_catalog_ids_with_japanese_region_request": 868,
+  "preview_title_ids_with_japanese_region_request": 836,
+  "preview_catalog_title_ids": 844,
+  "captured_shared_scripts": [
+    {
+      "name": "ChkCard.js",
+      "bytes": 12495,
+      "sha256": "7cd36329a9a3fd2f9344b160fff33c61d091db1937fc863b7110cc7495703c23"
+    },
+    {
+      "name": "buttons.js",
+      "bytes": 3833,
+      "sha256": "f02c24ac8339254d36bca444195c45de38193fea438ef8e69e1cd013e7fc473b"
+    },
+    {
+      "name": "ec.js",
+      "bytes": 11326,
+      "sha256": "d2411666619bf39c6f80147a2979fa2df7959c72483c00fbdf4b17e30bbaed7a"
+    },
+    {
+      "name": "error.js",
+      "bytes": 9153,
+      "sha256": "4d4769fec6c0a0d7b521190dbbc3c59a189439d1f3b1f0e3ccc142c9922b1f0f"
+    },
+    {
+      "name": "images.js",
+      "bytes": 1752,
+      "sha256": "0e99682bb3d288485a588481e325d47642b740d492a21fc9a974ff19f590917f"
+    },
+    {
+      "name": "keyboard.js",
+      "bytes": 1426,
+      "sha256": "400739e24fc85e592812b06866188ba5ccc3aec4da4341f2b9546936087a0103"
+    },
+    {
+      "name": "miiselector.js",
+      "bytes": 10949,
+      "sha256": "f56b80d84cf895a5b4eadfb6a86b0b43b621493cd9a9d619e96a4e6565cb273a"
+    },
+    {
+      "name": "njsl.js",
+      "bytes": 799,
+      "sha256": "6dc113cfcad9477aded93be417924715dcbb4a83d8cff0cde1acccb7edfadc2f"
+    },
+    {
+      "name": "oss.js",
+      "bytes": 65331,
+      "sha256": "9103c77a737e433ac62e125328823cb1ad55333aa30fc5e3b0308bc2f42e6acc"
+    },
+    {
+      "name": "shop.js",
+      "bytes": 2369,
+      "sha256": "5f1d013d7a68569cdf63158e073123a1cd06872c3a92b667a85e53f499a95aea"
+    },
+    {
+      "name": "shopsd.js",
+      "bytes": 8792,
+      "sha256": "505def9527a3ec4e7498cd1e750fc7b93ce28039d5ad8f55dfe22723f870b302"
+    },
+    {
+      "name": "sound.js",
+      "bytes": 890,
+      "sha256": "58ac450d83e2a94b517b01adf57bd2d56436122e53c05118bf4168b5a0798c1c"
+    },
+    {
+      "name": "title_manager.js",
+      "bytes": 8219,
+      "sha256": "35c94ca691790bd22a036de28d9d61e2b4c119c1bd8141b6c8fb3335e2e8ae64"
+    }
+  ],
+  "selected_members_size_crc_sha256_verified": true,
+  "japanese_region_does_not_prove_japanese_ui_language": true,
+  "captured_price_is_historical_not_a_current_offer": true,
+  "acquisition_or_account_flow_executed": false,
+  "captured_keyboard_script_reviewed": true,
+  "updated_keyboard_dolphin_visual_verified": false,
+  "captured_keyboard_tls_sha256": "400739e24fc85e592812b06866188ba5ccc3aec4da4341f2b9546936087a0103",
+  "captured_keyboard_http_charset": "Shift_JIS",
+  "captured_keyboard_loaded_before_adapter": true,
+  "shop_and_credential_tests_passed": 79,
+  "keyboard_constructor_and_call_verified_with_synthetic_native_objects": true,
+  "captured_search_keyboard_type_constant": "cKT_PredictNoLF",
+  "captured_search_row_limit": 5,
+  "original_japanese_search_prompt_verified": false
+}

@@ -32,7 +32,10 @@ Third-party archived scripts and event handlers are discarded. Three unchanged
 scripts from the installed v21 resource archive (`sound.js`, `common.js`,
 `shop.js`) now initialize the native sound/Shop objects and supply the original
 image-swap helpers. A small ES3 service adapter handles initialization,
-keyboard/search wiring, diagnostics and local navigation. The home heading and
+search wiring, diagnostics and local navigation. A reviewed captured
+`keyboard.js` now supplies the native keyboard object and constants; the search
+mode and row limit follow the captured retail handler. See the
+[capture recovery and limits](frontend_capture.md). The home heading and
 Wii Menu button use `shop.title` and `shop.menuBtn` from the native client rather
 than handwritten Japanese. Hover handlers use the bundled image-swap functions
 and sound constants. The scripts are served byte-for-byte, with pinned SHA-256
@@ -81,6 +84,13 @@ checks verify object initialization, native string binding, image hover/restore
 and returning to the menu with synthetic browser/native dependencies. The new
 script wiring still needs a Dolphin visual check; earlier frame evidence
 predates this change.
+
+The updated service also requires the reviewed private storefront capture at
+`private/wii_shop/frontend-capture-v1`. Its [import procedure](frontend_capture.md#reproduce-privately)
+checks the collector archive and extracts selected files into a hashed store.
+The server serves only the fingerprint-pinned keyboard script from that store;
+the remaining captured commerce scripts are not enabled. Keyboard input and
+the full Japanese prompt/submit/cancel flow remain unverified in Dolphin.
 
 `tools.prepare_wii_shop_preview` copies Config/Wii into a new private profile.
 It audits the source Shop's 18 contents, replaces 20 Shop URL fields with
@@ -150,7 +160,7 @@ The image importer uses Pillow from the existing `artwork` optional dependency.
 Normal preview launches explicitly disable frame dumping; temporary test videos
 were removed after retaining a private native proof image.
 
-Validation: 71 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
+Validation: 77 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
 rendered against the real snapshot; title links cover all 844 grouped IDs once.
 All 821 available image routes were checked. See the
 [updated artwork report](../../research/wii_shop_artwork_validation_20261025.json)

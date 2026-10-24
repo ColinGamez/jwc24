@@ -8,6 +8,7 @@ from jwc24.wii_shop_artwork import Artwork, Tree
 from jwc24.wii_shop_browse import Catalog
 from jwc24.wii_shop_server import Application
 from jwc24.wii_shop_native_assets import NativeAssets, PREFIX, SCRIPTS
+from jwc24.wii_shop_captured_scripts import CapturedScripts, KEYBOARD_URL
 from tests.test_wii_shop_browse import record
 
 
@@ -29,7 +30,10 @@ class ShopArtworkTests(unittest.TestCase):
         native = Path('private/wii_shop/native-assets-v1')
         if not (native/'manifest.json').is_file():
             self.skipTest('Private native script pack unavailable')
-        return Artwork(root, native_assets=NativeAssets(native))
+        capture = Path('private/wii_shop/frontend-capture-v1')
+        if not (capture/'manifest.private.json').is_file():
+            self.skipTest('Private storefront capture unavailable')
+        return Artwork(root, native_assets=NativeAssets(native), captured_scripts=CapturedScripts(capture))
 
     def test_legacy_void_and_nested_elements_keep_their_structure(self):
         root = Tree('<body><div id="a"><img src="x"><br><span>A &amp; B</span></div></body>').root
@@ -52,7 +56,7 @@ class ShopArtworkTests(unittest.TestCase):
         for name in ('top_buy_vc_a.png', 'top_buy_wiiware_a.png', 'top_buy_wiichannel_a.png'):
             self.assertTrue(any(path.endswith(name) for path in images))
         scripts = [attrs.get('src') for tag, attrs in elements if tag == 'script']
-        self.assertEqual(scripts, [PREFIX+name for name in SCRIPTS]+['/assets/shop.js'])
+        self.assertEqual(scripts, [PREFIX+name for name in SCRIPTS]+[KEYBOARD_URL, '/assets/shop.js'])
         labels = [a['data-shop-string'] for _, a in elements if 'data-shop-string' in a]
         self.assertCountEqual(labels, ['title', 'menuBtn'])
         self.assertNotIn('Wiiメニューへ'.encode(), pack.home(844))

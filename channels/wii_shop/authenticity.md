@@ -18,13 +18,13 @@ remain in `jwc24/wii_shop_artwork.py` and its adapter:
 
 | Area | Current deviation | Required work |
 | --- | --- | --- |
-| Page source | Third-party archive includes later edits; the list template uses modern JavaScript and the home includes an added Easter egg | Recover and corroborate original Japanese storefront pages and behavior |
+| Page source | Current renderer uses a modified third-party archive; separate 2019 captures have now been recovered privately | Review and integrate the captured Japanese storefront pages and corroborate their behavior |
 | Text | JWC24 translates labels, supplies category descriptions, and replaces decoding errors with another character | Recover original Japanese copy and correct source encoding |
 | Controls | Publisher/genre functions are repurposed as list/demo filters; unsupported links lead to a custom explanation | Preserve the original meaning and implement the corresponding data and flow |
 | Account/title fields | Unknown balance, price, release date and player fields become dashes; publisher is blank | Obtain verified values and implement native account state; do not fabricate values |
 | Images | 23 title images are unavailable in the current fetch; missing resources use a transparent spacer | Recover the correct images and verify title association; do not count blank images as completion |
 | Details | Download/ownership controls are hidden and a custom preparation message is inserted | Restore original controls and implement their actual behavior |
-| Scripts | Unchanged installed Shop/sound/common scripts now run, but storefront event bindings and service navigation are still adapted | Recover and verify original storefront scripts and remaining native behavior |
+| Scripts | Unchanged installed Shop/sound/common scripts and a reviewed captured keyboard script now run; storefront bindings/navigation are still adapted | Review the other recovered storefront scripts and verify remaining native behavior |
 | Navigation | Footer visibility, back labels and title line splitting are overridden | Recover the original page states, navigation and text handling |
 
 Deleting those substitutions alone would not restore missing functions or
@@ -37,6 +37,10 @@ The home heading and Wii Menu button now use the native `shop.title` and
 native object construction uses unchanged `shop.js` and `sound.js`. Their pinned
 hashes establish exact equality to the installed v21 scripts. This resolves those
 specific substitutions, not the other text, menu, data or layout gaps above.
+The [historical storefront capture](frontend_capture.md) adds thirteen captured
+shared scripts and Japan-region detail requests matching 836 preview IDs.
+Its keyboard script and observed search mode/row limit are now integrated;
+the complete original Japanese page/keyboard flow remains unfinished.
 
 ## Nintendo collection follow-up
 
@@ -53,7 +57,9 @@ The recorded dependency is `wstrunk1316_repack.zip`. The collection's existing
 archive-reference search has no filename hit for that package. A fresh physical
 filename search in the Nintendo tree and `D:/Nintendo-Archive` also found only
 `wstrunk1300_notes.conf`, with no `W_03`/`B_27` page files or named Shop/OSS
-archive. The October 22 metadata index has no `/oss/serv` hit. These searches do
+archive. That notes file is an explicitly synthetic scanner fixture beneath
+`vcs-history/control/seed/`, not a recovered Nintendo reference or version.
+The October 22 metadata index has no `/oss/serv` hit. These searches do
 not exclude renamed files, unindexed archive members or other encodings; they
 do not establish that the retail storefront is recovered. No recovered build,
 diagnostic page or internal server link was executed or contacted.

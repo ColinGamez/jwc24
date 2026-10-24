@@ -56,6 +56,7 @@ try {
     $health = $healthJson | ConvertFrom-Json
     if (-not $health.archived_artwork) { throw 'The running service does not have archived Shop artwork enabled.' }
     if (-not $health.native_original_scripts) { throw 'Restart the preview service with the unchanged native Shop scripts pack.' }
+    if (-not $health.captured_keyboard_script) { throw 'Restart the preview service with the reviewed captured keyboard script.' }
     if ($health.catalog_sha256 -ne (Get-FileHash -LiteralPath $catalog -Algorithm SHA256).Hash.ToLowerInvariant()) {
         throw 'Running preview has a different catalog snapshot.'
     }

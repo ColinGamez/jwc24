@@ -1,5 +1,11 @@
 # Wii Shop research
 
+The latest [storefront recovery](frontend_capture.md) indexes a 2019 collector
+backup and privately recovers 1,315 selected files, including thirteen shared
+scripts. Japan-region detail requests match 836 of the 844 preview IDs, with
+language/field verification still pending. The captured keyboard script and
+observed search mode/row limit are now wired into the preview.
+
 **Authenticity requirement:** preserve the original Japanese assets, copy,
 control meanings and flows, with no placeholder or invented replacements.
 The current browsing experiment does not meet that requirement. See the
