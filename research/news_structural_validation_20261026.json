@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-26",
+  "channel": "Japanese News / HAGJ v7",
+  "evidence": {
+    "private_native_source_sha256": "8c7328c94ed44f916f104e254d07eddbaed7c0f236539a4fe4e70d893b72e852",
+    "original_bytes_published": false,
+    "validator": {
+      "entry": "0x8000AFC8",
+      "end_exclusive": "0x8000BE30",
+      "slice_sha256": "1f07de4fe4136dcc6aec080ff174030c1f534b41b234df70e8502414c06279c2"
+    },
+    "crc": {
+      "entry": "0x8007621C",
+      "end_exclusive": "0x80076350",
+      "slice_sha256": "b406aae1ce266200d9ea2b435d80626bc450e0091bc10b506d4d26374bf0fbe4"
+    },
+    "separate_third_party_leads": {
+      "repository": "https://github.com/WiiLink24/NewsChannel",
+      "commit": "daccc47b22a6a045aaaa7d5b86548525c3c2ea7c",
+      "classification": "public restoration implementation, not Nintendo source or runtime dependency",
+      "built_or_run": false,
+      "selected_file_sha256": {
+        "header.go": "54f1924c47d09cd9f5edf8faf1bda46030316e06fa33f72bb60bc395b65d6993",
+        "articles.go": "0e957a9abb9935e0b449a3aed364db3022248283fa693c18306871b69e2fb821",
+        "headlines.go": "4f9ca912ef7d9359a30bd9baee02efd87dafc27ae91ec28361e2751f3c77be3a",
+        "topics.go": "bab58e9c411f394de78fe48a47fee2a0adc3a8f7337ba04a1b04b313f340e75b",
+        "locations.go": "05cc8e623036f9626355910c1f54a7f001d9b44dea410fde51eccaef7fe8af37",
+        "sources.go": "30f11fc5004830eaf9f48ac128371e39f5ce2587944645ae5039f80f20d82b43",
+        "utils.go": "b7b98a1e108dc546a3c3924d17ff974e48918d86471080b9bbcf4321e494a6e1"
+      },
+      "additional_address_lead": "https://gist.github.com/quatric/e571ed2400339867bf9d52701e59db24",
+      "additional_lead_classification": "third-party USA-v7 analysis; claims rechecked against pinned Japanese executable"
+    }
+  },
+  "verification_command": ".venv/Scripts/python.exe -m unittest tests.test_news tests.test_news_native",
+  "result": {
+    "tests_run": 23,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "independent_decoder_and_cli_tests": 11,
+    "native_comparison_tests": 12
+  },
+  "native_execution": {
+    "entire_buffer_validator_executed": true,
+    "native_crc_executed": true,
+    "native_register_helpers_executed": true,
+    "native_validation_or_crc_stubs": false,
+    "stubbed_services": ["current minute", "tick clock", "calendar time"],
+    "input_slots": 24,
+    "input_body_cap_per_slot_bytes": 65536,
+    "instruction_cap": 10000000,
+    "fixed_code_read_write_allowlists": true,
+    "input_and_stack_guards_checked": true,
+    "synthetic_body_mutation_allowed_only_for_observed_topic_pruning_stores": true
+  },
+  "checked_native_findings": [
+    "Complete valid synthetic set returns zero with all 24 original CRC calls",
+    "Missing hourly slots produce -2 and a refresh mask, separately from one-buffer structure",
+    "Declared size mismatch or CRC damage returns -1",
+    "Version high word nonzero returns -3; lower sixteen bits are not fixed to 512",
+    "Native close-time boundary is inclusive",
+    "Secondary timestamp accepts supplied now plus 1440 and rejects a greater value",
+    "Expired synthetic buffers with a server-message offset can return zero in this validator",
+    "Selected article source, location and image indices enforce ordinary bounds or the all-ones sentinel",
+    "Unresolved latest-topic article references and body sizes at least 20000 bytes are pruned in native RAM",
+    "Malformed wrapping table counts can exceed supplied input bounds and are trapped by the harness",
+    "The native validator does not validate the separate headline table or require even UTF-16 byte sizes"
+  ],
+  "independent_local_policies": {
+    "raw_byte_cap": 4194304,
+    "envelope_byte_cap": 5242880,
+    "record_cap_per_table": 4096,
+    "topic_reference_cap": 65536,
+    "unique_decoded_text_byte_cap": 8388608,
+    "no_wrapping_sizes_or_overlapping_tables": true,
+    "strict_utf16_and_bounded_terminators": true,
+    "missing_local_articles_rejected_without_rewriting": true,
+    "external_hour_references_retained_as_unresolved": true
+  },
+  "signatures_or_installed_trust_verified": false,
+  "native_envelope_or_decompression_executed": false,
+  "current_news_or_provider_licensing_established": false,
+  "cross_hour_reference_graph_complete": false,
+  "wc24_registration_or_delivery_verified": false,
+  "native_banner_or_article_rendering_verified": false,
+  "server_routes_added": false,
+  "console_profile_or_original_input_modified": false
+}

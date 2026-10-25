@@ -17,10 +17,16 @@ Likewise, the internal `news.bin.00` through `.23` strings remain filename
 references. Their relationship to live data, task rotation or test data is
 unverified. They must not be treated as 24 required task registrations.
 
+The [structural decoder and guarded native comparisons](format.md) now verify
+the decompressed header, CRC, table layout and selected article-reference path.
+They deliberately leave signatures, native decompression, cross-hour completeness
+and UI use unverified. Public restoration material supplied separately attributed
+leads, rather than being treated as original Nintendo source.
+
 The next gates are the original first-run registration/caller arguments;
-outer WC24 delivery and file framing; compression/integrity and article/category/
-geographic records; licensed current Japanese news input with provenance; and
-independent payload validation. Only then can one coordinated native check
+outer WC24 delivery/trust and native envelope/decompression acceptance;
+cross-hour loading and UI consumption; and licensed current Japanese news input
+with provenance. Only then can one coordinated native check
 exercise banner headlines, category selection, globe, article text/images,
 dates, refresh and failure handling.
 

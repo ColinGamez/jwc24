@@ -11,9 +11,9 @@ native WC24 scheduling, delivery, and validation foundation.
 - Region: `JPN`
 - Installed in the active Dolphin NAND as a bundled system channel
 
-The title currently has an empty data directory and no entries in
-`nwc24dl.bin`, indicating that it has not completed its first-run setup in this
-NAND.
+The initial inventory found an empty data directory and no entries in
+`nwc24dl.bin`; it did not establish completed first-run setup. That observation
+is a snapshot, not a live check of a console or current profile.
 
 ## Direct executable evidence
 
@@ -23,16 +23,34 @@ The stock v7 executable contains this URL format:
 http://news.wapp.wii.com/v2/%d/%03d/news.bin
 ```
 
-It also contains internal references for `news.bin.00` through `news.bin.23`,
-which suggests a multi-part or rotating test corpus. Runtime task capture and
-format validation are required before implementing delivery.
+It also contains internal `TestData/news.bin.00` through `.23` paths. Native
+execution now verifies a separate 24-buffer validator, including checksums,
+table bounds and selected article references. This does not establish the
+actual hourly URL/task mapping or network delivery.
+
+## Offline payload inspection
+
+The [bounded structural decoder and native comparisons](format.md) cover the
+decompressed header, six table layouts, text/data spans and local references.
+The metadata-only CLI accepts either a private envelope file or decompressed
+input:
+
+```powershell
+.venv/Scripts/python.exe tools/inspect_news.py <private-news-file>
+.venv/Scripts/python.exe tools/inspect_news.py <private-raw-file> --raw
+```
+
+Neither a structural pass nor native validator status zero establishes a
+signature, current licensed news, accepted WC24 delivery or a rendered channel.
 
 ## Bring-up order
 
 1. Capture the exact Japanese first-run WC24 task.
-2. Recover the `news.bin` container, compression, and record formats.
+2. Extend the recovered structural subset through native envelope verification,
+   decompression, cross-hour loading and banner/article rendering.
 3. Define licensed/current Japanese-language news inputs with provenance.
 4. Generate and independently validate replacement payloads.
 5. Verify the banner headlines, globe, categories, and article UI.
 
-No channel binary patch is planned for the initial restoration.
+No channel binary patch has been applied. Original trust and endpoint handling
+remain separate unfinished restoration work.
