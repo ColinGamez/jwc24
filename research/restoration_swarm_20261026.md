@@ -1,75 +1,110 @@
 # Project-wide restoration checkpoint, October 26, 2026
 
-The owner requested the full Japanese service baseline and one coordinated
-native validation pass. Four concurrent worker slots (coordinator plus three
-workers) covered shared WC24, News/Nintendo/CMOC, experience channels and Shop.
-This checkpoint records completed scoped work, not a finished restoration.
+The full Japanese restoration goal remains active. Four concurrent worker slots
+(coordinator plus three workers) produced the scoped code and evidence below.
+This is an offline implementation checkpoint, not a finished original-channel
+experience or a request to run an incomplete final console test.
 
-## Implemented and verified
+## Verified implementation
 
-- Shared delivery now selects a distinct private envelope-key path for each
-  payload's owning title. Synthetic HTTP decryption tests cover two channel
-  owners, compressed payloads, assets, filename aliases and unencrypted data.
-- Read-only multi-channel preflight checks local inputs, cross-manifest
-  conflicts and optional task/account/key-file prerequisites. The shared
-  origin override changes only in-memory manifests. Native readiness and
-  project completion are always explicitly unverified.
-- Forecast bundle validation joins current records to catalog/condition keys,
-  checks locale/window consistency, and optionally verifies both signatures
-  against an explicitly supplied JWC24 key. Observation age is not inferred
-  from envelope validity. The retained pair verifies historically but fails
-  the current-window requirement.
-- CMOC's bounded independent inspector now supports both native size encodings
-  and a separate header-correlation predicate. Six original retail routines
-  execute against synthetic inputs without service stubs. Deliberate local
-  safeguards reject malformed extended prefixes that trigger unchecked native
-  reads. This does not implement authenticated startup or Mii/contest semantics.
-- Shop server assembly and offline preflight share the same pack loader.
-  The current snapshot rendered 2,605 HTML routes and attempted 3,374 static
-  display dependencies. All HTML routes passed, but two local font routes
-  and four external third-party style references keep the overall check
-  failing. No external dependency was fetched or original asset invented.
+- Shared WC24 delivery selects each payload's owning title key. Read-only
+  multi-manifest preflight checks conflicts, local inputs and optional explicit
+  task/account/key-file prerequisites without modifying profiles.
+- Shared mail replays unacknowledged batches, budgets multipart overhead,
+  preserves new arrivals, and records acknowledgment intent before retiring
+  files. Tests cover restart, partial deletion, same-content resubmission,
+  storage faults and stalled/truncated requests. Native receive/import/display
+  and count-only acknowledgment edge cases remain separate open work.
+- Forecast checks all daily/weekly condition references and paired current
+  records, locales, windows and optional signatures. The retained pair verifies
+  historically but is expired. Observation freshness and installed-client trust
+  are not inferred from those checks.
+- News has a bounded structural decoder, explicit cross-buffer graph checks,
+  original Japanese validator/CRC comparisons, and separate task/filename/reader
+  comparisons. One job's 24-subtask intent is not 24 task registrations or a
+  fixed IOS slot. Real IOS storage, signature/trust, native decompression,
+  current articles and rendering remain unverified.
+- Nintendo Channel CSData framing/CRC/decompression and follow-on list-reference
+  construction are independently implemented and compared with selected original
+  code. The configured endpoint, language eligibility, downloaded records,
+  software/video catalog and original UI are still unfinished.
+- CMOC ordinary/extended framing and header correlation match a bounded native
+  subset. Authentication, FD startup semantics, Mii/search/contest/vote operations
+  and their native UI are not implemented by those framing checks.
+- Shop has shared pack assembly/offline display checks plus the verified retail
+  EC/plugin initialization call sites and an offline IAS GetChallenge component.
+  The snapshot renders 2,605 HTML routes and attempts 3,374 dependencies, with
+  two missing font paths and four external modified-style references. Full
+  Japanese fidelity, runtime startup, registration/signing, accounts, ownership,
+  acquisition and installation remain unfinished.
+- The provider catalog writer now uses its existing identity registry and a
+  cross-process lock with unique atomic temporary files. Public clean-copy tests
+  caught the previously unwired committed writer. This does not restore Wii no
+  Ma's original Flash shop or make provider products orderable.
+- Today and Tomorrow, Wii Speak and Digicam Print have separate evidence-based
+  tracks. All 34 owned package contents match their source TMD sizes/hashes;
+  Nintendo signatures remain unverified. Fortune has local resource evidence,
+  voice has separate WFC/version dependencies, and printing needs a real provider.
 
-## Validation scope
+## Validation and repository integrity
 
-The initial full local worktree suite passed 696 tests. The final full local
-worktree suite passed **745 tests**, with no reported skips, after code review
-and fixes. These totals include existing uncommitted experiments; they do
-not imply that unrelated work was committed or independently restored.
+The initial local worktree suite passed 696 tests. The final local offline
+suite passed **862 tests**, with no reported skips. This includes existing
+uncommitted experiments and private originals; it is not proof of native UI
+acceptance or a claim that unrelated work was committed.
 
-Newly staged code was also exported separately from the older dirty worktree.
-The shared-preflight/delivery tests passed 16 tests, Forecast passed 14,
-CMOC passed 16, and Shop preflight/server passed 15. For CMOC native checks
-the separately exported test suite was explicitly pointed at the existing
-private original executable; no original bytes entered the index or commit.
-The first export run without that private input correctly skipped native
-CMOC tests. These scoped counts overlap the 745 total and must not be added.
+The exported committed/staged code, run without private profile/package inputs,
+also passed **672 tests with 280 explicit private/optional skips**. Skip counts
+are test-framework counts, including class/subtest skips, not a completion
+percentage. The public CI job now installs declared test dependencies and runs
+the available offline suite in addition to compilation/package checks. Its
+actual remote job result must be reported separately from this local export.
 
-Independent cross-review caught incomplete task-flag validation, unsafe
-manifest labels in metadata, ignored quoted CSS imports and the need to state
-the observation-age limitation. Fixes or explicit scope flags were checked
-before committing. Documentation links in the staged cross-channel inventory
-were checked against indexed files, rather than relying on unrelated local
-documents.
+Scoped staged-only checks covered shared preparation/delivery, mail, Forecast,
+CMOC, News, Nintendo, Shop and provider publication. Native tests that needed
+original files were explicitly pointed at existing private inputs outside the
+export; no original bytes were staged. These focused counts overlap the total.
 
-## Open work and next investigation order
+Cross-review caught task-flag/privacy gaps, ignored CSS imports, the distinction
+between envelope and observation freshness, mail retirement/retry bugs, encoded
+versus decoded News limits, and misleading private-fixture assumptions. Public
+fixture gates now skip only absent primary inputs; corrupt or incomplete present
+inputs still fail. Synthetic prices/articles/media exist only inside tests and
+are never published as channel data.
 
-The [complete channel inventory](../channels/README.md) controls scope. News
-still lacks a verified registration/container/article contract. Nintendo
-Channel still lacks the CSData load/validation/record contract. CMOC still
-lacks its first-response semantics and authentication. These are implementation
-gates, not requests for the owner to test incomplete success responses.
+Completed changes were committed in scoped batches. Older unrelated worktree
+edits and experiments remain intact. Proprietary sources/software, media, keys,
+NAND data, extraction outputs and test logs remain private and ignored.
 
-Next recover the News data-consumption and Nintendo CSData paths from the
-actual clients, keeping any independently published protocol observations
-separate from Nintendo provenance. Continue Shop's original startup/account
-and Japanese screen recovery. Demae verified variants/orderability, Wii no Ma
-original-compatible Flash/media, Body Check's legitimate save and dataset
-requirements, and the additional verified stock channels remain open as
-documented. Private originals are evidence inputs, never executable tools to
-run blindly or material to publish.
+## Work that still prevents final completion
 
-No Dolphin launch, live account/order/submission, profile/DNS change or device
-installation occurred. The real Wii backup and credentials remained untouched.
-The region-changed physical console is a separate future validation target;
-the authorized isolated Dolphin/vWii profile remains the development hub.
+The [channel inventory](../channels/README.md) controls the full scope. Continue
+from the verified contracts instead of repeating the broad collection searches:
+
+1. Implement actual News transport/registration and signed-data acceptance,
+   then acquire authorized current Japanese content. The owner was asked about
+   a preferred feed/API; no publisher default or fabricated article was chosen.
+2. Recover Nintendo's downloaded list records and full loader/manager lifecycle;
+   implement actual software/video browsing and submission contracts.
+3. Recover CMOC startup/authentication and real record meanings; connect actual
+   Mii discovery, posting, contests, voting and native notices.
+4. Finish original Shop screens/assets and source-supported runtime/account/
+   entitlement/acquisition behavior. Do not substitute account success or treat
+   the catalog as ownership.
+5. Complete Demae real variants/orderability/native basket and notice delivery;
+   Wii no Ma original-compatible Flash/media/setup; Body Check dataset semantics
+   and legitimate Japanese Fit-save prerequisites. Country-wide provider
+   retention is not complete delivery/menu coverage.
+6. Continue the additional-channel native flows, Wii Speak's actual compatible
+   communication service and Digicam's authorized fulfillment contract. Locate
+   and verify an Everybody Votes client before inventing its protocol.
+7. Finish shared Dolphin mail import/friend behavior, refresh time-sensitive
+   inputs, and prepare the coordinated native validation pass for all genuinely
+   implemented flows. Real-device findings can still require another fix/pass.
+
+No Dolphin launch, live provider account/order/submission, console installation,
+profile/DNS change or actual Wii-backup modification occurred. Tests used local
+synthetic HTTP only; public research and Git transport are separate from native
+service delivery. The region-changed physical Wii remains a distinct future
+validation target. Only the authorized isolated profile may use owned vWii
+credentials; no credential migration was performed by this checkpoint.

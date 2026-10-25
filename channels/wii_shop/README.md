@@ -1,6 +1,6 @@
 # Wii Shop research
 
-The latest [More Details recovery](descriptions.md) enables 835 original game
+The latest [More Details recovery](descriptions.md) enables 835 captured game
 descriptions and 1,670 source-referenced screenshots, including alternative
 image file IDs. The original scroll handler, focus and detail/back context are
 preserved. A [captured generic no-results view](../../research/wii_shop_navigation_recovery_20261025.md)
@@ -12,6 +12,14 @@ Parallel source work adds an [offline CAS codec](soap_contract.md) and a bounded
 or a new manual control; the recovered guide is incomplete. The [all-region
 catalog review](../../research/wii_shop_catalog_regions_validation_20261025.json)
 found no additional Japanese title/icon associations beyond the existing 776.
+
+The [October 26 startup/account follow-up](startup_account.md) identifies retail
+EC initialization, plugin registration and the connection worker's first IAS
+challenge operation. An offline challenge codec is checked against that original
+operation with synthetic transport. This does not connect or authorize an account.
+The [offline display preflight](offline_preflight.md) checks all 2,605 current HTML
+routes and 3,374 dependencies, and reports two missing font paths plus four external
+references in retained modified styles. Those findings remain unfinished work.
 
 The latest [detail/controller recovery](captured_titles.md) enables 834 captured
 detail information panels and 836 original controller pages. Game-specific
@@ -53,7 +61,7 @@ control meanings and flows, with no placeholder or invented replacements.
 The current browsing experiment does not meet that requirement. See the
 [fidelity audit and outstanding work](authenticity.md).
 
-Updated October 25, 2026. A [local browsing checkpoint](runtime_preview.md) now
+Updated October 26, 2026. A [local browsing checkpoint](runtime_preview.md) now
 runs through the original Shop browser in an isolated Dolphin profile. It serves
 844 grouped Japan titles over loopback HTTPS. The initial connectivity screen
 was confirmed in-channel; an earlier three-panel home was checked
@@ -117,6 +125,8 @@ Neither the codec nor the harness is a live commerce route.
 The [native origin predicates](origin_access.md) and [network initializer wrappers](../../research/wii_shop_network_initializers_20261025.md)
 have separate, bounded checks. They do not establish browser permissions,
 EC/plugin initialization, account connection or full startup.
+The later startup/account audit above maps actual EC/plugin setup calls, while
+their complete runtime execution and connected-account flow remain unverified.
 
 Original source/software, device/account data and tickets stay outside Git.
 The checked-in [audit report](../../research/wii_shop_source_audit_20261024.json)

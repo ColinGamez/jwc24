@@ -115,6 +115,11 @@ python -m unittest tests.test_wii_shop_url tests.test_wii_shop_navigation
 
 ## Static caller leads and remaining work
 
+The [October 26 retail startup/account audit](startup_account.md) now maps the
+actual `EC_Init`, plugin registration and first IAS challenge call sites. Its
+isolated native challenge check is separate from executing the entire startup
+sequence; it does not establish account connection or a storefront redirect chain.
+
 The [later network-initializer verification](../../research/wii_shop_network_initializers_20261025.md)
 now executes the caller wrappers at `0x8002F560` and `0x8002F680`, their directly
 invoked worker and a bounded polling prefix. Native diagnostics associate the

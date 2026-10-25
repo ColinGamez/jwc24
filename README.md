@@ -100,6 +100,8 @@ contracts from offline checks and native acceptance. A new read-only
 inputs; encrypted downloads now select each payload's owning title key, so
 multiple encrypted channels can share a listener without sharing keys.
 The [paired Forecast validator](channels/forecast/bundle_validation.md),
+[News structural decoder](channels/news/format.md),
+[Nintendo CSData inspector](channels/nintendo/csdata_contract.md),
 [CMOC framing checks](channels/cmoc/framing.md) and
 [offline Shop display preflight](channels/wii_shop/offline_preflight.md) add
 specific preparation gates. They do not mark those channels complete.
@@ -136,6 +138,9 @@ explicit offline fixtures checked against selected original v21 request,
 response and URL-storage code. The [origin checks](channels/wii_shop/origin_access.md)
 and [network initializer checks](research/wii_shop_network_initializers_20261025.md)
 separate those boundaries from the still-unfinished full startup and account connection.
+The [retail startup/account follow-up](channels/wii_shop/startup_account.md)
+maps EC/plugin initialization and verifies an offline IAS challenge operation;
+signing, registration and connected-account behavior remain unfinished.
 [Manual recovery](channels/wii_shop/manual_recovery.md) found a partial Japanese
 game guide but no Shop operations guide; it stays disconnected from the UI.
 [Native startup](channels/wii_shop/startup_contract.md) and [EULA/manual command](channels/wii_shop/bridge_contract.md)
@@ -265,6 +270,10 @@ The server-side receive/delete protocol is implemented and independently
 tested. Dolphin 2606 still skips WC24 download entries whose destination
 filename is empty, so importing received mail into `wc24recv.mbx` requires a
 Dolphin KD implementation patch; it does not require modifying a channel WAD.
+The [shared mail delivery notes](channels/mail/README.md) distinguish retryable
+unacknowledged batches, durable acknowledgment retirement and multipart byte
+budgets from verified native receipt/display. New mail is retained across
+interrupted receive attempts; no live mailbox or credentials are migrated.
 
 ## Project boundaries
 

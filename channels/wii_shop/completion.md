@@ -1,6 +1,6 @@
 # Full Shop restoration: remaining completion criteria
 
-Updated October 25, 2026. **The Shop is not complete.** Restored historical
+Updated October 26, 2026. **The Shop is not complete.** Restored historical
 browsing and a working loopback browser do not establish the original Japanese
 experience or a working acquisition service.
 
@@ -8,12 +8,12 @@ experience or a working acquisition service.
 | --- | --- | --- |
 | Home/list/detail | Captured home and populated list layout; 776 original catalog title-line sets; 834 captured detail views | Remaining original states, 68 per-title list layouts and ten captured detail views |
 | Controller information | 837 raw captures, 836 accepted pages; 834 detail/controller links; original vWii compatibility condition | Eight unavailable controller pages and native interaction/visual checks |
-| More Details | 835 original B06 descriptions and 1,670 original screenshots; source-proven footer targets, scrolling and return context | Nine unavailable descriptions and native visual/interaction checks |
+| More Details | 835 captured B06 descriptions and 1,670 retained screenshots; source-referenced footer targets, scrolling and return context | Nine unavailable descriptions, remaining provenance/fidelity confirmation and native visual/interaction checks |
 | Artwork | 776 list icons and 835 detail images with role-specific page references | 68 list icons, nine detail images and the missing CERO descriptor |
 | Japanese interface | Home copy corroborated against Nintendo's screenshot; detail heading corroborated in its manual; captured product text retained | Remaining Japanese labels, original markup/flow and encoding verification |
 | Category/search | Captured VC menu with original control meanings and native keyboard wiring; exact backend group filters and captured generic no-results layout | Original publisher/category gateway/WiiWare pages, two system-picker pictograms, genre-code mapping, exact Japanese keyword-empty/search-again states, verified popularity/new-release data |
 | Native experience | Original v21 browser connects; original installed scripts and selected captured handlers are checked | Current home/list/detail/controller visuals, Japanese input, hover/sound behavior and complete interaction in Dolphin |
-| Commerce | Client/library interfaces and selected native paths audited; offline CAS ListTitles and ECS GetECConfig components; selected v21 request construction, response parsing and URL storage checked with synthetic input | Complete retail request/startup/attribute contract, account/session/device status, catalog/entitlement semantics, verified content selection, tickets/acquisition, storage/install and error recovery |
+| Commerce | Client/library interfaces and selected native paths audited; offline CAS ListTitles, ECS GetECConfig and IAS GetChallenge components; retail EC/plugin call sites and selected original request/response code checked | Complete runtime startup/attribute contract, signing/registration/account/session/device status, catalog/entitlement semantics, verified content selection, tickets/acquisition, storage/install and error recovery |
 | Operations guide | Original help/manual routing traced; partial Japanese game pilot recovered and kept inactive | Original Shop guide, complete manual dependencies and native session behavior |
 
 The known collector backup lacks `B_17.jsp`, `B_23.jsp` and `B_27.jsp`. A fresh
@@ -33,6 +33,10 @@ It does not supply the missing server templates, so no replacement heading or
 picker layout is invented from that description.
 
 The [authenticity audit](authenticity.md) remains the controlling fidelity list.
+The [offline preflight](offline_preflight.md) additionally exposes two missing
+font paths and four external third-party display references in retained modified
+styles. Successful HTML responses do not close those display dependencies or
+establish the provenance of every historical template or asset.
 Unimplemented commerce is not replaced by simulated success, invented account
 state or a catalog interpreted as ownership. Original software and device data
 remain private; the owner's actual Wii backup is unchanged.

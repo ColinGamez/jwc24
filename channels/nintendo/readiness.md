@@ -40,3 +40,7 @@ lead to the actual load/consumer path, whole-file CRC, supported version and
 reference checks, and native LZ10/LZ11 helpers. A bounded independent inspector
 and synthetic native comparisons are implemented. Record semantics, the full
 I/O/load sequence, authentic catalog data and native browsing remain unfinished.
+The [next-stage reference planner](list_references.md) additionally verifies
+original list-reference construction and handoff before transport. It requires
+explicit caller configuration and does not fetch a catalog or establish the
+selected language's eligibility.

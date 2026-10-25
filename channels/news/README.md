@@ -42,6 +42,10 @@ input:
 
 Neither a structural pass nor native validator status zero establishes a
 signature, current licensed news, accepted WC24 delivery or a rendered channel.
+The [explicit bundle check](bundle_validation.md) resolves supplied cross-buffer
+references. The [task-registration investigation](task_registration.md) verifies
+one native job's 24-subtask intent, local filename construction and reader order;
+it does not provision real tasks or turn that evidence into a generic manifest.
 
 ## Bring-up order
 
