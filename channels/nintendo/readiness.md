@@ -34,3 +34,9 @@ No emulator was launched, service host contacted, data submitted, WAD modified,
 or real-console backup accessed during this follow-up. The original files and
 derived disassembly remain private. A broad project preflight must report
 this channel as unfinished rather than pass it on filename evidence.
+
+The subsequent [CSData framing recovery](csdata_contract.md) now connects that
+lead to the actual load/consumer path, whole-file CRC, supported version and
+reference checks, and native LZ10/LZ11 helpers. A bounded independent inspector
+and synthetic native comparisons are implemented. Record semantics, the full
+I/O/load sequence, authentic catalog data and native browsing remain unfinished.
