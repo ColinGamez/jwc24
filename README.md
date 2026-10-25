@@ -92,6 +92,18 @@ validated replacement data
 
 ## Current project status
 
+The [project-wide restoration inventory and coordinated test plan](channels/README.md)
+tracks every requested channel, including News, Nintendo Channel, Check Mii Out
+and additional stock Japanese applications. It separates unfinished service
+contracts from offline checks and native acceptance. A new read-only
+`jwc24 preflight` command checks combined manifests and optional task/account
+inputs; encrypted downloads now select each payload's owning title key, so
+multiple encrypted channels can share a listener without sharing keys.
+The [paired Forecast validator](channels/forecast/bundle_validation.md),
+[CMOC framing checks](channels/cmoc/framing.md) and
+[offline Shop display preflight](channels/wii_shop/offline_preflight.md) add
+specific preparation gates. They do not mark those channels complete.
+
 The [Nintendo collection index](research/nintendo_collection_index_20261022.md)
 maps the local research tree and existing archive catalogs to JWC24 follow-up
 work. The [early Wii SDK PDF review](research/sdk_pdf_review_20261022.md) covers
