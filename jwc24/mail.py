@@ -8,7 +8,7 @@ import re
 import secrets
 import tempfile
 import threading
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from email import policy
 from email.parser import BytesParser
 from pathlib import Path
@@ -57,16 +57,16 @@ def normalize_wii_id(value: str | int) -> str:
     text = str(value)
     if text.lower().startswith("w"):
         text = text[1:]
-    if not text.isdigit() or len(text) != 16:
+    if re.fullmatch(r"[0-9]{16}", text) is None:
         raise ValueError("Wii mail ID must contain exactly 16 decimal digits")
     return text
 
 
 @dataclass(frozen=True)
 class MailAccount:
-    wii_id: str
-    password: str
-    mlchkid: str
+    wii_id: str = field(repr=False)
+    password: str = field(repr=False)
+    mlchkid: str = field(repr=False)
     mail_flag: str
 
 
@@ -93,12 +93,53 @@ class MailStore:
 
     def _write_accounts(self, accounts: dict[str, dict[str, str]]) -> None:
         payload = (json.dumps(accounts, indent=2, sort_keys=True) + "\n").encode()
-        with tempfile.NamedTemporaryFile(
-            dir=self.root, prefix="accounts.", suffix=".tmp", delete=False
-        ) as temporary:
-            temporary.write(payload)
-            temporary_path = Path(temporary.name)
-        os.replace(temporary_path, self.accounts_path)
+        self._atomic_write(self.accounts_path, payload)
+
+    @staticmethod
+    def _atomic_write(destination: Path, payload: bytes) -> None:
+        temporary_path = None
+        try:
+            with tempfile.NamedTemporaryFile(dir=destination.parent, prefix="mail.", suffix=".tmp", delete=False) as temporary:
+                temporary_path = Path(temporary.name)
+                temporary.write(payload)
+                temporary.flush()
+                os.fsync(temporary.fileno())
+            os.replace(temporary_path, destination)
+        finally:
+            if temporary_path is not None:
+                temporary_path.unlink(missing_ok=True)
+
+    @staticmethod
+    def _ack_intent(inbox: Path) -> tuple[str, ...]:
+        path = inbox / "acknowledgment.json"
+        try:
+            with path.open("rb") as source:
+                raw = source.read(8193)
+        except FileNotFoundError:
+            return ()
+        if len(raw) > 8192:
+            raise ValueError("mail acknowledgment intent is oversized")
+        try:
+            value = json.loads(raw)
+            names = value["messages"]
+            valid = (type(value) is dict and set(value) == {"schema_version", "messages"}
+                     and type(value["schema_version"]) is int and value["schema_version"] == 1
+                     and type(names) is list and 1 <= len(names) <= 10
+                     and all(isinstance(name, str) and re.fullmatch(r"[0-9a-f]{64}\.sent", name) for name in names)
+                     and len(set(names)) == len(names))
+        except (ValueError, KeyError, TypeError):
+            valid = False
+        if not valid:
+            raise ValueError("mail acknowledgment intent is invalid")
+        return tuple(names)
+
+    def _complete_ack(self, inbox: Path) -> int:
+        names = self._ack_intent(inbox)
+        if names:
+            for name in names:
+                (inbox / name).unlink(missing_ok=True)
+            (inbox / "acknowledgment.json").unlink()
+        return len(names)
 
     @staticmethod
     def _account(wii_id: str, record: dict[str, str]) -> MailAccount:
@@ -140,9 +181,18 @@ class MailStore:
         return None
 
     def check_response(self, account: MailAccount, challenge: str, interval: int = 1) -> bytes:
-        if not challenge.isdigit():
+        if re.fullmatch(r"[0-9]{1,64}", challenge) is None:
             raise ValueError("mail challenge must be decimal")
-        mail_flag = account.mail_flag if self.pending(account.wii_id) else NO_MAIL_FLAG
+        with self._lock:
+            pending = self.pending(account.wii_id)
+            # Queue filenames are content hashes (or stable registration keys).
+            # Include the durable generation marker so identical content queued
+            # after acknowledgment cannot reuse a cached flag. Reading current
+            # state avoids relying on a caller's stale MailAccount snapshot.
+            # Ignore suffix changes while a batch awaits delete acknowledgment.
+            generation = self._read_accounts()[account.wii_id].get("mail_flag", NO_MAIL_FLAG)
+            mail_flag = (hashlib.sha256((generation + "\n" + "\n".join(sorted({p.stem for p in pending}))).encode("ascii"))
+                         .hexdigest()[:33] if pending else NO_MAIL_FLAG)
         message = (
             f"{challenge}\nw{account.wii_id}\n{mail_flag}\n{interval}"
         ).encode("ascii")
@@ -186,6 +236,10 @@ class MailStore:
             for recipient in recipients:
                 inbox = self.messages / recipient
                 inbox.mkdir(parents=True, exist_ok=True)
+                # A prior delete acknowledgment may have committed before a
+                # crash during retirement. Finish it before treating a new
+                # same-content submission as an unacknowledged duplicate.
+                self._complete_ack(inbox)
                 if message.get("X-Wii-Cmd") == "80010001":
                     # The Wii Menu can reload IOS during startup, causing more than one KD session
                     # to issue the same friend-registration command with a different Date header.
@@ -195,9 +249,12 @@ class MailStore:
                 else:
                     digest = hashlib.sha256(message_payload).hexdigest()
                 destination = inbox / f"{digest}.eml"
-                if not destination.exists():
-                    destination.write_bytes(message_payload)
+                if not destination.exists() and not destination.with_suffix(".sent").exists():
+                    # Commit the generation before publishing the new message.
+                    # Failure can cause an extra check, never an undiscoverable
+                    # committed message with a reused cached generation.
                     self._advance_flag(recipient)
+                    self._atomic_write(destination, message_payload)
         return recipients
 
     def quarantine_rejected(self, sender: MailAccount, payload: bytes, reason: str) -> Path:
@@ -209,29 +266,75 @@ class MailStore:
         return destination
 
     def pending(self, wii_id: str | int) -> list[Path]:
+        """Return queued and claimed-but-unacknowledged messages."""
         inbox = self.messages / normalize_wii_id(wii_id)
-        return sorted(inbox.glob("*.eml")) if inbox.is_dir() else []
+        if not inbox.is_dir():
+            return []
+        retired = set(self._ack_intent(inbox))
+        return sorted(p for p in (*inbox.glob("*.eml"), *inbox.glob("*.sent")) if p.name not in retired)
 
-    def claim(self, account: MailAccount, max_size: int, limit: int = 10) -> list[bytes]:
-        if max_size <= 0:
+    def claim(self, account: MailAccount, max_size: int, limit: int = 10,
+              *, message_overhead: int = 0) -> list[bytes]:
+        """Replay an outstanding batch until delete.cgi acknowledges it.
+
+        The batch remains on disk across HTTP disconnects and service restarts.
+        New mail cannot enter that batch before acknowledgment, since deletion
+        is batch-scoped. Overhead lets the CGI enforce its multipart byte budget.
+        """
+        if type(max_size) is not int or max_size <= 0:
             raise ValueError("maxsize must be positive")
+        if type(limit) is not int or not 1 <= limit <= 10:
+            raise ValueError("mail batch limit must be between one and ten")
+        if type(message_overhead) is not int or message_overhead < 0:
+            raise ValueError("mail multipart overhead must be nonnegative")
         claimed: list[bytes] = []
         used = 0
         with self._lock:
-            for path in self.pending(account.wii_id)[:limit]:
-                payload = path.read_bytes().replace(b"\n", b"\r\n").replace(b"\r\r\n", b"\r\n")
-                if claimed and used + len(payload) > max_size:
+            inbox = self.messages / normalize_wii_id(account.wii_id)
+            self._complete_ack(inbox)
+            outstanding = sorted(inbox.glob("*.sent"))
+            if len(outstanding) > limit:
+                raise ValueError("outstanding mail batch exceeds the requested limit")
+            candidates = outstanding or sorted(inbox.glob("*.eml"))
+            selected = []
+            for path in candidates:
+                if len(claimed) >= limit:
                     break
-                if len(payload) > max_size:
+                payload = path.read_bytes().replace(b"\n", b"\r\n").replace(b"\r\r\n", b"\r\n")
+                size = len(payload) + message_overhead
+                if used + size > max_size:
+                    if outstanding:
+                        raise ValueError("outstanding mail batch does not fit the requested byte budget")
+                    if claimed:
+                        break
                     continue
-                path.replace(path.with_suffix(".sent"))
+                selected.append(path)
                 claimed.append(payload)
-                used += len(payload)
+                used += size
+            for path in selected:
+                if path.suffix == ".eml":
+                    path.replace(path.with_suffix(".sent"))
         return claimed
 
-    def delete_claimed(self, account: MailAccount) -> int:
-        inbox = self.messages / account.wii_id
-        claimed = sorted(inbox.glob("*.sent")) if inbox.is_dir() else []
-        for path in claimed:
-            path.unlink()
-        return len(claimed)
+    def delete_claimed(self, account: MailAccount, *, expected_count: int | None = None) -> int:
+        with self._lock:
+            inbox = self.messages / normalize_wii_id(account.wii_id)
+            retiring = self._ack_intent(inbox)
+            if retiring:
+                if expected_count is not None and expected_count != len(retiring):
+                    raise ValueError("mail acknowledgment does not match the retiring batch")
+                return self._complete_ack(inbox)
+            claimed = sorted(inbox.glob("*.sent")) if inbox.is_dir() else []
+            if expected_count is not None:
+                if type(expected_count) is not int or expected_count < 0:
+                    raise ValueError("mail acknowledgment count must be nonnegative")
+                # An already acknowledged empty batch permits an idempotent
+                # delete retry. Partial acknowledgment needs a separately
+                # recovered contract; do not guess which messages were stored.
+                if claimed and expected_count != len(claimed):
+                    raise ValueError("mail acknowledgment does not match the outstanding batch")
+            if not claimed:
+                return 0
+            intent = {"schema_version": 1, "messages": [path.name for path in claimed]}
+            self._atomic_write(inbox / "acknowledgment.json", json.dumps(intent).encode("ascii"))
+            return self._complete_ack(inbox)

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 import secrets
+import socket
 from email import policy
 from email.parser import BytesParser
 from http import HTTPStatus
@@ -16,6 +17,8 @@ AUTH_FIELD = "pass" + "wd"
 AUTH = re.compile(
     rf"mlid=w([0-9]{{16}})\r?\n{AUTH_FIELD}=([0-9a-f]+)", re.IGNORECASE
 )
+MAX_REQUEST_BYTES = 4 * 1024 * 1024
+REQUEST_TIMEOUT_SECONDS = 30
 
 
 def _multipart_fields(content_type: str, body: bytes) -> dict[str, bytes]:
@@ -38,6 +41,10 @@ def create_mail_server(host: str, port: int, store: MailStore) -> ThreadingHTTPS
     class Handler(BaseHTTPRequestHandler):
         server_version = "JWC24-Mail/0.1"
 
+        def setup(self) -> None:
+            super().setup()
+            self.connection.settimeout(REQUEST_TIMEOUT_SECONDS)
+
         def _reply(self, body: bytes, *, interval_headers: bool = False) -> None:
             self.send_response(HTTPStatus.OK)
             self.send_header("Content-Type", "text/plain")
@@ -57,11 +64,23 @@ def create_mail_server(host: str, port: int, store: MailStore) -> ThreadingHTTPS
 
         def do_POST(self) -> None:  # noqa: N802
             path = urlparse(self.path).path
-            length = int(self.headers.get("Content-Length", "0") or "0")
-            if length > 4 * 1024 * 1024:
+            lengths = self.headers.get_all("Content-Length", [])
+            if (self.headers.get_all("Transfer-Encoding") or len(lengths) != 1
+                    or re.fullmatch(r"[0-9]{1,10}", lengths[0]) is None):
+                self.send_error(HTTPStatus.BAD_REQUEST)
+                return
+            length = int(lengths[0])
+            if length > MAX_REQUEST_BYTES:
                 self.send_error(HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
                 return
-            body = self.rfile.read(length)
+            try:
+                body = self.rfile.read(length)
+            except socket.timeout:
+                self.send_error(HTTPStatus.REQUEST_TIMEOUT)
+                return
+            if len(body) != length:
+                self.send_error(HTTPStatus.BAD_REQUEST)
+                return
             try:
                 if path.endswith("/account.cgi"):
                     form = parse_qs(body.decode("ascii"), keep_blank_values=True)
@@ -123,13 +142,13 @@ def create_mail_server(host: str, port: int, store: MailStore) -> ThreadingHTTPS
                     if account is None:
                         self._reply(cgi_response(cd=250))
                         return
-                    messages = store.claim(account, int(form["maxsize"][0]))
                     boundary = f"jwc24/{secrets.token_hex(8)}"
+                    prefix = (b"\r\n--" + boundary.encode() +
+                              b"\r\nContent-Type: text/plain\r\n\r\n")
+                    messages = store.claim(account, int(form["maxsize"][0]),
+                                           message_overhead=len(prefix))
                     mail_parts = [
-                        b"\r\n--"
-                        + boundary.encode()
-                        + b"\r\nContent-Type: text/plain\r\n\r\n"
-                        + message
+                        prefix + message
                         for message in messages
                     ]
                     mail_size = sum(map(len, mail_parts))
@@ -166,11 +185,17 @@ def create_mail_server(host: str, port: int, store: MailStore) -> ThreadingHTTPS
                     if account is None:
                         self._reply(cgi_response(cd=250))
                         return
-                    deleted = store.delete_claimed(account)
+                    deleted = store.delete_claimed(account, expected_count=int(form["delnum"][0]))
                     self._reply(cgi_response(cd=100, deletenum=deleted))
                     return
             except (KeyError, UnicodeError, ValueError):
                 self._reply(cgi_response(cd=220))
+                return
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+                self.close_connection = True
+                return
+            except OSError:
+                self.send_error(HTTPStatus.SERVICE_UNAVAILABLE, "Mail storage unavailable")
                 return
             self.send_error(HTTPStatus.NOT_FOUND)
 
