@@ -1,0 +1,39 @@
+{
+  "checked_on_jst": "2026-10-26",
+  "command": "python -m tools.preflight_wii_shop --progress",
+  "schema_version": 1,
+  "offline_preview_passed": false,
+  "titles": 844,
+  "html_routes_checked": 2605,
+  "display_dependencies_checked": 3374,
+  "html_bytes_checked": 26048496,
+  "display_dependency_bytes_checked": 35144698,
+  "failures": {
+    "html_routes": 0,
+    "display_dependencies": 2,
+    "external_display_dependencies": 4
+  },
+  "captured_detail_titles": 834,
+  "captured_controller_titles": 836,
+  "captured_description_titles": 835,
+  "missing_captured_detail_titles": 10,
+  "missing_captured_controller_titles": 8,
+  "missing_captured_description_titles": 9,
+  "known_dependency_gaps": {
+    "missing_font_routes": ["/font2.ttf", "/category/font2.ttf"],
+    "external_display_host": "wiishopchannel.neocities.org",
+    "context": "Retained modified-template styles; no original replacement inferred"
+  },
+  "http_tls_checked": false,
+  "scripts_executed": false,
+  "native_rendering_checked": false,
+  "commerce_supported": false,
+  "complete_original_japanese_experience": false,
+  "network_requests_sent": 0,
+  "dolphin_launched": false,
+  "nand_accessed": false,
+  "device_credentials_accessed": false,
+  "proprietary_code_executed": false,
+  "experimental_fallbacks_retained": true,
+  "scope": "Static img/input/script/stylesheet references, inline style URLs, and transitive CSS url() and quoted @import references. Ordinary anchors, dynamic script dependencies, original native behavior and source provenance remain separate checks."
+}

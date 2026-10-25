@@ -235,24 +235,12 @@ def main(argv=None):
         return
     if bool(args.cert) != bool(args.key):
         parser.error('Both TLS certificate and key are required')
-    from .wii_shop_artwork import Artwork
-    from .wii_shop_native_assets import NativeAssets
-    from .wii_shop_captured_scripts import CapturedScripts
-    from .wii_shop_captured_catalog import CapturedCatalog
-    from .wii_shop_captured_titles import CapturedTitlePages
-    from .wii_shop_captured_empty import CapturedEmpty
-    from .wii_shop_descriptions import Descriptions
-    from .wii_shop_captured_navigation import CapturedNavigation
-    capture = CapturedScripts(args.frontend_capture)
-    catalog, digest = catalog_from_file(args.catalog, args.title_metadata, capture.manifest_sha256)
-    artwork = Artwork(args.artwork, args.title_artwork, digest, NativeAssets(args.native_assets),
-                      capture, CapturedCatalog(args.catalog_capture,{item['title_id'] for item in catalog.items}),
-                      CapturedTitlePages(capture,catalog.title_metadata,args.title_support,{item['title_id'] for item in catalog.items},args.title_page_index),
-                      CapturedEmpty(args.catalog_evidence_capture,capture),
-                      Descriptions(args.descriptions,digest,{item['title_id'] for item in catalog.items},shared_paths=capture.shared),
-                      CapturedNavigation(args.navigation_capture,capture))
-    server = create_server(('127.0.0.1', args.port), Application(catalog, digest, artwork), cert=args.cert, key=args.key)
-    print(f'JWC24 Shop preview ready: {len(catalog.items)} titles', flush=True)
+    from dataclasses import fields
+    from .wii_shop_preflight import PreviewPacks, load_preview_application
+    application = load_preview_application(PreviewPacks(**{
+        field.name: getattr(args, field.name) for field in fields(PreviewPacks)}))
+    server = create_server(('127.0.0.1', args.port), application, cert=args.cert, key=args.key)
+    print(f'JWC24 Shop preview ready: {len(application.catalog.items)} titles', flush=True)
     try:
         server.serve_forever()
     finally:
