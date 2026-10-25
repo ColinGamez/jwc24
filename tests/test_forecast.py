@@ -102,7 +102,7 @@ class ForecastPayloadTests(unittest.TestCase):
         compressed = build_location_forecast_payload(
             [location],
             forecasts=[LocationForecast(1, 10, 2, 1_800_000_000, day, day, (week_day,) * 7)],
-            condition_texts=[WeatherConditionText(0x1001, 1, "晴れ")],
+            condition_texts=[WeatherConditionText(0x1001, 1, "晴れ"), WeatherConditionText(0x1002, 1, "Cloudy")],
             uv_texts=[WeatherIndexText(5, "やや強い")],
             laundry_texts=[WeatherIndexText(4, "乾きよし")],
             pollen_texts=[WeatherIndexText(1, "少ない")],
@@ -111,10 +111,74 @@ class ForecastPayloadTests(unittest.TestCase):
         summary = validate_forecast(compressed, signed=False)
         self.assertEqual(summary.long_forecasts, 1)
         self.assertEqual(summary.locations, 1)
-        self.assertEqual(summary.weather_conditions, 1)
+        self.assertEqual(summary.weather_conditions, 2)
         self.assertEqual(summary.uv_indices, 1)
         self.assertEqual(summary.laundry_indices, 1)
         self.assertEqual(summary.pollen_counts, 1)
+
+    def test_weather_condition_membership_covers_all_short_daily_slots(self) -> None:
+        location = ForecastLocation(1, 2, 1, "City", "Region", "Country", 35, 139)
+        base = decode_lz10(build_location_forecast_payload(
+            [location], generated_unix_timestamp=1_800_000_000,
+        ))
+        # Use the existing table layout with a short forecast row containing
+        # unknown sentinels, then introduce an absent condition in each slot.
+        from jwc24.forecast import SHORT_FORECAST
+        raw = bytearray(base)
+        row_offset = len(raw)
+        row = bytearray(SHORT_FORECAST.size)
+        struct.pack_into(">BBH", row, 0, 1, 2, 1)
+        for relative in [16 + day * 28 + slot * 2 for day in range(2) for slot in range(5)]:
+            struct.pack_into(">H", row, relative, 0xFFFF)
+        row[38] = row[66] = 0xFF
+        row[41:44] = b"\xff" * 3
+        row[69:72] = b"\xff" * 3
+        raw.extend(row)
+        struct.pack_into(">II", raw, 0x28, 1, row_offset)
+        struct.pack_into(">I", raw, 4, len(raw))
+        def compressed(data):
+            struct.pack_into(">I", data, 8, zlib.crc32(data[12:]) & 0xFFFFFFFF)
+            return encode_lz10(bytes(data))
+        validate_forecast(compressed(raw), signed=False)
+        for relative in [16 + day * 28 + slot * 2 for day in range(2) for slot in range(5)]:
+            with self.subTest(offset=relative):
+                broken = bytearray(raw)
+                struct.pack_into(">H", broken, row_offset + relative, 0)
+                with self.assertRaisesRegex(ValueError, "unknown weather condition"):
+                    validate_forecast(compressed(broken), signed=False)
+
+    def test_weather_condition_membership_covers_all_long_daily_and_weekly_slots(self) -> None:
+        location = ForecastLocation(1, 2, 1, "City", "Region", "Country", 35, 139)
+        base = decode_lz10(build_location_forecast_payload(
+            [location], generated_unix_timestamp=1_800_000_000,
+        ))
+        # Use the existing table layout with a short forecast row containing
+        # unknown sentinels, then introduce an absent condition in each slot.
+        from jwc24.forecast import LONG_FORECAST
+        raw = bytearray(base)
+        row_offset = len(raw)
+        row = bytearray(LONG_FORECAST.size)
+        struct.pack_into(">BBH", row, 0, 1, 2, 1)
+        for relative in [16 + day * 28 + slot * 2 for day in range(2) for slot in range(5)]:
+            struct.pack_into(">H", row, relative, 0xFFFF)
+        row[38] = row[66] = 0xFF
+        row[41:44] = b"\xff" * 3
+        row[69:72] = b"\xff" * 3
+        for day in range(7):
+            struct.pack_into(">H", row, 72 + day * 8, 0xFFFF)
+        raw.extend(row)
+        struct.pack_into(">II", raw, 0x20, 1, row_offset)
+        struct.pack_into(">I", raw, 4, len(raw))
+        def compressed(data):
+            struct.pack_into(">I", data, 8, zlib.crc32(data[12:]) & 0xFFFFFFFF)
+            return encode_lz10(bytes(data))
+        validate_forecast(compressed(raw), signed=False)
+        for relative in [16 + day * 28 + slot * 2 for day in range(2) for slot in range(5)] + [72 + day * 8 for day in range(7)]:
+            with self.subTest(offset=relative):
+                broken = bytearray(raw)
+                struct.pack_into(">H", broken, row_offset + relative, 0)
+                with self.assertRaisesRegex(ValueError, "unknown weather condition"):
+                    validate_forecast(compressed(broken), signed=False)
 
     @patch("jwc24.forecast.subprocess.run")
     def test_signs_stock_envelope(self, run) -> None:

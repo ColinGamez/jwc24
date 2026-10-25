@@ -11,9 +11,11 @@ room UI consumes weather state from the Wii ecosystem.
 - Region: `JPN`
 - Installed in the active Dolphin NAND as a bundled system channel
 
-The title currently has an empty data directory and no entries in
-`nwc24dl.bin`, indicating that it has not completed its first-run setup in this
-NAND.
+The retained October 9, 2026 test observations report completed first-run setup
+in the isolated Dolphin profile. Native WC24 slots 3 and 4 delivered full and
+short forecasts into `data/wc24dl.vff`; location settings used
+`data/noerase/savedata.dat`. This is a historical profile observation, not a new
+check of the current profile or physical console.
 
 ## Direct executable evidence
 
@@ -46,6 +48,21 @@ files `3.bin` and `4.bin`. The original host is offline, producing error
    Japanese location table.
 4. Confirm the Forecast Channel banner and full UI update correctly.
 5. Confirm Wii no Ma reads and displays the same weather state.
+
+## Wii no Ma integration
+
+Wii no Ma reads the Japanese Forecast Channel's VFF and saved preferences
+directly from the shared NAND. It does not require an extra server XML option.
+On October 9, 2026, a live native probe confirmed successful weather loading
+and the user's selected Gunma/Takasaki location. Visual weather-panel behavior
+still needs an in-room check.
+
+The investigated native weather reader validates every daily and weekly condition identifier against
+the payload's weather dictionary. Missing conditions must use `0xFFFF`;
+an undefined identifier, even in an overseas record, rejects the entire file.
+The public validator enforces this before publication. The retained October 9
+observations report that correcting missing subsidiary condition codes and
+refreshing both native downloads enabled Wii no Ma's weather-ready gate.
 
 The stock WAD remains immutable, but a patched working copy is required for
 live replacement data. The client verifies the 320-byte payload envelope with

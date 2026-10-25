@@ -677,6 +677,24 @@ def validate_forecast(payload: bytes, *, signed: bool = True) -> ForecastSummary
         counts.append(count)
         offsets.append(offset)
 
+    condition_codes = {
+        WEATHER_CONDITION.unpack_from(raw, offsets[2] + index * WEATHER_CONDITION.size)[0]
+        for index in range(counts[2])
+    }
+    for table_index, stride in ((0, LONG_FORECAST.size), (1, SHORT_FORECAST.size)):
+        for position in range(counts[table_index]):
+            start = offsets[table_index] + position * stride
+            code_offsets = [16 + day * 28 + slot * 2 for day in range(2) for slot in range(5)]
+            if table_index == 0:
+                code_offsets.extend(72 + day * 8 for day in range(7))
+            for relative in code_offsets:
+                code = struct.unpack_from(">H", raw, start + relative)[0]
+                if code != 0xFFFF and code not in condition_codes:
+                    raise ValueError(
+                        f"{names[table_index]} {position} references unknown weather condition "
+                        f"{code:#06x} at record offset {relative}"
+                    )
+
     long_keys = _table_keys(
         raw, counts[0], offsets[0], LONG_FORECAST.size, allow_duplicates=True
     )
