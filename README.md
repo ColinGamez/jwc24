@@ -105,6 +105,10 @@ controller pages and [835 More Details pages with 1,670 original screenshots](ch
 The preview preserves captured scrolling, paging and return context. A recovered
 generic no-results view replaces the modified template for zero-match name
 queries; its original Japanese keyword-search flow remains unverified.
+The [captured Virtual Console menu](channels/wii_shop/captured_navigation.md)
+now preserves its original control meanings and title-search input. Original
+Japanese controller-button artwork replaces the English normal/hover variants;
+this does not establish a fully recovered Japanese interface.
 
 [Historical metadata](channels/wii_shop/title_metadata.md) supplies 835 captured
 names/publishers and 774 historical point amounts. Separate [image roles](channels/wii_shop/image_roles.md)

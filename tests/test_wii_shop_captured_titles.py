@@ -5,12 +5,14 @@ import shutil
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 from urllib.parse import parse_qs,urlsplit
 
 from jwc24.wii_shop_artwork import Artwork,Tree
 from jwc24.wii_shop_captured_scripts import CapturedScripts
 from jwc24.wii_shop_captured_titles import CapturedTitlePages,CONTROLLER_SCRIPT_URL,controller_identity,read_page
 from jwc24.wii_shop_native_assets import NativeAssets
+from jwc24.wii_shop_localization import controller_images
 from jwc24.wii_shop_server import Application,catalog_from_file
 from tests.test_wii_shop_artwork import Elements
 
@@ -72,7 +74,12 @@ class CapturedTitlePageTests(unittest.TestCase):
     def test_controller_round_trip_preserves_list_context_and_uses_captured_assets(self):
         query='offset=30&demos=all'
         body=self.app.get('/title/'+self.identifier+'?'+query)[2]
-        anchor=Tree(body.decode()).root.find('ControlAnchor').attrs['href']
+        detail=Tree(body.decode()).root
+        normal,hover=controller_images(self.capture)
+        self.assertEqual(detail.find('Image3control').attrs['src'],normal)
+        self.assertIn(hover,detail.find('controllerLink').attrs['onmouseover'])
+        self.assertEqual(detail.find('controllerLink').attrs['onmouseout'],'MM_swapImgRestore()')
+        anchor=detail.find('ControlAnchor').attrs['href']
         self.assertEqual(urlsplit(anchor).path,'/controller/'+self.identifier)
         status,_,controller=self.app.get(anchor)
         self.assertEqual(status,200)
@@ -93,6 +100,19 @@ class CapturedTitlePageTests(unittest.TestCase):
         self.assertEqual(status,200)
         self.assertNotIn(b'Pic_Rating/GRB/cd05.gif',body)
         self.assertNotIn(b'Pic_Rating/PEGI/cd05.gif',body)
+
+    def test_japanese_controller_selection_requires_the_reviewed_source_image_family(self):
+        page = self.pages.page(self.identifier)
+        page[0].find('Image3control').attrs['src'] = '/oss/oss/common/images/spacer.gif'
+        before = page[0].render()
+        with patch.object(self.pages, 'page', return_value=page):
+            body = self.app.get('/title/'+self.identifier)[2]
+        image = Tree(body.decode()).root.find('Image3control')
+        self.assertEqual(image.attrs['src'], self.capture.resource_url('/oss/oss/common/images/spacer.gif'))
+        # The reader normally returns its own copy; the test changes only that
+        # synthetic page and does not alter the cached original capture.
+        original,_ = self.pages.page(self.identifier)
+        self.assertNotEqual(original.render(), before)
 
     def test_cached_source_trees_are_copied_before_rendering(self):
         first,_=self.pages.page(self.identifier)

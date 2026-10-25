@@ -3,6 +3,8 @@
 param(
     [string]$DolphinExe = 'C:\Users\Colin\Desktop\Wii\Dolphin-JWC24-Mail\Dolphin.exe',
     [string]$Profile,
+    [ValidateRange(5, 300)]
+    [int]$ServiceStartupTimeoutSeconds = 120,
     [switch]$ServerOnly
 )
 $ErrorActionPreference = 'Stop'
@@ -22,6 +24,7 @@ $titleSupportManifest = Join-Path $repoRoot 'private\wii_shop\frontend-title-sup
 $titlePageIndex = Join-Path $repoRoot 'private\wii_shop\title-pages-v2\index.json'
 $catalogEvidenceManifest = Join-Path $repoRoot 'private\wii_shop\frontend-all-catalog-v1\manifest.private.json'
 $descriptionManifest = Join-Path $repoRoot 'private\wii_shop\descriptions-v2\manifest.private.json'
+$navigationManifest = Join-Path $repoRoot 'private\wii_shop\frontend-navigation-v1\manifest.private.json'
 $markerFile = Join-Path $Profile 'preview-profile.json'
 $marker = Get-Content -LiteralPath $markerFile -Raw | ConvertFrom-Json
 $content = Join-Path $Profile 'Wii\title\00010002\48414241\content'
@@ -52,10 +55,12 @@ if (-not $listeners.Count) {
     $arguments = @('-u', '-m', 'jwc24.wii_shop_server', '--catalog', ('"'+$catalog+'"'),
         '--cert', ('"'+(Join-Path $Profile 'tls\server.pem')+'"'),
         '--key', ('"'+(Join-Path $Profile 'tls\server.key')+'"'))
-    Start-Process -FilePath $python -ArgumentList $arguments -WorkingDirectory $repoRoot -WindowStyle Hidden `
-        -RedirectStandardOutput (Join-Path $logs "$stamp.stdout.log") -RedirectStandardError (Join-Path $logs "$stamp.stderr.log") | Out-Null
-    $listenDeadline = [DateTime]::UtcNow.AddSeconds(30)
+    $shopServiceProcess = Start-Process -FilePath $python -ArgumentList $arguments -WorkingDirectory $repoRoot -WindowStyle Hidden `
+        -RedirectStandardOutput (Join-Path $logs "$stamp.stdout.log") -RedirectStandardError (Join-Path $logs "$stamp.stderr.log") -PassThru
+    $listenDeadline = [DateTime]::UtcNow.AddSeconds($ServiceStartupTimeoutSeconds)
     while (-not @(Get-NetTCPConnection -LocalPort 18443 -State Listen -ErrorAction SilentlyContinue).Count) {
+        $shopServiceProcess.Refresh()
+        if ($shopServiceProcess.HasExited) { throw 'Local Shop preview exited; inspect the private preview logs.' }
         if ([DateTime]::UtcNow -ge $listenDeadline) { throw 'Local Shop preview did not start; inspect the private preview logs.' }
         Start-Sleep -Milliseconds 200
     }
@@ -77,6 +82,9 @@ try {
     }
     if (-not $health.captured_description_titles -or $health.captured_description_manifest_sha256 -ne (Get-FileHash -LiteralPath $descriptionManifest -Algorithm SHA256).Hash.ToLowerInvariant()) {
         throw 'Restart the preview service with the matching historical description pack.'
+    }
+    if (-not $health.captured_vc_menu -or $health.captured_navigation_manifest_sha256 -ne (Get-FileHash -LiteralPath $navigationManifest -Algorithm SHA256).Hash.ToLowerInvariant()) {
+        throw 'Restart the preview service with the matching historical navigation capture.'
     }
     if (-not $health.captured_detail_titles -or $health.captured_title_support_manifest_sha256 -ne (Get-FileHash -LiteralPath $titleSupportManifest -Algorithm SHA256).Hash.ToLowerInvariant()) {
         throw 'Restart the preview service with the matching historical title/support pages.'

@@ -73,6 +73,8 @@ class Application:
                           'captured_catalog_layout': bool(getattr(self.pages, 'captured_catalog', None)),
                           'captured_no_results_layout': bool(getattr(self.pages,'captured_empty',None)),
                           'captured_no_results_manifest_sha256': self.pages.captured_empty.manifest_sha256 if getattr(self.pages,'captured_empty',None) else None,
+                          'captured_vc_menu': bool(getattr(self.pages,'captured_navigation',None)),
+                          'captured_navigation_manifest_sha256': self.pages.captured_navigation.manifest_sha256 if getattr(self.pages,'captured_navigation',None) else None,
                           'captured_catalog_manifest_sha256': self.pages.captured_catalog.manifest_sha256 if getattr(self.pages,'captured_catalog',None) else None,
                           'captured_catalog_title_rows': len(self.pages.captured_catalog.panels) if getattr(self.pages,'captured_catalog',None) else 0,
                           'captured_detail_titles': len(self.pages.captured_titles.detail_rows) if getattr(self.pages,'captured_titles',None) else 0,
@@ -221,6 +223,7 @@ def main(argv=None):
     parser.add_argument('--title-page-index', type=Path, default=Path('private/wii_shop/title-pages-v2/index.json'))
     parser.add_argument('--catalog-evidence-capture', type=Path, default=Path('private/wii_shop/frontend-all-catalog-v1'))
     parser.add_argument('--descriptions', type=Path, default=Path('private/wii_shop/descriptions-v2'))
+    parser.add_argument('--navigation-capture', type=Path, default=Path('private/wii_shop/frontend-navigation-v1'))
     args = parser.parse_args(argv)
     if args.check:
         context = legacy_tls_context(root=args.root)
@@ -239,13 +242,15 @@ def main(argv=None):
     from .wii_shop_captured_titles import CapturedTitlePages
     from .wii_shop_captured_empty import CapturedEmpty
     from .wii_shop_descriptions import Descriptions
+    from .wii_shop_captured_navigation import CapturedNavigation
     capture = CapturedScripts(args.frontend_capture)
     catalog, digest = catalog_from_file(args.catalog, args.title_metadata, capture.manifest_sha256)
     artwork = Artwork(args.artwork, args.title_artwork, digest, NativeAssets(args.native_assets),
                       capture, CapturedCatalog(args.catalog_capture,{item['title_id'] for item in catalog.items}),
                       CapturedTitlePages(capture,catalog.title_metadata,args.title_support,{item['title_id'] for item in catalog.items},args.title_page_index),
                       CapturedEmpty(args.catalog_evidence_capture,capture),
-                      Descriptions(args.descriptions,digest,{item['title_id'] for item in catalog.items},shared_paths=capture.shared))
+                      Descriptions(args.descriptions,digest,{item['title_id'] for item in catalog.items},shared_paths=capture.shared),
+                      CapturedNavigation(args.navigation_capture,capture))
     server = create_server(('127.0.0.1', args.port), Application(catalog, digest, artwork), cert=args.cert, key=args.key)
     print(f'JWC24 Shop preview ready: {len(catalog.items)} titles', flush=True)
     try:

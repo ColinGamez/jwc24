@@ -5,6 +5,13 @@ a running commerce service. No route imports it. It does not establish that the
 installed Japanese Shop v21 uses this library revision or invokes this operation
 from its original storefront pages.
 
+The later [retail commerce-surface audit](../../research/wii_shop_commerce_surface_20261025.json)
+found concrete v21 fields absent from this older source implementation:
+`AttributeFiltersEx` and `OrderByAttribute`, with additional typed subfields.
+Their enum meanings and storefront use are unresolved. This codec is therefore
+an incomplete v21 contract and remains offline; accepting its older subset is
+not evidence of retail service compatibility.
+
 The [metadata-only source report](../../research/wii_shop_soap_contract_20261025.json)
 records five private client-library files verified against their extraction
 inventory. That verification establishes extraction consistency, not independent

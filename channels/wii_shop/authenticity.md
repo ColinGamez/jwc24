@@ -18,9 +18,9 @@ remain in `jwc24/wii_shop_artwork.py` and its adapter:
 
 | Area | Current deviation | Required work |
 | --- | --- | --- |
-| Page source | Home, lists, 834 detail views, 836 controller pages, 835 descriptions and the generic no-results view use reviewed captures; category, ten detail fallbacks and other experimental states still use a modified interactive archive | Integrate remaining captured states and corroborate their behavior |
+| Page source | Home, VC menu, lists, 834 detail views, 836 controller pages, 835 descriptions and the generic no-results view use reviewed captures; WiiWare menu, ten detail fallbacks and other experimental states still use a modified interactive archive | Integrate remaining captured states and corroborate their behavior |
 | Text | Home labels are corroborated by Nintendo's screenshot and native properties; other pages still have adapted translations/descriptions and decoding substitutions | Recover remaining original Japanese copy and correct source encoding |
-| Controls | Publisher/genre functions are repurposed as list/demo filters; unsupported links lead to a custom explanation | Preserve the original meaning and implement the corresponding data and flow |
+| Controls | Captured VC menu meanings are preserved, with unsupported ranking/gateway targets leading to the existing explanation; WiiWare's adapted category controls still use list/demo filters | Preserve remaining original meanings and implement their corresponding data and flow |
 | Account/title fields | Captured names/publishers now cover 835 IDs and historical points cover 774; balance, other fields and uncovered entries remain unknown | Recover remaining facts, distinguish original-game and Wii release dates, and implement native account state |
 | Images | Captured page references now distinguish 776 catalog icons and 835 detail images; 68 icon slots and nine detail slots still use a transparent spacer | Recover missing role-specific references/images and verify native rendering; do not count blank images as completion |
 | Details | Captured information panels now preserve original facts/artwork without the custom notice; transaction/account branches are excluded, while ten earlier views remain | Implement original commerce behavior and recover remaining original pages/resources |
@@ -66,6 +66,12 @@ review](../../research/wii_shop_navigation_recovery_20261025.md) replaces one
 modified state with captured markup; it does not establish Japanese search-again.
 The [CAS codec](soap_contract.md) remains offline, and the [partial manual](manual_recovery.md)
 does not replace the absent Shop guide or a More Details control.
+The [captured VC menu](captured_navigation.md) now replaces its modified template.
+Its English captions remain captured English; ranking/release data and the missing
+category gateway are not replaced by unrelated filters. The system picker stays
+offline because two original pictograms are absent. Detail pages now select the
+reviewed original Japanese normal/hover controller images from the same captured
+asset family; this asset selection does not prove an original Japanese page capture.
 
 ## Nintendo collection follow-up
 

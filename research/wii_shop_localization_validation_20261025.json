@@ -1,0 +1,482 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-25",
+  "source": "https://archive.org/details/WiiShopChannelBackup",
+  "archive_sha1": "e20c789c86bd602d7af3816d105c3f62ab504374",
+  "archive_sha256": "f7f349b8baf06f0f77ba6d413ed87e535378bc746084e24c7d5f59273acacda0",
+  "source_limit": "Collector capture consistency, not Nintendo signature or exact installed-version Japanese-page verification.",
+  "shared_manifest_sha256": "cfa89ef974455e13d31b37b3c7a3c34599dfd4498c48979105262c2dff75cb8e",
+  "native_resource_sha256": "9e4a171c24782be38a88225fda507b5c17120531cf517a6ebd9bd3f8ee580ead",
+  "native_scripts": [
+    {
+      "filename": "sound.js",
+      "bytes": 346,
+      "sha256": "1da241101239e20084539267183350d2f066ed8e9500d84eeef6087c27c7988a",
+      "utf8_bom": false,
+      "ascii_after_utf8_bom": true,
+      "japanese_character_count": 0
+    },
+    {
+      "filename": "common.js",
+      "bytes": 1068,
+      "sha256": "431710d4b723f3875f394fbdb48e7b8e065ba163fbd749c43b7247d55b14fcc3",
+      "utf8_bom": true,
+      "ascii_after_utf8_bom": true,
+      "japanese_character_count": 0
+    },
+    {
+      "filename": "shop.js",
+      "bytes": 795,
+      "sha256": "47d9797ae0bcc68599ca42e4c34c8b576ffc153cdd47d20a9560116201500fc4",
+      "utf8_bom": false,
+      "ascii_after_utf8_bom": true,
+      "japanese_character_count": 0
+    }
+  ],
+  "native_localized_property_names": [
+    "title",
+    "menuBtn",
+    "retryBtn",
+    "connecting"
+  ],
+  "native_japanese_literal_table_found": false,
+  "controller_asset_variant": {
+    "normal": {
+      "path": "/oss/oss/common/images/banner/controller_msg1_J_ja.gif",
+      "bytes": 3250,
+      "sha256": "222f22d5bf910030891152f304ac3e22eff397c6f79aa22d9749b7a6b5b52aa8",
+      "mime": "image/gif",
+      "width": 77,
+      "height": 65
+    },
+    "hover": {
+      "path": "/oss/oss/common/images/banner/controller_msg2_J_ja.gif",
+      "bytes": 3154,
+      "sha256": "aad1e109ef4997d1aac52ce2e63c009bfdcfc474abbee99a828e42b217f7509b",
+      "mime": "image/gif",
+      "width": 77,
+      "height": 65
+    },
+    "review_method": "Viewed both original GIFs and checked hashes/sizes/logical screen dimensions.",
+    "japanese_text_visually_confirmed": true,
+    "text_is_implemented_as_image_bytes": true,
+    "captured_b05_reference_sha256": "61887bc7e9894ac4797247778dc4f1916f2ab2673268ea409df5ae033e40e65c",
+    "captured_b05_normal_key": "Image3control",
+    "captured_b05_normal_basename": "controller_msg1_E_en.gif",
+    "captured_b05_hover_basename": "controller_msg2_E_en.gif",
+    "selected_japanese_variant_is_not_an_exact_japanese_page_capture": true
+  },
+  "listing": {
+    "sha256": "545c3700d4f05f7880f178e7fd945b138e8bca8e8b15a694bbeef2628f406aa1",
+    "common_files": 394,
+    "common_directory_rows": 16,
+    "explicit_jp_or_ja_page_requests": {
+      "P_01.jsp": 1,
+      "P_02.jsp": 1,
+      "P_17.jsp": 1,
+      "P_18.jsp": 1,
+      "P_19.jsp": 1,
+      "P_20.jsp": 1,
+      "P_21.jsp": 1,
+      "P_22.jsp": 1,
+      "W_02.jsp": 5,
+      "W_02_1.jsp": 5
+    },
+    "category_search_catalog_requests_with_explicit_japanese_language": 0,
+    "once_percent_decoded_filename_classification_has_same_japanese_selector_count": true,
+    "raw_query_values_published": false
+  },
+  "japanese_ui_source_pages": [
+    {
+      "page": "W_02.jsp",
+      "bytes": 31169,
+      "sha256": "bd6f32653e169c2559fb612bef75640912bbb2e9346c8c868f7a01e5cbba6c2e",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "W_02.jsp",
+      "bytes": 31170,
+      "sha256": "86729c59a6b6991d0585497695ccff46bb5022de25fb6f61b4520156e081e80e",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "W_02.jsp",
+      "bytes": 31126,
+      "sha256": "fd50483612a146756dea21ba713c176e892616ac9ccb72a472df43ad86fc664a",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "W_02.jsp",
+      "bytes": 31165,
+      "sha256": "4da8eac39e5f6c33d3f46d17e9a216383002e0af7b8cc050c6cc2ddf545f742b",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "W_02.jsp",
+      "bytes": 31165,
+      "sha256": "736182e113585dbd9a2b7e9cd1f6ab82bddfc63f36d54b85b8bf0c448af9231d",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "W_02_1.jsp",
+      "bytes": 27334,
+      "sha256": "065fe5b7910907488f6fed3ae950ce44e1b749cb6ae12f7b8c07fee7703b15e6",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "W_02_1.jsp",
+      "bytes": 27334,
+      "sha256": "065fe5b7910907488f6fed3ae950ce44e1b749cb6ae12f7b8c07fee7703b15e6",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "W_02_1.jsp",
+      "bytes": 24993,
+      "sha256": "ea359bce7a751da13d76da0c686021683dc40ad34e724bec27f26f4579e55b81",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "W_02_1.jsp",
+      "bytes": 26610,
+      "sha256": "0ef118b8f69e34899daafbd09c728c6eac1f764766321ca010f354ce61535818",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "W_02_1.jsp",
+      "bytes": 26263,
+      "sha256": "261e8360d1628a0a199d821fc411cf37784de69b169a2d2b563d0c360aea150f",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "P_01.jsp",
+      "bytes": 40383,
+      "sha256": "e9799bbdefc76f0839406487a57b62bbe6596643f996d0468b0de3ba67792cf2",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "P_02.jsp",
+      "bytes": 37729,
+      "sha256": "3ce115df68a917045d8a91c8437dadfdc3808369df41769467bd86a4ec483dfa",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "P_17.jsp",
+      "bytes": 37729,
+      "sha256": "a7ab3512f644128249d47a3f29c534cdba44ff4609ad057af78b99f440cb46d6",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "P_18.jsp",
+      "bytes": 37180,
+      "sha256": "bfbde8d4006857421184b0efbb9aff038ad5d05b0e9370de91a20e45a1ea9e47",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "P_19.jsp",
+      "bytes": 37097,
+      "sha256": "5fbc2ee20d004ff6145104bfb5da3f7520b5d6eda9e84d2a77a6025ed6fb7d29",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "P_20.jsp",
+      "bytes": 37027,
+      "sha256": "11b6bfbb04b0ac907693f22af78e8baa47b8b94135c775d7dc7cff5a14c34fa4",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "P_21.jsp",
+      "bytes": 37953,
+      "sha256": "129d179d233d5a7c98e60b270d5bec9133bb1e4ac0296449b10bacd9a193da72",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    },
+    {
+      "page": "P_22.jsp",
+      "bytes": 38007,
+      "sha256": "a4ce535340a19b51aff368550b5749d72a8861b6ebe91039450eaf26f4a03129",
+      "encoding": "UTF-8",
+      "replacement_characters": 0
+    }
+  ],
+  "source_button_evidence": [
+    {
+      "page": "W_02.jsp",
+      "side": "L",
+      "label": "もどる",
+      "target_function": "showPage",
+      "sha256": "bd6f32653e169c2559fb612bef75640912bbb2e9346c8c868f7a01e5cbba6c2e"
+    },
+    {
+      "page": "W_02.jsp",
+      "side": "L",
+      "label": "もどる",
+      "target_function": "showPage",
+      "sha256": "86729c59a6b6991d0585497695ccff46bb5022de25fb6f61b4520156e081e80e"
+    },
+    {
+      "page": "W_02.jsp",
+      "side": "L",
+      "label": "もどる",
+      "target_function": "showPage",
+      "sha256": "fd50483612a146756dea21ba713c176e892616ac9ccb72a472df43ad86fc664a"
+    },
+    {
+      "page": "W_02.jsp",
+      "side": "L",
+      "label": "もどる",
+      "target_function": "showPage",
+      "sha256": "4da8eac39e5f6c33d3f46d17e9a216383002e0af7b8cc050c6cc2ddf545f742b"
+    },
+    {
+      "page": "W_02.jsp",
+      "side": "L",
+      "label": "もどる",
+      "target_function": "showPage",
+      "sha256": "736182e113585dbd9a2b7e9cd1f6ab82bddfc63f36d54b85b8bf0c448af9231d"
+    },
+    {
+      "page": "P_01.jsp",
+      "side": "L",
+      "label": "もどる",
+      "target_function": "showHome",
+      "sha256": "e9799bbdefc76f0839406487a57b62bbe6596643f996d0468b0de3ba67792cf2"
+    },
+    {
+      "page": "P_02.jsp",
+      "side": "single",
+      "label": "もういちど",
+      "target_function": "retry",
+      "sha256": "3ce115df68a917045d8a91c8437dadfdc3808369df41769467bd86a4ec483dfa"
+    },
+    {
+      "page": "P_02.jsp",
+      "side": "L",
+      "label": "やめる",
+      "target_function": "showHome_KR",
+      "sha256": "3ce115df68a917045d8a91c8437dadfdc3808369df41769467bd86a4ec483dfa"
+    },
+    {
+      "page": "P_02.jsp",
+      "side": "R",
+      "label": "OK",
+      "target_function": "validate",
+      "sha256": "3ce115df68a917045d8a91c8437dadfdc3808369df41769467bd86a4ec483dfa"
+    },
+    {
+      "page": "P_17.jsp",
+      "side": "L",
+      "label": "もどる",
+      "target_function": "showPage",
+      "sha256": "a7ab3512f644128249d47a3f29c534cdba44ff4609ad057af78b99f440cb46d6"
+    },
+    {
+      "page": "P_18.jsp",
+      "side": "single",
+      "label": "もういちど",
+      "target_function": "retry",
+      "sha256": "bfbde8d4006857421184b0efbb9aff038ad5d05b0e9370de91a20e45a1ea9e47"
+    },
+    {
+      "page": "P_18.jsp",
+      "side": "L",
+      "label": "やめる",
+      "target_function": "showPage",
+      "sha256": "bfbde8d4006857421184b0efbb9aff038ad5d05b0e9370de91a20e45a1ea9e47"
+    },
+    {
+      "page": "P_18.jsp",
+      "side": "R",
+      "label": "OK",
+      "target_function": "validate",
+      "sha256": "bfbde8d4006857421184b0efbb9aff038ad5d05b0e9370de91a20e45a1ea9e47"
+    },
+    {
+      "page": "P_19.jsp",
+      "side": "single",
+      "label": "もういちど",
+      "target_function": "retry",
+      "sha256": "5fbc2ee20d004ff6145104bfb5da3f7520b5d6eda9e84d2a77a6025ed6fb7d29"
+    },
+    {
+      "page": "P_19.jsp",
+      "side": "L",
+      "label": "やめる",
+      "target_function": "showPage",
+      "sha256": "5fbc2ee20d004ff6145104bfb5da3f7520b5d6eda9e84d2a77a6025ed6fb7d29"
+    },
+    {
+      "page": "P_19.jsp",
+      "side": "R",
+      "label": "OK",
+      "target_function": "validate",
+      "sha256": "5fbc2ee20d004ff6145104bfb5da3f7520b5d6eda9e84d2a77a6025ed6fb7d29"
+    },
+    {
+      "page": "P_20.jsp",
+      "side": "single",
+      "label": "もういちど",
+      "target_function": "retry",
+      "sha256": "11b6bfbb04b0ac907693f22af78e8baa47b8b94135c775d7dc7cff5a14c34fa4"
+    },
+    {
+      "page": "P_20.jsp",
+      "side": "L",
+      "label": "やめる",
+      "target_function": "showBack",
+      "sha256": "11b6bfbb04b0ac907693f22af78e8baa47b8b94135c775d7dc7cff5a14c34fa4"
+    },
+    {
+      "page": "P_20.jsp",
+      "side": "R",
+      "label": "OK",
+      "target_function": "validate",
+      "sha256": "11b6bfbb04b0ac907693f22af78e8baa47b8b94135c775d7dc7cff5a14c34fa4"
+    },
+    {
+      "page": "P_21.jsp",
+      "side": "L",
+      "label": "もどる",
+      "target_function": "gotoWiipoint",
+      "sha256": "129d179d233d5a7c98e60b270d5bec9133bb1e4ac0296449b10bacd9a193da72"
+    },
+    {
+      "page": "P_22.jsp",
+      "side": "L",
+      "label": "もどる",
+      "target_function": "gotoWiipoint",
+      "sha256": "a4ce535340a19b51aff368550b5749d72a8861b6ebe91039450eaf26f4a03129"
+    }
+  ],
+  "source_title_evidence": [
+    {
+      "page": "W_02.jsp",
+      "value": "おしらせ",
+      "sha256": "bd6f32653e169c2559fb612bef75640912bbb2e9346c8c868f7a01e5cbba6c2e"
+    },
+    {
+      "page": "W_02.jsp",
+      "value": "おしらせ",
+      "sha256": "86729c59a6b6991d0585497695ccff46bb5022de25fb6f61b4520156e081e80e"
+    },
+    {
+      "page": "W_02.jsp",
+      "value": "おしらせ",
+      "sha256": "fd50483612a146756dea21ba713c176e892616ac9ccb72a472df43ad86fc664a"
+    },
+    {
+      "page": "W_02.jsp",
+      "value": "おしらせ",
+      "sha256": "4da8eac39e5f6c33d3f46d17e9a216383002e0af7b8cc050c6cc2ddf545f742b"
+    },
+    {
+      "page": "W_02.jsp",
+      "value": "おしらせ",
+      "sha256": "736182e113585dbd9a2b7e9cd1f6ab82bddfc63f36d54b85b8bf0c448af9231d"
+    },
+    {
+      "page": "W_02_1.jsp",
+      "value": "おしらせ",
+      "sha256": "065fe5b7910907488f6fed3ae950ce44e1b749cb6ae12f7b8c07fee7703b15e6"
+    },
+    {
+      "page": "W_02_1.jsp",
+      "value": "おしらせ",
+      "sha256": "ea359bce7a751da13d76da0c686021683dc40ad34e724bec27f26f4579e55b81"
+    },
+    {
+      "page": "W_02_1.jsp",
+      "value": "おしらせ",
+      "sha256": "0ef118b8f69e34899daafbd09c728c6eac1f764766321ca010f354ce61535818"
+    },
+    {
+      "page": "W_02_1.jsp",
+      "value": "おしらせ",
+      "sha256": "261e8360d1628a0a199d821fc411cf37784de69b169a2d2b563d0c360aea150f"
+    },
+    {
+      "page": "P_01.jsp",
+      "value": "Wiiショッピングチャンネル",
+      "sha256": "e9799bbdefc76f0839406487a57b62bbe6596643f996d0468b0de3ba67792cf2"
+    },
+    {
+      "page": "P_02.jsp",
+      "value": "Wiiショッピングチャンネル",
+      "sha256": "3ce115df68a917045d8a91c8437dadfdc3808369df41769467bd86a4ec483dfa"
+    },
+    {
+      "page": "P_17.jsp",
+      "value": "Wiiショッピングチャンネル",
+      "sha256": "a7ab3512f644128249d47a3f29c534cdba44ff4609ad057af78b99f440cb46d6"
+    },
+    {
+      "page": "P_18.jsp",
+      "value": "Wiiショッピングチャンネル",
+      "sha256": "bfbde8d4006857421184b0efbb9aff038ad5d05b0e9370de91a20e45a1ea9e47"
+    },
+    {
+      "page": "P_19.jsp",
+      "value": "Wiiショッピングチャンネル",
+      "sha256": "5fbc2ee20d004ff6145104bfb5da3f7520b5d6eda9e84d2a77a6025ed6fb7d29"
+    },
+    {
+      "page": "P_20.jsp",
+      "value": "Wiiショッピングチャンネル",
+      "sha256": "11b6bfbb04b0ac907693f22af78e8baa47b8b94135c775d7dc7cff5a14c34fa4"
+    },
+    {
+      "page": "P_21.jsp",
+      "value": "Wiiショッピングチャンネル",
+      "sha256": "129d179d233d5a7c98e60b270d5bec9133bb1e4ac0296449b10bacd9a193da72"
+    },
+    {
+      "page": "P_22.jsp",
+      "value": "Wiiショッピングチャンネル",
+      "sha256": "a4ce535340a19b51aff368550b5749d72a8861b6ebe91039450eaf26f4a03129"
+    }
+  ],
+  "encoding": {
+    "jp_ui_pages_strict_utf8_checked": 18,
+    "decoded_replacement_characters": 0,
+    "keyboard_js_cp932": true,
+    "keyboard_sha256": "400739e24fc85e592812b06866188ba5ccc3aec4da4341f2b9546936087a0103",
+    "keyboard_runtime_http_charset": "Shift_JIS",
+    "loaded_legacy_pages_strict_utf8": true,
+    "confirmed_runtime_decoding_bug": false,
+    "diagnostic_note": "Python default Windows console encoding can garble Japanese tool output; this audit explicitly emits UTF-8. This is not evidence of corrupted source bytes."
+  },
+  "other_image_limits": {
+    "NEW_ja_gif_text": "NEW",
+    "visually_reviewed_blank_or_symbol_resources": [
+      "top_a.gif",
+      "B01_banner_a.png",
+      "B_04_half_genre_a.png",
+      "B_04_softbanner_a.gif",
+      "under_banner_a.gif"
+    ],
+    "japanese_category_or_button_labels_recovered_from_these_five_images": false
+  },
+  "tests": {
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_wii_shop_localization -v",
+    "passed": 5
+  },
+  "scripts_executed": false,
+  "nand_or_credentials_accessed": false,
+  "runtime_files_modified_by_this_audit": false,
+  "complete_original_japanese_localization_verified": false
+}

@@ -93,6 +93,13 @@ python tools/audit_wii_shop_client.py '<private Dolphin Wii NAND directory>'
 python -m unittest tests.test_wii_shop_source_audit tests.test_wii_shop_client_audit
 ```
 
+The [captured VC menu](captured_navigation.md) now replaces the modified
+Virtual Console template and preserves the captured search/control meanings.
+The [Japanese controller-image pair](localization.md) supplies the original
+normal/hover artwork on 834 captured detail pages. The [latest integration check](../../research/wii_shop_navigation_integration_validation_20261025.json)
+verified those selections and all 844 detail routes over local HTTPS; native
+visual and Japanese-input checks are still outstanding.
+
 The next milestone is checking the archived layout and catalog navigation in
 the running original browser. Commerce services require a
 separate adapter; WC24 task/mail support does not implement Shop accounts,

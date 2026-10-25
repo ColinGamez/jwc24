@@ -4,8 +4,10 @@ October 25, 2026. A further 95 navigation/setup captures provide evidence about
 the original control meanings. The captured Virtual Console menu routes its
 category choice through `B_23.jsp`; the system and genre pickers are `B_03.jsp`
 and `B_16.jsp`. Nintendo's [original Shop instructions](https://en-americas-support.nintendo.com/app/answers/detail/a_id/2829/~/how-to-download-wii-shop-channel-items)
-also identify system, publisher, genre and title searches. The preview's adapted
-list/demo bindings do not yet implement those complete original flows.
+also identify system, publisher, genre and title searches. The [captured VC menu](captured_navigation.md)
+now preserves its original controls and search input; its unsupported ranking and
+gateway targets no longer become all-title/demo filters. WiiWare's adapted
+bindings and the complete original category flows remain unfinished.
 
 The service now supports exact filters backed by accepted historical fields:
 77 publishers, ten platform descriptions and 210 nonempty genre descriptions.

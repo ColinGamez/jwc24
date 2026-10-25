@@ -1,0 +1,808 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-25",
+  "original_main": {
+    "bytes": 3530912,
+    "sha256": "aff20704bd4cf9025e34382e185b0936e9ebc6e047a3431f21a445165c9dc898",
+    "allowlisted_marker_locations": {
+      "ListTitles": [
+        {
+          "file_offset": 3312672,
+          "address": 2150812448
+        }
+      ],
+      "listTitles": [],
+      "EC_ListTitles()": [
+        {
+          "file_offset": 3312656,
+          "address": 2150812432
+        }
+      ],
+      "GetTitle": [],
+      "GetTitleDetails": [],
+      "EC_GetTitle(titleId)": [
+        {
+          "file_offset": 3272380,
+          "address": 2150772156
+        }
+      ],
+      "getTitleInfo": [
+        {
+          "file_offset": 3280748,
+          "address": 2150780524
+        }
+      ],
+      "getTitleInfos": [
+        {
+          "file_offset": 3280764,
+          "address": 2150780540
+        }
+      ],
+      "downloadTitle": [
+        {
+          "file_offset": 3276076,
+          "address": 2150775852
+        },
+        {
+          "file_offset": 3280532,
+          "address": 2150780308
+        }
+      ],
+      "request": [
+        {
+          "file_offset": 3280840,
+          "address": 2150780616
+        }
+      ],
+      "ECommerceInterface": [
+        {
+          "file_offset": 3276504,
+          "address": 2150776280
+        },
+        {
+          "file_offset": 3279816,
+          "address": 2150779592
+        }
+      ],
+      "GetECConfig": [
+        {
+          "file_offset": 3268948,
+          "address": 2150768724
+        }
+      ],
+      "ECVersion": [
+        {
+          "file_offset": 3268960,
+          "address": 2150768736
+        }
+      ],
+      "ContentPrefixURL": [
+        {
+          "file_offset": 3268972,
+          "address": 2150768748
+        }
+      ],
+      "UncachedContentPrefixURL": [
+        {
+          "file_offset": 3268992,
+          "address": 2150768768
+        }
+      ],
+      "EcsURL": [
+        {
+          "file_offset": 3269020,
+          "address": 2150768796
+        }
+      ],
+      "IasURL": [
+        {
+          "file_offset": 3269028,
+          "address": 2150768804
+        }
+      ],
+      "CasURL": [
+        {
+          "file_offset": 3269036,
+          "address": 2150768812
+        }
+      ],
+      "ListResultOffset": [
+        {
+          "file_offset": 3314660,
+          "address": 2150814436
+        }
+      ],
+      "ListResultLimit": [
+        {
+          "file_offset": 3311304,
+          "address": 2150811080
+        },
+        {
+          "file_offset": 3314680,
+          "address": 2150814456
+        }
+      ],
+      "ListResultTotalSize": [
+        {
+          "file_offset": 3311456,
+          "address": 2150811232
+        },
+        {
+          "file_offset": 3314728,
+          "address": 2150814504
+        }
+      ],
+      "Attributes": [
+        {
+          "file_offset": 3260848,
+          "address": 2150760624
+        },
+        {
+          "file_offset": 3311320,
+          "address": 2150811096
+        }
+      ],
+      "AttributeFilters": [
+        {
+          "file_offset": 3311332,
+          "address": 2150811108
+        }
+      ],
+      "Name": [
+        {
+          "file_offset": 3260732,
+          "address": 2150760508
+        },
+        {
+          "file_offset": 3311352,
+          "address": 2150811128
+        },
+        {
+          "file_offset": 3314708,
+          "address": 2150814484
+        }
+      ],
+      "Value": [
+        {
+          "file_offset": 3260740,
+          "address": 2150760516
+        },
+        {
+          "file_offset": 3311360,
+          "address": 2150811136
+        }
+      ],
+      "TitleId": [
+        {
+          "file_offset": 3256696,
+          "address": 2150756472
+        },
+        {
+          "file_offset": 3260808,
+          "address": 2150760584
+        },
+        {
+          "file_offset": 3295096,
+          "address": 2150794872
+        },
+        {
+          "file_offset": 3296872,
+          "address": 2150796648
+        },
+        {
+          "file_offset": 3299704,
+          "address": 2150799480
+        },
+        {
+          "file_offset": 3311448,
+          "address": 2150811224
+        },
+        {
+          "file_offset": 3314720,
+          "address": 2150814496
+        }
+      ],
+      "Titles": [
+        {
+          "file_offset": 3301296,
+          "address": 2150801072
+        },
+        {
+          "file_offset": 3312684,
+          "address": 2150812460
+        }
+      ],
+      "Version": [
+        {
+          "file_offset": 3296896,
+          "address": 2150796672
+        }
+      ],
+      "TitleType": [],
+      "TitleName": [],
+      "TitleDescription": [],
+      "TitleSize": [],
+      "FsSize": [],
+      "Category": [],
+      "TitleKind": [
+        {
+          "file_offset": 3314000,
+          "address": 2150813776
+        }
+      ],
+      "SERVICE": [
+        {
+          "file_offset": 3311248,
+          "address": 2150811024
+        },
+        {
+          "file_offset": 3314016,
+          "address": 2150813792
+        }
+      ],
+      "ADVENTURE": [],
+      "ACTION": [],
+      "AttributeFiltersEx": [
+        {
+          "file_offset": 3311368,
+          "address": 2150811144
+        }
+      ],
+      "FilterType": [
+        {
+          "file_offset": 3311388,
+          "address": 2150811164
+        }
+      ],
+      "DataType": [
+        {
+          "file_offset": 3311400,
+          "address": 2150811176
+        }
+      ],
+      "OrderByAttribute": [
+        {
+          "file_offset": 3311412,
+          "address": 2150811188
+        }
+      ],
+      "OrderByType": [
+        {
+          "file_offset": 3311432,
+          "address": 2150811208
+        }
+      ]
+    },
+    "allowlisted_nul_terminated_suffix_counts": {
+      "ListTitles": 2,
+      "listTitles": 0,
+      "EC_ListTitles()": 1,
+      "GetTitle": 4,
+      "GetTitleDetails": 0,
+      "EC_GetTitle(titleId)": 1,
+      "getTitleInfo": 1,
+      "getTitleInfos": 1,
+      "downloadTitle": 2,
+      "request": 4,
+      "ECommerceInterface": 2,
+      "GetECConfig": 1,
+      "ECVersion": 1,
+      "ContentPrefixURL": 2,
+      "UncachedContentPrefixURL": 1,
+      "EcsURL": 1,
+      "IasURL": 1,
+      "CasURL": 1,
+      "ListResultOffset": 2,
+      "ListResultLimit": 2,
+      "ListResultTotalSize": 2,
+      "Attributes": 6,
+      "AttributeFilters": 1,
+      "Name": 6,
+      "Value": 7,
+      "TitleId": 7,
+      "Titles": 7,
+      "Version": 6,
+      "TitleType": 1,
+      "TitleName": 0,
+      "TitleDescription": 0,
+      "TitleSize": 0,
+      "FsSize": 0,
+      "Category": 0,
+      "TitleKind": 1,
+      "SERVICE": 2,
+      "ADVENTURE": 0,
+      "ACTION": 0,
+      "AttributeFiltersEx": 1,
+      "FilterType": 1,
+      "DataType": 1,
+      "OrderByAttribute": 1,
+      "OrderByType": 1
+    }
+  },
+  "browser_container": {
+    "bytes": 4374443,
+    "sha256": "7cebfa18a7b7525d25a9ebf407b648e13e4fa2470b6c628fd7f1e007adb2faa8"
+  },
+  "browser_compressed_member": {
+    "name": "wwwlib-rvl.lz7",
+    "bytes": 4374347,
+    "sha256": "5742df998f3bcf4545e4a7ba1df591a11b76e660087fd3ceb2cdf8f90582fefe"
+  },
+  "browser_overlay": {
+    "bytes": 9130272,
+    "sha256": "703a9810ee62c0a3c6675a4ebaa14ef498759dbc8c274e74be2f9ddf1512f514",
+    "allowlisted_marker_counts": {
+      "ListTitles": 0,
+      "listTitles": 0,
+      "EC_ListTitles()": 0,
+      "GetTitle": 0,
+      "GetTitleDetails": 0,
+      "EC_GetTitle(titleId)": 0,
+      "getTitleInfo": 0,
+      "getTitleInfos": 0,
+      "downloadTitle": 0,
+      "request": 0,
+      "ECommerceInterface": 0,
+      "GetECConfig": 0,
+      "ECVersion": 0,
+      "ContentPrefixURL": 0,
+      "UncachedContentPrefixURL": 0,
+      "EcsURL": 0,
+      "IasURL": 0,
+      "CasURL": 0,
+      "ListResultOffset": 0,
+      "ListResultLimit": 0,
+      "ListResultTotalSize": 0,
+      "Attributes": 0,
+      "AttributeFilters": 0,
+      "Name": 1,
+      "Value": 0,
+      "TitleId": 0,
+      "Titles": 0,
+      "Version": 1,
+      "TitleType": 0,
+      "TitleName": 0,
+      "TitleDescription": 0,
+      "TitleSize": 0,
+      "FsSize": 0,
+      "Category": 0,
+      "TitleKind": 0,
+      "SERVICE": 0,
+      "ADVENTURE": 0,
+      "ACTION": 0,
+      "AttributeFiltersEx": 0,
+      "FilterType": 0,
+      "DataType": 0,
+      "OrderByAttribute": 0,
+      "OrderByType": 0
+    }
+  },
+  "source_audit": {
+    "schema_version": 1,
+    "inventory_match_verified": true,
+    "inventory_sha256": "ea7edbe9e4e03f96f24cb3b2ccf45241bbac678be6351877719cab89e453c352",
+    "verified_files": [
+      {
+        "path": "common/lib/ec/ec_getTitle.cpp",
+        "bytes": 26222,
+        "sha256": "e013f5ec0d112800894d2953b3a61935deccc591a237a995da9f31950bf412a7"
+      },
+      {
+        "path": "common/lib/ec/ec_getTitle.h",
+        "bytes": 1932,
+        "sha256": "7cdf5af258a8a86f4e2f6ab63139389e8baebb6d2a8f4be80514b4f1760f4728"
+      },
+      {
+        "path": "common/lib/ec/ec_js.cpp",
+        "bytes": 153617,
+        "sha256": "167fd6c0a31eb4eef0cf499731d38bc94c3b180ef654199e10f81495074433f9"
+      },
+      {
+        "path": "common/lib/ec/ec_api.cpp",
+        "bytes": 21105,
+        "sha256": "3ce30e3867b34f9fac038a9214bcb8302f6c0b6f614b686ab3c4c771d0d1d927"
+      },
+      {
+        "path": "common/lib/ec/ec_soap.cpp",
+        "bytes": 40736,
+        "sha256": "392f7ab92409347bcbdd558c59fcc0bc50acf398dde55746ef048004846988e3"
+      },
+      {
+        "path": "common/lib/ec/ec_soap.h",
+        "bytes": 9121,
+        "sha256": "2c6c35eca837540d1c7d6d06bc0b52c7d45c2077e93b922707a2624a698e5c89"
+      },
+      {
+        "path": "common/lib/ec/ec_listTitles.cpp",
+        "bytes": 8223,
+        "sha256": "6541781efe26bbc6959cb2fb68a4ce70af61f496339b6659ed1097057c45d22c"
+      },
+      {
+        "path": "common/lib/ec/ec_listTitles.h",
+        "bytes": 2976,
+        "sha256": "4fbc8c7245fe782f71b89f5ec21003c4ebc66b7fcad298b8ce72e659b2f53299"
+      },
+      {
+        "path": "common/lib/ec/ec_common.h",
+        "bytes": 7093,
+        "sha256": "dd200395053b4360f3468127fc63b87e7328c1f88204889d1615a0c5ef7c268a"
+      },
+      {
+        "path": "common/lib/ec/include/ecbase.h",
+        "bytes": 20968,
+        "sha256": "09c789fd7da89ed3498ac0fb2607621848194d0489db1c8a5ae10675bbf96706"
+      },
+      {
+        "path": "common/lib/ec/ec_test.cpp",
+        "bytes": 26373,
+        "sha256": "181b14959b8e060b5da2f10fc045b1648eb3fddd42e2f4aa087d91073243858f"
+      },
+      {
+        "path": "common/lib/ec/ec_listServiceItems.cpp",
+        "bytes": 6532,
+        "sha256": "0d6b6286073e740fcdb560ce38f752532ef28e2fcb31180d124c6611a965692c"
+      },
+      {
+        "path": "common/lib/ec/ec_asyncOp.cpp",
+        "bytes": 29250,
+        "sha256": "7f61d58c83f82760f08e76a587cf79c1dff82d5895c11c43088b19aa5304a98d"
+      },
+      {
+        "path": "common/lib/ec/ec_connect.cpp",
+        "bytes": 4813,
+        "sha256": "e54cab889d60467bc330d9dd8eb26cc739d0e13cc7a2b17b8608d5f6bfe577df"
+      },
+      {
+        "path": "common/lib/ec/include/ec_apip.h",
+        "bytes": 4647,
+        "sha256": "05b2122f5ca9d833e1d8445f6892403aeb66e574acc190f8f247199d4dd240ae"
+      }
+    ],
+    "literal_soap_calls": [
+      {
+        "file": "common/lib/ec/ec_connect.cpp",
+        "line": 59,
+        "service": "ecs",
+        "action": "GetECConfig"
+      }
+    ],
+    "dynamic_soap_call_sites": [
+      {
+        "file": "common/lib/ec/ec_listTitles.cpp",
+        "line": 171,
+        "service": "cas"
+      }
+    ],
+    "javascript_globals": [
+      "ECommerceInterface",
+      "ECProgress",
+      "ECCreditCardPayment",
+      "ECECardPayment",
+      "ECAccountPayment",
+      "ECPrice",
+      "ECTitleLimit",
+      "ECTitleLimits",
+      "ECTitleInfo",
+      "ECTitleInfos",
+      "ECTicketInfo",
+      "ECTicketInfos",
+      "ECDeviceInfo",
+      "ECTransactionInfo",
+      "ECTransactionInfos",
+      "trace"
+    ],
+    "build_package_references": [],
+    "source_review_only": true,
+    "complete_protocol_verified": false,
+    "retail_channel_match_verified": false,
+    "server_implementation_verified": false,
+    "referenced_packages_presence_verified": false
+  },
+  "source_vocabulary": {
+    "test_requested_attribute_names": [
+      "Version",
+      "TitleType",
+      "TitleName",
+      "TitleDescription",
+      "TitleSize",
+      "FsSize",
+      "Category"
+    ],
+    "test_attribute_names_are_retail_schema": false,
+    "ec_interface_getter_names": [
+      "acceptGiftTitle",
+      "cancelOperation",
+      "checkDeviceStatus",
+      "checkParentalControlPassword",
+      "checkRegistration",
+      "confirmCSS",
+      "confirmKeyPair",
+      "deleteLocalTicket",
+      "deleteOwnership",
+      "deleteTitle",
+      "deleteTitleContent",
+      "downloadTitle",
+      "generateKeyPair",
+      "getCSSConfirmation",
+      "getCachedBalance",
+      "getChallengeResp",
+      "getDeviceInfo",
+      "getLog",
+      "getProgress",
+      "getPurchaseInfo",
+      "getSessionValue",
+      "getTicketInfos",
+      "getTitleInfo",
+      "getTitleInfos",
+      "getTransactionInfos",
+      "getVersion",
+      "getWeakToken",
+      "launchTitle",
+      "purchaseGiftTitle",
+      "purchasePoints",
+      "purchaseTitle",
+      "refreshCachedBalance",
+      "register",
+      "reportCSS",
+      "request",
+      "runTests",
+      "sendChallengeReq",
+      "setAccountId",
+      "setAge",
+      "setContentUrls",
+      "setCountry",
+      "setLanguage",
+      "setOption",
+      "setRegion",
+      "setSessionValue",
+      "setWebSvcUrls",
+      "startLog",
+      "stopLog",
+      "syncRegistration",
+      "syncTickets",
+      "transfer",
+      "unregister"
+    ],
+    "dedicated_list_titles_getter_present": false
+  },
+  "getecconfig_relative_string_loads": [
+    {
+      "instruction": "0x800889d8",
+      "marker": "GetECConfig",
+      "target": "0x80322054",
+      "destination_register": 23
+    },
+    {
+      "instruction": "0x80088be0",
+      "marker": "ECVersion",
+      "target": "0x80322060",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x80088c0c",
+      "marker": "ContentPrefixURL",
+      "target": "0x8032206c",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x80088c44",
+      "marker": "UncachedContentPrefixURL",
+      "target": "0x80322080",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x80088c7c",
+      "marker": "EcsURL",
+      "target": "0x8032209c",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x80088cb4",
+      "marker": "IasURL",
+      "target": "0x803220a4",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x80088cec",
+      "marker": "CasURL",
+      "target": "0x803220ac",
+      "destination_register": 4
+    }
+  ],
+  "listtitles_relative_string_loads": [
+    {
+      "instruction": "0x800a3540",
+      "marker": "ListResultOffset",
+      "target": "0x8032c5b4",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a3554",
+      "marker": "ListResultLimit",
+      "target": "0x8032c5c8",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a3574",
+      "marker": "Attributes",
+      "target": "0x8032c5d8",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a35a4",
+      "marker": "AttributeFilters",
+      "target": "0x8032c5e4",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a35b4",
+      "marker": "Name",
+      "target": "0x8032c5f8",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a35c8",
+      "marker": "Value",
+      "target": "0x8032c600",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a3610",
+      "marker": "AttributeFilters",
+      "target": "0x8032c5e4",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a3620",
+      "marker": "Name",
+      "target": "0x8032c5f8",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a3634",
+      "marker": "Value",
+      "target": "0x8032c600",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a3680",
+      "marker": "AttributeFiltersEx",
+      "target": "0x8032c608",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a3690",
+      "marker": "FilterType",
+      "target": "0x8032c61c",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a36a4",
+      "marker": "DataType",
+      "target": "0x8032c628",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a36bc",
+      "marker": "Name",
+      "target": "0x8032c5f8",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a36e0",
+      "marker": "Value",
+      "target": "0x8032c600",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a3734",
+      "marker": "OrderByAttribute",
+      "target": "0x8032c634",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a3744",
+      "marker": "OrderByType",
+      "target": "0x8032c648",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a3758",
+      "marker": "DataType",
+      "target": "0x8032c628",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a376c",
+      "marker": "Name",
+      "target": "0x8032c5f8",
+      "destination_register": 4
+    },
+    {
+      "instruction": "0x800a37cc",
+      "marker": "TitleId",
+      "target": "0x8032c658",
+      "destination_register": 24
+    }
+  ],
+  "listtitles_native_object_evidence": {
+    "constructor": "0x800a39d0",
+    "constructor_direct_callers": [
+      "0x8008ad50"
+    ],
+    "vtable": "0x8032cc08",
+    "vtable_words": [
+      "0x8032cc60",
+      "0x00000000",
+      "0x80076c80",
+      "0x800a3250",
+      "0x800a3240",
+      "0x8008c140",
+      "0x800a3310",
+      "0x800a3890"
+    ],
+    "run_dispatch": "0x800a3240",
+    "request_candidate": "0x800a3310",
+    "extract_candidate": "0x800a3890",
+    "initialization_is_not_operation_invocation": true
+  },
+  "retail_listtitles_source_differences": {
+    "AttributeFiltersEx": {
+      "outer_loop_stride_bytes": 20,
+      "fields": [
+        "FilterType",
+        "DataType",
+        "Name",
+        "Value"
+      ],
+      "value_repeated": true
+    },
+    "OrderByAttribute": {
+      "fields": [
+        "OrderByType",
+        "DataType",
+        "Name"
+      ]
+    },
+    "additional_caller_name_value_elements": {
+      "loop_start": "0x800a378c",
+      "loop_stride_bytes": 8
+    },
+    "string_element_helper_candidate": "0x8007d7a0",
+    "allowed_filter_order_data_type_values_verified": false,
+    "complete_compatibility_with_old_source_codec": false
+  },
+  "native_slice_sha256": {
+    "getecconfig": "7af995d4a735e49b5d01165d21abbe54069c76e7f9e575a900b09ab199431e71",
+    "listtitles_constructor": "5611585124f965d56473a8c03916c51bf23422bc2b4e89ededf3755cda2a8b37",
+    "listtitles_request": "eefa915a051c94679a33d467f6f93761aadaed2d9173cd602657a2c0d266e374",
+    "listtitles_extract": "50472b9de982e463890f4c7e2dbb89359bfea515eaa730b8642187f791550561"
+  },
+  "raw_binary_context_or_disassembly_emitted": false,
+  "original_code_executed": false,
+  "credentials_or_account_files_read": false,
+  "network_contacted": false,
+  "runtime_or_nand_modified": false,
+  "retail_cas_call_path_verified": false,
+  "retail_attribute_schema_verified": false,
+  "source_revision_exact_retail_match_verified": false,
+  "account_or_entitlement_success_enabled": false,
+  "tests": {
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_wii_shop_commerce_surface -v",
+    "passed": 8
+  },
+  "next_implementable_read_only_component": {
+    "operation": "ECS GetECConfig",
+    "mode": "offline bounded codec plus matched-retail response parser verification",
+    "request_field": "ECVersion",
+    "response_fields": [
+      "ContentPrefixURL",
+      "UncachedContentPrefixURL",
+      "EcsURL",
+      "IasURL",
+      "CasURL"
+    ],
+    "native_execution_or_live_route_authorized_by_this_audit": false,
+    "does_not_satisfy_account_device_or_connect_preconditions": true
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "source": "https://archive.org/details/WiiShopChannelBackup",
+  "archive_sha1": "e20c789c86bd602d7af3816d105c3f62ab504374",
+  "source_classification": "third-party historical collector capture; Nintendo signature not verified",
+  "navigation_manifest_sha256": "27e52ef0ffad9d4efdb8eafa3ef38d29a53802ae9509e9c0b5ca1ca98a5b7a04",
+  "shared_manifest_sha256": "cfa89ef974455e13d31b37b3c7a3c34599dfd4498c48979105262c2dff75cb8e",
+  "listing_sha256": "545c3700d4f05f7880f178e7fd945b138e8bca8e8b15a694bbeef2628f406aa1",
+  "virtual_console": {
+    "page": "B_01.jsp",
+    "bytes": 32496,
+    "sha256": "da03f9e6de729ad6763e71c2e83ea0e2a4c62d6e2df50dd76321440d1c86c854",
+    "member_selector_sha256": "a3c4b749ef84012fcd5a7450a288b5368080281e41ed5df829f79c7337aac048",
+    "controls": [
+      {
+        "slot": "01",
+        "label": "Popular Titles",
+        "page": "B_04.jsp",
+        "query": {
+          "popular": "true",
+          "p": "1",
+          "vc": "true"
+        }
+      },
+      {
+        "slot": "02",
+        "label": "Newest Additions",
+        "page": "B_04.jsp",
+        "query": {
+          "order": "new",
+          "p": "1",
+          "vc": "true"
+        }
+      },
+      {
+        "slot": "03",
+        "label": "Search by Category",
+        "page": "B_23.jsp",
+        "query": {
+          "vc": "true"
+        }
+      },
+      {
+        "slot": "04",
+        "label": "Search by Game Title",
+        "page": "B_04.jsp",
+        "query": {
+          "p": "1",
+          "vc": "true"
+        },
+        "input_parameter": "title"
+      }
+    ],
+    "keyboard": {
+      "keyboard_mode": "cKT_PredictNoLF",
+      "keyboard_rows": 5,
+      "maximum_characters": 40,
+      "query_parameter": "title",
+      "destination": {
+        "page": "B_04.jsp",
+        "query": {
+          "p": "1",
+          "vc": "true"
+        }
+      }
+    },
+    "back_label": "Back",
+    "back_page": "W_03.jsp",
+    "validated_display_hover_css_dependencies": 20,
+    "missing_display_dependencies": [],
+    "popular_new_release_data_verified": false,
+    "category_gateway_recovered": false
+  },
+  "systems": {
+    "page": "B_03.jsp",
+    "bytes": 48365,
+    "sha256": "db6afe02557b35e38d4e5507e710bc51ce07f40ac342b8def274cbbd91360651",
+    "member_selector_sha256": "fcbf3675f86faf44fd1a56375ba1e68f8c0d6a09ead08b7484a7907c9cdabee3",
+    "controls": [
+      {
+        "slot": "01",
+        "label": "Wii Channels",
+        "page": "B_04.jsp",
+        "query": {
+          "p": "1",
+          "vc": "true",
+          "platform": "WII"
+        }
+      },
+      {
+        "slot": "02",
+        "label": "NES",
+        "page": "B_04.jsp",
+        "query": {
+          "p": "1",
+          "vc": "true",
+          "platform": "FC/NES"
+        }
+      },
+      {
+        "slot": "03",
+        "label": "Super NES",
+        "page": "B_04.jsp",
+        "query": {
+          "p": "1",
+          "vc": "true",
+          "platform": "SFC/SNES"
+        }
+      },
+      {
+        "slot": "04",
+        "label": "Nintendo 64",
+        "page": "B_04.jsp",
+        "query": {
+          "p": "1",
+          "vc": "true",
+          "platform": "N64"
+        }
+      },
+      {
+        "slot": "05",
+        "label": "TurboGrafx16",
+        "page": "B_04.jsp",
+        "query": {
+          "p": "1",
+          "vc": "true",
+          "platform": "PCE/TG16"
+        }
+      },
+      {
+        "slot": "06",
+        "label": "Sega Genesis",
+        "page": "B_04.jsp",
+        "query": {
+          "p": "1",
+          "vc": "true",
+          "platform": "MD/GEN"
+        }
+      },
+      {
+        "slot": "07",
+        "label": "NEOGEO",
+        "page": "B_04.jsp",
+        "query": {
+          "p": "1",
+          "vc": "true",
+          "platform": "NEOGEO"
+        }
+      },
+      {
+        "slot": "08",
+        "label": "MASTER SYSTEM",
+        "page": "B_04.jsp",
+        "query": {
+          "p": "1",
+          "vc": "true",
+          "platform": "MASTER"
+        }
+      },
+      {
+        "slot": "09",
+        "label": "Virtual Console Arcade",
+        "page": "B_04.jsp",
+        "query": {
+          "p": "1",
+          "vc": "true",
+          "platform": "VCA"
+        }
+      },
+      {
+        "slot": "010",
+        "label": "WiiWare",
+        "page": "B_04.jsp",
+        "query": {
+          "p": "1",
+          "vc": "true",
+          "platform": "WIIWARE"
+        }
+      }
+    ],
+    "back_label": "Back",
+    "back_page": "B_23.jsp",
+    "display_hover_css_dependency_count": 28,
+    "missing_dependencies": [
+      "/oss/oss/ext/attributes/images/platform/Plat_WIIWARE_E.gif",
+      "/oss/oss/ext/attributes/images/platform/Plat_WII_E.gif"
+    ],
+    "missing_pictogram_filename_hits": {
+      "Plat_WIIWARE_E.gif": 0,
+      "Plat_WII_E.gif": 0
+    },
+    "scroll_subset_bytes": 318,
+    "scroll_subset_sha256": "858edbc75a11a52196ef379a2cffcf6fe26810e51955d41fbeeb9b120c746b22",
+    "ready_for_display": false,
+    "runtime_route_added": false
+  },
+  "captured_scripts_executed": false,
+  "full_request_queries_emitted": false,
+  "original_japanese_localization_verified": false,
+  "canonical_platform_title_membership_recovered": false,
+  "complete_original_storefront_verified": false,
+  "focused_synthetic_reader_tests_passed": 5
+}

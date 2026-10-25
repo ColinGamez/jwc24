@@ -16,6 +16,7 @@ import posixpath
 import re
 from urllib.parse import urlencode
 from .wii_shop_title_artwork import TitleArtwork
+from .wii_shop_localization import controller_images
 
 VOID = {'img', 'input', 'br', 'hr', 'meta', 'link', 'area', 'base', 'wbr', 'source'}
 
@@ -101,15 +102,18 @@ class Artwork:
     page_size = 10
 
     def __init__(self, root, title_artwork=None, catalog_digest=None, native_assets=None, captured_scripts=None,
-                 captured_catalog=None, captured_titles=None, captured_empty=None, descriptions=None):
+                 captured_catalog=None, captured_titles=None, captured_empty=None, descriptions=None,
+                 captured_navigation=None):
         self.native_assets = native_assets
         self.captured_scripts = captured_scripts
         self.captured_catalog = captured_catalog
         self.captured_titles = captured_titles
         self.captured_empty = captured_empty
         self.descriptions = descriptions
-        if (captured_catalog or captured_titles or captured_empty or descriptions) and not captured_scripts:
+        self.captured_navigation = captured_navigation
+        if (captured_catalog or captured_titles or captured_empty or descriptions or captured_navigation) and not captured_scripts:
             raise ValueError('Captured pages require their shared resource pack')
+        self.controller_images = controller_images(captured_scripts) if captured_titles else None
         self.title_artwork = TitleArtwork(title_artwork, catalog_digest) if title_artwork else None
         root = Path(root).resolve()
         manifest_path = root/'manifest.json'
@@ -295,6 +299,8 @@ class Artwork:
             target.attrs['onmouseout'] = 'MM_swapImgRestore()'
 
     def category(self, category):
+        if category == 'Virtual Console' and self.captured_navigation:
+            return self._captured_vc_menu()
         root, styles = self._base('B_27.html' if category == 'WiiWare' else 'B_01.html')
         root.text('text00-01', 'Wiiウェア' if category == 'WiiWare' else 'バーチャルコンソール')
         root.text('text00-02', 'Wiiならではのオリジナルソフト。' if category == 'WiiWare' else '懐かしいゲームをWiiで。')
@@ -321,6 +327,22 @@ class Artwork:
                                    onchange='submitCatalogSearch(this)')
                 entry.attrs['data-shop-category'] = category
         return self._finish(root, styles)
+
+    def _captured_vc_menu(self):
+        capture = self.captured_navigation
+        root = self._prepare(deepcopy(capture.vc_root), captured=True)
+        # Popularity, release order and the category gateway need their own
+        # verified data/pages. Preserve the captured controls without assigning
+        # them unrelated all-title or demo filters.
+        for number in ('01', '02', '03'):
+            self._hover(root, 'spacer'+number, 'Image'+number)
+        slot = root.find('spacer04')
+        entry = next(node for node in slot.walk() if node.tag == 'input')
+        entry.attrs.update(onmousedown='typeSearch(this)', onchange='submitCatalogSearch(this)')
+        entry.attrs['data-shop-category'] = 'Virtual Console'
+        self._button_label(root, 'underwordL', 'Back')
+        root.find('underlinkL').attrs.update(href='/', onclick='snd.playSE(cSE_Cancel)')
+        return self._finish(root, capture.vc_styles, captured_stylesheets=capture.vc_stylesheets)
 
     def browse(self, result, options):
         if self.captured_catalog and result['items']:
@@ -473,8 +495,10 @@ class Artwork:
         photo = detail.find('Photo')
         image = next(node for node in photo.walk() if node.tag == 'img')
         image.attrs['src'] = '/oss/oss/common/images/spacer.gif'
+        controller_image = root.find('Image3control')
+        original_controller = controller_image.attrs.get('src', '') if controller_image else ''
         overlay = root.find('Image2control')
-        hover = re.search(r"MM_swapImage\('Image3control','','([^']+)'",overlay.attrs.get('onmouseover','')) if overlay else None
+        original_hover = re.search(r"MM_swapImage\('Image3control','','([^']+)'",overlay.attrs.get('onmouseover','')) if overlay else None
         root = self._prepare(root,captured=True)
         root.text('heading',DETAIL_HEADING)
         self._button_label(root,'underwordL','Back')
@@ -485,8 +509,12 @@ class Artwork:
         anchor = root.find('ControlAnchor')
         if identifier in self.captured_titles.controller_rows:
             anchor.attrs['href'] = '/controller/'+identifier+'?'+context
-            if hover:
-                self._hover(root,'controllerLink','Image3control',self.captured_scripts.resource_url(hover[1]))
+            if (posixpath.normpath(original_controller) == '/oss/oss/common/images/banner/controller_msg1_E_en.gif'
+                    and original_hover and posixpath.normpath(original_hover[1]) == '/oss/oss/common/images/banner/controller_msg2_E_en.gif'):
+                controller_image.attrs['src'] = self.controller_images[0]
+                self._hover(root,'controllerLink','Image3control',self.controller_images[1])
+            elif original_hover:
+                self._hover(root,'controllerLink','Image3control',self.captured_scripts.resource_url(original_hover[1]))
         else:
             root.display('controllerLink',False)
         description = self.descriptions.rows.get(identifier) if self.descriptions else None

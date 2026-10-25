@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "navigation_manifest_sha256": "27e52ef0ffad9d4efdb8eafa3ef38d29a53802ae9509e9c0b5ca1ca98a5b7a04",
+  "vc_page_sha256": "da03f9e6de729ad6763e71c2e83ea0e2a4c62d6e2df50dd76321440d1c86c854",
+  "certificate_verification": true,
+  "verified_https_requests": 886,
+  "vc_original_label_subtrees_preserved": true,
+  "vc_display_dependencies_checked": 20,
+  "vc_unsupported_rank_gateway_controls_not_repurposed": true,
+  "vc_title_search_and_category_return_checked": true,
+  "detail_pages_checked": 844,
+  "japanese_controller_normal_hover_pairs_checked": 834,
+  "original_image_bytes_unchanged": true,
+  "system_picker_runtime_route": false,
+  "retail_commerce_enabled": false,
+  "native_visual_verified": false,
+  "complete_original_storefront_verified": false,
+  "shop_tests_passed": 198,
+  "credential_tests_passed": 2
+}
