@@ -1,0 +1,340 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-25",
+  "original_main_sha256": "aff20704bd4cf9025e34382e185b0936e9ebc6e047a3431f21a445165c9dc898",
+  "native_slices": [
+    {
+      "name": "original-inline-soap-constructor-and-callers",
+      "address": "0x80088968",
+      "bytes": 660,
+      "sha256": "c7934a29a14ed8a5db76f7d7d62a5955602d630f0502e892fe05d7cc9568bddd"
+    },
+    {
+      "name": "soap-start",
+      "address": "0x8007c950",
+      "bytes": 1888,
+      "sha256": "ead7bc099bede5a070f74fa2cc363d16be6878c4626b6854422283283fc071c7"
+    },
+    {
+      "name": "soap-end-and-element-helpers",
+      "address": "0x8007d600",
+      "bytes": 640,
+      "sha256": "efe07997d13a5b74266774894ca67e3dbceb3ee59d939a716600e9f6e7146dcd"
+    },
+    {
+      "name": "getresp-before-network-wrapper",
+      "address": "0x8007dab0",
+      "bytes": 164,
+      "sha256": "b663bcbb8cda5da029441f94c2d7d3a01ed357cac6a788618e336ca74e35def5"
+    }
+  ],
+  "original_product_version_build_metadata": "ECSHOP 4.8.0 Jul 27 2012 16:52:03",
+  "product_version_source_pointer_slot": "0x80322658",
+  "original_message_prefix_build_metadata": "ECSHOP",
+  "message_prefix_pointer_slot": "0x80322654",
+  "native_constructor_default_version": "2.0",
+  "synthetic_ram_substitutions": [
+    "product-version pointer",
+    "message-prefix pointer",
+    "embedded initial service URL",
+    "environment strings and key-pair flag"
+  ],
+  "postal_code_condition": {
+    "environment_string_offset": "0x260",
+    "nonempty_check": "0x8007cd80",
+    "element": "ecs:Attributes",
+    "children": [
+      "ecs:Name",
+      "ecs:Value"
+    ],
+    "name_constant": "PostalCode",
+    "position": "after Language before SerialNo",
+    "max_observed_occurrences": 1
+  },
+  "http_boundary": {
+    "intercepted_before_address": "0x800a74a0",
+    "wrapper": "getWsResponse",
+    "transport_method_or_http_tls_executed": false,
+    "endpoint_was_synthetic_ram_substitution": true
+  },
+  "common_values_xml_escaped": false,
+  "ecversion_value_xml_escaped": true,
+  "default_token_slot": "weak-prefixed",
+  "strong_token_branch_executed": false,
+  "max_input_string_utf8_bytes": 96,
+  "max_heap_bytes": 4194304,
+  "max_instructions": 3000000,
+  "cases": [
+    {
+      "case": "minimal",
+      "request_bytes": 819,
+      "soap_action": "urn:ecs.wsapi.broadon.com/GetECConfig",
+      "header_names": [
+        "Accept",
+        "Accept-Charset",
+        "Content-type",
+        "SOAPAction"
+      ],
+      "operation_expanded_name": "{urn:ecs.wsapi.broadon.com}GetECConfig",
+      "request_type": {
+        "{http://www.w3.org/2001/XMLSchema-instance}type": "ecs:GetECConfigRequestType"
+      },
+      "native_default_version": "2.0",
+      "field_order": [
+        "Version",
+        "MessageId",
+        "Region",
+        "Country",
+        "Language",
+        "SerialNo",
+        "ECVersion"
+      ],
+      "field_byte_lengths": {
+        "Version": 3,
+        "MessageId": 37,
+        "Region": 3,
+        "Country": 2,
+        "Language": 2,
+        "SerialNo": 16,
+        "ECVersion": 17
+      },
+      "postal_attribute_count": 0,
+      "postal_child_names": [],
+      "heap_bytes_used": 7328,
+      "native_instruction_addresses_visited": 3048,
+      "stub_call_counts": {
+        "0x80078610": 121,
+        "0x8007c5e0": 40,
+        "0x8007c5f0": 28,
+        "0x80073380": 1,
+        "0x80074340": 1
+      },
+      "object_heap_and_write_bounds_verified": true,
+      "native_constructor_executed": true,
+      "native_xml_builder_stubbed": false,
+      "transport_executed": false
+    },
+    {
+      "case": "postal",
+      "request_bytes": 938,
+      "soap_action": "urn:ecs.wsapi.broadon.com/GetECConfig",
+      "header_names": [
+        "Accept",
+        "Accept-Charset",
+        "Content-type",
+        "SOAPAction"
+      ],
+      "operation_expanded_name": "{urn:ecs.wsapi.broadon.com}GetECConfig",
+      "request_type": {
+        "{http://www.w3.org/2001/XMLSchema-instance}type": "ecs:GetECConfigRequestType"
+      },
+      "native_default_version": "2.0",
+      "field_order": [
+        "Version",
+        "MessageId",
+        "Region",
+        "Country",
+        "Language",
+        "Attributes",
+        "SerialNo",
+        "ECVersion"
+      ],
+      "field_byte_lengths": {
+        "Version": 3,
+        "MessageId": 37,
+        "Region": 3,
+        "Country": 2,
+        "Language": 2,
+        "SerialNo": 16,
+        "ECVersion": 17
+      },
+      "postal_attribute_count": 1,
+      "postal_child_names": [
+        [
+          "Name",
+          "Value"
+        ]
+      ],
+      "heap_bytes_used": 7456,
+      "native_instruction_addresses_visited": 3091,
+      "stub_call_counts": {
+        "0x80078610": 121,
+        "0x8007c5e0": 40,
+        "0x8007c5f0": 28,
+        "0x80073380": 1,
+        "0x80074340": 1
+      },
+      "object_heap_and_write_bounds_verified": true,
+      "native_constructor_executed": true,
+      "native_xml_builder_stubbed": false,
+      "transport_executed": false
+    },
+    {
+      "case": "optional",
+      "request_bytes": 1069,
+      "soap_action": "urn:ecs.wsapi.broadon.com/GetECConfig",
+      "header_names": [
+        "Accept",
+        "Accept-Charset",
+        "Content-type",
+        "SOAPAction"
+      ],
+      "operation_expanded_name": "{urn:ecs.wsapi.broadon.com}GetECConfig",
+      "request_type": {
+        "{http://www.w3.org/2001/XMLSchema-instance}type": "ecs:GetECConfigRequestType"
+      },
+      "native_default_version": "2.0",
+      "field_order": [
+        "Version",
+        "MessageId",
+        "DeviceId",
+        "DeviceToken",
+        "AccountId",
+        "ApplicationId",
+        "TIN",
+        "Region",
+        "Country",
+        "Language",
+        "SerialNo",
+        "ECVersion"
+      ],
+      "field_byte_lengths": {
+        "Version": 3,
+        "MessageId": 37,
+        "DeviceId": 16,
+        "DeviceToken": 23,
+        "AccountId": 17,
+        "ApplicationId": 13,
+        "TIN": 13,
+        "Region": 3,
+        "Country": 2,
+        "Language": 2,
+        "SerialNo": 16,
+        "ECVersion": 17
+      },
+      "postal_attribute_count": 0,
+      "postal_child_names": [],
+      "heap_bytes_used": 9696,
+      "native_instruction_addresses_visited": 3136,
+      "stub_call_counts": {
+        "0x80078610": 124,
+        "0x8007c5e0": 41,
+        "0x8007c5f0": 29,
+        "0x80073380": 1,
+        "0x80074340": 1
+      },
+      "object_heap_and_write_bounds_verified": true,
+      "native_constructor_executed": true,
+      "native_xml_builder_stubbed": false,
+      "transport_executed": false
+    },
+    {
+      "case": "empty-fields",
+      "request_bytes": 796,
+      "soap_action": "urn:ecs.wsapi.broadon.com/GetECConfig",
+      "header_names": [
+        "Accept",
+        "Accept-Charset",
+        "Content-type",
+        "SOAPAction"
+      ],
+      "operation_expanded_name": "{urn:ecs.wsapi.broadon.com}GetECConfig",
+      "request_type": {
+        "{http://www.w3.org/2001/XMLSchema-instance}type": "ecs:GetECConfigRequestType"
+      },
+      "native_default_version": "2.0",
+      "field_order": [
+        "Version",
+        "MessageId",
+        "Region",
+        "Country",
+        "Language",
+        "SerialNo",
+        "ECVersion"
+      ],
+      "field_byte_lengths": {
+        "Version": 3,
+        "MessageId": 37,
+        "Region": 0,
+        "Country": 0,
+        "Language": 0,
+        "SerialNo": 0,
+        "ECVersion": 17
+      },
+      "postal_attribute_count": 0,
+      "postal_child_names": [],
+      "heap_bytes_used": 7296,
+      "native_instruction_addresses_visited": 3043,
+      "stub_call_counts": {
+        "0x80078610": 121,
+        "0x8007c5e0": 40,
+        "0x8007c5f0": 28,
+        "0x80073380": 1,
+        "0x80074340": 1
+      },
+      "object_heap_and_write_bounds_verified": true,
+      "native_constructor_executed": true,
+      "native_xml_builder_stubbed": false,
+      "transport_executed": false
+    },
+    {
+      "case": "prefixed-without-trigger",
+      "request_bytes": 819,
+      "soap_action": "urn:ecs.wsapi.broadon.com/GetECConfig",
+      "header_names": [
+        "Accept",
+        "Accept-Charset",
+        "Content-type",
+        "SOAPAction"
+      ],
+      "operation_expanded_name": "{urn:ecs.wsapi.broadon.com}GetECConfig",
+      "request_type": {
+        "{http://www.w3.org/2001/XMLSchema-instance}type": "ecs:GetECConfigRequestType"
+      },
+      "native_default_version": "2.0",
+      "field_order": [
+        "Version",
+        "MessageId",
+        "Region",
+        "Country",
+        "Language",
+        "SerialNo",
+        "ECVersion"
+      ],
+      "field_byte_lengths": {
+        "Version": 3,
+        "MessageId": 37,
+        "Region": 3,
+        "Country": 2,
+        "Language": 2,
+        "SerialNo": 16,
+        "ECVersion": 17
+      },
+      "postal_attribute_count": 0,
+      "postal_child_names": [],
+      "heap_bytes_used": 7328,
+      "native_instruction_addresses_visited": 3048,
+      "stub_call_counts": {
+        "0x80078610": 121,
+        "0x8007c5e0": 40,
+        "0x8007c5f0": 28,
+        "0x80073380": 1,
+        "0x80074340": 1
+      },
+      "object_heap_and_write_bounds_verified": true,
+      "native_constructor_executed": true,
+      "native_xml_builder_stubbed": false,
+      "transport_executed": false
+    }
+  ],
+  "case_count": 5,
+  "raw_synthetic_identity_wire_or_endpoint_values_emitted": false,
+  "native_xml_builder_stubbed": false,
+  "browser_network_ios_or_keys_accessed": false,
+  "account_connection_or_device_identity_verified": false,
+  "nand_modified": false,
+  "tests": {
+    "native_tests_passed": 10,
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_wii_shop_ec_config_request_native -v"
+  }
+}

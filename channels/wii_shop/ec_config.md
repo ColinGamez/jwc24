@@ -1,8 +1,8 @@
 # Offline ECS GetECConfig codec
 
 Reviewed October 25, 2026. `jwc24.wii_shop_ec_config` implements an offline,
-bounded older-source request parser and explicit response-fixture serializer
-targeting the verified retail-v21 response behavior. It does not
+bounded request parser and explicit response-fixture serializer checked against
+selected retail-v21 construction and response paths. It does not
 contact a service, select default endpoints, expose a server route, authenticate
 a device, register an account or mark a connection successful.
 
@@ -14,7 +14,10 @@ remain private. The [retail commerce audit](commerce_surface.md) corroborates
 the action, ECVersion and five URL-field family; its static references alone do
 not establish every request/common-response detail. Separate execution of the
 fingerprinted retail common parser and configuration extractor against synthetic
-XML supplies the response-status correction described below.
+XML supplies the response-status correction described below. The later
+[original request-builder check](ec_config_request.md) confirms the native
+constructor, protocol version, field forms and conditional PostalCode attribute
+using synthetic data and an intercepted pre-transport handoff.
 
 ## Source-backed request subset
 
@@ -25,20 +28,22 @@ adds `ECVersion` from `productVersion`, and ends the request. The service is ECS
 
 The common builder in `ec_soap.cpp:25-139` emits SOAP 1.1 and an ECS operation
 with `xsi:type="ecs:GetECConfigRequestType"`. The constructor in
-`ec_soap.h:219-239` sets protocol `Version` to `2.0`; this parser's version
-restriction is based on that older source and is not a retail request-builder
-claim. `ECVersion` is a separate opaque product-version string, not an inferred
+`ec_soap.h:219-239` sets protocol `Version` to `2.0`; the selected original v21
+constructor now independently confirms that value. `ECVersion` is a separate opaque product-version string, not an inferred
 protocol number or a default value supplied by JWC24.
+The retail harness substitutes its compiled product-version global only in
+synthetic RAM; its `product_version` argument is not an original caller API.
 
 | Fields | Codec behavior |
 | --- | --- |
 | Version, MessageId, Region, Country, Language, SerialNo | Structurally required common fields |
 | DeviceId, DeviceToken, AccountId, ApplicationId, TIN | Optional opaque common fields; never authenticated |
 | ECVersion | Required explicit nonblank string |
+| Attributes / Name=PostalCode / Value | One optional source-proven pair; opaque private value, no address lookup or validation |
 | Age | Rejected: the reviewed common builder emits it for CAS, not ECS |
 
 `parse_get_ec_config_request(data, *, soap_action)` returns
-`GetECConfigRequest(ec_version, common_fields)`. Both attributes are excluded
+`GetECConfigRequest(ec_version, common_fields, postal_code=None)`. All values are excluded
 from repr. Callers must keep the returned raw fields private. A structurally
 present empty SerialNo remains empty and establishes no identity.
 
@@ -48,6 +53,15 @@ must resolve to the ECS request type. Unknown fields, duplicate fields, wrong
 namespaces/types/actions, multiple operations, SOAP headers, nested scalar
 fields and mixed text are rejected. These are this component's boundaries,
 not a recovered complete WSDL or acceptance promise for all native requests.
+The only admitted nested attribute is the single native PostalCode name/value
+pair; unknown names, duplicate pairs and reordered/nested subfields are rejected.
+The value is not derived from the owner's address, recorded as authentication,
+or treated as permission to connect.
+
+The native common-field stream does not XML-escape its supplied values, while
+the separate ECVersion element does use escaping. Tests retain that difference:
+well-formed synthetic native requests parse unchanged, and malformed XML from
+an invalid synthetic common value is rejected without echoing it.
 
 ## Explicit response fixtures
 
@@ -121,7 +135,8 @@ validation rules:
 - Input/output XML is at most 64 KiB. Input is strict UTF-8; DTD/entity
   declarations are rejected before parsing.
 - Scalars have at most 4,096 characters; input has at most 64 elements, depth
-  four and 32 namespace declarations.
+  five and 32 namespace declarations. Nonblank ECVersion is a local restriction;
+  the native harness can emit an empty RAM-substituted product value.
 - Fixture error status uses canonical nonnegative decimal uint32 notation.
   Leading zeros such as `00` are rejected by this narrower policy even though
   the retail parser accepts them as reported errors using lexical comparison.
@@ -147,12 +162,11 @@ branches. XML parsing does not satisfy those conditions. No account or device
 success, redirect, endpoint override, native connect callback, ticket operation
 or installation flow is implemented here.
 
-The matched retail response check does not prove request-version/field
-completeness, bootstrap caller/origin policy, complete URL storage/admission
+The selected request and response checks do not prove complete field coverage,
+bootstrap caller/origin policy, complete URL storage/admission
 behavior or authorized identity handling. These remain integration gates before
-any route can use this component. The request parser remains explicitly the
-older `Version=2.0` subset; native response execution does not prove that request
-builder value. Keep older-source findings distinct from actual original native
+any route can use this component. Version 2.0 is now confirmed by the original
+request constructor, independently of the response checks. Keep older-source findings distinct from actual original native
 instruction execution against synthetic input.
 
 The [native verifier](../../tools/verify_wii_shop_ec_config.py) executes the
@@ -161,14 +175,14 @@ memory and explicit heap/logging boundaries. Its XML lookup helpers and URL
 setters run as native instructions; no browser, network, account or device state
 is present. The [serializer interoperability tests](../../tests/test_wii_shop_ec_config_interop.py)
 exercise this separate boundary. They do not establish a live connection or
-retail request-builder version.
+full retail request/transport or connection flow.
 
 The [native execution report](ec_config_native.md) details the observed v21
 behavior and its limits. The [batch integration report](../../research/wii_shop_ec_config_integration_20261025.json)
 records six serializer-to-native cases and the full regression result.
 
 Validation: `.venv/Scripts/python.exe -m unittest tests.test_wii_shop_ec_config -v`
-passes fifteen synthetic tests covering ECS/CAS separation, opaque field privacy,
+passes seventeen synthetic tests covering ECS/CAS separation, opaque field privacy,
 XML and URI bounds, no defaults, lexical response shape, required five URLs,
 retail zero-code/informational-message behavior, common errors and incremental
 output containment. No captured account data,

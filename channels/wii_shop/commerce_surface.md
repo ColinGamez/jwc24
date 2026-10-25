@@ -116,8 +116,9 @@ tickets or credentials, bypass checks, or turn transport success into ownership.
 
 The [offline ECS GetECConfig codec](ec_config.md) and isolated retail response
 verification now implement this bounded next step, without a live route.
-The request parser remains based on the older source subset; selected original
-v21 response readers and URL setters are separately exercised on synthetic data.
+Selected original v21 request construction, response readers and URL setters
+are separately exercised on synthetic data. The parser now accepts the verified
+optional PostalCode name/value pair and the constructor-confirmed Version 2.0.
 Their observed behavior takes precedence where it differs from the older source.
 The original function at `0x80088920` references this exact field family:
 
@@ -139,8 +140,9 @@ an authorized identity or connected account.
 
 The native checks establish selected response lexical/error behavior and exact
 URL storage, including quirks that prevent treating zero status as proof of a
-valid response. They do not prove the retail request version, origin/transport
-policy, complete connection or account state. No operational endpoint overrides,
+valid response. The request check stops before its transport wrapper; separate
+origin predicates and socket/HTTP setup wrappers do not establish complete
+browser permissions, transport, connection or account state. No operational endpoint overrides,
 registrations or live commerce routes were introduced. The actual storefront-to-CAS
 call path, requested attribute/type vocabulary, account protocol and
 entitlement/ticket/content contracts remain unfinished work.

@@ -193,7 +193,7 @@
     "material_XML_shape_or_provenance_mismatch_found": false,
     "native_harness_response_fields_must_remain_synthetic": true,
     "native_harness_executed_by_this_audit": false,
-    "native_output_string_pointer_containment": "Addressed: synthetic object ranges, heap allocation bounds and inline object capacity checked before exporting values; confirmed by parent integration review",
+    "native_output_string_pointer_containment": "Addressed: native string objects confined to synthetic regions, heap strings confined to individual synthetic allocations, inline payload plus terminator confined to12-byte object; code inspected without execution",
     "codec_response_semantics_follow_matched_retail_correction": true
   },
   "original_code_or_scripts_executed": false,

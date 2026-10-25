@@ -117,10 +117,11 @@ Independent review additionally requested output-string pointer containment:
 before exporting a native string, check both its length and that its decoded
 storage stays inside synthetic heap/object regions. A length check alone could
 read other mapped original-program memory if a native string were corrupted or
-misdecoded. This finding was sent to the harness owner for correction; its final
-status is recorded in the metadata report. Parent integration review confirmed
-that synthetic allocation bounds and the inline object-capacity check are now
-enforced. This audit inspected their code without running original instructions. Native
+misdecoded. The corrected branches now restrict objects to synthetic regions,
+heap strings to individual synthetic allocations, and inline strings (including
+their terminator) to the twelve-byte object. Parent integration review and this
+independent code inspection confirm those checks. This audit did not run the
+original instructions. Native
 parser results and remaining limitations belong to their separate report.
 
 Before a live route, recover the actual retail caller/request and original

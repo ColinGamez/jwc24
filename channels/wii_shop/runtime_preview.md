@@ -225,7 +225,7 @@ The image importer uses Pillow from the existing `artwork` optional dependency.
 Normal preview launches explicitly disable frame dumping; temporary test videos
 were removed after retaining a private native proof image.
 
-Validation: 232 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
+Validation: 274 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
 rendered against the real snapshot; title links cover all 844 grouped IDs once.
 All 1,611 current image routes were checked over verified loopback HTTPS. See the
 [image-role report](../../research/wii_shop_image_roles_validation_20261025.json)
@@ -282,3 +282,12 @@ and URL setters execute unchanged; allocator/logging/tick/mutex dependencies
 use explicit synthetic stubs. The [batch validation report](../../research/wii_shop_ec_config_integration_20261025.json)
 records this scope. No preview route, endpoint setting, account state, NAND or
 credential changed, and Dolphin was not launched for this batch.
+
+The next [request-construction check](ec_config_request.md) confirms native
+Version 2.0 and feeds five synthetic request variants into the ECS parser,
+including its private optional PostalCode pair. Separate [origin predicates](origin_access.md)
+and [network setup wrappers](../../research/wii_shop_network_initializers_20261025.md)
+establish narrowly scoped behavior with explicit browser/transport/thread stubs.
+The [request/startup batch report](../../research/wii_shop_request_startup_integration_20261025.json)
+records those checks. No origin protection, live endpoint, account state or
+preview route is changed, and these tests do not establish complete startup.

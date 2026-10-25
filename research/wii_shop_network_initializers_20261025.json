@@ -1,0 +1,330 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-25",
+  "source_sha256": "aff20704bd4cf9025e34382e185b0936e9ebc6e047a3431f21a445165c9dc898",
+  "source_classification": "original installed v21 executable hash matches installed-content audit; Nintendo signature not independently verified",
+  "native_slices": [
+    {
+      "name": "prepare",
+      "start": "0x8002f560",
+      "bytes": 280,
+      "sha256": "3880b5a56cd85bb7d2b7ce9c0e50a397060893ccae7fdeb7702501c52e54475e"
+    },
+    {
+      "name": "launch",
+      "start": "0x8002f680",
+      "bytes": 140,
+      "sha256": "68b5f7e2b5364b51f13b9ed6a69beac7b1372313ba0737579ea94d4dfbda2d69"
+    },
+    {
+      "name": "worker",
+      "start": "0x8002f710",
+      "bytes": 268,
+      "sha256": "c775caeada74225c1c8bb2cad7ffe578ffcc63f5becfc5e6cc795942e9cb91ca"
+    },
+    {
+      "name": "poll_prefix",
+      "start": "0x8002f820",
+      "bytes": 100,
+      "sha256": "912890ccce395ffabb0823854c7bd2bf5ebe9097ac74c7e3166d675470deddef"
+    }
+  ],
+  "diagnostic_name_corroboration": [
+    {
+      "address": "0x8030d630",
+      "sha256": "cbc8f55365f88f0211e8e2b9418abf0ff098dd094eff31d855c5ae8c60714c6e",
+      "API_name_tokens": [
+        "SOInit"
+      ]
+    },
+    {
+      "address": "0x8030d640",
+      "sha256": "51eb940b3307d2ea6158807f7d6d9fcf84e11ca81aeacd16c5068bdd3ebdac19",
+      "API_name_tokens": [
+        "SOInit"
+      ]
+    },
+    {
+      "address": "0x8030d650",
+      "sha256": "9eb593fe07736d4bc434c97df439b7dd261fb3869fbacd702779b65cf6428ef1",
+      "API_name_tokens": [
+        "SOStartup"
+      ]
+    },
+    {
+      "address": "0x8030d668",
+      "sha256": "da180bc637bb6d31f0407de2e477e6f9ea60cf8b0f151e33c189605527075fe8",
+      "API_name_tokens": [
+        "SOStartup"
+      ]
+    },
+    {
+      "address": "0x8030d678",
+      "sha256": "fdc2d2ebb1f8712ce7a02ea064f744c48ca84d487e6f2e4092911dcf0ebf4157",
+      "API_name_tokens": [
+        "NHTTPStartup"
+      ]
+    },
+    {
+      "address": "0x8030d68c",
+      "sha256": "c77ffcb8463fb86335b3cae47f395064059f934fa9783eea9142b2b138c5473e",
+      "API_name_tokens": [
+        "NHTTPStartup"
+      ]
+    }
+  ],
+  "diagnostics_establish_complete_SDK_symbol_equivalence": false,
+  "direct_callers": {
+    "0x8002f560": [
+      "0x800136d8"
+    ],
+    "0x8002f680": [
+      "0x800136e0"
+    ],
+    "0x8002f710": [],
+    "0x8002f820": [
+      "0x80027434",
+      "0x800284a4",
+      "0x8002ede0"
+    ]
+  },
+  "default_synthetic_execution": {
+    "source_sha256": "aff20704bd4cf9025e34382e185b0936e9ebc6e047a3431f21a445165c9dc898",
+    "prepare_return": 1,
+    "state_after_prepare": 1,
+    "launch_return": 1,
+    "worker_invoked_directly": true,
+    "worker_return": 0,
+    "worker_state": 3,
+    "worker_error": 0,
+    "worker_preparation_value": 4660,
+    "state_before_poll": 2,
+    "state_after_poll": 3,
+    "error_after_poll": 0,
+    "preparation_value_after_poll": 4660,
+    "poll_stop_address": "0x8002f968",
+    "boundary_calls": [
+      {
+        "phase": "prepare",
+        "boundary": "heap_selection",
+        "selector": 4
+      },
+      {
+        "phase": "prepare",
+        "boundary": "heap_allocation",
+        "bytes": 98304,
+        "alignment": 32
+      },
+      {
+        "phase": "prepare",
+        "boundary": "heap_construction",
+        "bytes": 98304,
+        "option": 4
+      },
+      {
+        "phase": "prepare",
+        "boundary": "logging_stub"
+      },
+      {
+        "phase": "prepare",
+        "boundary": "SOInit_diagnostic_associated",
+        "allocator_callbacks": [
+          "0x8002faa0",
+          "0x8002fac0"
+        ]
+      },
+      {
+        "phase": "prepare",
+        "boundary": "logging_stub"
+      },
+      {
+        "phase": "prepare",
+        "boundary": "worker_stack_allocation",
+        "bytes": 16384,
+        "alignment": 32
+      },
+      {
+        "phase": "launch",
+        "boundary": "thread_creation",
+        "entry": "0x8002f710",
+        "argument": 0,
+        "stack_bytes": 16384,
+        "priority": 14,
+        "attributes": 1
+      },
+      {
+        "phase": "launch",
+        "boundary": "thread_resume"
+      },
+      {
+        "phase": "worker",
+        "boundary": "worker_preparation_value"
+      },
+      {
+        "phase": "worker",
+        "boundary": "logging_stub"
+      },
+      {
+        "phase": "worker",
+        "boundary": "SOStartup_diagnostic_associated"
+      },
+      {
+        "phase": "worker",
+        "boundary": "logging_stub"
+      },
+      {
+        "phase": "worker",
+        "boundary": "logging_stub"
+      },
+      {
+        "phase": "worker",
+        "boundary": "NHTTPStartup_diagnostic_associated",
+        "allocator_callbacks": [
+          "0x8002fae0",
+          "0x8002fb00"
+        ],
+        "priority": 15
+      },
+      {
+        "phase": "worker",
+        "boundary": "logging_stub"
+      },
+      {
+        "phase": "poll",
+        "boundary": "thread_completion_query"
+      }
+    ],
+    "native_instruction_addresses_visited": 194,
+    "guards_verified": true,
+    "write_ranges_checked": true,
+    "all_allocator_socket_http_thread_calls_stubbed": true,
+    "native_thread_scheduler_invoked": false,
+    "browser_or_network_invoked": false,
+    "account_device_or_NAND_state_accessed": false,
+    "full_startup_executed": false,
+    "EC_init_connect_or_plugin_registration_verified": false,
+    "poll_timer_callbacks_executed": false
+  },
+  "failure_and_poll_cases": {
+    "SOInit_nonzero": {
+      "prepare_return": 0,
+      "launch_return": null,
+      "worker_invoked_directly": false,
+      "worker_state": 0,
+      "worker_error": 0,
+      "state_before_poll": 0,
+      "state_after_poll": 0,
+      "error_after_poll": 0,
+      "poll_stop_address": "0x8002f968",
+      "guards_verified": true,
+      "write_ranges_checked": true
+    },
+    "worker_stack_absent": {
+      "prepare_return": 0,
+      "launch_return": null,
+      "worker_invoked_directly": false,
+      "worker_state": 0,
+      "worker_error": 0,
+      "state_before_poll": 0,
+      "state_after_poll": 0,
+      "error_after_poll": 0,
+      "poll_stop_address": "0x8002f968",
+      "guards_verified": true,
+      "write_ranges_checked": true
+    },
+    "thread_creation_zero": {
+      "prepare_return": 1,
+      "launch_return": 0,
+      "worker_invoked_directly": false,
+      "worker_state": 0,
+      "worker_error": 0,
+      "state_before_poll": 4,
+      "state_after_poll": 4,
+      "error_after_poll": 50100,
+      "poll_stop_address": "0x8002f968",
+      "guards_verified": true,
+      "write_ranges_checked": true
+    },
+    "SOStartup_negative": {
+      "prepare_return": 1,
+      "launch_return": 1,
+      "worker_invoked_directly": true,
+      "worker_state": 4,
+      "worker_error": 119,
+      "state_before_poll": 2,
+      "state_after_poll": 4,
+      "error_after_poll": 119,
+      "poll_stop_address": "0x8002f968",
+      "guards_verified": true,
+      "write_ranges_checked": true
+    },
+    "SOStartup_positive": {
+      "prepare_return": 1,
+      "launch_return": 1,
+      "worker_invoked_directly": true,
+      "worker_state": 3,
+      "worker_error": 0,
+      "state_before_poll": 2,
+      "state_after_poll": 3,
+      "error_after_poll": 0,
+      "poll_stop_address": "0x8002f968",
+      "guards_verified": true,
+      "write_ranges_checked": true
+    },
+    "NHTTPStartup_nonzero": {
+      "prepare_return": 1,
+      "launch_return": 1,
+      "worker_invoked_directly": true,
+      "worker_state": 4,
+      "worker_error": 50100,
+      "state_before_poll": 2,
+      "state_after_poll": 4,
+      "error_after_poll": 50100,
+      "poll_stop_address": "0x8002f968",
+      "guards_verified": true,
+      "write_ranges_checked": true
+    },
+    "thread_not_finished": {
+      "prepare_return": 1,
+      "launch_return": 1,
+      "worker_invoked_directly": true,
+      "worker_state": 3,
+      "worker_error": 0,
+      "state_before_poll": 2,
+      "state_after_poll": 2,
+      "error_after_poll": 0,
+      "poll_stop_address": "0x8002f968",
+      "guards_verified": true,
+      "write_ranges_checked": true
+    },
+    "already_phase3_poll_prefix": {
+      "prepare_return": 1,
+      "launch_return": 1,
+      "worker_invoked_directly": true,
+      "worker_state": 3,
+      "worker_error": 0,
+      "state_before_poll": 2,
+      "state_after_poll": 3,
+      "error_after_poll": 0,
+      "poll_stop_address": "0x8002f884",
+      "guards_verified": true,
+      "write_ranges_checked": true
+    }
+  },
+  "focused_tests_passed": 12,
+  "all_external_allocator_socket_HTTP_thread_operations_stubbed": true,
+  "worker_invoked_directly_not_scheduled": true,
+  "pure_native_register_save_restore_helpers_executed": true,
+  "original_native_wrapper_instructions_executed": true,
+  "native_socket_HTTP_or_thread_library_implementations_executed": false,
+  "network_browser_IOS_or_actual_NAND_state_accessed": false,
+  "EC_init_connect_bootstrap_verified": false,
+  "full_startup_verified": false,
+  "next_bounded_leads": [
+    "poll direct caller0x80027434",
+    "poll direct caller0x800284a4",
+    "poll direct caller0x8002ede0",
+    "phase3 timer/callback branch after0x8002f884 remains unexecuted"
+  ],
+  "original_strings_queries_disassembly_or_bodies_emitted_in_artifacts": false
+}

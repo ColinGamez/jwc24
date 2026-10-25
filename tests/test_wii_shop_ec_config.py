@@ -50,6 +50,26 @@ class EcConfigRequestTests(unittest.TestCase):
         self.assertEqual(parse_get_ec_config_request(raw, soap_action=GET_EC_CONFIG_ACTION).ec_version,
                          'synthetic-client-version')
 
+    def test_native_postal_attribute_is_optional_opaque_and_private(self):
+        raw = request('<e:Attributes><e:Name>PostalCode</e:Name>'
+                      '<e:Value>synthetic-private-postal</e:Value></e:Attributes>')
+        result = parse_get_ec_config_request(raw, soap_action=GET_EC_CONFIG_ACTION)
+        self.assertEqual(result.postal_code, 'synthetic-private-postal')
+        self.assertNotIn('synthetic-private-postal', repr(result))
+        self.assertNotIn('Attributes', dict(result.common_fields))
+        self.assertIsNone(parse_get_ec_config_request(request(), soap_action=GET_EC_CONFIG_ACTION).postal_code)
+
+    def test_only_the_single_reviewed_postal_attribute_shape_is_supported(self):
+        valid = '<e:Attributes><e:Name>PostalCode</e:Name><e:Value>x</e:Value></e:Attributes>'
+        for extra in (valid+valid, valid.replace('PostalCode', 'Unknown'),
+                      '<e:Attributes><e:Value>x</e:Value><e:Name>PostalCode</e:Name></e:Attributes>',
+                      valid.replace('<e:Value>x</e:Value>', '<e:Value><e:Nested/></e:Value>'),
+                      valid.replace('<e:Name>', '<e:Name unexpected="x">'),
+                      valid.replace('</e:Name>', '</e:Name>mixed'),
+                      valid.replace('<e:Value>', '<e:Value xmlns:e="urn:other">')):
+            with self.subTest(extra=extra), self.assertRaises(EcConfigContractError):
+                parse_get_ec_config_request(request(extra), soap_action=GET_EC_CONFIG_ACTION)
+
     def test_common_and_product_values_are_excluded_from_repr_and_errors(self):
         raw = request('<e:DeviceId>synthetic-device</e:DeviceId>'
                       '<e:DeviceToken>synthetic-secret</e:DeviceToken>'

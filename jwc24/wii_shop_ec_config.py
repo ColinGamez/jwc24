@@ -1,8 +1,8 @@
-"""Offline ECS GetECConfig: older request subset, retail-verified response status.
+"""Offline ECS GetECConfig subset checked against selected retail v21 paths.
 
 No route, network, identity, connected-state or endpoint default is implemented.
-The request remains an inventory-verified older source subset. Retail-v21 native
-response verification overrides the older source's message-as-error behavior.
+The request includes the native optional PostalCode attribute. Selected retail
+request and response execution is separate from full connection/authentication.
 See ec_config.md for the exact verification scope and separate URI/local limits.
 """
 from dataclasses import dataclass, field
@@ -22,7 +22,7 @@ URL_FIELDS = ('ContentPrefixURL', 'UncachedContentPrefixURL', 'EcsURL', 'IasURL'
 MAX_XML_BYTES = 64*1024
 MAX_TEXT = 4096
 MAX_ELEMENTS = 64
-MAX_DEPTH = 4
+MAX_DEPTH = 5
 MAX_NAMESPACES = 32
 _COMMON = ('Version', 'MessageId', 'DeviceId', 'DeviceToken', 'AccountId',
            'ApplicationId', 'TIN', 'Region', 'Country', 'Language', 'SerialNo')
@@ -58,14 +58,17 @@ class GetECConfigRequest:
     ec_version: str = field(repr=False)
     # Opaque account/device fields confer no authentication and stay private.
     common_fields: tuple[tuple[str, str], ...] = field(repr=False)
+    postal_code: str | None = field(default=None, repr=False)
 
 
 def parse_get_ec_config_request(data: bytes, *, soap_action: str) -> GetECConfigRequest:
-    """Structurally validate the older ECS request subset, without authenticating.
+    """Structurally validate the reviewed ECS request subset, without authenticating.
 
     Prefix spelling is arbitrary. xsi:type may be absent; when present it must
     resolve to the ECS GetECConfigRequestType. SerialNo is an ECS common field;
     the CAS-only Age field and CAS namespace/action are intentionally rejected.
+    A single native Attributes/PostalCode pair is retained as opaque private
+    text. Unknown attribute names and repeated pairs are outside this subset.
     """
     if not isinstance(soap_action, str) or soap_action not in (
             GET_EC_CONFIG_ACTION, '"'+GET_EC_CONFIG_ACTION+'"'):
@@ -128,20 +131,31 @@ def parse_get_ec_config_request(data: bytes, *, soap_action: str) -> GetECConfig
         if not element.tag.startswith('{'+ECS_NS+'}'):
             raise EcConfigContractError('Unexpected ECS field namespace')
         name = element.tag[len(ECS_NS)+2:]
-        if name not in (*_COMMON, 'ECVersion'):
+        if name not in (*_COMMON, 'ECVersion', 'Attributes'):
             raise EcConfigContractError('Unsupported ECS request field')
         if name in values:
             raise EcConfigContractError('Duplicate ECS request field')
+        if name == 'Attributes':
+            _container(element)
+            if [child.tag for child in element] != [f'{{{ECS_NS}}}Name', f'{{{ECS_NS}}}Value']:
+                raise EcConfigContractError('Unsupported ECS configuration attribute structure')
+            if any(child.attrib or len(child) for child in element):
+                raise EcConfigContractError('Expected simple ECS configuration attribute fields')
+            if _text(element[0].text or '') != 'PostalCode':
+                raise EcConfigContractError('Unsupported ECS configuration attribute name')
+            values[name] = _text(element[1].text or '')
+            continue
         if element.attrib or len(element):
             raise EcConfigContractError('Expected a simple ECS field')
         values[name] = _text(element.text or '')
     if any(name not in values for name in _REQUIRED):
         raise EcConfigContractError('Missing required ECS request field')
     if values['Version'] != '2.0':
-        raise EcConfigContractError('Unsupported older-library request version')
+        raise EcConfigContractError('Unsupported reviewed request version')
     if not values['ECVersion'].strip():
         raise EcConfigContractError('Missing explicit ECVersion')
-    return GetECConfigRequest(values['ECVersion'], tuple((k, values[k]) for k in _COMMON if k in values))
+    return GetECConfigRequest(values['ECVersion'], tuple((k, values[k]) for k in _COMMON if k in values),
+                              values.get('Attributes'))
 
 
 @dataclass(frozen=True)

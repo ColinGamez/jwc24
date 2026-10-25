@@ -115,6 +115,15 @@ python -m unittest tests.test_wii_shop_url tests.test_wii_shop_navigation
 
 ## Static caller leads and remaining work
 
+The [later network-initializer verification](../../research/wii_shop_network_initializers_20261025.md)
+now executes the caller wrappers at `0x8002F560` and `0x8002F680`, their directly
+invoked worker and a bounded polling prefix. Native diagnostics associate the
+intercepted dependencies with SOInit, SOStartup and NHTTPStartup. Every actual
+socket/HTTP/thread/allocator boundary is a synthetic stub; the worker is not
+scheduled as a thread. These are network setup boundaries, not proof of
+EC/plugin initialization or configuration requests. The earlier navigation
+harness above still stubs those calls rather than executing a complete boot.
+
 Direct call sites were found at `0x80023EBC`, `0x80023FBC`, `0x80024064` and
 `0x80024078`. Some prepare title-ID strings before calling the builder; another
 passes a caller-supplied string. The mode-zero cases above show a path retaining

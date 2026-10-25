@@ -120,9 +120,10 @@ Accounts, purchases, content acquisition and installation remain unfinished.
 The [CAS catalog codec](channels/wii_shop/soap_contract.md) is an offline,
 source-backed protocol component without a live account or commerce route.
 The separate [ECS configuration codec](channels/wii_shop/ec_config.md) supplies
-explicit offline fixtures checked against the original v21 response reader and
-URL-storage code. This verifies a configuration component, while the retail
-request/startup sequence and account connection remain unfinished.
+explicit offline fixtures checked against selected original v21 request,
+response and URL-storage code. The [origin checks](channels/wii_shop/origin_access.md)
+and [network initializer checks](research/wii_shop_network_initializers_20261025.md)
+separate those boundaries from the still-unfinished full startup and account connection.
 [Manual recovery](channels/wii_shop/manual_recovery.md) found a partial Japanese
 game guide but no Shop operations guide; it stays disconnected from the UI.
 [Native startup](channels/wii_shop/startup_contract.md) and [EULA/manual command](channels/wii_shop/bridge_contract.md)
