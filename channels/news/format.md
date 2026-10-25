@@ -83,6 +83,10 @@ Some native behavior is intentionally not reproduced:
   `cross_buffer_references_checked` stays false; one file is insufficient to
   prove a complete 24-hour article/image graph.
 
+The separate [explicit bundle validator](bundle_validation.md) now resolves
+those links against a supplied 24-slot set. It does not infer hourly URL mapping,
+freshness, original media validity or a running News service from resolved links.
+
 Local bounds are 4 MiB decompressed input, 5 MiB envelope input, 4096 entries per
 table, 65536 topic references and 8 MiB aggregate unique decoded text. Reused
 text spans are cached to prevent repeated-reference expansion. These are

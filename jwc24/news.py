@@ -7,6 +7,7 @@ public WiiLink generator. This module neither fetches news nor serves success.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import hashlib
 import struct
 import zlib
 
@@ -65,6 +66,8 @@ class NewsInspection:
     topic_references: int
     external_topic_references: int
     external_image_references: int
+    topic_links: tuple[tuple[int, int], ...] = field(repr=False)
+    buffer_sha256: str = field(repr=False)
 
     def metadata(self):
         """Exclude article/source/location text, identifiers and binary media."""
@@ -226,6 +229,7 @@ def inspect_news(raw: bytes) -> NewsInspection:
                                      published, changed, sized_text(title_size, title_offset),
                                      sized_text(body_size, body_offset, body=True)))
     references = external_references = 0
+    topic_links = []
     for index, (name_offset, count, offset) in enumerate(tables['topic']):
         if name_offset:
             terminated(name_offset)
@@ -240,6 +244,7 @@ def inspect_news(raw: bytes) -> NewsInspection:
             raise NewsFormatError('News empty timestamp table offset is invalid')
         for position in range(count):
             timestamp, identifier = struct.unpack_from('>2I', raw, offset + position * 8)
+            topic_links.append((timestamp, identifier))
             if timestamp == updated:
                 if identifier not in identifiers:
                     raise NewsFormatError('News topic references a missing local article')
@@ -248,7 +253,8 @@ def inspect_news(raw: bytes) -> NewsInspection:
     return NewsInspection(len(raw), version, updated, word(16), word(24), raw[20], raw[44],
                           languages, bool(message), len(tables['topic']), tuple(articles), len(tables['source']),
                           len(tables['location']), len(tables['image']), len(tables['headline']),
-                          references, external_references, external_images)
+                          references, external_references, external_images,
+                          tuple(topic_links), hashlib.sha256(raw).hexdigest())
 
 
 def inspect_news_envelope(payload: bytes) -> NewsInspection:

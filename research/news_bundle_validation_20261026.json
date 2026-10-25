@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-26",
+  "original_main_sha256": "8c7328c94ed44f916f104e254d07eddbaed7c0f236539a4fe4e70d893b72e852",
+  "synthetic_slots_per_case": 24,
+  "cases": [
+    {
+      "case": "resolved_cross_snapshot_topic_and_image",
+      "native_status": 0,
+      "mutated_slots": [],
+      "guard_checks": true
+    },
+    {
+      "case": "unresolved_topic_pruned_by_native",
+      "native_status": 0,
+      "mutated_slots": [
+        0
+      ],
+      "guard_checks": true
+    },
+    {
+      "case": "resolved_image_bad_index",
+      "native_status": -1,
+      "mutated_slots": [],
+      "guard_checks": true
+    },
+    {
+      "case": "unresolved_image_timestamp_native_accepts",
+      "native_status": 0,
+      "mutated_slots": [],
+      "guard_checks": true
+    }
+  ],
+  "independent_bundle_tests": 10,
+  "combined_bundle_and_single_buffer_tests": 21,
+  "aggregate_supplied_and_advertised_decoded_byte_limit": 33554432,
+  "limits_are_local_policy": true,
+  "native_hourly_mapping_or_freshness_verified": false,
+  "native_delivery_or_ui_verified": false,
+  "original_code_or_article_content_exported": false
+}
