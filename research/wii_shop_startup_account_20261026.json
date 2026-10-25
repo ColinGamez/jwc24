@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-10-26",
+  "original_main_sha256": "aff20704bd4cf9025e34382e185b0936e9ebc6e047a3431f21a445165c9dc898",
+  "source_inventory_sha256": "ea7edbe9e4e03f96f24cb3b2ccf45241bbac678be6351877719cab89e453c352",
+  "inventory_verified_sources": [
+    {
+      "path": "common/lib/ec/ec_api.cpp",
+      "bytes": 21105,
+      "sha256": "3ce30e3867b34f9fac038a9214bcb8302f6c0b6f614b686ab3c4c771d0d1d927"
+    },
+    {
+      "path": "common/lib/ec/ec_wshop.cpp",
+      "bytes": 8111,
+      "sha256": "c26db485f2a05faf33a3f15d6d5346ab8803721e1bff069ab416ee79ae3ab588"
+    },
+    {
+      "path": "common/lib/ec/ec_js.cpp",
+      "bytes": 153617,
+      "sha256": "167fd6c0a31eb4eef0cf499731d38bc94c3b180ef654199e10f81495074433f9"
+    },
+    {
+      "path": "common/lib/ec/ec_connect.cpp",
+      "bytes": 4813,
+      "sha256": "e54cab889d60467bc330d9dd8eb26cc739d0e13cc7a2b17b8608d5f6bfe577df"
+    },
+    {
+      "path": "common/lib/ec/ec_register.cpp",
+      "bytes": 11260,
+      "sha256": "9b329bd7fba918f5e775ab78198e91a7d74500fba657855e4c61e5cac4f5f958"
+    },
+    {
+      "path": "common/lib/ec/ec_asyncOp.cpp",
+      "bytes": 29250,
+      "sha256": "7f61d58c83f82760f08e76a587cf79c1dff82d5895c11c43088b19aa5304a98d"
+    },
+    {
+      "path": "common/lib/ec/ec_asyncOp.h",
+      "bytes": 11471,
+      "sha256": "73d46565c0e32b640ad5dc4cecfff6fc8134966d606fddade56290401e9c0747"
+    },
+    {
+      "path": "common/lib/ec/ec_soap.cpp",
+      "bytes": 40736,
+      "sha256": "392f7ab92409347bcbdd558c59fcc0bc50acf398dde55746ef048004846988e3"
+    },
+    {
+      "path": "common/lib/ec/ec_soap.h",
+      "bytes": 9121,
+      "sha256": "2c6c35eca837540d1c7d6d06bc0b52c7d45c2077e93b922707a2624a698e5c89"
+    }
+  ],
+  "native_direct_calls_checked": [
+    {
+      "role": "application_to_EC_Init",
+      "call": "0x8002735c",
+      "target": "0x80088fd0"
+    },
+    {
+      "role": "EC_Init_to_platform_init",
+      "call": "0x80089024",
+      "target": "0x8008a3c0"
+    },
+    {
+      "role": "EC_Init_to_environment_init",
+      "call": "0x8008903c",
+      "target": "0x80074010"
+    },
+    {
+      "role": "platform_init_to_plugin_registration",
+      "call": "0x8008a700",
+      "target": "0x80099f60"
+    },
+    {
+      "role": "connection_worker_to_GetChallenge",
+      "call": "0x80088e48",
+      "target": "0x80087a50"
+    },
+    {
+      "role": "connection_worker_to_registration_sync",
+      "call": "0x80088e6c",
+      "target": "0x80088620"
+    },
+    {
+      "role": "GetChallenge_constructor",
+      "call": "0x80087a80",
+      "target": "0x80087b40"
+    },
+    {
+      "role": "GetChallenge_start",
+      "call": "0x80087a88",
+      "target": "0x8007c950"
+    },
+    {
+      "role": "GetChallenge_end",
+      "call": "0x80087a90",
+      "target": "0x8007d600"
+    },
+    {
+      "role": "GetChallenge_response_wrapper",
+      "call": "0x80087aa0",
+      "target": "0x8007dab0"
+    },
+    {
+      "role": "response_wrapper_transport",
+      "call": "0x8007db50",
+      "target": "0x800a74a0"
+    },
+    {
+      "role": "response_wrapper_common_parser",
+      "call": "0x8007dbfc",
+      "target": "0x8007dd20"
+    },
+    {
+      "role": "GetChallenge_field_reader",
+      "call": "0x80087ad4",
+      "target": "0x8007e470"
+    }
+  ],
+  "retail_startup_argument_table": "0x802cea60",
+  "retail_startup_argument_count": 11,
+  "retail_startup_argument_names": [
+    "alloc",
+    "free",
+    "EC_LOG_LEVEL",
+    "EC_BLUETOOTH_MAC_ADDR",
+    "EC_DEVICE_CODE",
+    "EC_ADD_JS_PLUGIN_CALLBACK",
+    "EC_GET_CURRENT_URL_CALLBACK",
+    "EC_CC_ENCRYPT_MODULUS",
+    "EC_CC_ENCRYPT_MODULUS_SIZE",
+    "EC_CC_ENCRYPT_EXPONENT",
+    "EC_CC_ENCRYPT_EXPONENT_SIZE"
+  ],
+  "argument_values_or_encryption_parameters_exported": false,
+  "connection_worker_virtual_table": "0x80322188",
+  "connection_worker_run_entry": "0x80088920",
+  "plugin_registration_entry": "0x80099f60",
+  "plugin_global_getter": "0x80091300",
+  "plugin_origin_callback": "0x80091150",
+  "native_slices": [
+    {
+      "start": "0x800272e8",
+      "end": "0x800273a0",
+      "sha256": "3203cd5c0aba6fe60655684bad6a935043a3ef28afa3a0de08d5e3dd07b16ebf"
+    },
+    {
+      "start": "0x80088fd0",
+      "end": "0x800890b8",
+      "sha256": "56f12d12a965fea3d3190d0454a059dc1cb567caa8bc8f9910d9b33a7b976822"
+    },
+    {
+      "start": "0x80099f60",
+      "end": "0x8009a0a4",
+      "sha256": "7ee3ccd695d9475b38a5329b1c6a1be3ff0731c3b602f419d983d957eaa4332f"
+    },
+    {
+      "start": "0x80087a50",
+      "end": "0x80087b34",
+      "sha256": "aa76823e4c52e25ba354153d762c6aef0633eb4b2655989dab98c5e0d43611b3"
+    }
+  ],
+  "original_code_executed_by_audit": false,
+  "network_or_device_state_accessed": false,
+  "complete_runtime_startup_trace": false,
+  "public_EC_Connect_or_worker_scheduling_caller_verified": false,
+  "account_signing_registration_or_connection_verified": false
+}

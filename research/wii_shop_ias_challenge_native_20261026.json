@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-10-26",
+  "original_main_sha256": "aff20704bd4cf9025e34382e185b0936e9ebc6e047a3431f21a445165c9dc898",
+  "operation_entry": "0x80087a50",
+  "connection_worker_call_site": "0x80088e48",
+  "transport_boundary": "0x800a74a0",
+  "common_response_parser": "0x8007dd20",
+  "challenge_field_reader": "0x8007e470",
+  "maximum_accepted_challenge_bytes": 11,
+  "cases": [
+    {
+      "case": "valid",
+      "status": 0,
+      "challenge_bytes": 9,
+      "native_common_response_parser_executed": true,
+      "native_challenge_reader_executed": true,
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 4518
+    },
+    {
+      "case": "empty",
+      "status": 0,
+      "challenge_bytes": 0,
+      "native_common_response_parser_executed": true,
+      "native_challenge_reader_executed": true,
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 4518
+    },
+    {
+      "case": "eleven_bytes",
+      "status": 0,
+      "challenge_bytes": 11,
+      "native_common_response_parser_executed": true,
+      "native_challenge_reader_executed": true,
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 4518
+    },
+    {
+      "case": "twelve_bytes",
+      "status": -4034,
+      "challenge_bytes": 0,
+      "native_common_response_parser_executed": true,
+      "native_challenge_reader_executed": true,
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 4523
+    },
+    {
+      "case": "utf8_nine_bytes",
+      "status": 0,
+      "challenge_bytes": 9,
+      "native_common_response_parser_executed": true,
+      "native_challenge_reader_executed": true,
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 4518
+    },
+    {
+      "case": "utf8_twelve_bytes",
+      "status": -4034,
+      "challenge_bytes": 0,
+      "native_common_response_parser_executed": true,
+      "native_challenge_reader_executed": true,
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 4523
+    },
+    {
+      "case": "missing_challenge",
+      "status": -4006,
+      "challenge_bytes": 0,
+      "native_common_response_parser_executed": true,
+      "native_challenge_reader_executed": true,
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 4518
+    },
+    {
+      "case": "reported_error",
+      "status": -4015,
+      "challenge_bytes": 9,
+      "native_common_response_parser_executed": true,
+      "native_challenge_reader_executed": false,
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 4807
+    },
+    {
+      "case": "noncanonical_zero",
+      "status": -4015,
+      "challenge_bytes": 9,
+      "native_common_response_parser_executed": true,
+      "native_challenge_reader_executed": false,
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 4824
+    },
+    {
+      "case": "wrong_namespace",
+      "status": 0,
+      "challenge_bytes": 9,
+      "native_common_response_parser_executed": true,
+      "native_challenge_reader_executed": true,
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 4398
+    },
+    {
+      "case": "informational_error_message",
+      "status": 0,
+      "challenge_bytes": 9,
+      "native_common_response_parser_executed": true,
+      "native_challenge_reader_executed": true,
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 4616
+    },
+    {
+      "case": "raw_entity_copy",
+      "status": 0,
+      "challenge_bytes": 7,
+      "native_common_response_parser_executed": true,
+      "native_challenge_reader_executed": true,
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 4518
+    },
+    {
+      "case": "different_soap_prefix",
+      "status": -4034,
+      "challenge_bytes": 9,
+      "native_common_response_parser_executed": true,
+      "native_challenge_reader_executed": false,
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 4011
+    },
+    {
+      "case": "transport_failure",
+      "status": -4007,
+      "challenge_bytes": 9,
+      "native_common_response_parser_executed": false,
+      "native_challenge_reader_executed": false,
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 3499
+    }
+  ],
+  "cases_checked": 14,
+  "focused_codec_native_tests_passed": 20,
+  "original_request_response_and_challenge_helpers_executed": true,
+  "native_xml_helpers_stubbed": false,
+  "response_and_identity_fixtures_synthetic": true,
+  "network_requests_sent": 0,
+  "device_or_account_state_accessed": false,
+  "dolphin_started": false,
+  "registration_signing_or_connection_verified": false,
+  "returned_wire_and_value_fields_are_not_a_real_capture_redaction_api": true,
+  "scope": "Original IAS operation with synthetic heap/log/time/lock/transport boundaries; no live challenge generator, route, certificate validation, signing, registration or connected state."
+}
