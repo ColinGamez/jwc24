@@ -1,0 +1,200 @@
+{
+  "date": "2026-10-26",
+  "channel": "Japanese News HAGJ v7",
+  "source_sha256": "8c7328c94ed44f916f104e254d07eddbaed7c0f236539a4fe4e70d893b72e852",
+  "source_bytes_published": false,
+  "native_slices": {
+    "job_creator": {
+      "entry": "0x80041514",
+      "end_exclusive": "0x80041964",
+      "sha256": "e56b70ef1ebcf693683b0e637e737b8c4ded9d461d0c06af6c365faf1febd503"
+    },
+    "registration_caller": {
+      "entry": "0x80043178",
+      "end_exclusive": "0x80043c44",
+      "sha256": "ef7de432823330e362c46bddd4cf88253b21cfd70d0af2d648a7a3702cab8dbe"
+    },
+    "filename_getter": {
+      "entry": "0x8007d000",
+      "end_exclusive": "0x8007d1a4",
+      "sha256": "2a3ff39c27779f1ec54b8a136967097d93a617fc21e9fd0a82f5b5d3e05ebba5"
+    },
+    "reader_slot_loop": {
+      "entry": "0x80042e30",
+      "end_exclusive": "0x8004309c",
+      "sha256": "f747b8b3fcb4c37223e6972b6c900b38bd1b41b31062f2dcd3cb558a63b21290"
+    }
+  },
+  "verification_command": ".venv/Scripts/python.exe -m unittest tests.test_news_tasks",
+  "result": {
+    "tests_run": 11,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "native_tests": 9,
+    "input_policy_tests": 2
+  },
+  "synthetic_missing_task_registration": {
+    "native_return": 0,
+    "sdk_calls_stubbed": [
+      "get_task_mine",
+      "init_task",
+      "get_vf_name",
+      "storage_boundary_stub",
+      "create_vf",
+      "set_url",
+      "set_server_interval",
+      "set_subtask_parameters",
+      "set_priority",
+      "set_flags",
+      "set_interval",
+      "set_retry_margin",
+      "set_filename",
+      "set_count",
+      "add_task",
+      "get_id",
+      "post_commit_task_helper"
+    ],
+    "setter_arguments": {
+      "init_task": 1,
+      "create_vf": 3801088,
+      "set_url": {
+        "matches_explicit_fixture_url": true
+      },
+      "set_server_interval": 1440,
+      "set_subtask_parameters": [
+        2,
+        16777215,
+        259
+      ],
+      "set_priority": 100,
+      "set_flags": 1073741824,
+      "set_interval": 30,
+      "set_retry_margin": 720,
+      "set_count": 240
+    },
+    "native_formatted_filenames": [
+      "2.bin"
+    ],
+    "sdk_failure_injected": false,
+    "instructions": 804,
+    "guard_checks_passed": true,
+    "sdk_storage_and_task_commit_executed": false,
+    "original_caller_executed": true,
+    "original_integer_filename_formatter_executed": true,
+    "full_first_run_or_download_verified": false
+  },
+  "synthetic_existing_task_registration": {
+    "native_return": 0,
+    "sdk_calls_stubbed": [
+      "get_task_mine",
+      "get_id",
+      "get_vf_name",
+      "storage_boundary_stub",
+      "get_subtask_filename",
+      "storage_boundary_stub",
+      "get_url",
+      "get_interval",
+      "set_count",
+      "update_task",
+      "get_id",
+      "post_commit_task_helper"
+    ],
+    "setter_arguments": {
+      "set_count": 240
+    },
+    "native_formatted_filenames": [],
+    "sdk_failure_injected": false,
+    "instructions": 699,
+    "guard_checks_passed": true,
+    "sdk_storage_and_task_commit_executed": false,
+    "original_caller_executed": true,
+    "original_integer_filename_formatter_executed": false,
+    "full_first_run_or_download_verified": false
+  },
+  "synthetic_queue_creator_defaults": {
+    "native_return": 0,
+    "submitted_descriptors": 1,
+    "settings": {
+      "job_kind": 2,
+      "task_type": 2,
+      "interval": 30,
+      "count": 240,
+      "max_vf_bytes": 3801088
+    },
+    "instructions": 440,
+    "guard_checks_passed": true,
+    "os_message_submission_stubbed": true,
+    "real_worker_scheduler_or_task_registration_verified": false
+  },
+  "synthetic_reader_hour_3": {
+    "requested_slots": [
+      3,
+      2,
+      1,
+      0,
+      23,
+      22,
+      21,
+      20,
+      19,
+      18,
+      17,
+      16,
+      15,
+      14,
+      13,
+      12,
+      11,
+      10,
+      9,
+      8,
+      7,
+      6,
+      5,
+      4
+    ],
+    "cleared_buffer_slots": [],
+    "instructions": 1231,
+    "guard_checks_passed": true,
+    "calendar_filename_file_and_load_services_stubbed": true,
+    "download_or_real_storage_verified": false
+  },
+  "synthetic_filename_slot_23": {
+    "native_return": 0,
+    "synthetic_local_filename": "2.bin.23",
+    "instructions": 682,
+    "guard_checks_passed": true,
+    "original_sdk_getter_and_formatters_executed": true,
+    "synthetic_sdk_context": true,
+    "remote_url_or_download_verified": false
+  },
+  "separate_dolphin_source": {
+    "commit": "3eb30c7620b4475b2e0404228ba0d2b238a132f1",
+    "files": {
+      "NWC24DL.cpp": {
+        "url": "https://raw.githubusercontent.com/dolphin-emu/dolphin/3eb30c7620b4475b2e0404228ba0d2b238a132f1/Source/Core/Core/IOS/Network/KD/NWC24DL.cpp",
+        "sha256": "74a24fef69518f3e29ede0531da01d7d04eb32f4ae6fcf36b9a87f56a6e084a3"
+      },
+      "NWC24DL.h": {
+        "url": "https://raw.githubusercontent.com/dolphin-emu/dolphin/3eb30c7620b4475b2e0404228ba0d2b238a132f1/Source/Core/Core/IOS/Network/KD/NWC24DL.h",
+        "sha256": "5b42a18e430c299817bbe222a3480cb1eee51ef3bc64e8784cfce512c0e81e1f"
+      },
+      "NetKDRequest.cpp": {
+        "url": "https://raw.githubusercontent.com/dolphin-emu/dolphin/3eb30c7620b4475b2e0404228ba0d2b238a132f1/Source/Core/Core/IOS/Network/KD/NetKDRequest.cpp",
+        "sha256": "597bfc631a33b10b6cd9ccbb2109c3d66ee489fae661cfeff9ed581798e9cab8"
+      }
+    },
+    "classification": "official emulator implementation, not Nintendo source or installed-build execution"
+  },
+  "limits": {
+    "instruction_cap_per_execution": 200000,
+    "code_read_write_allowlists": true,
+    "synthetic_allocation_and_stack_guards": true
+  },
+  "real_task_table_or_registration_changed": false,
+  "live_calendar_or_hourly_coverage_verified": false,
+  "real_ios_remote_url_generation_executed": false,
+  "full_first_run_or_delivery_verified": false,
+  "original_software_profile_backup_or_device_modified": false
+}
