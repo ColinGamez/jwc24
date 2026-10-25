@@ -174,6 +174,14 @@ See the [Demae setup and current status](channels/demae/README.md),
 [menu and basket progress](channels/demae/menu_basket.md), and
 [native menu/item contracts](channels/demae/menu_contract.md).
 
+## Online multiplayer compatibility
+
+JWC24's planned setup will offer **Wiimmfi as the initial recommended provider**
+for supported games, with **WiiLink WFC as an optional alternative**. This is a
+planned integration: provider selection, game patching and multiplayer have not
+been implemented or tested by JWC24. Compatibility must be checked for each
+game and region. See the [online multiplayer integration plan](channels/online_play/README.md).
+
 ## Repository layout
 
 - `channels/demae/` — Demae restoration status, source reviews and native contracts
