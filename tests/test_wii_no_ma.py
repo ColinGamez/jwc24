@@ -11,6 +11,9 @@ from pathlib import Path
 from jwc24.lz11 import decode_lz11, encode_lz11
 from tools.build_wii_no_ma_bootstrap import config_xml, encrypt_cbc
 from jwc24.wii_no_ma import get_response
+from tests.wii_no_ma_private_fixtures import (
+    requires_private_wii_no_ma, with_synthetic_wii_no_ma_catalogs,
+)
 
 
 class WiiNoMaTests(unittest.TestCase):
@@ -32,6 +35,7 @@ class WiiNoMaTests(unittest.TestCase):
         self.assertIn(b"http://192.168.2.16/url1/", xml)
         self.assertNotIn(xml, encrypted)
 
+    @with_synthetic_wii_no_ma_catalogs
     def test_boot_routes_return_v1025_xml(self) -> None:
         routes = (
             "/url2/reginfo.cgi",
@@ -80,6 +84,7 @@ class WiiNoMaTests(unittest.TestCase):
                 document = ET.fromstring(response)
                 self.assertEqual(document.findtext("ver"), "399")
 
+    @requires_private_wii_no_ma("bandwidth_movie")
     def test_fresh_install_bandwidth_movie_is_valid(self) -> None:
         movie = Path("private/wii_no_ma/theater/assets/movies/c8/2-H.mov").read_bytes()
         self.assertEqual(movie[:4], b"MOC5")
@@ -130,6 +135,7 @@ class WiiNoMaTests(unittest.TestCase):
             self.assertEqual(popular.findtext("movieinfo/movieid"), "1")
             self.assertEqual(metadata.findtext("price"), "1980")
 
+    @requires_private_wii_no_ma("shop")
     def test_paid_event_has_v1025_intro_and_posters(self) -> None:
         event = ET.fromstring(get_response("/url3/pay/event/today.xml"))
         self.assertGreater(len(event.findall("posterinfo")), 0)
@@ -142,6 +148,7 @@ class WiiNoMaTests(unittest.TestCase):
         self.assertEqual(metadata.findtext("posterid"), poster_id)
         self.assertEqual(metadata.findtext("type"), "1")
 
+    @requires_private_wii_no_ma("theater")
     def test_private_theater_catalog_populates_normal_theater(self) -> None:
         new = ET.fromstring(get_response("/url1/list/new/all.xml"))
         category = ET.fromstring(get_response("/url1/list/category/01.xml"))
@@ -153,6 +160,7 @@ class WiiNoMaTests(unittest.TestCase):
         self.assertEqual(metadata.findtext("len"), "30")
         self.assertEqual(metadata.findtext("dsdist"), "0")
 
+    @requires_private_wii_no_ma("theater")
     def test_room_poster_wall_features_theater_movies(self) -> None:
         event = ET.fromstring(get_response("/url1/event/today.xml"))
         tags = [child.tag for child in event]
@@ -174,6 +182,7 @@ class WiiNoMaTests(unittest.TestCase):
         self.assertEqual(new_movie.findtext("title"), "アニマックス 番組スポット（0210_025420）")
         self.assertEqual(new_movie.findtext("len"), "10")
 
+    @requires_private_wii_no_ma("theater", "miis")
     def test_developer_concierge_mii_metadata_and_binary(self) -> None:
         event = ET.fromstring(get_response("/url1/event/today.xml"))
         self.assertEqual(event.findtext("miiinfo/miiid"), "1")
@@ -189,6 +198,7 @@ class WiiNoMaTests(unittest.TestCase):
         recommended = ET.fromstring(get_response("/url1/list/category/search/20001"))
         self.assertEqual(recommended.findtext("movieinfo/movieid"), "1")
 
+    @requires_private_wii_no_ma("theater", "miis", "rooms")
     def test_jwc24_special_mii_batch_and_parade_room(self) -> None:
         event = ET.fromstring(get_response("/url1/event/today.xml"))
         self.assertEqual(len(event.findall("miiinfo")), 11)
@@ -209,6 +219,7 @@ class WiiNoMaTests(unittest.TestCase):
         self.assertEqual(tribute.findtext("miiinfo/miiid"), "9")
         self.assertEqual(tribute.findtext("menu[2]/enq/enqid"), "2")
 
+    @requires_private_wii_no_ma("miis", "rooms")
     def test_historical_room_rotations_are_complete_and_wii_safe(self) -> None:
         room_document = json.loads(
             Path("private/wii_no_ma/special/rooms.json").read_text(encoding="utf-8")
@@ -237,6 +248,7 @@ class WiiNoMaTests(unittest.TestCase):
         metadata = ET.fromstring(get_response(f"/url1/mii/{sample['parade_mii']}.met"))
         self.assertIn("再現Mii", metadata.findtext("prof"))
 
+    @requires_private_wii_no_ma("rooms")
     def test_historical_rooms_do_not_use_generic_video_or_poll_placeholders(self) -> None:
         room_document = json.loads(
             Path("private/wii_no_ma/special/rooms.json").read_text(encoding="utf-8")
@@ -255,6 +267,7 @@ class WiiNoMaTests(unittest.TestCase):
         self.assertEqual(page.findtext("menu/type"), "6")
         self.assertGreaterEqual(int(page.findtext("menu/pic/picnum")), 5)
 
+    @requires_private_wii_no_ma("rooms")
     def test_missing_historical_rooms_have_labeled_jwc24_revivals(self) -> None:
         room_document = json.loads(
             Path("private/wii_no_ma/special/rooms.json").read_text(encoding="utf-8")
