@@ -114,8 +114,11 @@ tickets or credentials, bypass checks, or turn transport success into ownership.
 
 ## Next source-proven component
 
-The next bounded backend component should be an **offline ECS GetECConfig codec
-and matched-retail response-parser verification**, before any live route.
+The [offline ECS GetECConfig codec](ec_config.md) and isolated retail response
+verification now implement this bounded next step, without a live route.
+The request parser remains based on the older source subset; selected original
+v21 response readers and URL setters are separately exercised on synthetic data.
+Their observed behavior takes precedence where it differs from the older source.
 The original function at `0x80088920` references this exact field family:
 
 | Field | Native reference instruction |
@@ -134,12 +137,13 @@ initialized environment and confirmed key pair (`:227-247`); connection then
 has EULA/account/device-status branches. Supplying five URLs does not establish
 an authorized identity or connected account.
 
-A future implementation should first prove retail common envelope/version/error
-semantics and URL validation with synthetic data. No response values, endpoint
-overrides, successful registrations or new commerce routes were introduced in
-this batch. The actual storefront-to-CAS call path, requested attribute/type
-vocabulary, account protocol and entitlement/ticket/content contracts remain
-unfinished work.
+The native checks establish selected response lexical/error behavior and exact
+URL storage, including quirks that prevent treating zero status as proof of a
+valid response. They do not prove the retail request version, origin/transport
+policy, complete connection or account state. No operational endpoint overrides,
+registrations or live commerce routes were introduced. The actual storefront-to-CAS
+call path, requested attribute/type vocabulary, account protocol and
+entitlement/ticket/content contracts remain unfinished work.
 
 ## Reproduction
 

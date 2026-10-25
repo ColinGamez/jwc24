@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-25",
+  "component": "jwc24/wii_shop_ec_config.py",
+  "inventory_sha256": "ea7edbe9e4e03f96f24cb3b2ccf45241bbac678be6351877719cab89e453c352",
+  "inventory_match_verified": true,
+  "source_provenance_independently_verified": false,
+  "verified_source_files": [
+    {
+      "path": "common/lib/ec/ec_connect.cpp",
+      "bytes": 4813,
+      "sha256": "e54cab889d60467bc330d9dd8eb26cc739d0e13cc7a2b17b8608d5f6bfe577df"
+    },
+    {
+      "path": "common/lib/ec/ec_soap.cpp",
+      "bytes": 40736,
+      "sha256": "392f7ab92409347bcbdd558c59fcc0bc50acf398dde55746ef048004846988e3"
+    },
+    {
+      "path": "common/lib/ec/ec_soap.h",
+      "bytes": 9121,
+      "sha256": "2c6c35eca837540d1c7d6d06bc0b52c7d45c2077e93b922707a2624a698e5c89"
+    }
+  ],
+  "request": {
+    "operation": "GetECConfig",
+    "namespace": "urn:ecs.wsapi.broadon.com",
+    "soap_action": "urn:ecs.wsapi.broadon.com/GetECConfig",
+    "soap_version": "1.1",
+    "older_source_protocol_version": "2.0",
+    "protocol_version_is_not_ec_version": true,
+    "required_fields": ["Version", "MessageId", "Region", "Country", "Language", "SerialNo", "ECVersion"],
+    "optional_opaque_fields": ["DeviceId", "DeviceToken", "AccountId", "ApplicationId", "TIN"],
+    "cas_age_rejected": true,
+    "common_and_ec_version_excluded_from_repr": true,
+    "structural_parse_is_not_authentication": true
+  },
+  "response": {
+    "fixture_only": true,
+    "namespace": "urn:ecs.wsapi.broadon.com",
+    "literal_envelope_name": "soapenv:Envelope",
+    "literal_body_name": "soapenv:Body",
+    "literal_response_name": "GetECConfigResponse",
+    "response_has_sole_default_ecs_namespace_attribute": true,
+    "common_order": ["optional TimeStamp", "required ErrorCode", "optional ErrorMessage"],
+    "reported_error_rule_from_older_source": "ErrorCode is not literal zero OR decoded ErrorMessage is nonempty",
+    "response_fixture_target": "verified retail v21, not older source message-as-error behavior",
+    "reported_error_rule_verified_retail": "ErrorCode is not literal zero; nonempty ErrorMessage with literal zero is informational",
+    "zero_code_nonempty_message_requires_five_urls": true,
+    "reported_error_fixture_has_no_urls": true,
+    "zero_status_fixture_requires_all_five_explicit_urls": true,
+    "url_fields_in_source_order": ["ContentPrefixURL", "UncachedContentPrefixURL", "EcsURL", "IasURL", "CasURL"],
+    "caller_evidence_refs_are_assertions_and_not_serialized": true,
+    "common_request_fields_are_not_echoed": true,
+    "endpoint_defaults": false,
+    "older_source_simple_url_reader_unescapes_xml": false,
+    "raw_ampersands_rejected_without_silent_url_transformation": true
+  },
+  "source_evidence": [
+    {"path": "common/lib/ec/ec_connect.cpp", "start_line": 59, "end_line": 89, "finding": "ECS GetECConfig request ECVersion and required five URL extraction order"},
+    {"path": "common/lib/ec/ec_soap.cpp", "start_line": 25, "end_line": 139, "finding": "SOAP 1.1 ECS namespace/type/action, common fields and ECS-only SerialNo"},
+    {"path": "common/lib/ec/ec_soap.h", "start_line": 219, "end_line": 239, "finding": "Older-source constructor protocol Version 2.0"},
+    {"path": "common/lib/ec/ec_soap.cpp", "start_line": 294, "end_line": 345, "finding": "Older lexical response envelope and common order; its OR-message error criterion is superseded by actual retail-v21 verification"},
+    {"path": "common/lib/ec/ec_soap.cpp", "start_line": 467, "end_line": 502, "finding": "Simple values are raw XML substrings; URL XML entities would change configured strings"},
+    {"path": "common/lib/ec/ec_connect.cpp", "start_line": 227, "end_line": 243, "finding": "Connect environment and confirmed-key prerequisites remain outside this codec"}
+  ],
+  "local_policies_not_native_limits": {
+    "max_xml_bytes": 65536,
+    "max_scalar_characters": 4096,
+    "max_elements": 64,
+    "max_depth": 4,
+    "max_namespace_declarations": 32,
+    "status": "canonical nonnegative decimal uint32; leading zeros rejected",
+    "timestamp": "explicit 1-20 decimal digits",
+    "uris": "absolute http(s), host required, no credentials/query/fragment delimiters/whitespace/controls/raw ampersand or unsafe XML/URI punctuation",
+    "output_byte_bound_checked_before_buffer_growth": true
+  },
+  "retail_limits": {
+    "static_v21_field_family_report": "research/wii_shop_commerce_surface_20261025.json",
+    "matched_native_verifier": "tools/verify_wii_shop_ec_config.py",
+    "serializer_native_interop_tests": "tests/test_wii_shop_ec_config_interop.py",
+    "original_main_sha256": "aff20704bd4cf9025e34382e185b0936e9ebc6e047a3431f21a445165c9dc898",
+    "native_request_version_verified_by_this_component": false,
+    "matched_native_response_parser_verified_separately": true,
+    "native_common_zero_code_nonempty_message_status": 0,
+    "native_zero_code_message_and_five_urls_installed": true,
+    "native_zero_code_message_without_five_urls_extractor_status": -4006,
+    "native_leading_zero_error_code_reported_error_status": -4015,
+    "native_url_admission_or_storage_limits_claimed": false,
+    "complete_native_protocol_verified": false
+  },
+  "tests": {
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_wii_shop_ec_config -v",
+    "passed": 15,
+    "fixture_values_are_synthetic": true,
+    "captured_device_or_account_values_used": false
+  },
+  "independent_review": {
+    "remaining_material_findings": 0,
+    "ecs_serial_no_cas_age_and_version_distinctions_reviewed": true,
+    "privacy_bounds_and_fixture_only_scope_reviewed": true,
+    "captured_javascript_direct_getecconfig_method_proven": false
+  },
+  "network_enabled": false,
+  "route_integrated": false,
+  "authentication_implemented": false,
+  "account_or_connected_state_implemented": false,
+  "ownership_or_installation_implemented": false,
+  "original_sources_executed": false,
+  "nand_or_device_credentials_accessed": false
+}

@@ -225,7 +225,7 @@ The image importer uses Pillow from the existing `artwork` optional dependency.
 Normal preview launches explicitly disable frame dumping; temporary test videos
 were removed after retaining a private native proof image.
 
-Validation: 198 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
+Validation: 232 Shop tests and 2 credential tests pass. All 85 catalog pages and 844 title pages were
 rendered against the real snapshot; title links cover all 844 grouped IDs once.
 All 1,611 current image routes were checked over verified loopback HTTPS. See the
 [image-role report](../../research/wii_shop_image_roles_validation_20261025.json)
@@ -273,3 +273,12 @@ The launcher checks the navigation manifest as well as the other private packs.
 `-ServiceStartupTimeoutSeconds` defaults to 120 (range 5–300) to accommodate
 observed slow cold reads; a service that exits is reported immediately. An
 existing listener must still pass all TLS/pack health checks before a launch.
+
+The [offline ECS configuration codec](ec_config.md) and its [original v21 reader check](ec_config_native.md)
+are separate from these preview routes. Fifteen codec, thirteen native and six
+interoperability tests verify synthetic configuration responses and distinguish
+actual retail behavior from older source assumptions. The native XML helpers
+and URL setters execute unchanged; allocator/logging/tick/mutex dependencies
+use explicit synthetic stubs. The [batch validation report](../../research/wii_shop_ec_config_integration_20261025.json)
+records this scope. No preview route, endpoint setting, account state, NAND or
+credential changed, and Dolphin was not launched for this batch.

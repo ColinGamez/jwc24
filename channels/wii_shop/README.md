@@ -105,6 +105,14 @@ the running original browser. Commerce services require a
 separate adapter; WC24 task/mail support does not implement Shop accounts,
 catalogs, tickets or content installation.
 
+The [offline ECS GetECConfig component](ec_config.md) now parses the reviewed
+request subset and emits explicit response fixtures. Selected original v21
+XML/error readers and URL setters consume synthetic fixtures in an isolated
+native harness; no XML lookup or URL setter is replaced by a test double.
+The [bootstrap audit](../../research/wii_shop_ec_bootstrap_20261025.md) separates
+that component from the unresolved retail caller and connection sequence.
+Neither the codec nor the harness is a live commerce route.
+
 Original source/software, device/account data and tickets stay outside Git.
 The checked-in [audit report](../../research/wii_shop_source_audit_20261024.json)
 contains metadata and protocol-name leads only. The separate loopback preview

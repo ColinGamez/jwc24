@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-25",
+  "scope": "read-only bootstrap and integration boundary audit; no original commerce execution",
+  "source_inventory_sha256": "ea7edbe9e4e03f96f24cb3b2ccf45241bbac678be6351877719cab89e453c352",
+  "verified_private_source_files": [
+    {
+      "path": "common/lib/ec/ec_wshop.cpp",
+      "bytes": 8111,
+      "sha256": "c26db485f2a05faf33a3f15d6d5346ab8803721e1bff069ab416ee79ae3ab588"
+    },
+    {
+      "path": "common/lib/ec/ec_chkDownload_bw.cpp",
+      "bytes": 6350,
+      "sha256": "dd998d94b9a5861b9e0b9edf10138a1ab5f361e8a904186087128838eb396660"
+    },
+    {
+      "path": "common/lib/ec/ec_common.h",
+      "bytes": 7093,
+      "sha256": "dd200395053b4360f3468127fc63b87e7328c1f88204889d1615a0c5ef7c268a"
+    },
+    {
+      "path": "common/lib/ec/ec_js.cpp",
+      "bytes": 153617,
+      "sha256": "167fd6c0a31eb4eef0cf499731d38bc94c3b180ef654199e10f81495074433f9"
+    },
+    {
+      "path": "common/lib/ec/ec_connect.cpp",
+      "bytes": 4813,
+      "sha256": "e54cab889d60467bc330d9dd8eb26cc739d0e13cc7a2b17b8608d5f6bfe577df"
+    },
+    {
+      "path": "common/lib/ec/ec_connect.h",
+      "bytes": 1133,
+      "sha256": "351d79ace8078e665cb91ad8040f0c2b3283ae5e07d15ec01bc7f503f20af2e9"
+    },
+    {
+      "path": "common/lib/ec/ec_api.cpp",
+      "bytes": 21105,
+      "sha256": "3ce30e3867b34f9fac038a9214bcb8302f6c0b6f614b686ab3c4c771d0d1d927"
+    },
+    {
+      "path": "common/lib/ec/ec_config.h",
+      "bytes": 2605,
+      "sha256": "87fa8c7fc9b36c38a44e3ec4040eea24de87df0223ed1bb6730bd1dd2b2a228c"
+    },
+    {
+      "path": "common/lib/ec/ec_soap.cpp",
+      "bytes": 40736,
+      "sha256": "392f7ab92409347bcbdd558c59fcc0bc50acf398dde55746ef048004846988e3"
+    },
+    {
+      "path": "common/lib/ec/ec_soap.h",
+      "bytes": 9121,
+      "sha256": "2c6c35eca837540d1c7d6d06bc0b52c7d45c2077e93b922707a2624a698e5c89"
+    }
+  ],
+  "captured_scripts": {
+    "source": "https://archive.org/details/WiiShopChannelBackup",
+    "archive_sha1": "e20c789c86bd602d7af3816d105c3f62ab504374",
+    "manifest_sha256": "cfa89ef974455e13d31b37b3c7a3c34599dfd4498c48979105262c2dff75cb8e",
+    "files": [
+      {
+        "name": "ec.js",
+        "bytes": 11326,
+        "sha256": "d2411666619bf39c6f80147a2979fa2df7959c72483c00fbdf4b17e30bbaed7a",
+        "GetECConfig_occurrences": 0,
+        "ec_connect_call_occurrences": 0
+      },
+      {
+        "name": "oss.js",
+        "bytes": 65331,
+        "sha256": "9103c77a737e433ac62e125328823cb1ad55333aa30fc5e3b0308bc2f42e6acc",
+        "GetECConfig_occurrences": 0,
+        "ec_connect_call_occurrences": 0
+      },
+      {
+        "name": "title_manager.js",
+        "bytes": 8219,
+        "sha256": "35c94ca691790bd22a036de28d9d61e2b4c119c1bd8141b6c8fb3335e2e8ae64",
+        "GetECConfig_occurrences": 0,
+        "ec_connect_call_occurrences": 0
+      }
+    ]
+  },
+  "captured_index": {
+    "page": "index.jsp",
+    "bytes": 14547,
+    "sha256": "06f2865dfe0b5dd9582112300914ca92303c06dbea566d45a19bb795a9028130",
+    "navigation_manifest_sha256": "27e52ef0ffad9d4efdb8eafa3ef38d29a53802ae9509e9c0b5ca1ca98a5b7a04",
+    "initPage_line": 665,
+    "showCheckRegistered_line": 623,
+    "GetECConfig_or_ec_connect_present": false
+  },
+  "older_source_entry_points": {
+    "EC_Init": "ec_api.cpp:38-51",
+    "plugin_registration": "ec_wshop.cpp:134-160; ec_js.cpp:5308-5328",
+    "plugin_callbacks": [
+      "EC_ADD_JS_PLUGIN_CALLBACK",
+      "EC_GET_CURRENT_URL_CALLBACK"
+    ],
+    "public_native_connection": "ec_connect.cpp:227-243",
+    "GetECConfig": "ec_connect.cpp:45-109",
+    "javascript_connect_getter_present": false,
+    "connect_literal_is_diagnostic_operation_name": "ec_js.cpp:60",
+    "captured_oss_wrapper_constructor_line": 12,
+    "captured_oss_progress_poll_line": 1421,
+    "captured_oss_finish_operation_line": 1511
+  },
+  "request_response_boundaries": {
+    "older_source_request_Version": "2.0",
+    "Version_constructor_source": "ec_soap.h:233",
+    "ECVersion_source": "ec_api.cpp:32 productVersion; ec_connect.cpp:62",
+    "retail_request_version_verified": false,
+    "ECS_common_serial_field": "SerialNo",
+    "CAS_age_field_is_not_ECS_field": true,
+    "common_response_source": "ec_soap.cpp:294-345",
+    "response_URL_fields": [
+      "ContentPrefixURL",
+      "UncachedContentPrefixURL",
+      "EcsURL",
+      "IasURL",
+      "CasURL"
+    ],
+    "configuration_URL_installation_is_connected_state": false,
+    "older_source_common_error_zero_test": "literal string 0; nonempty ErrorMessage independently reports error",
+    "retail_response_error_behavior_from_sibling_native_verification": "Literal code 0 permits nonempty informational ErrorMessage; five URL fields remain required"
+  },
+  "older_source_origin_reference": {
+    "source": "ec_chkDownload_bw.cpp:187-218; ec_js.cpp:926-1054",
+    "hostname_suffix": ".shop.wii.com",
+    "path_untrusted_marker": "/ext/",
+    "arbitrary_loopback_origin_authorized": false,
+    "exact_v21_origin_guard_verified": false
+  },
+  "retail_static_comparison": {
+    "main_sha256": "aff20704bd4cf9025e34382e185b0936e9ebc6e047a3431f21a445165c9dc898",
+    "hostname_suffix_nul_occurrences": 10,
+    "resource_sha256": "9e4a171c24782be38a88225fda507b5c17120531cf517a6ebd9bd3f8ee580ead",
+    "bundled_html": [
+      {
+        "name": "corrupt.html",
+        "bytes": 2128,
+        "sha256": "b4749761c4ec2a547c3f84d53b1232a7b04fbd07c2ee27a5bc745506b93e5b08",
+        "EC_connect_or_GetECConfig_marker_present": false
+      },
+      {
+        "name": "error.html",
+        "bytes": 3515,
+        "sha256": "62742287b7b5f9343e74c3aa0dcdd801116d991abe1ee55adcb52c258c334efd",
+        "EC_connect_or_GetECConfig_marker_present": false
+      },
+      {
+        "name": "eula.html",
+        "bytes": 4221,
+        "sha256": "aff24d6db640d57f0fc1abd323c81891c1cde28a646c02c536a137b99e0e7792",
+        "EC_connect_or_GetECConfig_marker_present": false
+      },
+      {
+        "name": "eulacomp.html",
+        "bytes": 4336,
+        "sha256": "5ae96579741fec91753d13b8668a384ab093458bc42c3c1e0f79e925e615ac96",
+        "EC_connect_or_GetECConfig_marker_present": false
+      },
+      {
+        "name": "internet.html",
+        "bytes": 3229,
+        "sha256": "9a2429e6f215bd7203a6e9f274d6b87e79435f9ef318b8f2d34ac27a95939e8c",
+        "EC_connect_or_GetECConfig_marker_present": false
+      },
+      {
+        "name": "nwc24error.html",
+        "bytes": 3560,
+        "sha256": "9f2d0422aba8e1e44ce197fe171c6ee2f30a71e50d1aad94ca0c26962f06fe9b",
+        "EC_connect_or_GetECConfig_marker_present": false
+      },
+      {
+        "name": "nwc24fullerror.html",
+        "bytes": 2807,
+        "sha256": "2b0f59c0afeb9aa1e6a4a303caeee896ca5283164f36fa80d9df1fffa1b282e3",
+        "EC_connect_or_GetECConfig_marker_present": false
+      }
+    ],
+    "startup_initializer_calls_still_unexecuted_in_existing_startup_contract": [
+      "0x8002f560",
+      "0x8002f680"
+    ],
+    "native_bootstrap_caller_and_full_order_verified": false
+  },
+  "independent_review": {
+    "codec": "jwc24/wii_shop_ec_config.py",
+    "native_harness": "tools/verify_wii_shop_ec_config.py",
+    "material_XML_shape_or_provenance_mismatch_found": false,
+    "native_harness_response_fields_must_remain_synthetic": true,
+    "native_harness_executed_by_this_audit": false,
+    "native_output_string_pointer_containment": "Addressed: synthetic object ranges, heap allocation bounds and inline object capacity checked before exporting values; confirmed by parent integration review",
+    "codec_response_semantics_follow_matched_retail_correction": true
+  },
+  "original_code_or_scripts_executed": false,
+  "network_contacted": false,
+  "account_or_key_material_read": false,
+  "NAND_or_runtime_modified": false,
+  "full_request_URLs_or_original_bodies_emitted_in_artifacts": false,
+  "live_route_or_authentication_flow_implemented": false
+}
