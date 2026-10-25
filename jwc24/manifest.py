@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -49,6 +49,26 @@ class ChannelManifest:
     @property
     def title_code(self) -> int:
         return self.title_id & 0xFFFFFFFF
+
+
+def with_base_url(manifests: tuple[ChannelManifest, ...], base_url: str) -> tuple[ChannelManifest, ...]:
+    """Select one service origin in memory, leaving manifest files untouched."""
+    parsed = urlparse(base_url)
+    try:
+        port = parsed.port
+        valid = (parsed.scheme in {"http", "https"} and bool(parsed.hostname)
+                 and all(char.isalnum() or char in ".:-_" for char in (parsed.hostname or ""))
+                 and parsed.username is None and parsed.password is None
+                 and parsed.path in {"", "/"} and not parsed.params
+                 and not parsed.query and not parsed.fragment
+                 and "?" not in base_url and "#" not in base_url
+                 and (port is None or 1 <= port <= 65535)
+                 and all(32 < ord(char) < 127 for char in base_url))
+    except ValueError:
+        valid = False
+    if not valid:
+        raise ValueError("service base URL must be an HTTP(S) origin without credentials or a path")
+    return tuple(replace(item, base_url=base_url.rstrip("/")) for item in manifests)
 
 
 def _required(data: dict[str, Any], key: str, expected: type) -> Any:

@@ -6,7 +6,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from . import dl_list, launcher, wc24_config
-from .manifest import load_manifest
+from .manifest import load_manifest, with_base_url
 from .mail import MailStore
 from .mail_server import serve_mail
 from .server import serve
@@ -22,6 +22,14 @@ def build_parser() -> argparse.ArgumentParser:
     validate = sub.add_parser("validate-manifest", help="validate and summarize a channel manifest")
     validate.add_argument("manifest", type=Path)
 
+    preflight = sub.add_parser("preflight", help="read-only multi-channel preparation checks; no native acceptance claim")
+    preflight.add_argument("manifest", type=Path, nargs="+")
+    preflight.add_argument("--dl-list", type=Path)
+    preflight.add_argument("--config", type=Path)
+    preflight.add_argument("--nand-root", type=Path)
+    preflight.add_argument("--max-payload-age-seconds", type=int)
+    preflight.add_argument("--base-url", help="select a shared origin in memory; does not rewrite manifests")
+
     provision = sub.add_parser("provision", help="provision manifest tasks (dry run by default)")
     provision.add_argument("manifest", type=Path)
     provision.add_argument("--dl-list", type=Path, required=True)
@@ -34,6 +42,7 @@ def build_parser() -> argparse.ArgumentParser:
     server.add_argument("--nand-root", type=Path)
     server.add_argument("--tls-cert", type=Path)
     server.add_argument("--tls-key", type=Path)
+    server.add_argument("--base-url", help="select a shared origin in memory; does not rewrite manifests")
 
     account = sub.add_parser("account", help="audit or locally bootstrap the WC24 account")
     account.add_argument("--config", type=Path, required=True)
@@ -65,6 +74,26 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> int:
     args = build_parser().parse_args()
     try:
+        if args.command == "preflight":
+            import json
+            from .readiness import inspect_readiness
+            # Avoid printing source paths, URLs or input-derived exception text.
+            try:
+                manifests = tuple(load_manifest(path) for path in args.manifest)
+                if args.base_url:
+                    manifests = with_base_url(manifests, args.base_url)
+                report = inspect_readiness(
+                    manifests, dl_path=args.dl_list, config_path=args.config,
+                    nand_root=args.nand_root,
+                    max_payload_age_seconds=args.max_payload_age_seconds,
+                )
+            except (OSError, ValueError, KeyError, TypeError):
+                print(json.dumps({"preflight_passed": False,
+                                  "error": "invalid_or_unreadable_preflight_input",
+                                  "profile_modified": False, "network_used": False}))
+                return 2
+            print(json.dumps(report, indent=2, sort_keys=True))
+            return 0 if report["preflight_passed"] else 1
         if args.command == "launch":
             return launcher.launch(
                 args.dolphin, args.data_dir, args.host, args.port, args.title
@@ -131,6 +160,8 @@ def main() -> int:
 
         if args.command == "serve":
             manifests = tuple(load_manifest(path) for path in args.manifest)
+            if args.base_url:
+                manifests = with_base_url(manifests, args.base_url)
             netlocs = {urlparse(item.base_url).netloc for item in manifests}
             if len(netlocs) != 1:
                 raise ValueError("served manifests must share one base host and port")

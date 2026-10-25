@@ -14,6 +14,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from .manifest import ChannelManifest
+from .wc24_delivery import envelope_key_paths
 from .wii_no_ma import get_response as wii_no_ma_get_response
 
 
@@ -118,31 +119,7 @@ def serve(
     request_log = Path("private/wii_no_ma/request.log")
     request_log.parent.mkdir(parents=True, exist_ok=True)
     request_log.write_text("", encoding="utf-8")
-    key_file = None
-    if any(
-        item.envelope == "wc24-aes-ofb"
-        for item in (*all_tasks, *all_assets)
-    ):
-        if nand_root is None:
-            raise ValueError("manifest requires wc24-aes-ofb; pass --nand-root")
-        encrypted_manifests = [
-            item
-            for item in manifests
-            if any(value.envelope == "wc24-aes-ofb" for value in (*item.tasks, *item.assets))
-        ]
-        if len(encrypted_manifests) != 1:
-            raise ValueError("multi-channel encrypted serving requires exactly one key owner")
-        key_manifest = encrypted_manifests[0]
-        key_file = (
-            nand_root
-            / "title"
-            / f"{key_manifest.title_type:08x}"
-            / f"{key_manifest.title_code:08x}"
-            / "data"
-            / "wc24pubk.mod"
-        )
-        if not key_file.is_file():
-            raise FileNotFoundError(f"missing channel WC24 key: {key_file}")
+    envelope_keys = envelope_key_paths(manifests, nand_root)
 
     class Handler(BaseHTTPRequestHandler):
         server_version = "JWC24/0.1"
@@ -338,8 +315,7 @@ def serve(
                 if item.compression == "nintendo-lz10":
                     body = _nintendo_lz10_literal(body)
                 if item.envelope == "wc24-aes-ofb":
-                    assert key_file is not None
-                    body = _wc24_envelope(body, key_file)
+                    body = _wc24_envelope(body, envelope_keys[item.filename])
                 self.send_response(HTTPStatus.OK)
                 self.send_header("Content-Type", "application/octet-stream")
                 self.send_header("ETag", hashlib.sha256(body).hexdigest())
