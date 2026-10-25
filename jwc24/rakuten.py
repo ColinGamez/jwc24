@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
+import tempfile
+import time
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -128,15 +131,43 @@ def search(
 
 
 def write_catalog(path: Path, keyword: str, products: list[Product]) -> None:
+    from .publication_lock import directory_lock
+    path = path.resolve()
+    with directory_lock(path.parent):
+        _write_catalog_locked(path, keyword, products)
+
+
+def _write_catalog_locked(path: Path, keyword: str, products: list[Product]) -> None:
+    from .shop_catalog import assign_identities
+    previous = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    rows, registry, high = assign_identities(previous, [asdict(product) for product in products])
     document = {
         "schema_version": 1,
         "provider": "rakuten_ichiba",
         "keyword": keyword,
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "currency": "JPY",
-        "products": [asdict(product) for product in products],
+        "products": rows,
+        "identity_registry": registry,
+        "movie_id_high_water": high,
     }
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(document, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    temporary.replace(path)
+    descriptor, name = tempfile.mkstemp(prefix=".rakuten-", suffix=".json", dir=path.parent)
+    temporary = Path(name)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+            stream.write(json.dumps(document, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        for attempt in range(10):
+            try:
+                os.replace(temporary, path)
+                break
+            except PermissionError as error:
+                # Windows can transiently deny replacement while a reader
+                # or another atomic publisher holds the destination open.
+                if getattr(error, "winerror", None) not in (5, 32) or attempt == 9:
+                    raise
+                time.sleep(0.01)
+    finally:
+        temporary.unlink(missing_ok=True)
