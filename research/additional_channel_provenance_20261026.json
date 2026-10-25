@@ -1,0 +1,401 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-10-26",
+  "scope": "Owned source packages, independently extracted contents and selected application/resource evidence",
+  "channels": [
+    {
+      "channel_id": "HAVJ",
+      "title_id": "000100014841564A",
+      "title_version": 512,
+      "required_ios": 35,
+      "boot_index": 11,
+      "source_wad_bytes": 24686336,
+      "source_wad_sha256": "f07ea3a15de2779d55145653ba27062895749dd74a542ef6e1dc5dcd7dd174d1",
+      "tmd_sha256": "551237a7c1de707149be0c8cafa5db9c25b8845bfe0c231acf2d61b7aad1992d",
+      "ticket_tmd_title_identity_matches": true,
+      "all_content_sizes_and_sha1_match_tmd": true,
+      "nintendo_signature_verified": false,
+      "verified_contents": [
+        {
+          "index": 0,
+          "content_id": "0000000C",
+          "bytes": 300288,
+          "sha1_matches_tmd": true,
+          "sha256": "b0b5db4c8022fa22e1f6fdf773cf346c15b12fe988e78ad10dedd77ac389151c"
+        },
+        {
+          "index": 1,
+          "content_id": "0000000D",
+          "bytes": 2571552,
+          "sha1_matches_tmd": true,
+          "sha256": "a4b5910668d8b6a22c242b6cc53c4cf91562ef76ade62a4f93d5dcb3a08b7a2e"
+        },
+        {
+          "index": 2,
+          "content_id": "00000002",
+          "bytes": 4559887,
+          "sha1_matches_tmd": true,
+          "sha256": "c030993bcf61dd2726cfc09cae69a004827464b51d6bd1e295e62e45f212622d"
+        },
+        {
+          "index": 3,
+          "content_id": "00000003",
+          "bytes": 2669044,
+          "sha1_matches_tmd": true,
+          "sha256": "411781fd519fc10cf16197a4f93c6c29d14a8862d17e5a1beacb0272dec3b0f8"
+        },
+        {
+          "index": 4,
+          "content_id": "00000004",
+          "bytes": 672,
+          "sha1_matches_tmd": true,
+          "sha256": "bcb540081ffbeb9cf5cb703ccac98664aa139bcd613bac853f2efcbecaadb920"
+        },
+        {
+          "index": 5,
+          "content_id": "00000005",
+          "bytes": 276,
+          "sha1_matches_tmd": true,
+          "sha256": "30d5a234c6640b6ba80ebaeb3805d413cb185a1f4c7772fbf1fd50271dc00396"
+        },
+        {
+          "index": 6,
+          "content_id": "0000000E",
+          "bytes": 7404352,
+          "sha1_matches_tmd": true,
+          "sha256": "47a13fa2a0ed6803373b2f593264de319d96ebe7fc6e4aa9fc49676353b0f607"
+        },
+        {
+          "index": 7,
+          "content_id": "00000007",
+          "bytes": 2156800,
+          "sha1_matches_tmd": true,
+          "sha256": "9ff4609878d5eb752ef75a5bfa74ed72628b99871ce58a7172a1c9fb3277859f"
+        },
+        {
+          "index": 8,
+          "content_id": "00000008",
+          "bytes": 370880,
+          "sha1_matches_tmd": true,
+          "sha256": "7884e90122dd7e52f4108a26e52508ef8ad9b667ba5e2e3b0edc6eb25c81c0a1"
+        },
+        {
+          "index": 9,
+          "content_id": "00000009",
+          "bytes": 686468,
+          "sha1_matches_tmd": true,
+          "sha256": "2c644c9e5986a3847f64f53226d7fa296e62e384262d82728c33d97b7ecbab93"
+        },
+        {
+          "index": 10,
+          "content_id": "0000000A",
+          "bytes": 3649020,
+          "sha1_matches_tmd": true,
+          "sha256": "4922465314b05b5d61efe9f1176df1cb2363310789095c0eafff3968c1df8665"
+        },
+        {
+          "index": 11,
+          "content_id": "0000000B",
+          "bytes": 312576,
+          "sha1_matches_tmd": true,
+          "sha256": "678c9e1f67a9b34cd99049e299751e8dc3890b1ce8fd0e09179b7e1d3c71fc05"
+        }
+      ],
+      "application_content_index": 1,
+      "application_compression": "Nintendo LZ11",
+      "application_bytes": 4247616,
+      "application_sha256": "fdf597412f5dedf2dd4b9388204ed35a52ad3624282a23c08bb54d29f237f0d2",
+      "selected_consumer_evidence": {
+        "scope": "Static resource-table and selected initializer inspection",
+        "initializer": "0x8009b770",
+        "resource_call": "0x8009b854",
+        "resource_consumer": "0x800a7780",
+        "archive_index": 6,
+        "bundled_resource": "etc/affinity.bin",
+        "local_save_name": "uranai6.dat",
+        "local_save_name_present": true,
+        "hosted_core_payload_contract_recovered": false,
+        "local_predictions_or_native_ui_executed": false
+      },
+      "selected_application_marker_counts": {
+        "NWC24OpenLib": 0,
+        "NWC24CommitMsg": 0,
+        "NWC24InitMsgObj": 0,
+        "NWC24SetMsgAttached": 0,
+        "NWC24iDownloadNowEx": 0,
+        "NWC24iGetSchedulerStat": 0,
+        "DWC_Init": 0,
+        "DWC_Login": 0,
+        "DWC_Connect": 0,
+        "NHTTP": 0
+      },
+      "selected_bundled_resources": [
+        {
+          "content_index": 6,
+          "member_basename": "affinity.bin",
+          "bytes": 20580,
+          "sha256": "f871fb665fc76ae87c970e2c5ec9d0c74f04020af716331a059c6e2a95bed25c"
+        }
+      ],
+      "original_program_or_script_executed": false,
+      "network_or_device_state_accessed": false,
+      "marker_presence_is_not_an_active_service_contract": true
+    },
+    {
+      "channel_id": "HCFJ",
+      "title_id": "000100014843464A",
+      "title_version": 512,
+      "required_ios": 56,
+      "boot_index": 8,
+      "source_wad_bytes": 9726016,
+      "source_wad_sha256": "071d721402dc683b559c46843d11604e2a26bb949c036e0beae66193dfac24a1",
+      "tmd_sha256": "3ea1bee328bebfa7f76711f9171d73933ac3ab026ed2643056a8654b3a39e3ee",
+      "ticket_tmd_title_identity_matches": true,
+      "all_content_sizes_and_sha1_match_tmd": true,
+      "nintendo_signature_verified": false,
+      "verified_contents": [
+        {
+          "index": 0,
+          "content_id": "00000011",
+          "bytes": 515328,
+          "sha1_matches_tmd": true,
+          "sha256": "ae43c427bd885a8864b89453953ea396dcad1f5b642697cb8792ac8573d6d32e"
+        },
+        {
+          "index": 1,
+          "content_id": "00000012",
+          "bytes": 2293760,
+          "sha1_matches_tmd": true,
+          "sha256": "85f13e1566b462e89d936740a8da57ac7cae5d1c695beb43505df9a1b4f465dd"
+        },
+        {
+          "index": 2,
+          "content_id": "00000013",
+          "bytes": 3243525,
+          "sha1_matches_tmd": true,
+          "sha256": "c2d30841e9051ec217747a297a56dcb44487341de325b20516fad4981f32d448"
+        },
+        {
+          "index": 3,
+          "content_id": "0000000B",
+          "bytes": 2156800,
+          "sha1_matches_tmd": true,
+          "sha256": "9ff4609878d5eb752ef75a5bfa74ed72628b99871ce58a7172a1c9fb3277859f"
+        },
+        {
+          "index": 4,
+          "content_id": "0000000C",
+          "bytes": 370880,
+          "sha1_matches_tmd": true,
+          "sha256": "7884e90122dd7e52f4108a26e52508ef8ad9b667ba5e2e3b0edc6eb25c81c0a1"
+        },
+        {
+          "index": 5,
+          "content_id": "0000000D",
+          "bytes": 112448,
+          "sha1_matches_tmd": true,
+          "sha256": "091b3ace337f8eac1dcc4fce65b064e9f98b3e67f75351c199086aededb2c392"
+        },
+        {
+          "index": 6,
+          "content_id": "0000000E",
+          "bytes": 29906,
+          "sha1_matches_tmd": true,
+          "sha256": "f05bd0ced225f2fdd6a2cab326caf83db50d7947b4572d5dce792458c02fef76"
+        },
+        {
+          "index": 7,
+          "content_id": "0000000F",
+          "bytes": 686468,
+          "sha1_matches_tmd": true,
+          "sha256": "2c644c9e5986a3847f64f53226d7fa296e62e384262d82728c33d97b7ecbab93"
+        },
+        {
+          "index": 8,
+          "content_id": "00000014",
+          "bytes": 312576,
+          "sha1_matches_tmd": true,
+          "sha256": "b17125d9e237b476f48401fea50ae1a003db040eb978f28f8ef5768e7de2fa92"
+        }
+      ],
+      "application_content_index": 1,
+      "application_compression": "Nintendo LZ11",
+      "application_bytes": 4372384,
+      "application_sha256": "7da329f17754d3199b6254f26c3e059913671820f9017c2424236430aa64eff3",
+      "selected_consumer_evidence": {
+        "scope": "Static version-descriptor and compiled SDK evidence",
+        "initializer_slice": [
+          "0x800b9624",
+          "0x800b9718"
+        ],
+        "version_url_reference": "0x800b965c",
+        "descriptor_consumer_call": "0x800b9714",
+        "descriptor_consumer": "0x800423b4",
+        "version_host": "nwcs.wapp.wii.com",
+        "version_path": "/hcf/version.enc",
+        "crypto_resource_selectors_observed": true,
+        "crypto_keys_exported": false,
+        "version_host_is_proven_voice_broker": false,
+        "delivery_envelope_or_WFC_service_compatibility_verified": false
+      },
+      "selected_application_marker_counts": {
+        "NWC24OpenLib": 0,
+        "NWC24CommitMsg": 0,
+        "NWC24InitMsgObj": 0,
+        "NWC24SetMsgAttached": 0,
+        "NWC24iDownloadNowEx": 1,
+        "NWC24iGetSchedulerStat": 1,
+        "DWC_Init": 2,
+        "DWC_Login": 1,
+        "DWC_Connect": 4,
+        "NHTTP": 20
+      },
+      "selected_bundled_resources": [],
+      "original_program_or_script_executed": false,
+      "network_or_device_state_accessed": false,
+      "marker_presence_is_not_an_active_service_contract": true
+    },
+    {
+      "channel_id": "HCDJ",
+      "title_id": "000100014843444A",
+      "title_version": 1024,
+      "required_ios": 56,
+      "boot_index": 12,
+      "source_wad_bytes": 14488512,
+      "source_wad_sha256": "26ec0e47f39b12546957a0d090d9a6ca68a7db9ed17c58c4a6297efb9479c22b",
+      "tmd_sha256": "1091dac9fd83108332623e94b6b7bac48c9c9ef23adbdd48933cd795adcd5c26",
+      "ticket_tmd_title_identity_matches": true,
+      "all_content_sizes_and_sha1_match_tmd": true,
+      "nintendo_signature_verified": false,
+      "verified_contents": [
+        {
+          "index": 0,
+          "content_id": "00000018",
+          "bytes": 357552,
+          "sha1_matches_tmd": true,
+          "sha256": "e25a79f73cf983041fc5d19818b5c66ecdf7a16abad046e3b652a3cd71d7bca2"
+        },
+        {
+          "index": 1,
+          "content_id": "00000019",
+          "bytes": 1730784,
+          "sha1_matches_tmd": true,
+          "sha256": "f8dddbb8019fa21d0c1e0a9196c9fffdac9081ec876ac127261d1c3febfd7ba2"
+        },
+        {
+          "index": 2,
+          "content_id": "00000016",
+          "bytes": 5348212,
+          "sha1_matches_tmd": true,
+          "sha256": "d4e41d7f59d15f273658197a2252ae1cabf9df8a9952054bb8fd750f418d7a91"
+        },
+        {
+          "index": 3,
+          "content_id": "00000003",
+          "bytes": 2156800,
+          "sha1_matches_tmd": true,
+          "sha256": "9ff4609878d5eb752ef75a5bfa74ed72628b99871ce58a7172a1c9fb3277859f"
+        },
+        {
+          "index": 4,
+          "content_id": "00000004",
+          "bytes": 340,
+          "sha1_matches_tmd": true,
+          "sha256": "a7e91acd4affe70c06edf852c1a67cab52328232da62608d52a6a548dfc30bf0"
+        },
+        {
+          "index": 5,
+          "content_id": "00000005",
+          "bytes": 344,
+          "sha1_matches_tmd": true,
+          "sha256": "279b65cab4363b2f99b1a214a8a4082a3885de6321e06c8871cebe633fa7ab4c"
+        },
+        {
+          "index": 6,
+          "content_id": "00000006",
+          "bytes": 370880,
+          "sha1_matches_tmd": true,
+          "sha256": "7884e90122dd7e52f4108a26e52508ef8ad9b667ba5e2e3b0edc6eb25c81c0a1"
+        },
+        {
+          "index": 7,
+          "content_id": "00000007",
+          "bytes": 112448,
+          "sha1_matches_tmd": true,
+          "sha256": "091b3ace337f8eac1dcc4fce65b064e9f98b3e67f75351c199086aededb2c392"
+        },
+        {
+          "index": 8,
+          "content_id": "00000008",
+          "bytes": 1572320,
+          "sha1_matches_tmd": true,
+          "sha256": "6a1a459aa7898d06cab417834e3edbfb31c34c7651dc8134a8d65e2e377124a7"
+        },
+        {
+          "index": 9,
+          "content_id": "00000009",
+          "bytes": 15392,
+          "sha1_matches_tmd": true,
+          "sha256": "204f544628cec47608b0f3f7f14ace3db61db49a883783b87b4e5cb086e5b991"
+        },
+        {
+          "index": 10,
+          "content_id": "0000000A",
+          "bytes": 1819808,
+          "sha1_matches_tmd": true,
+          "sha256": "e73e6818044f8b8385e32f1d8d2e70007d54f88d8bd0663a2de509d1c4ac9950"
+        },
+        {
+          "index": 11,
+          "content_id": "0000000B",
+          "bytes": 686468,
+          "sha1_matches_tmd": true,
+          "sha256": "2c644c9e5986a3847f64f53226d7fa296e62e384262d82728c33d97b7ecbab93"
+        },
+        {
+          "index": 12,
+          "content_id": "00000017",
+          "bytes": 312576,
+          "sha1_matches_tmd": true,
+          "sha256": "b17125d9e237b476f48401fea50ae1a003db040eb978f28f8ef5768e7de2fa92"
+        }
+      ],
+      "application_content_index": 1,
+      "application_compression": "Nintendo LZ11",
+      "application_bytes": 3303168,
+      "application_sha256": "419c295d0745a5991df5468a4dd1dfc502fdf6c81f47898629f65fbd42e40f7e",
+      "selected_consumer_evidence": {
+        "scope": "Static HTTP controller plus separate synthetic native execution",
+        "provider_url_controller": "0x80045ed4",
+        "tls_selector": "0x80046124",
+        "formatter": "0x800b3ef4",
+        "provider_host": "wch.fdinet.fujifilm.co.jp",
+        "operation_path": "/wii_svr/WPOperationServlet",
+        "file_operation_path": "/wii_svr/WPFileOperationServlet",
+        "print_fulfillment_or_order_contract_verified": false,
+        "message_board_delivery_verified": false
+      },
+      "selected_application_marker_counts": {
+        "NWC24OpenLib": 5,
+        "NWC24CommitMsg": 3,
+        "NWC24InitMsgObj": 1,
+        "NWC24SetMsgAttached": 1,
+        "NWC24iDownloadNowEx": 0,
+        "NWC24iGetSchedulerStat": 0,
+        "DWC_Init": 0,
+        "DWC_Login": 0,
+        "DWC_Connect": 0,
+        "NHTTP": 66
+      },
+      "selected_bundled_resources": [],
+      "original_program_or_script_executed": false,
+      "network_or_device_state_accessed": false,
+      "marker_presence_is_not_an_active_service_contract": true
+    }
+  ],
+  "source_wads_changed": false,
+  "titles_installed_or_launched": false,
+  "real_wii_backup_accessed": false,
+  "device_credentials_accessed": false,
+  "print_voice_account_or_delivery_operation_submitted": false
+}

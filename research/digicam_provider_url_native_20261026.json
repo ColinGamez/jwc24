@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-10-26",
+  "channel_id": "HCDJ",
+  "title_version": 1024,
+  "application_sha256": "419c295d0745a5991df5468a4dd1dfc502fdf6c81f47898629f65fbd42e40f7e",
+  "controller_entry": "0x80045ed4",
+  "tls_selector": "0x80046124",
+  "formatter": "0x800b3ef4",
+  "cases": [
+    {
+      "selector": 0,
+      "provider_urls": [
+        "https://wch.fdinet.fujifilm.co.jp/wii_svr/WPOperationServlet",
+        "https://wch.fdinet.fujifilm.co.jp/wii_svr/WPFileOperationServlet"
+      ],
+      "native_url_controller_executed": true,
+      "native_tls_selector_executed": true,
+      "native_formatter_executed": true,
+      "native_formatter_or_selector_stubbed": false,
+      "native_instructions": 2414,
+      "synthetic_buffer_guards_verified": true,
+      "native_write_ranges_checked": true,
+      "network_or_print_order_invoked": false,
+      "settings_or_credentials_read_from_nand": false
+    },
+    {
+      "selector": 7,
+      "provider_urls": [],
+      "native_url_controller_executed": true,
+      "native_tls_selector_executed": true,
+      "native_formatter_executed": false,
+      "native_formatter_or_selector_stubbed": false,
+      "native_instructions": 31,
+      "synthetic_buffer_guards_verified": true,
+      "native_write_ranges_checked": true,
+      "network_or_print_order_invoked": false,
+      "settings_or_credentials_read_from_nand": false
+    },
+    {
+      "selector": 255,
+      "provider_urls": [],
+      "native_url_controller_executed": true,
+      "native_tls_selector_executed": true,
+      "native_formatter_executed": false,
+      "native_formatter_or_selector_stubbed": false,
+      "native_instructions": 31,
+      "synthetic_buffer_guards_verified": true,
+      "native_write_ranges_checked": true,
+      "network_or_print_order_invoked": false,
+      "settings_or_credentials_read_from_nand": false
+    }
+  ],
+  "native_helper_stubs": 0,
+  "source_program_or_nand_changed": false,
+  "provider_contacted": false,
+  "order_or_upload_submitted": false,
+  "account_or_payment_verified": false,
+  "scope": "Original URL controller and formatter only; no full channel initialization, current provider availability or request/order contract claim."
+}

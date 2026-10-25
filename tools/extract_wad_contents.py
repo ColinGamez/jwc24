@@ -18,6 +18,16 @@ def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def title_metadata(ticket: Ticket, tmd: TMD) -> dict[str, int | str]:
+    # get_title_id() decodes the binary identifier as text in this SDK version.
+    # Preserve its eight bytes as hexadecimal instead of embedding controls.
+    title_id = ticket.title_id.hex().upper()
+    if len(ticket.title_id) != 8 or title_id != tmd.title_id.upper():
+        raise ValueError("Ticket and TMD title identifiers do not match")
+    return {"title_id": title_id, "title_version": tmd.title_version,
+            "boot_index": tmd.boot_index, "required_ios": tmd.ios_version}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("wad", type=Path)
@@ -47,8 +57,7 @@ def main() -> int:
         "source": str(args.wad.resolve()),
         "source_size": len(wad_bytes),
         "source_sha256": sha256(wad_bytes),
-        "title_id": ticket.get_title_id().upper(),
-        "title_version": tmd.title_version,
+        **title_metadata(ticket, tmd),
         "contents": [],
     }
     contents: list[dict[str, object]] = []
