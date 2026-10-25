@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-26",
+  "channel": "Japanese Check Mii Out / HAPJ v512",
+  "source_sha256": "3957942d54501633bd7d256c636517885958ed152d9c914f4e07aadecf84a5b3",
+  "source_bytes_published": false,
+  "verification_command": ".venv/Scripts/python.exe -m unittest tests.test_cmoc tests.test_cmoc_framing tests.test_cmoc_native_framing",
+  "result": {
+    "tests_run": 16,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "native_tests": 7,
+    "independent_parser_and_cli_tests": 9
+  },
+  "native_routines": {
+    "initialize": "0x800695D0",
+    "header": "0x80069634",
+    "peek": "0x8006966C",
+    "advance": "0x80069728",
+    "size": "0x80068344",
+    "header_correlation": "0x8006A57C"
+  },
+  "native_services_stubbed": [],
+  "synthetic_fixture_only": true,
+  "bounds": {
+    "source_max_bytes_before_hash": 4194304,
+    "body_max_bytes": 1048576,
+    "max_records": 4096,
+    "instructions_per_call": 2000,
+    "code_read_and_write_allowlists": true,
+    "input_object_and_stack_guards": true
+  },
+  "findings": [
+    "Header threshold is 32 bytes",
+    "Ordinary and extended declared sizes include their prefixes",
+    "Extended size reads a 32-bit word at record offset 12",
+    "Native framing can attempt an out-of-body extended-size read after checking only eight bytes",
+    "Independent parser requires a complete sixteen-byte extended prefix and extended size at least sixteen",
+    "Native header correlation checks only the tag and words at offsets four and eight"
+  ],
+  "network_routes_added": false,
+  "native_startup_verified": false,
+  "authentication_or_signatures_verified": false,
+  "fd_record_semantics_verified": false,
+  "mii_payloads_decoded_or_submitted": false,
+  "original_wad_or_real_wii_backup_modified": false
+}
