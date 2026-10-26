@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-10-27",
+  "original_main_sha256": "ca6677094a9293219b4122038b916cb64f6361b5b4106a670ade438292d4969c",
+  "original_main_bytes": 4110944,
+  "provenance": "Pinned private decoded Japanese HFNJ v256 application, unchanged. Synthetic RAM buffers only; no original bytes, genuine records, saves or credentials published.",
+  "source_regions": [
+    {
+      "role": "complete_read_consumer",
+      "start": "0x802bbb90",
+      "exclusive_end": "0x802bbd3c",
+      "sha256": "fbf5d129d0bcdf0045c1e5400bb2487b41ebb4c6dbfe070ba0eec9af15c536b7"
+    },
+    {
+      "role": "complete_opaque_pair_gate",
+      "start": "0x802bbb10",
+      "exclusive_end": "0x802bbb90",
+      "sha256": "499dcd1fbc9cb70a0ed411f4b2d9fde95ffe594ebcdf147365934ccedc16cdb1"
+    },
+    {
+      "role": "selected_static_caller",
+      "start": "0x802b6418",
+      "exclusive_end": "0x802b645c",
+      "sha256": "b0857b901e755ba4f563e8cb4541151760ae3ff2baa2367669db8962787ad42f"
+    }
+  ],
+  "static_callsite": {
+    "site": "0x802b641c",
+    "target": "0x802bbb10",
+    "downstream_virtual_targets_or_ui_executed": false
+  },
+  "read_completion": {
+    "original_main_sha256": "ca6677094a9293219b4122038b916cb64f6361b5b4106a670ade438292d4969c",
+    "read_consumer_cases": 25,
+    "read_boundary_calls": 21,
+    "diagnostic_boundary_calls": 4,
+    "header_crc_checked_cases": 9,
+    "buffer_clear_cases": 11,
+    "original_helper_calls": {
+      "copy": 9,
+      "clear": 11,
+      "crc": 9,
+      "filename": 21,
+      "last_diagnostic": 4
+    },
+    "instructions": 115990,
+    "complete_original_read_consumer_executed": true,
+    "original_copy_clear_and_crc_stubbed": false,
+    "filesystem_read_and_diagnostic_conversion_stubbed": true,
+    "dataset_reads_bounded_to_header": true,
+    "state_input_and_stack_guards_verified": true,
+    "reported_length_not_used_by_selected_consumer": true,
+    "opaque_payload_semantics_or_authentication_verified": false,
+    "native_ui_verified": false,
+    "save_or_profile_modified": false
+  },
+  "opaque_header_pair_gate": {
+    "original_main_sha256": "ca6677094a9293219b4122038b916cb64f6361b5b4106a670ade438292d4969c",
+    "opaque_header_pair_cases": 15,
+    "instructions": 1031,
+    "complete_original_header_pair_gate_executed": true,
+    "original_two_byte_copy_calls": 30,
+    "original_copy_or_header_predicate_stubbed": false,
+    "service_boundaries_stubbed": false,
+    "input_and_stack_guards_verified": true,
+    "header_word_meanings_verified": false,
+    "native_menu_transition_or_display_verified": false,
+    "save_or_profile_modified": false
+  },
+  "validation": {
+    "focused_tests": 20,
+    "passed": true,
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_body_check_completion tests.test_body_check tests.test_body_check_crc_native",
+    "public_private_absent": {
+      "tests_run": 6,
+      "native_class_skips": 1,
+      "passed": true,
+      "private_input_used": false
+    }
+  },
+  "unverified": [
+    "actual filesystem copy and returned-length construction",
+    "diagnostic-converter mapping",
+    "complete asynchronous task lifecycle",
+    "header word meanings and other possible consumers",
+    "opaque payload semantics and genuine source data",
+    "crypto, installed-client trust, freshness and authentication",
+    "downstream native screen and full original UI",
+    "legitimate Japanese game profile and board prerequisites",
+    "save-backed health, question and mail flows"
+  ]
+}
