@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-10-27",
+  "source_bytes": 4194944,
+  "source_sha256": "aef18b3a045c09b0a1c4dfdd9aed99f78bd4a6be8c0a967deea3e6aa93523264",
+  "source_regions": [
+    {
+      "role": "retail_caller",
+      "start": "0x80048260",
+      "exclusive_end": "0x800482d8",
+      "sha256": "15e8d36ec4231982341757e10ec3436b42058aa5705ca7c55fb6b7aec68effd4"
+    },
+    {
+      "role": "context_stores",
+      "start": "0x800265b4",
+      "exclusive_end": "0x800265d4",
+      "sha256": "74bfa11c1347314b4ad4c1cd8f1f30c40a900d26c5c0171a17c3213e425c762a"
+    },
+    {
+      "role": "language_gate",
+      "start": "0x800266a8",
+      "exclusive_end": "0x80026728",
+      "sha256": "a8961738f43610639ce78225148d58321ae2a18c6acbfd1a7b00cda5f06bd052"
+    },
+    {
+      "role": "install_to_exit",
+      "start": "0x80026950",
+      "exclusive_end": "0x800269f4",
+      "sha256": "c7d25febb5ba5cc6f64a058553690314164b20c0c1680c9cfda9c9d75e1f517c"
+    },
+    {
+      "role": "temporary_descriptor_destructor",
+      "start": "0x80026a10",
+      "exclusive_end": "0x80026a68",
+      "sha256": "80238ebdd72d197897b6dcd9157eab2c12352149c7f6f9b60c8866ed8619bfde"
+    }
+  ],
+  "targeted_tests": 12,
+  "targeted_tests_passed": true,
+  "final_targeted_test_seconds": 10.146,
+  "all_nintendo_regression_tests": 52,
+  "all_nintendo_regression_passed": true,
+  "all_nintendo_regression_seconds": 15.875,
+  "private_absent_public_tests_passed": 8,
+  "private_absent_native_classes_skipped": 1,
+  "native_comparisons": 35,
+  "native_language_gate_cases": 30,
+  "native_install_cases": 5,
+  "retail_allocation_bytes": 2082764,
+  "native_install_shapes": [
+    "raw_valid_full_allocation",
+    "lz10_valid",
+    "lz11_valid",
+    "raw_invalid_enum_full_allocation",
+    "lz10_format7_native_accepts_backend_rejects"
+  ],
+  "actual_copy_decompressor_constructor_validator_publication_stores_stubbed": false,
+  "error_scheduler_and_free_boundaries_stubbed": true,
+  "separate_slices_not_complete_async_worker": true,
+  "raw_padding_explicitly_synthetic_not_downloaded": true,
+  "native_constructor_global_pointer_changes_before_validation": true,
+  "failed_validator_preserves_published_pair_not_complete_rollback": true,
+  "full_async_io_heap_or_network_executed": false,
+  "genuine_catalog_sample_verified": false,
+  "authentication_freshness_or_native_browsing_verified": false,
+  "original_software_copied_to_git": false,
+  "device_profile_or_backup_changed": false
+}
