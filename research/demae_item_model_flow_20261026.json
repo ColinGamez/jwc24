@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-10-26",
+  "channel_id": "HCHJ",
+  "title_version": 512,
+  "stock_application_sha256": "6b9002431aec265e34ba532aae2707ef74a5b8c491f81be624a54563eabc88c9",
+  "stock_compressed_application_sha256": "e63d55ac9ac6b408e01019ac898ae319efb01f994d3c7f8dddba8046a9e2fd8f",
+  "stock_decompression_matches_application": true,
+  "older_host_patched_fixture_sha256": "da087f063dd9a7c54eb27ffda6b35f843cd0f1fbe67eca45aff216333133a830",
+  "selected_original_and_fixture_code_regions": [
+    {
+      "start": "0x80026060",
+      "end": "0x80029bd0",
+      "byte_equal": true,
+      "sha256": "cbb43d10796a8eed738b4b2d2eecbc97046df0984c956e58861dfa6659d698de"
+    },
+    {
+      "start": "0x8004f45c",
+      "end": "0x800502e0",
+      "byte_equal": true,
+      "sha256": "c3ea8840d1901f9e08aa92c9e5b67d576d3397f8bce695a131ee4ae63fdcea0b"
+    },
+    {
+      "start": "0x8005712c",
+      "end": "0x800575a4",
+      "byte_equal": true,
+      "sha256": "076be293247d85c6cc1767df380acae8890a557c0b479749aa956de62a9150a5"
+    },
+    {
+      "start": "0x800c3bd8",
+      "end": "0x800c4b40",
+      "byte_equal": true,
+      "sha256": "021968f71ae94c2c23b8568602af449bfce2ba63785652fbd55b4b6b61b4f8df"
+    },
+    {
+      "start": "0x800b2428",
+      "end": "0x800b24a0",
+      "byte_equal": true,
+      "sha256": "2898b0978e75c7ed9c9845347a7655bb3bed2719678359f7ba5339a7cc5d3a15"
+    }
+  ],
+  "native_item_consumer": "0x8004f45c",
+  "native_variant_attachment": "0x80027358",
+  "native_item_insertion": "0x80026060",
+  "native_variant_index_selector": "0x8002757c",
+  "native_variant_code_getter": "0x80029774",
+  "native_raw_stock_getter": "0x80029a7c",
+  "native_basket_code_getter": "0x80012ec4",
+  "native_basket_matching_slice": [
+    "0x800b2428",
+    "0x800b24a0"
+  ],
+  "synthetic_cases": [
+    {
+      "case": "two_items_four_variants",
+      "accepted": true,
+      "items_retained": 2,
+      "variants_retained": 4,
+      "native_indexed_variant_identity_checks": 4,
+      "basket_selected_indices": [
+        1,
+        0,
+        null
+      ],
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 2105
+    },
+    {
+      "case": "variant_node_failure",
+      "accepted": false,
+      "items_retained": 0,
+      "variants_retained": 0,
+      "native_indexed_variant_identity_checks": 0,
+      "basket_selected_indices": [],
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 1397
+    },
+    {
+      "case": "copy_variant_node_failure",
+      "accepted": false,
+      "items_retained": 0,
+      "variants_retained": 0,
+      "native_indexed_variant_identity_checks": 0,
+      "basket_selected_indices": [],
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 1958
+    },
+    {
+      "case": "item_node_failure",
+      "accepted": false,
+      "items_retained": 0,
+      "variants_retained": 0,
+      "native_indexed_variant_identity_checks": 0,
+      "basket_selected_indices": [],
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 1667
+    },
+    {
+      "case": "second_item_node_failure",
+      "accepted": false,
+      "items_retained": 1,
+      "variants_retained": 2,
+      "native_indexed_variant_identity_checks": 2,
+      "basket_selected_indices": [],
+      "object_heap_stack_and_write_bounds_verified": true,
+      "native_instruction_addresses_visited": 2038
+    },
+    {
+      "case": "explicit_zero_prices",
+      "accepted": true,
+      "items_retained": 1,
+      "variants_retained": 2,
+      "native_parent_price_text": "0円",
+      "native_variant_price_text": "0円",
+      "native_price_formatter_mocked": false,
+      "object_heap_stack_and_write_bounds_verified": true
+    }
+  ],
+  "native_model_mocked": false,
+  "native_price_formatter_mocked": false,
+  "native_stock_comparison_mocked": false,
+  "xml_lookup_storage_payload_wrappers_and_status_mocked": true,
+  "xml_bytes_native_parsed_by_combined_checker": false,
+  "heap_codecs_and_selected_libc_mocked": true,
+  "zero_size_allocation_mock_returns_owned_byte": true,
+  "empty_node_wrapper_behavior_is_not_native_verified": true,
+  "retained_real_menu_evidence_audit": {
+    "retained_observations": 38,
+    "retained_items": 248,
+    "fresh_observations": 0,
+    "expired_or_invalid_observations": 38,
+    "items_with_provider_item_id": 0,
+    "items_with_variant_rows": 0,
+    "items_with_options_observed_true": 0
+  },
+  "focused_tests_passed": 17,
+  "current_availability_or_orderability_verified": false,
+  "native_ui_or_complete_basket_contract_verified": false,
+  "native_item_route_enabled": false,
+  "provider_basket_transferred": false,
+  "source_evidence_timestamps_changed": false,
+  "orders_submitted": 0,
+  "notices_created": 0,
+  "network_requests_sent": 0,
+  "dolphin_launched": false,
+  "profile_or_actual_wii_backup_accessed": false
+}
