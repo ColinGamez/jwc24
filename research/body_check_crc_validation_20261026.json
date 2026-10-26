@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-26",
+  "scope": "CRC leaf routine only; existing plaintext header inspector reviewed unchanged; fixed CLI error privacy",
+  "tests": 11,
+  "results": {
+    "original_main_sha256": "ca6677094a9293219b4122038b916cb64f6361b5b4106a670ade438292d4969c",
+    "synthetic_crc_cases": 67,
+    "covered_bytes_per_case": 12,
+    "native_crc_matches_zlib": true,
+    "native_crc_stubbed": false,
+    "bounded_input_and_original_table_reads": true,
+    "input_guards_verified": true,
+    "native_memory_writes_attempted": false,
+    "instructions": 10854,
+    "native_dataset_loader_executed": false,
+    "dataset_records_or_authentication_verified": false,
+    "save_or_profile_modified": false
+  },
+  "original_code_keys_health_or_save_bytes_published": false,
+  "component_dependencies": "standard library for inspector; optional reverse-engineering dependencies/private original for native verification",
+  "complete_channel_verified": false
+}
