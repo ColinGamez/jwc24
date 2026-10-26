@@ -45,6 +45,7 @@ def build_parser() -> argparse.ArgumentParser:
     server.add_argument("--base-url", help="select a shared origin in memory; does not rewrite manifests")
     server.add_argument("--news-root", type=Path, help="explicit validated private News publication")
     server.add_argument("--news-public-key", type=Path, help="explicit News signature verification key")
+    server.add_argument("--hbnj-root", type=Path, help="explicit coherent private HBNJ publication root")
 
     account = sub.add_parser("account", help="audit or locally bootstrap the WC24 account")
     account.add_argument("--config", type=Path, required=True)
@@ -175,6 +176,12 @@ def main() -> int:
                 raise ValueError("served manifests must share one base host and port")
             parsed = urlparse(manifests[0].base_url)
             port = args.port or parsed.port or (443 if parsed.scheme == "https" else 80)
+            prepared = {}
+            if news is not None:
+                prepared["news_publication"] = news
+            if args.hbnj_root is not None:
+                from .hbnj_publication import load_hbnj_snapshot
+                prepared["hbnj_snapshot"] = load_hbnj_snapshot(args.hbnj_root)
             serve(
                 manifests,
                 args.host,
@@ -182,7 +189,7 @@ def main() -> int:
                 args.nand_root,
                 args.tls_cert,
                 args.tls_key,
-                **({"news_publication": news} if news is not None else {}),
+                **prepared,
             )
             return 0
 

@@ -16,6 +16,7 @@ from pathlib import Path
 from .manifest import ChannelManifest
 from .wc24_delivery import envelope_key_paths
 from .news_server import NewsApplication
+from .hbnj_publication import HBNJRouteSnapshot, HBNJSnapshotExpired
 from .wii_no_ma import get_response as wii_no_ma_get_response
 
 
@@ -87,6 +88,7 @@ def serve(
     tls_key: Path | None = None,
     *,
     news_publication=None,
+    hbnj_snapshot=None,
 ) -> None:
     manifests = (manifest,) if isinstance(manifest, ChannelManifest) else tuple(manifest)
     if not manifests:
@@ -96,6 +98,24 @@ def serve(
     news_application = NewsApplication(news_publication) if news_publication is not None else None
     all_tasks = tuple(task for item in manifests for task in item.tasks)
     all_assets = tuple(asset for item in manifests for asset in item.assets)
+    hbnj_items = {}
+    if hbnj_snapshot is not None:
+        if type(hbnj_snapshot) is not HBNJRouteSnapshot:
+            raise ValueError("HBNJ serving needs a validated loaded snapshot")
+        hbnj_snapshot.metadata()
+        hbnj_snapshot.raw_payload("/header.bin")  # Check expiry before listening.
+        owners = [item for item in manifests if item.channel_id == "HBNJ"]
+        if len(owners) != 1 or owners[0].title_id != 0x0001000148424E4A:
+            raise ValueError("HBNJ snapshot requires its verified title manifest")
+        hbnj_items = {task.filename: task for task in owners[0].tasks
+                      if task.filename in {"header.bin", "epg.bin", "str.bin"}}
+        if (set(hbnj_items) != {"header.bin", "epg.bin", "str.bin"}
+                or any(item.compression != "nintendo-lz10" or item.envelope != "wc24-aes-ofb"
+                       for item in hbnj_items.values())):
+            raise ValueError("HBNJ snapshot requires the original three task transport modes")
+        if any(task.route.rsplit("/", 1)[-1] in hbnj_items
+               and all(task is not owned for owned in hbnj_items.values()) for task in all_tasks):
+            raise ValueError("Another manifest task conflicts with the HBNJ route family")
     wii_no_ma_base = next(
         (item.base_url for item in manifests if item.channel_id == "HCIJ"),
         "http://127.0.0.1",
@@ -122,7 +142,7 @@ def serve(
     missing = [
         str(item.payload)
         for item in (*all_tasks, *all_assets)
-        if not item.payload.is_file()
+        if not item.payload.is_file() and all(item is not owned for owned in hbnj_items.values())
     ]
     if missing:
         raise FileNotFoundError("missing declared payloads:\n" + "\n".join(missing))
@@ -155,6 +175,28 @@ def serve(
             # Shorter replacement hosts are slash-padded in fixed-size channel
             # URL fields. Treat repeated path separators as equivalent.
             route = "/" + "/".join(part for part in raw_route.split("/") if part)
+            if hbnj_snapshot is not None and route.rsplit("/", 1)[-1] in hbnj_items:
+                # Bind all 109 routes to one captured generation. Never fall
+                # through to a national/stale file or an arbitrary suffix alias.
+                try:
+                    body = hbnj_snapshot.raw_payload(route)
+                except HBNJSnapshotExpired:
+                    self.send_error(HTTPStatus.SERVICE_UNAVAILABLE, "HBNJ snapshot expired")
+                    return
+                if body is None:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                    return
+                item = hbnj_items[route.rsplit("/", 1)[-1]]
+                body = _nintendo_lz10_literal(body)
+                body = _wc24_envelope(body, envelope_keys[item.filename])
+                self.send_response(HTTPStatus.OK)
+                self.send_header("Content-Type", "application/octet-stream")
+                self.send_header("Content-Length", str(len(body)))
+                self.send_header("ETag", hashlib.sha256(body).hexdigest())
+                self.send_header("Cache-Control", "no-store")
+                self.end_headers()
+                self.wfile.write(body)
+                return
             if route == "/conf/first.bin" or route.startswith(("/url1/", "/url2/", "/url3/", "/shop/")):
                 with request_log.open("a", encoding="utf-8") as handle:
                     handle.write(f"GET {self.path}\n")

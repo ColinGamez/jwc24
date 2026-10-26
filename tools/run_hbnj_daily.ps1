@@ -16,7 +16,10 @@ try {
     # allow the process to finish and judge success by its actual exit code.
     $previousErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
-    & py -3 "tools\update_hbnj_daily.py" *>&1 | Tee-Object -FilePath $log
+    # Preserve the existing scheduled per-file experiment. Coherent generation
+    # publication requires a separately supplied operator rights/age policy and
+    # explicit snapshot-server activation; this wrapper invents neither.
+    & py -3 "tools\update_hbnj_daily.py" --legacy *>&1 | Tee-Object -FilePath $log
     $updaterExitCode = $LASTEXITCODE
     $ErrorActionPreference = $previousErrorActionPreference
     if ($updaterExitCode -ne 0) {

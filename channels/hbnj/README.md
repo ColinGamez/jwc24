@@ -28,10 +28,15 @@ downloaded display strings are null-terminated UTF-16BE; the retired Shift-JIS
 fixtures are retained only as reverse-engineering evidence and must not be
 served.
 
-`tools/update_hbnj_daily.py` performs the complete national collection,
-schema audit, native packing, and independent binary audit in a private staging
-directory. It atomically publishes to `generated/current` only after every
-stage succeeds, so a failed upstream collection leaves the previous guide live.
+`tools/update_hbnj_daily.py` supports national collection or an explicit offline
+guide, schema audit, native packing, and independent binary audit in a private
+staging directory. Its existing default/`--legacy` per-file output remains
+compatible with the daily wrapper; whole-guide atomicity is unverified.
+The opt-in `--coherent` path writes one immutable generation and atomically
+switches `generated/snapshots/current.json`, with explicit required source-rights
+reference and collection-age policy arguments. This mode leaves legacy files unchanged. The
+[publication and runtime snapshot guide](publication.md) describes activation;
+the shared server must load the prepared snapshot and apply HBNJ transport.
 It collects the channel's full eight-day date window, builds and validates one
 EPG/string pair per native area ID under
 `generated/current/areas/<id>`. Requests such as `/1016/epg.bin` resolve to the
