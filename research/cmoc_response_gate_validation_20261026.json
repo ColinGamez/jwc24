@@ -1,0 +1,33 @@
+{
+  "channel": "Check Mii Out Japan HAPJ v512",
+  "source_bytes": 3410304,
+  "source_sha256": "3957942d54501633bd7d256c636517885958ed152d9c914f4e07aadecf84a5b3",
+  "provenance": "Original locally preserved Japanese executable; unchanged private input. All response/cache/state data synthetic.",
+  "entry": "0x80072CE0",
+  "complete_handler_comparisons": 284,
+  "all_response_flag_bytes_compared": 256,
+  "header_gate_passed_cases": 42,
+  "observed_completion_histogram": {
+    "0": 75,
+    "252101": 128,
+    "252102": 1,
+    "252103": 2,
+    "252104": 2,
+    "252201": 64,
+    "252301": 3,
+    "252302": 3,
+    "257100": 1,
+    "257999": 1,
+    "258300": 1,
+    "258503": 1,
+    "2147740647": 1,
+    "2147741647": 1
+  },
+  "native_instructions": 29518,
+  "all_input_state_and_stack_guards_verified": true,
+  "header_branches_correlation_or_state_updates_stubbed": false,
+  "transport_accessors_cache_singleton_and_callback_stubbed": true,
+  "host_override_supplied": false,
+  "http_header_text_parsing_verified": false,
+  "authentication_current_service_or_ui_verified": false
+}
