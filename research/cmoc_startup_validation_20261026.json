@@ -1,0 +1,161 @@
+{
+  "date": "2026-10-26",
+  "original_main_sha256": "3957942d54501633bd7d256c636517885958ed152d9c914f4e07aadecf84a5b3",
+  "tests": 13,
+  "synthetic_native_cases": 9,
+  "scope": "FD constructor/type/copy/state method; explicit cached retrieval/singleton/UI stubs",
+  "results": [
+    {
+      "case": "normal_fd_fields",
+      "native_constructor_matches_12_byte_encoder": true,
+      "native_type_predicate_allows_record": true,
+      "strict_record_subset_accepted": true,
+      "native_fixed_record_copy_and_state_updates_executed": true,
+      "native_state_fields_match_record": true,
+      "intercepted_ui_transition_value": 2,
+      "counts": {
+        "instructions": 462,
+        "cached_record_lookups_stubbed": 1,
+        "singleton_lookups_stubbed": 1,
+        "ui_transitions_intercepted": 1
+      },
+      "input_and_stack_guards_verified": true,
+      "cached_retrieval_and_ui_services_stubbed": true,
+      "http_auth_crypto_or_native_menu_verified": false
+    },
+    {
+      "case": "zero_fields",
+      "native_constructor_matches_12_byte_encoder": true,
+      "native_type_predicate_allows_record": true,
+      "strict_record_subset_accepted": true,
+      "native_fixed_record_copy_and_state_updates_executed": true,
+      "native_state_fields_match_record": true,
+      "intercepted_ui_transition_value": 2,
+      "counts": {
+        "instructions": 460,
+        "cached_record_lookups_stubbed": 1,
+        "singleton_lookups_stubbed": 1,
+        "ui_transitions_intercepted": 1
+      },
+      "input_and_stack_guards_verified": true,
+      "cached_retrieval_and_ui_services_stubbed": true,
+      "http_auth_crypto_or_native_menu_verified": false
+    },
+    {
+      "case": "unsigned_maximum_fields",
+      "native_constructor_matches_12_byte_encoder": true,
+      "native_type_predicate_allows_record": true,
+      "strict_record_subset_accepted": true,
+      "native_fixed_record_copy_and_state_updates_executed": true,
+      "native_state_fields_match_record": true,
+      "intercepted_ui_transition_value": 2,
+      "counts": {
+        "instructions": 462,
+        "cached_record_lookups_stubbed": 1,
+        "singleton_lookups_stubbed": 1,
+        "ui_transitions_intercepted": 1
+      },
+      "input_and_stack_guards_verified": true,
+      "cached_retrieval_and_ui_services_stubbed": true,
+      "http_auth_crypto_or_native_menu_verified": false
+    },
+    {
+      "case": "missing_record",
+      "native_constructor_matches_12_byte_encoder": true,
+      "native_type_predicate_allows_record": false,
+      "strict_record_subset_accepted": false,
+      "native_fixed_record_copy_and_state_updates_executed": false,
+      "native_state_fields_match_record": false,
+      "intercepted_ui_transition_value": null,
+      "counts": {
+        "instructions": 100,
+        "cached_record_lookups_stubbed": 1,
+        "singleton_lookups_stubbed": 0,
+        "ui_transitions_intercepted": 0
+      },
+      "input_and_stack_guards_verified": true,
+      "cached_retrieval_and_ui_services_stubbed": true,
+      "http_auth_crypto_or_native_menu_verified": false
+    },
+    {
+      "case": "wrong_record_tag",
+      "native_constructor_matches_12_byte_encoder": true,
+      "native_type_predicate_allows_record": false,
+      "strict_record_subset_accepted": false,
+      "native_fixed_record_copy_and_state_updates_executed": false,
+      "native_state_fields_match_record": false,
+      "intercepted_ui_transition_value": 2,
+      "counts": {
+        "instructions": 233,
+        "cached_record_lookups_stubbed": 1,
+        "singleton_lookups_stubbed": 0,
+        "ui_transitions_intercepted": 1
+      },
+      "input_and_stack_guards_verified": true,
+      "cached_retrieval_and_ui_services_stubbed": true,
+      "http_auth_crypto_or_native_menu_verified": false
+    },
+    {
+      "case": "generic_zero_tag_outside_strict_subset",
+      "native_constructor_matches_12_byte_encoder": true,
+      "native_type_predicate_allows_record": true,
+      "strict_record_subset_accepted": false,
+      "native_fixed_record_copy_and_state_updates_executed": true,
+      "native_state_fields_match_record": true,
+      "intercepted_ui_transition_value": 2,
+      "counts": {
+        "instructions": 384,
+        "cached_record_lookups_stubbed": 1,
+        "singleton_lookups_stubbed": 1,
+        "ui_transitions_intercepted": 1
+      },
+      "input_and_stack_guards_verified": true,
+      "cached_retrieval_and_ui_services_stubbed": true,
+      "http_auth_crypto_or_native_menu_verified": false
+    },
+    {
+      "case": "maximum_opaque_extension",
+      "native_constructor_matches_12_byte_encoder": true,
+      "native_type_predicate_allows_record": true,
+      "strict_record_subset_accepted": true,
+      "native_fixed_record_copy_and_state_updates_executed": true,
+      "native_state_fields_match_record": true,
+      "intercepted_ui_transition_value": 2,
+      "counts": {
+        "instructions": 462,
+        "cached_record_lookups_stubbed": 1,
+        "singleton_lookups_stubbed": 1,
+        "ui_transitions_intercepted": 1
+      },
+      "input_and_stack_guards_verified": true,
+      "cached_retrieval_and_ui_services_stubbed": true,
+      "http_auth_crypto_or_native_menu_verified": false
+    },
+    {
+      "case": "oversize_native_cast",
+      "native_constructor_matches_12_byte_encoder": true,
+      "native_type_predicate_allows_record": false,
+      "strict_record_subset_accepted": false,
+      "native_fixed_record_copy_and_state_updates_executed": false,
+      "native_state_fields_match_record": false,
+      "intercepted_ui_transition_value": 2,
+      "counts": {
+        "instructions": 167,
+        "cached_record_lookups_stubbed": 1,
+        "singleton_lookups_stubbed": 0,
+        "ui_transitions_intercepted": 1
+      },
+      "input_and_stack_guards_verified": true,
+      "cached_retrieval_and_ui_services_stubbed": true,
+      "http_auth_crypto_or_native_menu_verified": false
+    },
+    {
+      "case": "short_native_cast_read",
+      "native_read_guard_trapped": true,
+      "native_acceptance_claimed": false
+    }
+  ],
+  "original_or_user_payload_bytes_published": false,
+  "server_field_values_or_meanings_verified": false,
+  "http_auth_crypto_or_native_menu_verified": false
+}
