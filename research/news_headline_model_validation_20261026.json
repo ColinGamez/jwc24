@@ -1,0 +1,171 @@
+{
+  "channel": "News Channel Japan HAGJ v7",
+  "source_bytes": 2018688,
+  "source_sha256": "8c7328c94ed44f916f104e254d07eddbaed7c0f236539a4fe4e70d893b72e852",
+  "provenance": "Original locally preserved Nintendo application executable; unchanged private input. All records and expected text are explicitly synthetic test data.",
+  "entry": "0x8000FA38",
+  "native_string_routines": [
+    "0x801881BC",
+    "0x801881D8",
+    "0x80188238"
+  ],
+  "allocation_stub": "0x80040A48",
+  "native_comparisons": 8,
+  "completed_constructor_comparisons": 7,
+  "guard_trap_comparisons": 1,
+  "ticker_table_consumer_verified": false,
+  "renderer_or_banner_verified": false,
+  "cases": [
+    {
+      "case": "explicit all-table records",
+      "constructor_finished": true,
+      "exact_display_text_verified": true,
+      "article_title_reference_verified": true,
+      "source_name_appended": true,
+      "counts": {
+        "instructions": 589,
+        "allocations": 4,
+        "native_wcslen_calls": 1,
+        "native_wcscpy_calls": 1,
+        "native_wcscat_calls": 2,
+        "ticker_header_reads": 0,
+        "ticker_table_reads": 0
+      },
+      "input_and_output_guards_verified": true,
+      "allocation_service_stubbed": true,
+      "native_constructor_or_strings_stubbed": false,
+      "ticker_table_consumer_verified": false,
+      "buffer_validation_signatures_delivery_or_rendering_verified": false
+    },
+    {
+      "case": "no separate ticker strings",
+      "constructor_finished": true,
+      "exact_display_text_verified": true,
+      "article_title_reference_verified": true,
+      "source_name_appended": true,
+      "counts": {
+        "instructions": 589,
+        "allocations": 4,
+        "native_wcslen_calls": 1,
+        "native_wcscpy_calls": 1,
+        "native_wcscat_calls": 2,
+        "ticker_header_reads": 0,
+        "ticker_table_reads": 0
+      },
+      "input_and_output_guards_verified": true,
+      "allocation_service_stubbed": true,
+      "native_constructor_or_strings_stubbed": false,
+      "ticker_table_consumer_verified": false,
+      "buffer_validation_signatures_delivery_or_rendering_verified": false
+    },
+    {
+      "case": "one separate ticker string",
+      "constructor_finished": true,
+      "exact_display_text_verified": true,
+      "article_title_reference_verified": true,
+      "source_name_appended": true,
+      "counts": {
+        "instructions": 589,
+        "allocations": 4,
+        "native_wcslen_calls": 1,
+        "native_wcscpy_calls": 1,
+        "native_wcscat_calls": 2,
+        "ticker_header_reads": 0,
+        "ticker_table_reads": 0
+      },
+      "input_and_output_guards_verified": true,
+      "allocation_service_stubbed": true,
+      "native_constructor_or_strings_stubbed": false,
+      "ticker_table_consumer_verified": false,
+      "buffer_validation_signatures_delivery_or_rendering_verified": false
+    },
+    {
+      "case": "different separate ticker strings",
+      "constructor_finished": true,
+      "exact_display_text_verified": true,
+      "article_title_reference_verified": true,
+      "source_name_appended": true,
+      "counts": {
+        "instructions": 589,
+        "allocations": 4,
+        "native_wcslen_calls": 1,
+        "native_wcscpy_calls": 1,
+        "native_wcscat_calls": 2,
+        "ticker_header_reads": 0,
+        "ticker_table_reads": 0
+      },
+      "input_and_output_guards_verified": true,
+      "allocation_service_stubbed": true,
+      "native_constructor_or_strings_stubbed": false,
+      "ticker_table_consumer_verified": false,
+      "buffer_validation_signatures_delivery_or_rendering_verified": false
+    },
+    {
+      "case": "invalid ticker table negative scope control",
+      "constructor_finished": true,
+      "exact_display_text_verified": true,
+      "article_title_reference_verified": true,
+      "source_name_appended": true,
+      "counts": {
+        "instructions": 589,
+        "allocations": 4,
+        "native_wcslen_calls": 1,
+        "native_wcscpy_calls": 1,
+        "native_wcscat_calls": 2,
+        "ticker_header_reads": 0,
+        "ticker_table_reads": 0
+      },
+      "input_and_output_guards_verified": true,
+      "allocation_service_stubbed": true,
+      "native_constructor_or_strings_stubbed": false,
+      "ticker_table_consumer_verified": false,
+      "buffer_validation_signatures_delivery_or_rendering_verified": false
+    },
+    {
+      "case": "absent references and exact whitespace/surrogate-pair title",
+      "constructor_finished": true,
+      "exact_display_text_verified": true,
+      "article_title_reference_verified": true,
+      "source_name_appended": false,
+      "counts": {
+        "instructions": 188,
+        "allocations": 3,
+        "native_wcslen_calls": 0,
+        "native_wcscpy_calls": 1,
+        "native_wcscat_calls": 0,
+        "ticker_header_reads": 0,
+        "ticker_table_reads": 0
+      },
+      "input_and_output_guards_verified": true,
+      "allocation_service_stubbed": true,
+      "native_constructor_or_strings_stubbed": false,
+      "ticker_table_consumer_verified": false,
+      "buffer_validation_signatures_delivery_or_rendering_verified": false
+    },
+    {
+      "case": "later article identifier search",
+      "constructor_finished": true,
+      "exact_display_text_verified": true,
+      "article_title_reference_verified": true,
+      "source_name_appended": true,
+      "counts": {
+        "instructions": 606,
+        "allocations": 4,
+        "native_wcslen_calls": 1,
+        "native_wcscpy_calls": 1,
+        "native_wcscat_calls": 2,
+        "ticker_header_reads": 0,
+        "ticker_table_reads": 0
+      },
+      "input_and_output_guards_verified": true,
+      "allocation_service_stubbed": true,
+      "native_constructor_or_strings_stubbed": false,
+      "ticker_table_consumer_verified": false,
+      "buffer_validation_signatures_delivery_or_rendering_verified": false
+    },
+    {
+      "case": "invalid title pointer guard",
+      "guard_trapped": true
+    }
+  ]
+}
