@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-26",
+  "component": "Local GPL Dolphin WC24 receive patch",
+  "upstream_base_commit": "cb9df1264526c37ed3901afc622c456e8ee137da",
+  "patch_sha256": "8285abe17734ec7887177238550917c26c802c05064e92c0c8afe51a471b901b",
+  "public_source_only": true,
+  "patch_apply_check_on_exported_base_files": true,
+  "patched_files_match_local_tested_source": true,
+  "files": [
+    "Source/Core/Core/CMakeLists.txt",
+    "Source/Core/Core/IOS/Network/KD/Mail/WC24FriendList.cpp",
+    "Source/Core/Core/IOS/Network/KD/Mail/WC24FriendList.h",
+    "Source/Core/Core/IOS/Network/KD/Mail/WC24Send.cpp",
+    "Source/Core/Core/IOS/Network/KD/Mail/WC24Send.h",
+    "Source/Core/Core/IOS/Network/KD/NWC24Config.cpp",
+    "Source/Core/Core/IOS/Network/KD/NWC24Config.h",
+    "Source/Core/Core/IOS/Network/KD/NetKDRequest.cpp",
+    "Source/Core/Core/IOS/Network/KD/NetKDRequest.h",
+    "Source/Core/DolphinLib.props",
+    "Source/UnitTests/Core/CMakeLists.txt",
+    "Source/Core/Core/IOS/Network/KD/Mail/WC24Receive.cpp",
+    "Source/Core/Core/IOS/Network/KD/Mail/WC24Receive.h",
+    "Source/UnitTests/Core/IOS/Network/WC24ReceiveTest.cpp"
+  ],
+  "build": {
+    "target": "tests",
+    "configuration": "Release, MSVC x64 CMake/Ninja",
+    "succeeded": true,
+    "includes_unrelated_local_SSL_diagnostics": true,
+    "installed_emulator_replaced": false
+  },
+  "verification": {
+    "new_receive_envelope_tests": 4,
+    "new_temporary_mailbox_tests": 8,
+    "filesystem_regression_tests": 18,
+    "passed": true,
+    "uses_console_data_or_credentials": false
+  },
+  "native_message_board_receipt_display_verified": false,
+  "live_receive_delete_cgi_transaction_verified": false,
+  "real_friend_registration_verified": false,
+  "dolphin_launched": false,
+  "actual_wii_backup_accessed_or_changed": false
+}

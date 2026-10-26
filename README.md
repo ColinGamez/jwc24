@@ -267,9 +267,12 @@ service when one is already running; otherwise it owns a temporary local server,
 health-checks it before launching Dolphin, and shuts it down when Dolphin exits.
 
 The server-side receive/delete protocol is implemented and independently
-tested. Dolphin 2606 still skips WC24 download entries whose destination
-filename is empty, so importing received mail into `wc24recv.mbx` requires a
-Dolphin KD implementation patch; it does not require modifying a channel WAD.
+tested. The [local Dolphin KD patch](channels/mail/dolphin_receive.md) now
+includes incoming mailbox import, persistence checks, replay handling and
+friend-status fixes. Twelve temporary-mailbox/MIME C++ tests and eighteen
+filesystem regressions pass; native Message Board receipt/display remains
+unverified. The patch has not replaced the active emulator and does not modify
+a channel WAD.
 The [shared mail delivery notes](channels/mail/README.md) distinguish retryable
 unacknowledged batches, durable acknowledgment retirement and multipart byte
 budgets from verified native receipt/display. New mail is retained across

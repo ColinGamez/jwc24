@@ -1,0 +1,1804 @@
+diff --git a/Source/Core/Core/CMakeLists.txt b/Source/Core/Core/CMakeLists.txt
+index 996b63e..4a3be76 100644
+--- a/Source/Core/Core/CMakeLists.txt
++++ b/Source/Core/Core/CMakeLists.txt
+@@ -421,6 +421,8 @@ add_library(core
+   IOS/Network/KD/Mail/MailCommon.h
+   IOS/Network/KD/Mail/WC24FriendList.cpp
+   IOS/Network/KD/Mail/WC24FriendList.h
++  IOS/Network/KD/Mail/WC24Receive.cpp
++  IOS/Network/KD/Mail/WC24Receive.h
+   IOS/Network/KD/Mail/WC24Send.cpp
+   IOS/Network/KD/Mail/WC24Send.h
+   IOS/Network/MACUtils.cpp
+diff --git a/Source/Core/Core/IOS/Network/KD/Mail/WC24FriendList.cpp b/Source/Core/Core/IOS/Network/KD/Mail/WC24FriendList.cpp
+index b150665..bc3e9fa 100644
+--- a/Source/Core/Core/IOS/Network/KD/Mail/WC24FriendList.cpp
++++ b/Source/Core/Core/IOS/Network/KD/Mail/WC24FriendList.cpp
+@@ -4,6 +4,7 @@
+ #include "Core/IOS/Network/KD/Mail/WC24FriendList.h"
+ 
+ #include <algorithm>
++#include <cstring>
+ #include <memory>
+ #include <string_view>
+ #include <vector>
+@@ -22,25 +23,31 @@ WC24FriendList::WC24FriendList(std::shared_ptr<FS::FileSystem> fs) : m_fs{std::m
+   ReadFriendList();
+ }
+ 
+-void WC24FriendList::ReadFriendList()
++bool WC24FriendList::ReadFriendList()
+ {
++  FriendList data{};
+   const auto file = m_fs->OpenFile(PID_KD, PID_KD, FRIEND_LIST_PATH, FS::Mode::Read);
+-  if (!file || !file->Read(&m_data, 1))
+-    return;
+-
+-  const bool success = CheckFriendList();
+-  if (!success)
+-    ERROR_LOG_FMT(IOS_WC24, "There is an error in the Receive List for WC24 mail");
++  if (!file || file->GetStatus()->size != sizeof(data) || !file->Read(&data, 1) ||
++      Common::swap32(data.header.magic) != FRIEND_LIST_MAGIC)
++    return false;
++  m_data = data;
++  return true;
+ }
+ 
+-void WC24FriendList::WriteFriendList() const
++bool WC24FriendList::WriteFriendList() const
+ {
+   constexpr FS::Modes public_modes{FS::Mode::ReadWrite, FS::Mode::ReadWrite, FS::Mode::ReadWrite};
+   m_fs->CreateFullPath(PID_KD, PID_KD, FRIEND_LIST_PATH, 0, public_modes);
+   const auto file = m_fs->CreateAndOpenFile(PID_KD, PID_KD, FRIEND_LIST_PATH, public_modes);
+-
+-  if (!file || !file->Write(&m_data, 1))
+-    ERROR_LOG_FMT(IOS_WC24, "Failed to open or write WC24 Receive list file");
++  FriendList persisted{};
++  if (!file || !file->Write(&m_data, 1) || file->GetStatus()->size != sizeof(m_data) ||
++      !file->Seek(0, FS::SeekMode::Set) || !file->Read(&persisted, 1) ||
++      std::memcmp(&persisted, &m_data, sizeof(m_data)) != 0)
++  {
++    ERROR_LOG_FMT(IOS_WC24, "Failed to persist WC24 friend list.");
++    return false;
++  }
++  return true;
+ }
+ 
+ bool WC24FriendList::CheckFriendList() const
+@@ -59,7 +66,35 @@ bool WC24FriendList::CheckFriendList() const
+ bool WC24FriendList::DoesFriendExist(u64 friend_id) const
+ {
+   return std::ranges::any_of(m_data.friend_codes,
+-                             [&friend_id](const u64 v) { return v == friend_id; });
++                             [&friend_id](const u64 v) { return Common::swap64(v) == friend_id; });
++}
++
++bool WC24FriendList::ConfirmFriend(u64 friend_id)
++{
++  if (!ReadFriendList())
++    return false;
++  for (u32 index = 0; index < MAX_ENTRIES; ++index)
++  {
++    if (Common::swap64(m_data.friend_codes[index]) != friend_id ||
++        static_cast<FriendType>(Common::swap32(m_data.entries[index].friend_type)) !=
++            FriendType::Wii)
++    {
++      continue;
++    }
++
++    if (static_cast<FriendStatus>(Common::swap32(m_data.entries[index].status)) ==
++        FriendStatus::Unconfirmed)
++    {
++      m_data.entries[index].status = Common::swap32(static_cast<u32>(FriendStatus::Confirmed));
++      if (!WriteFriendList())
++      {
++        ReadFriendList();
++        return false;
++      }
++    }
++    return true;
++  }
++  return false;
+ }
+ 
+ std::vector<u64> WC24FriendList::GetUnconfirmedFriends() const
+diff --git a/Source/Core/Core/IOS/Network/KD/Mail/WC24FriendList.h b/Source/Core/Core/IOS/Network/KD/Mail/WC24FriendList.h
+index 99d899f..4652ab8 100644
+--- a/Source/Core/Core/IOS/Network/KD/Mail/WC24FriendList.h
++++ b/Source/Core/Core/IOS/Network/KD/Mail/WC24FriendList.h
+@@ -27,11 +27,12 @@ public:
+   explicit WC24FriendList(std::shared_ptr<FS::FileSystem> fs);
+   static u64 ConvertEmailToFriendCode(std::string_view email);
+ 
+-  void ReadFriendList();
++  bool ReadFriendList();
+   bool CheckFriendList() const;
+-  void WriteFriendList() const;
++  bool WriteFriendList() const;
+ 
+   bool DoesFriendExist(u64 friend_id) const;
++  bool ConfirmFriend(u64 friend_id);
+   std::vector<u64> GetUnconfirmedFriends() const;
+ 
+ private:
+@@ -89,7 +90,7 @@ private:
+   static_assert(std::is_trivially_copyable_v<FriendList>);
+ #pragma pack(pop)
+ 
+-  FriendList m_data;
++  FriendList m_data{};
+   std::shared_ptr<FS::FileSystem> m_fs;
+ };
+ }  // namespace NWC24::Mail
+diff --git a/Source/Core/Core/IOS/Network/KD/Mail/WC24Send.cpp b/Source/Core/Core/IOS/Network/KD/Mail/WC24Send.cpp
+index f92a24c..6e5f40e 100644
+--- a/Source/Core/Core/IOS/Network/KD/Mail/WC24Send.cpp
++++ b/Source/Core/Core/IOS/Network/KD/Mail/WC24Send.cpp
+@@ -60,8 +60,9 @@ bool WC24SendList::ReadSendList()
+   }
+ 
+   // Make sure that next_entry_offset is not out of bounds.
+-  if (m_data.header.next_entry_offset % 128 != 0 ||
+-      m_data.header.next_entry_offset >
++  const u32 next_entry_offset = Common::swap32(m_data.header.next_entry_offset);
++  if (next_entry_offset < sizeof(MailListHeader) || next_entry_offset % 128 != 0 ||
++      next_entry_offset >
+           sizeof(MailListEntry) * (MAX_ENTRIES - 1) + sizeof(MailListEntry))
+   {
+     const std::optional<u32> next_entry_index = GetNextFreeEntryIndex();
+@@ -88,6 +89,13 @@ bool WC24SendList::IsDisabled() const
+   return m_is_disabled;
+ }
+ 
++void WC24SendList::SetMailFlag(std::string_view mail_flag)
++{
++  std::fill(m_data.header.mail_flag.begin(), m_data.header.mail_flag.end(), '\0');
++  std::copy_n(mail_flag.begin(), std::min(mail_flag.size(), m_data.header.mail_flag.size() - 1),
++              m_data.header.mail_flag.begin());
++}
++
+ void WC24SendList::WriteSendList() const
+ {
+   ASSERT(!IsDisabled());
+@@ -148,7 +156,7 @@ ErrorCode WC24SendList::DeleteMessage(u32 index)
+   m_data.header.next_entry_id = Common::swap32(GetEntryId(index));
+   m_data.header.next_entry_offset = CalculateFileOffset(index);
+   m_data.header.total_size_of_messages =
+-      Common::swap32(m_data.header.total_size_of_messages) - GetMailSize(index);
++      Common::swap32(Common::swap32(m_data.header.total_size_of_messages) - GetMailSize(index));
+ 
+   std::memset(&m_data.entries[index], 0, sizeof(MailListEntry));
+   return WC24_OK;
+@@ -206,17 +214,19 @@ std::optional<u32> WC24SendList::GetNextFreeEntryIndex() const
+   return std::nullopt;
+ }
+ 
+-ErrorCode WC24SendList::AddRegistrationMessages(const WC24FriendList& friend_list, u64 sender)
++ErrorCode WC24SendList::AddRegistrationMessages(std::span<const u64> friend_codes, u64 sender)
+ {
+   ASSERT(!IsDisabled());
+   // It is possible that the user composed a message before SendMail was called.
+   ReadSendList();
+ 
+-  const std::vector<u64> unconfirmed_friends = friend_list.GetUnconfirmedFriends();
+-  for (const u64 code : unconfirmed_friends)
++  for (const u64 code : friend_codes)
+   {
+     const u32 entry_index = GetNextEntryIndex();
++    if (entry_index >= MAX_ENTRIES)
++      return WC24_ERR_FILE_WRITE;
+     const u32 msg_id = GetNextEntryId();
++    m_data.entries[entry_index] = {};
+     m_data.entries[entry_index].id = Common::swap32(msg_id);
+ 
+     const std::time_t t = std::time(nullptr);
+@@ -240,7 +250,8 @@ ErrorCode WC24SendList::AddRegistrationMessages(const WC24FriendList& friend_lis
+     m_data.header.number_of_mail = Common::swap32(GetNumberOfMail() + 1);
+     m_data.header.next_entry_id = Common::swap32(msg_id + 1);
+     m_data.header.total_size_of_messages =
+-        Common::swap32(m_data.header.total_size_of_messages) + static_cast<u32>(message.size());
++        Common::swap32(Common::swap32(m_data.header.total_size_of_messages) +
++                       static_cast<u32>(message.size()));
+ 
+     const std::optional<u32> next_entry_index = GetNextFreeEntryIndex();
+     if (!next_entry_index)
+diff --git a/Source/Core/Core/IOS/Network/KD/Mail/WC24Send.h b/Source/Core/Core/IOS/Network/KD/Mail/WC24Send.h
+index d6de3b7..9f9a919 100644
+--- a/Source/Core/Core/IOS/Network/KD/Mail/WC24Send.h
++++ b/Source/Core/Core/IOS/Network/KD/Mail/WC24Send.h
+@@ -6,6 +6,7 @@
+ #include <array>
+ #include <memory>
+ #include <optional>
++#include <span>
+ #include <string>
+ #include <string_view>
+ #include <vector>
+@@ -38,6 +39,7 @@ public:
+   bool IsDisabled() const;
+ 
+   std::string_view GetMailFlag() const;
++  void SetMailFlag(std::string_view mail_flag);
+   u32 GetNumberOfMail() const;
+   std::vector<u32> GetMailToSend() const;
+   u32 GetEntryId(u32 entry_index) const;
+@@ -48,7 +50,7 @@ public:
+   u32 GetNextEntryIndex() const;
+   std::optional<u32> GetNextFreeEntryIndex() const;
+ 
+-  ErrorCode AddRegistrationMessages(const WC24FriendList& friend_list, u64 sender);
++  ErrorCode AddRegistrationMessages(std::span<const u64> friend_codes, u64 sender);
+ 
+ private:
+   static constexpr u32 MAX_ENTRIES = 127;
+@@ -61,11 +63,11 @@ private:
+   // is written to nwc24fl.bin, although it has been observed to always be 0.
+   static constexpr char MAIL_REGISTRATION_STRING[] =
+       "MAIL FROM: {0:016d}@wii.com\r\n"
+-      "RCPT TO: {1:016d}wii.com\r\n"
++      "RCPT TO: w{1:016d}@wii.com\r\n"
+       "DATA\r\n"
+       "Date: {2:%a, %d %b %Y %X} GMT\r\n"
+-      "From: {0:016d}@wii.com\r\n"
+-      "To: {1:016d}@wii.com\r\n"
++      "From: w{0:016d}@wii.com\r\n"
++      "To: w{1:016d}@wii.com\r\n"
+       "Message-Id: <00002000B0DF6BB47FE0303E0DB0D@wii.com>\r\n"
+       "Subject: WC24 Cmd Message\r\n"
+       "X-Wii-AppId: 0-00000001-0001\r\n"
+diff --git a/Source/Core/Core/IOS/Network/KD/NWC24Config.cpp b/Source/Core/Core/IOS/Network/KD/NWC24Config.cpp
+index b191642..fcca70d 100644
+--- a/Source/Core/Core/IOS/Network/KD/NWC24Config.cpp
++++ b/Source/Core/Core/IOS/Network/KD/NWC24Config.cpp
+@@ -235,6 +235,18 @@ std::string NWC24Config::GetAccountURL() const
+   return {m_data.http_urls[0], size};
+ }
+ 
++std::string NWC24Config::GetReceiveURL() const
++{
++  const size_t size = strnlen(m_data.http_urls[2], MAX_URL_LENGTH);
++  return {m_data.http_urls[2], size};
++}
++
++std::string NWC24Config::GetDeleteURL() const
++{
++  const size_t size = strnlen(m_data.http_urls[3], MAX_URL_LENGTH);
++  return {m_data.http_urls[3], size};
++}
++
+ void NWC24Config::SetMailCheckID(std::string_view mlchkid)
+ {
+   std::strncpy(m_data.mlchkid, mlchkid.data(), std::size(m_data.mlchkid));
+diff --git a/Source/Core/Core/IOS/Network/KD/NWC24Config.h b/Source/Core/Core/IOS/Network/KD/NWC24Config.h
+index 9db688e..0beb20d 100644
+--- a/Source/Core/Core/IOS/Network/KD/NWC24Config.h
++++ b/Source/Core/Core/IOS/Network/KD/NWC24Config.h
+@@ -74,6 +74,8 @@ public:
+ 
+   std::string_view GetMlchkid() const;
+   std::string GetCheckURL() const;
++  std::string GetReceiveURL() const;
++  std::string GetDeleteURL() const;
+   std::string GetSendURL() const;
+   std::string_view GetPassword() const;
+ 
+diff --git a/Source/Core/Core/IOS/Network/KD/NetKDRequest.cpp b/Source/Core/Core/IOS/Network/KD/NetKDRequest.cpp
+index ed320f5..c00eeb2 100644
+--- a/Source/Core/Core/IOS/Network/KD/NetKDRequest.cpp
++++ b/Source/Core/Core/IOS/Network/KD/NetKDRequest.cpp
+@@ -154,11 +154,25 @@ s32 NWC24MakeUserID(u64* nwc24_id, u32 hollywood_id, u16 id_ctr, HardwareModel h
+ NetKDRequestDevice::NetKDRequestDevice(EmulationKernel& ios, const std::string& device_name,
+                                        const std::shared_ptr<NetKDTimeDevice>& time_device)
+     : EmulationDevice(ios, device_name), m_config{ios.GetFS()}, m_dl_list{ios.GetFS()},
+-      m_send_list{ios.GetFS()}, m_friend_list{ios.GetFS()}, m_time_device{time_device}
++      m_send_list{ios.GetFS()}, m_receive_list{ios.GetFS()}, m_friend_list{ios.GetFS()},
++      m_time_device{time_device}
+ {
+   // Enable all NWC24 permissions
+   m_scheduler_buffer[1] = Common::swap32(-1);
+ 
++  // The scheduler status is volatile, but received mail persists in wc24recv.ctl. Re-announce
++  // queued messages after an IOS restart so the Wii Menu cannot miss the brief receive event.
++  m_receive_list.ProcessFriendRegistrationMessages(m_friend_list);
++  const u32 queued_received_mail = m_receive_list.GetNumberOfMail();
++  if (queued_received_mail != 0)
++  {
++    constexpr u32 MSG_ARRIVED = 1 << 0;
++    constexpr u32 MSG_ARRIVED_FOR_MENU = 1 << 1;
++    m_scheduler_buffer[3] = Common::swap32(MSG_ARRIVED | MSG_ARRIVED_FOR_MENU);
++    m_scheduler_buffer[7] = Common::swap32(queued_received_mail);
++    m_scheduler_buffer[12] = Common::swap32(1);
++  }
++
+   m_work_queue.Reset("WiiConnect24 Worker", [this](const AsyncTask& task) {
+     const IPCReply reply = task.handler();
+     {
+@@ -167,7 +181,10 @@ NetKDRequestDevice::NetKDRequestDevice(EmulationKernel& ios, const std::string&
+     }
+   });
+ 
+-  m_handle_mail = !ios.GetIOSC().IsUsingDefaultId() && !m_send_list.IsDisabled();
++  // Local WC24 replacement services can safely use Dolphin's generated console identity.
++  // The account credentials in nwc24msg.cfg authenticate mail independently of the IOSC key.
++  m_handle_mail =
++      m_config.IsRegistered() && !m_send_list.IsDisabled() && !m_receive_list.IsDisabled();
+   m_scheduler_work_queue.Reset("WiiConnect24 Scheduler Worker");
+ 
+   m_scheduler_timer_thread = std::thread([this] { SchedulerTimer(); });
+@@ -275,6 +292,12 @@ void NetKDRequestDevice::SchedulerWorker(const SchedulerEvent event)
+     {
+       LogError(ErrorType::CheckMail, code);
+     }
++    else if (mail_flag)
++    {
++      code = KDReceiveMail();
++      if (code != NWC24::WC24_OK)
++        LogError(ErrorType::ReceiveMail, code);
++    }
+ 
+     code = KDSendMail();
+     if (code != NWC24::WC24_OK)
+@@ -343,6 +366,7 @@ void NetKDRequestDevice::LogError(ErrorType error_type, s32 error_code)
+ 
+ NWC24::ErrorCode NetKDRequestDevice::KDCheckMail(u32* mail_flag, u32* interval)
+ {
++  std::lock_guard transaction_lg(m_mail_lock);
+   bool success = false;
+   Common::ScopeGuard state_guard([&] {
+     std::lock_guard lg(m_scheduler_buffer_lock);
+@@ -407,6 +431,7 @@ NWC24::ErrorCode NetKDRequestDevice::KDCheckMail(u32* mail_flag, u32* interval)
+   }
+ 
+   *mail_flag = std::strncmp(str_mail_flag.data(), m_send_list.GetMailFlag().data(), 22) != 0;
++  m_pending_mail_flag = str_mail_flag;
+ 
+   {
+     std::lock_guard scheduler_lg(m_scheduler_lock);
+@@ -509,8 +534,90 @@ NWC24::ErrorCode NetKDRequestDevice::DetermineSubtask(u16 entry_index,
+   return NWC24::WC24_ERR_INVALID_VALUE;
+ }
+ 
++NWC24::ErrorCode NetKDRequestDevice::KDReceiveMail()
++{
++  // Explicit ioctl requests and the scheduler share the mailbox, friend list and HTTP client.
++  std::lock_guard mail_lg(m_mail_lock);
++  {
++    std::lock_guard lg(m_scheduler_buffer_lock);
++    m_scheduler_buffer[4] = Common::swap32(static_cast<u32>(CurrentFunction::Receive));
++  }
++  Common::ScopeGuard state_guard([&] {
++    std::lock_guard lg(m_scheduler_buffer_lock);
++    m_scheduler_buffer[4] = static_cast<u32>(CurrentFunction::None);
++  });
++
++  const Common::HttpRequest::Headers form_headers = {
++      {"Content-Type", "application/x-www-form-urlencoded"}};
++  const std::string form_data =
++      fmt::format("mlid=w{:016}&passwd={}&maxsize={}", m_config.Id(), m_config.GetPassword(),
++                  MAX_MAIL_SIZE);
++  const Common::HttpRequest::Response response =
++      m_http.Post(m_config.GetReceiveURL(), form_data, form_headers);
++  if (!response)
++  {
++    ERROR_LOG_FMT(IOS_WC24, "NET_KD_REQ: Failed to receive mail from {}.",
++                  m_config.GetReceiveURL());
++    return NWC24::WC24_ERR_SERVER;
++  }
++
++  const std::string response_str{response->begin(), response->end()};
++  const auto parsed = NWC24::Mail::ParseReceiveEnvelope(m_http.GetHeaderValue("Content-Type"), response_str);
++  if (!parsed || GetValueFromCGIResponse(std::string{parsed->front()}, "cd") != "100")
++    return NWC24::WC24_ERR_SERVER;
++  const auto& bodies = *parsed;
++
++  u32 received = 0;
++  for (const std::string_view body : std::span{bodies}.subspan(1))
++  {
++    const std::span message{reinterpret_cast<const u8*>(body.data()), body.size()};
++    const NWC24::ErrorCode result = m_receive_list.AddMessage(message);
++    if (result != NWC24::WC24_OK)
++      return result;
++    ++received;
++  }
++
++  m_receive_list.ProcessFriendRegistrationMessages(m_friend_list);
++
++  if (received != 0)
++  {
++    const std::string delete_form =
++        fmt::format("mlid=w{:016}&passwd={}&delnum={}", m_config.Id(), m_config.GetPassword(),
++                    received);
++    const Common::HttpRequest::Response delete_response =
++        m_http.Post(m_config.GetDeleteURL(), delete_form, form_headers);
++    if (!delete_response ||
++        GetValueFromCGIResponse(std::string{delete_response->begin(), delete_response->end()},
++                                "cd") != "100")
++    {
++      return NWC24::WC24_ERR_SERVER;
++    }
++
++    // NWC24iGetSchedulerStat forwards this flag into the title-side NWC24 library.
++    // The Wii Menu uses both bits to recognize newly received Message Board mail.
++    constexpr u32 MSG_ARRIVED = 1 << 0;
++    constexpr u32 MSG_ARRIVED_FOR_MENU = 1 << 1;
++    std::lock_guard lg(m_scheduler_buffer_lock);
++    m_scheduler_buffer[3] = Common::swap32(MSG_ARRIVED | MSG_ARRIVED_FOR_MENU);
++    m_scheduler_buffer[7] =
++        Common::swap32(Common::swap32(m_scheduler_buffer[7]) + received);
++    m_scheduler_buffer[12] = Common::swap32(Common::swap32(m_scheduler_buffer[12]) + 1);
++  }
++
++  if (!m_pending_mail_flag.empty())
++  {
++    m_send_list.SetMailFlag(m_pending_mail_flag);
++    m_send_list.WriteSendList();
++  }
++  NOTICE_LOG_FMT(IOS_WC24, "Received {} Wii Mail message(s).", received);
++  return NWC24::WC24_OK;
++}
++
+ NWC24::ErrorCode NetKDRequestDevice::KDSendMail()
+ {
++  // An explicit SendMail request can overlap a scheduler event. The send-list object and its VFF
++  // are shared, so serialize the complete transaction as well as registration discovery.
++  std::lock_guard send_lg(m_mail_lock);
+   bool success = false;
+   Common::ScopeGuard exit_guard([&] {
+     std::lock_guard lg(m_scheduler_buffer_lock);
+@@ -530,6 +637,24 @@ NWC24::ErrorCode NetKDRequestDevice::KDSendMail()
+     m_scheduler_buffer[4] = Common::swap32(static_cast<u32>(CurrentFunction::Send));
+   }
+ 
++  // The Wii Menu updates nwc24fl.bin after IOS has started, so refresh it before looking for
++  // newly added friends. Queue each unconfirmed friend once per IOS session; otherwise the
++  // minute-level scheduler would generate duplicate registration mail continuously.
++  {
++    m_friend_list.ReadFriendList();
++    std::vector<u64> new_friends = m_friend_list.GetUnconfirmedFriends();
++    std::erase_if(new_friends,
++                  [this](u64 code) { return m_registration_attempts.contains(code); });
++    if (!new_friends.empty())
++    {
++      const NWC24::ErrorCode registration_result =
++          m_send_list.AddRegistrationMessages(new_friends, m_config.Id());
++      if (registration_result != NWC24::WC24_OK)
++        return registration_result;
++      m_registration_attempts.insert(new_friends.begin(), new_friends.end());
++    }
++  }
++
+   m_send_list.ReadSendList();
+   const std::string auth =
+       fmt::format("mlid=w{:016}\r\npasswd={}", m_config.Id(), m_config.GetPassword());
+@@ -606,14 +731,6 @@ NWC24::ErrorCode NetKDRequestDevice::KDSendMail()
+   for (auto it = mails.rbegin(); it != mails.rend(); ++it)
+   {
+     const u32 entry_id = m_send_list.GetEntryId(*it);
+-    Common::ScopeGuard delete_guard([&] {
+-      NWC24::ErrorCode res = m_send_list.DeleteMessage(*it);
+-      if (res != NWC24::WC24_OK)
+-      {
+-        LogError(ErrorType::SendMail, res);
+-      }
+-    });
+-
+     const std::string value = GetValueFromCGIResponse(response_str, fmt::format("cd{}", entry_id));
+ 
+     s32 cgi_code{};
+@@ -629,6 +746,13 @@ NWC24::ErrorCode NetKDRequestDevice::KDSendMail()
+     {
+       ERROR_LOG_FMT(IOS_WC24, "Mail server failed to save mail at index {}", entry_id);
+       LogError(ErrorType::CGI, cgi_code);
++      continue;
++    }
++
++    NWC24::ErrorCode res = m_send_list.DeleteMessage(*it);
++    if (res != NWC24::WC24_OK)
++    {
++      LogError(ErrorType::SendMail, res);
+     }
+   }
+ 
+@@ -639,6 +763,7 @@ NWC24::ErrorCode NetKDRequestDevice::KDSendMail()
+ NWC24::ErrorCode NetKDRequestDevice::KDDownload(const u16 entry_index,
+                                                 const std::optional<u8> subtask_id)
+ {
++  std::lock_guard transaction_lg(m_mail_lock);
+   bool success = false;
+   Common::ScopeGuard state_guard([&] {
+     const u64 current_utc = m_time_device->GetAdjustedUTC();
+@@ -802,6 +927,22 @@ IPCReply NetKDRequestDevice::HandleNWC24SendMailNow(const IOCtlRequest& request)
+   return IPCReply(IPC_SUCCESS);
+ }
+ 
++IPCReply NetKDRequestDevice::HandleNWC24ReceiveMailNow(const IOCtlRequest& request)
++{
++  auto& memory = GetSystem().GetMemory();
++
++  if (!m_handle_mail)
++  {
++    LogError(ErrorType::ReceiveMail, NWC24::WC24_ERR_BROKEN);
++    WriteReturnValue(memory, NWC24::WC24_ERR_BROKEN, request.buffer_out);
++    return IPCReply(IPC_SUCCESS);
++  }
++
++  const NWC24::ErrorCode reply = KDReceiveMail();
++  WriteReturnValue(memory, reply, request.buffer_out);
++  return IPCReply(IPC_SUCCESS);
++}
++
+ IPCReply NetKDRequestDevice::HandleNWC24DownloadNowEx(const IOCtlRequest& request)
+ {
+   auto& system = GetSystem();
+@@ -874,6 +1015,7 @@ IPCReply NetKDRequestDevice::HandleNWC24DownloadNowEx(const IOCtlRequest& reques
+ 
+ IPCReply NetKDRequestDevice::HandleRequestRegisterUserId(const IOS::HLE::IOCtlRequest& request)
+ {
++  std::lock_guard transaction_lg(m_mail_lock);
+   auto& system = GetSystem();
+   auto& memory = system.GetMemory();
+ 
+@@ -1142,8 +1284,8 @@ std::optional<IPCReply> NetKDRequestDevice::IOCtl(const IOCtlRequest& request)
+   }
+ 
+   case IOCTL_NWC24_SAVE_MAIL_NOW:
+-    INFO_LOG_FMT(IOS_WC24, "NET_KD_REQ: IOCTL_NWC24_SAVE_MAIL_NOW - NI");
+-    break;
++    // Saving mail asks KD to flush the current send mailbox immediately.
++    return LaunchAsyncTask(&NetKDRequestDevice::HandleNWC24SendMailNow, request);
+ 
+   case IOCTL_NWC24_CHECK_MAIL_NOW:
+     return LaunchAsyncTask(&NetKDRequestDevice::HandleNWC24CheckMailNow, request);
+@@ -1154,6 +1296,9 @@ std::optional<IPCReply> NetKDRequestDevice::IOCtl(const IOCtlRequest& request)
+   case IOCTL_NWC24_SEND_MAIL_NOW:
+     return LaunchAsyncTask(&NetKDRequestDevice::HandleNWC24SendMailNow, request);
+ 
++  case IOCTL_NWC24_RECEIVE_MAIL_NOW:
++    return LaunchAsyncTask(&NetKDRequestDevice::HandleNWC24ReceiveMailNow, request);
++
+   case IOCTL_NWC24_REQUEST_SHUTDOWN:
+   {
+     if (request.buffer_in == 0 || request.buffer_in % 4 != 0 || request.buffer_in_size < 8 ||
+diff --git a/Source/Core/Core/IOS/Network/KD/NetKDRequest.h b/Source/Core/Core/IOS/Network/KD/NetKDRequest.h
+index e41b554..284a630 100644
+--- a/Source/Core/Core/IOS/Network/KD/NetKDRequest.h
++++ b/Source/Core/Core/IOS/Network/KD/NetKDRequest.h
+@@ -6,6 +6,7 @@
+ #include <array>
+ #include <memory>
+ #include <queue>
++#include <set>
+ #include <string>
+ 
+ #include "Common/CommonTypes.h"
+@@ -14,6 +15,7 @@
+ #include "Common/WorkQueueThread.h"
+ #include "Core/IOS/Device.h"
+ #include "Core/IOS/Network/KD/Mail/WC24FriendList.h"
++#include "Core/IOS/Network/KD/Mail/WC24Receive.h"
+ #include "Core/IOS/Network/KD/Mail/WC24Send.h"
+ #include "Core/IOS/Network/KD/NWC24Config.h"
+ #include "Core/IOS/Network/KD/NWC24DL.h"
+@@ -87,9 +89,11 @@ private:
+   };
+ 
+   IPCReply HandleNWC24SendMailNow(const IOCtlRequest& request);
++  IPCReply HandleNWC24ReceiveMailNow(const IOCtlRequest& request);
+   NWC24::ErrorCode KDCheckMail(u32* mail_flag, u32* interval);
+   IPCReply HandleRequestRegisterUserId(const IOCtlRequest& request);
+   NWC24::ErrorCode KDSendMail();
++  NWC24::ErrorCode KDReceiveMail();
+ 
+   void LogError(ErrorType error_type, s32 error_code);
+   void SchedulerTimer();
+@@ -108,7 +112,10 @@ private:
+   NWC24::NWC24Config m_config;
+   NWC24::NWC24Dl m_dl_list;
+   NWC24::Mail::WC24SendList m_send_list;
++  NWC24::Mail::WC24ReceiveList m_receive_list;
+   NWC24::Mail::WC24FriendList m_friend_list;
++  std::mutex m_mail_lock;
++  std::set<u64> m_registration_attempts;
+   Common::WorkQueueThreadSP<AsyncTask> m_work_queue;
+   Common::AsyncWorkThreadSP m_scheduler_work_queue;
+   std::mutex m_async_reply_lock;
+@@ -120,8 +127,11 @@ private:
+   // TODO: Maybe move away from Common::HttpRequest?
+   Common::HttpRequest m_http{std::chrono::minutes{1}};
+   u32 m_download_span = 2;
+-  u32 m_mail_span = 1;
++  // Perform the first mail check as soon as KD starts. The Wii Menu's first mailbox import
++  // happens during startup, so delaying the initial check by a minute makes it miss new mail.
++  u32 m_mail_span = 0;
+   bool m_handle_mail;
++  std::string m_pending_mail_flag;
+   Common::Event m_shutdown_event;
+   std::mutex m_scheduler_lock;
+   std::thread m_scheduler_timer_thread;
+diff --git a/Source/Core/DolphinLib.props b/Source/Core/DolphinLib.props
+index d343d4b..33b999b 100644
+--- a/Source/Core/DolphinLib.props
++++ b/Source/Core/DolphinLib.props
+@@ -404,6 +404,7 @@
+     <ClInclude Include="Core\IOS\Network\KD\WC24File.h" />
+     <ClInclude Include="Core\IOS\Network\KD\Mail\MailCommon.h" />
+     <ClInclude Include="Core\IOS\Network\KD\Mail\WC24FriendList.h" />
++    <ClInclude Include="Core\IOS\Network\KD\Mail\WC24Receive.h" />
+     <ClInclude Include="Core\IOS\Network\KD\Mail\WC24Send.h" />
+     <ClInclude Include="Core\IOS\Network\MACUtils.h" />
+     <ClInclude Include="Core\IOS\Network\NCD\Manage.h" />
+@@ -1114,6 +1115,7 @@
+     <ClCompile Include="Core\IOS\Network\KD\NWC24DL.cpp" />
+     <ClCompile Include="Core\IOS\Network\KD\VFF\VFFUtil.cpp" />
+     <ClCompile Include="Core\IOS\Network\KD\Mail\WC24FriendList.cpp" />
++    <ClCompile Include="Core\IOS\Network\KD\Mail\WC24Receive.cpp" />
+     <ClCompile Include="Core\IOS\Network\KD\Mail\WC24Send.cpp" />
+     <ClCompile Include="Core\IOS\Network\MACUtils.cpp" />
+     <ClCompile Include="Core\IOS\Network\NCD\Manage.cpp" />
+diff --git a/Source/UnitTests/Core/CMakeLists.txt b/Source/UnitTests/Core/CMakeLists.txt
+index 30aeae4..9fb3e64 100644
+--- a/Source/UnitTests/Core/CMakeLists.txt
++++ b/Source/UnitTests/Core/CMakeLists.txt
+@@ -15,6 +15,7 @@ add_dolphin_test(DSPAssemblyTest
+ add_dolphin_test(ESFormatsTest IOS/ES/FormatsTest.cpp)
+ 
+ add_dolphin_test(FileSystemTest IOS/FS/FileSystemTest.cpp)
++add_dolphin_test(WC24ReceiveTest IOS/Network/WC24ReceiveTest.cpp)
+ 
+ add_dolphin_test(SkylandersTest IOS/USB/SkylandersTest.cpp)
+ 
+diff --git a/Source/Core/Core/IOS/Network/KD/Mail/WC24Receive.cpp b/Source/Core/Core/IOS/Network/KD/Mail/WC24Receive.cpp
+new file mode 100644
+--- /dev/null
++++ b/Source/Core/Core/IOS/Network/KD/Mail/WC24Receive.cpp
+@@ -0,0 +1,755 @@
++// Copyright 2026 Dolphin Emulator Project
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include "Core/IOS/Network/KD/Mail/WC24Receive.h"
++
++#include <algorithm>
++#include <chrono>
++#include <charconv>
++#include <cctype>
++#include <cstdio>
++#include <cstring>
++#include <string_view>
++#include <utility>
++#include <vector>
++
++#include <fmt/format.h>
++
++#include "Common/Logging/Log.h"
++#include "Common/Swap.h"
++#include "Core/IOS/FS/FileSystem.h"
++#include "Core/IOS/Network/KD/VFF/VFFUtil.h"
++#include "Core/IOS/Uids.h"
++
++namespace IOS::HLE::NWC24::Mail
++{
++constexpr const char RECEIVE_LIST_PATH[] = "/" WII_WC24CONF_DIR "/mbox/wc24recv.ctl";
++
++namespace
++{
++constexpr u32 MSG_FOR_RECIPIENT = 1 << 0;
++constexpr u32 MSG_FOR_PUBLIC = 1 << 1;
++constexpr u32 MSG_FOR_APP = 1 << 2;
++constexpr u32 MSG_FOR_MENU = 1 << 3;
++constexpr u32 MSG_TO_RECV = 1 << 5;
++constexpr u32 MSG_INITIALIZED = 1 << 8;
++constexpr u32 MSG_DELIVERING = 1 << 9;
++// RevoEX (used by Wii Menu 4.x) marks initialized message objects with this
++// additional type bit. NWC24GetMsgObj rejects entries created without it.
++constexpr u32 MSG_REVOEX_TYPE = 1 << 21;
++
++struct FieldLocation
++{
++  u32 offset = 0;
++  u32 size = 0;
++};
++
++FieldLocation FindHeader(std::string_view message, std::string_view name)
++{
++  const size_t headers_end = message.find("\r\n\r\n");
++  if (headers_end == std::string_view::npos)
++    return {};
++
++  size_t line_start = 0;
++  while (line_start < headers_end)
++  {
++    const size_t line_end = message.find("\r\n", line_start);
++    const std::string_view line = message.substr(line_start, line_end - line_start);
++    if (line.size() > name.size() + 1 &&
++        std::equal(name.begin(), name.end(), line.begin(),
++                   [](char lhs, char rhs) {
++                     return std::tolower(static_cast<unsigned char>(lhs)) ==
++                            std::tolower(static_cast<unsigned char>(rhs));
++                   }) &&
++        line[name.size()] == ':')
++    {
++      size_t value_start = name.size() + 1;
++      while (value_start < line.size() && line[value_start] == ' ')
++        ++value_start;
++      return {static_cast<u32>(line_start + value_start),
++              static_cast<u32>(line.size() - value_start)};
++    }
++    if (line_end == std::string_view::npos)
++      break;
++    line_start = line_end + 2;
++  }
++  return {};
++}
++
++FieldLocation FindHeaderInRange(std::string_view message, size_t headers_start,
++                                size_t headers_end, std::string_view name)
++{
++  size_t line_start = headers_start;
++  while (line_start < headers_end)
++  {
++    const size_t line_end = std::min(message.find("\r\n", line_start), headers_end);
++    const std::string_view line = message.substr(line_start, line_end - line_start);
++    if (line.size() > name.size() + 1 &&
++        std::equal(name.begin(), name.end(), line.begin(),
++                   [](char lhs, char rhs) {
++                     return std::tolower(static_cast<unsigned char>(lhs)) ==
++                            std::tolower(static_cast<unsigned char>(rhs));
++                   }) &&
++        line[name.size()] == ':')
++    {
++      size_t value_start = name.size() + 1;
++      while (value_start < line.size() && line[value_start] == ' ')
++        ++value_start;
++      return {static_cast<u32>(line_start + value_start),
++              static_cast<u32>(line.size() - value_start)};
++    }
++    if (line_end == headers_end)
++      break;
++    line_start = line_end + 2;
++  }
++  return {};
++}
++
++FieldLocation FindParameter(std::string_view message, FieldLocation field,
++                            std::string_view name)
++{
++  const std::string_view value =
++      field.size == 0 ? std::string_view{} : message.substr(field.offset, field.size);
++  size_t position = value.find(name);
++  if (position == std::string_view::npos)
++    return {};
++
++  position += name.size();
++  // RFC mail generators commonly quote parameter values (for example,
++  // charset="utf-16be").  RevoEX accepts a trailing delimiter because its
++  // parser performs a case-insensitive prefix match, but a leading quote
++  // prevents the charset from being recognized at all.
++  if (position < value.size() && value[position] == '"')
++    ++position;
++  size_t end = position;
++  while (end < value.size() && value[end] != '"' && value[end] != ';' && value[end] != '\r' &&
++         value[end] != '\n' && !std::isspace(static_cast<unsigned char>(value[end])))
++  {
++    ++end;
++  }
++
++  if (end == position)
++    return {};
++
++  // Nintendo's message library includes the following delimiter byte in the
++  // packed charset/encoding length so its temporary copy is terminated.
++  return {field.offset + static_cast<u32>(position), static_cast<u32>(end - position + 1)};
++}
++
++u32 PackField(FieldLocation field)
++{
++  return (field.offset & 0x000fffff) | ((field.size << 20) & 0xfff00000);
++}
++
++std::string_view GetField(std::string_view message, FieldLocation field)
++{
++  return field.size == 0 ? std::string_view{} : message.substr(field.offset, field.size);
++}
++
++u64 ParseWiiAddress(std::string_view value)
++{
++  const size_t marker = value.find('w');
++  if (marker == std::string_view::npos || marker + 17 > value.size())
++    return 0;
++
++  u64 id = 0;
++  const char* begin = value.data() + marker + 1;
++  const auto [end, error] = std::from_chars(begin, begin + 16, id);
++  return error == std::errc{} && end == begin + 16 ? id : 0;
++}
++
++u32 GetDecodedTextSize(std::string_view body, std::string_view encoding)
++{
++  constexpr std::string_view base64 = "base64";
++  if (encoding.size() != base64.size() ||
++      !std::equal(encoding.begin(), encoding.end(), base64.begin(),
++                  [](char lhs, char rhs) {
++                    return std::tolower(static_cast<unsigned char>(lhs)) ==
++                           std::tolower(static_cast<unsigned char>(rhs));
++                  }))
++  {
++    return static_cast<u32>(body.size());
++  }
++
++  u32 characters = 0;
++  u32 padding = 0;
++  for (const char value : body)
++  {
++    if (std::isalnum(static_cast<unsigned char>(value)) || value == '+' || value == '/')
++    {
++      ++characters;
++      padding = 0;
++    }
++    else if (value == '=')
++    {
++      ++characters;
++      ++padding;
++    }
++  }
++  return characters / 4 * 3 - std::min(padding, 2U);
++}
++
++bool EqualsIgnoringCase(std::string_view lhs, std::string_view rhs)
++{
++  return lhs.size() == rhs.size() &&
++         std::equal(lhs.begin(), lhs.end(), rhs.begin(), [](char left, char right) {
++           return std::tolower(static_cast<unsigned char>(left)) ==
++                  std::tolower(static_cast<unsigned char>(right));
++         });
++}
++
++std::string FindMultipartBoundary(std::string_view message, size_t headers_end)
++{
++  const std::string_view headers = message.substr(0, headers_end);
++  std::string lower{headers};
++  std::ranges::transform(lower, lower.begin(), [](unsigned char value) {
++    return static_cast<char>(std::tolower(value));
++  });
++  const size_t marker = lower.find("boundary=");
++  if (marker == std::string::npos)
++    return {};
++
++  size_t start = marker + 9;
++  while (start < headers.size() && std::isspace(static_cast<unsigned char>(headers[start])))
++    ++start;
++  const bool quoted = start < headers.size() && headers[start] == '"';
++  if (quoted)
++    ++start;
++  size_t end = start;
++  while (end < headers.size() &&
++         (quoted ? headers[end] != '"' : headers[end] != ';' && headers[end] != '\r' &&
++                                            headers[end] != '\n' &&
++                                            !std::isspace(static_cast<unsigned char>(headers[end]))))
++  {
++    ++end;
++  }
++  return std::string{headers.substr(start, end - start)};
++}
++
++u32 GetMimeType(std::string_view value)
++{
++  const size_t delimiter = value.find(';');
++  value = value.substr(0, delimiter);
++  while (!value.empty() && std::isspace(static_cast<unsigned char>(value.back())))
++    value.remove_suffix(1);
++
++  if (EqualsIgnoringCase(value, "image/jpeg"))
++    return 0x00020000;
++  if (EqualsIgnoringCase(value, "image/x-wii-picture"))
++    return 0x00020001;
++  if (EqualsIgnoringCase(value, "application/x-wii-msgboard"))
++    return 0x00030001;
++  if (EqualsIgnoringCase(value, "application/x-wii-minidata"))
++    return 0x00030002;
++  if (EqualsIgnoringCase(value, "text/html"))
++    return 0x00010001;
++  if (EqualsIgnoringCase(value, "text/plain"))
++    return 0x00010000;
++  return 0x00030000;
++}
++
++bool PopulateMultipartMetadata(MailListEntry* entry, std::string_view message,
++                               size_t top_headers_end)
++{
++  const std::string boundary = FindMultipartBoundary(message, top_headers_end);
++  if (boundary.empty())
++    return false;
++
++  const std::string delimiter = "--" + boundary;
++  size_t cursor = message.find(delimiter, top_headers_end + 4);
++  u8 attachment_count = 0;
++  bool found_text = false;
++  while (cursor != std::string_view::npos)
++  {
++    cursor += delimiter.size();
++    if (message.substr(cursor, 2) == "--")
++      break;
++    if (message.substr(cursor, 2) == "\r\n")
++      cursor += 2;
++
++    const size_t part_headers_end = message.find("\r\n\r\n", cursor);
++    if (part_headers_end == std::string_view::npos)
++      break;
++    const size_t body_start = part_headers_end + 4;
++    const size_t next_delimiter = message.find("\r\n" + delimiter, body_start);
++    if (next_delimiter == std::string_view::npos)
++      break;
++
++    const FieldLocation part_type =
++        FindHeaderInRange(message, cursor, part_headers_end, "Content-Type");
++    const FieldLocation part_encoding =
++        FindHeaderInRange(message, cursor, part_headers_end, "Content-Transfer-Encoding");
++    const std::string_view type = GetField(message, part_type);
++    const std::string_view encoding = GetField(message, part_encoding);
++    const u32 encoded_size = static_cast<u32>(next_delimiter - body_start);
++    const u32 decoded_size =
++        GetDecodedTextSize(message.substr(body_start, encoded_size), encoding);
++
++    if (!found_text && EqualsIgnoringCase(type.substr(0, type.find(';')), "text/plain"))
++    {
++      const FieldLocation part_charset = FindParameter(message, part_type, "charset=");
++      entry->header_length = Common::swap32(static_cast<u32>(body_start));
++      entry->packed_charset = Common::swap32(PackField(part_charset));
++      FieldLocation packed_encoding = part_encoding;
++      if (packed_encoding.size != 0)
++        ++packed_encoding.size;
++      entry->packed_transfer_encoding = Common::swap32(PackField(packed_encoding));
++      entry->message_offset = Common::swap32(static_cast<u32>(body_start));
++      entry->encoded_length = Common::swap32(encoded_size);
++      entry->message_length = Common::swap32(decoded_size);
++      found_text = true;
++    }
++    else if (attachment_count < entry->multipart_entries.size())
++    {
++      entry->multipart_entries[attachment_count].offset =
++          Common::swap32(static_cast<u32>(body_start));
++      // RevoEX's streaming base64 reader decodes complete CRLF-terminated lines. If a payload's
++      // decoded length is divisible by three, its final base64 line has no '=' padding and the
++      // reader relies on this terminating CRLF to flush that line. Include the CRLF immediately
++      // preceding the next multipart boundary in the encoded range.
++      entry->multipart_entries[attachment_count].size = Common::swap32(encoded_size + 2);
++      entry->multipart_sizes[attachment_count] = Common::swap32(decoded_size);
++      entry->multipart_content_types[attachment_count] = Common::swap32(GetMimeType(type));
++      ++attachment_count;
++    }
++
++    cursor = next_delimiter + 2;
++  }
++
++  entry->number_of_multipart_entries = attachment_count;
++  return found_text;
++}
++
++void PopulateEntryMetadata(MailListEntry* entry, std::span<const u8> raw_message)
++{
++  const std::string_view message{reinterpret_cast<const char*>(raw_message.data()),
++                                 raw_message.size()};
++  const FieldLocation from = FindHeader(message, "From");
++  const FieldLocation to = FindHeader(message, "To");
++  const FieldLocation subject = FindHeader(message, "Subject");
++  const FieldLocation content_type = FindHeader(message, "Content-Type");
++  const FieldLocation transfer_encoding = FindHeader(message, "Content-Transfer-Encoding");
++  const FieldLocation app_id = FindHeader(message, "X-Wii-AppId");
++  const FieldLocation command = FindHeader(message, "X-Wii-Cmd");
++
++  const size_t separator = message.find("\r\n\r\n");
++  const u32 body_offset =
++      separator == std::string_view::npos ? 0 : static_cast<u32>(separator + 4);
++  const u32 body_size = static_cast<u32>(message.size()) - body_offset;
++  const u32 decoded_body_size =
++      GetDecodedTextSize(message.substr(body_offset), GetField(message, transfer_encoding));
++  const FieldLocation charset = FindParameter(message, content_type, "charset=");
++
++  const u64 sender_id = ParseWiiAddress(GetField(message, from));
++  const bool is_public = sender_id == 0;
++  u32 flags = (is_public ? MSG_FOR_PUBLIC : MSG_FOR_RECIPIENT) | MSG_TO_RECV |
++              MSG_INITIALIZED | MSG_DELIVERING | MSG_REVOEX_TYPE;
++  // Public mail without X-Wii-AppId is not title-specific. RevoEX rejects a non-zero app ID
++  // whose upper 24 bits do not match the currently running title (the Wii Menu in this case).
++  u32 application = is_public ? 0 : 1;
++  u32 group = 1;
++  const std::string_view app_value = GetField(message, app_id);
++  if (!app_value.empty())
++  {
++    u32 destination = 0;
++    u32 parsed_application = 0;
++    u32 parsed_group = 0;
++    if (std::sscanf(std::string{app_value}.c_str(), "%u-%8x-%4x", &destination,
++                    &parsed_application, &parsed_group) == 3)
++    {
++      application = parsed_application;
++      group = parsed_group;
++      if (!is_public && (destination & 1))
++        flags |= MSG_FOR_APP;
++      if (!is_public && (destination & 2))
++        flags |= MSG_FOR_MENU;
++    }
++  }
++  else if (!is_public)
++  {
++    // Unscoped Wii-to-Wii letters belong to the Wii Message Board. Native Wii-composed mail
++    // normally declares destination bit 2, but replacement services may omit X-Wii-AppId.
++    flags |= MSG_FOR_MENU;
++  }
++
++  u32 command_value = 0;
++  const std::string_view command_text = GetField(message, command);
++  if (!command_text.empty())
++  {
++    const auto [end, error] = std::from_chars(command_text.data(),
++                                               command_text.data() + command_text.size(),
++                                               command_value, 16);
++    if (error != std::errc{} || end != command_text.data() + command_text.size())
++      command_value = 0;
++  }
++  // 0x8001xxxx commands are Wii Message Board friend-management messages.
++  if ((command_value & 0xffff0000) == 0x80010000)
++    flags |= MSG_FOR_MENU;
++
++  entry->flag = Common::swap32(flags);
++  entry->app_id = Common::swap32(application);
++  entry->wii_cmd = Common::swap32(command_value);
++  // NWC24CommitMsg stores the position immediately after the MIME headers here
++  // for a non-multipart message.
++  entry->header_length = Common::swap32(body_offset);
++  if (is_public)
++  {
++    // NWC24iAddr is a union: public mail stores an NWC24Data offset/size pair
++    // here, while Wii-to-Wii mail stores the numeric friend code.
++    entry->from_friend_code =
++        Common::swap64((static_cast<u64>(from.offset) << 32) | static_cast<u64>(from.size));
++  }
++  else
++  {
++    entry->from_friend_code = Common::swap64(sender_id);
++  }
++  const auto unix_minutes = std::chrono::duration_cast<std::chrono::minutes>(
++                                std::chrono::system_clock::now().time_since_epoch())
++                                .count();
++  entry->minutes_since_1900 = Common::swap32(static_cast<u32>(unix_minutes + 36816480));
++  entry->always_1 = 1;
++  entry->number_of_multipart_entries = 0;
++  entry->app_group = Common::swap16(static_cast<u16>(group));
++  entry->packed_from = Common::swap32(PackField(from));
++  entry->packed_to = Common::swap32(PackField(to));
++  entry->packed_subject = Common::swap32(PackField(subject));
++  entry->packed_charset = Common::swap32(PackField(charset));
++  FieldLocation packed_encoding = transfer_encoding;
++  if (packed_encoding.size != 0)
++    ++packed_encoding.size;
++  entry->packed_transfer_encoding = Common::swap32(PackField(packed_encoding));
++  entry->message_offset = Common::swap32(body_offset);
++  entry->encoded_length = Common::swap32(body_size);
++  entry->message_length = Common::swap32(decoded_body_size);
++  entry->always_0x80000000 = Common::swap32(0x80000000);
++
++  const std::string_view top_type = GetField(message, content_type);
++  if (separator != std::string_view::npos &&
++      top_type.size() >= std::string_view{"multipart/"}.size() &&
++      EqualsIgnoringCase(top_type.substr(0, std::string_view{"multipart/"}.size()), "multipart/"))
++  {
++    PopulateMultipartMetadata(entry, message, separator);
++  }
++}
++}  // namespace
++
++std::optional<std::vector<std::string_view>> ParseReceiveEnvelope(std::string_view content_type,
++                                                                  std::string_view response)
++{
++  if (content_type.size() > 1024 || response.size() > 4 * 1024 * 1024)
++    return std::nullopt;
++  const auto trim = [](std::string_view value) {
++    while (!value.empty() && (value.front() == ' ' || value.front() == '\t'))
++      value.remove_prefix(1);
++    while (!value.empty() && (value.back() == ' ' || value.back() == '\t'))
++      value.remove_suffix(1);
++    return value;
++  };
++  size_t cursor = content_type.find(';');
++  if (cursor == std::string_view::npos ||
++      !EqualsIgnoringCase(trim(content_type.substr(0, cursor)), "multipart/mixed"))
++    return std::nullopt;
++  std::string_view token;
++  while (cursor < content_type.size())
++  {
++    const size_t next = content_type.find(';', cursor + 1);
++    const auto parameter = trim(content_type.substr(cursor + 1, next - cursor - 1));
++    const size_t equal = parameter.find('=');
++    if (equal != std::string_view::npos &&
++        EqualsIgnoringCase(trim(parameter.substr(0, equal)), "boundary"))
++    {
++      if (!token.empty())
++        return std::nullopt;
++      token = trim(parameter.substr(equal + 1));
++      if (token.starts_with('"'))
++      {
++        if (token.size() < 2 || !token.ends_with('"'))
++          return std::nullopt;
++        token = token.substr(1, token.size() - 2);
++      }
++      if (token.empty() || token.size() > 70 ||
++          std::ranges::any_of(token, [](unsigned char c) { return c <= 32 || c >= 127 || c == '"'; }))
++        return std::nullopt;
++    }
++    cursor = next == std::string_view::npos ? content_type.size() : next;
++  }
++  if (token.empty())
++    return std::nullopt;
++  const std::string delimiter = "--" + std::string{token};
++  const auto find_delimiter = [&](size_t start) {
++    size_t position = start;
++    while ((position = response.find(delimiter, position)) != std::string_view::npos)
++    {
++      const size_t after = position + delimiter.size();
++      if ((position == 0 || (position >= 2 && response.substr(position - 2, 2) == "\r\n")) &&
++          (response.substr(after, 2) == "\r\n" || response.substr(after, 2) == "--"))
++        return position;
++      ++position;
++    }
++    return std::string_view::npos;
++  };
++  std::vector<std::string_view> parts;
++  cursor = find_delimiter(0);
++  while (cursor != std::string_view::npos)
++  {
++    cursor += delimiter.size();
++    if (response.substr(cursor, 2) == "--")
++    {
++      const auto remainder = response.substr(cursor + 2);
++      if (!remainder.empty() && !remainder.starts_with("\r\n"))
++        return std::nullopt;
++      return parts.empty() ? std::nullopt : std::make_optional(std::move(parts));
++    }
++    cursor += 2;  // delimiter CRLF
++    const size_t next = find_delimiter(cursor);
++    const size_t headers_end = response.find("\r\n\r\n", cursor);
++    if (next == std::string_view::npos || headers_end == std::string_view::npos ||
++        headers_end + 4 > next - 2 || parts.size() >= 256)
++      return std::nullopt;
++    const size_t body_start = headers_end + 4;
++    parts.push_back(response.substr(body_start, next - 2 - body_start));
++    cursor = next;
++  }
++  return std::nullopt;  // A complete closing delimiter is required before any acknowledgment.
++}
++
++WC24ReceiveList::WC24ReceiveList(std::shared_ptr<FS::FileSystem> fs) : m_fs{std::move(fs)}
++{
++  if (!ReadReceiveList())
++  {
++    ERROR_LOG_FMT(IOS_WC24, "There is an error in the WC24 receive list. Incoming mail is disabled.");
++    m_is_disabled = true;
++  }
++  else
++  {
++    RefreshQueuedMessageMetadata();
++  }
++}
++
++bool WC24ReceiveList::IsDisabled() const
++{
++  return m_is_disabled;
++}
++
++u32 WC24ReceiveList::GetNumberOfMail() const
++{
++  return Common::swap32(m_data.header.number_of_mail);
++}
++
++bool WC24ReceiveList::ReadReceiveList()
++{
++  ReceiveList data{};
++  const auto file = m_fs->OpenFile(PID_KD, PID_KD, RECEIVE_LIST_PATH, FS::Mode::Read);
++  if (!file || file->GetStatus()->size != RECEIVE_LIST_SIZE || !file->Read(&data, 1))
++    return false;
++
++  if (Common::swap32(data.header.magic) != MAIL_LIST_MAGIC ||
++      Common::swap32(data.header.version) != 4)
++    return false;
++  u32 count = 0;
++  u64 size = 0;
++  for (const auto& entry : data.entries)
++  {
++    if (entry.id == 0)
++      continue;
++    const u32 message_size = Common::swap32(entry.msg_size);
++    if (message_size == 0 || message_size > 208952)
++      return false;
++    ++count;
++    size += message_size;
++  }
++  if (count != Common::swap32(data.header.number_of_mail) ||
++      size != Common::swap32(data.header.total_size_of_messages))
++    return false;
++  m_data = data;
++  return true;
++}
++
++bool WC24ReceiveList::WriteReceiveList() const
++{
++  constexpr FS::Modes modes{FS::Mode::ReadWrite, FS::Mode::ReadWrite, FS::Mode::ReadWrite};
++  const auto file = m_fs->CreateAndOpenFile(PID_KD, PID_KD, RECEIVE_LIST_PATH, modes);
++  ReceiveList persisted{};
++  // FileHandle::Write does not expose short-write byte counts. Read the index back before
++  // allowing the caller to acknowledge (and delete) its only server-side message copy.
++  if (!file || !file->Write(&m_data, 1) ||
++      file->GetStatus()->size != RECEIVE_LIST_SIZE || !file->Seek(0, FS::SeekMode::Set) ||
++      !file->Read(&persisted, 1) || std::memcmp(&persisted, &m_data, sizeof(m_data)) != 0)
++  {
++    ERROR_LOG_FMT(IOS_WC24, "Failed to persist the WC24 receive list.");
++    return false;
++  }
++  return true;
++}
++
++u32 WC24ReceiveList::GetEntryId(u32 index) const
++{
++  return Common::swap32(m_data.entries[index].id);
++}
++
++u32 WC24ReceiveList::GetNextEntryId() const
++{
++  return Common::swap32(m_data.header.next_entry_id);
++}
++
++u32 WC24ReceiveList::GetNextEntryIndex() const
++{
++  const u32 offset = Common::swap32(m_data.header.next_entry_offset);
++  return offset >= sizeof(MailListHeader) ? (offset - sizeof(MailListHeader)) / sizeof(MailListEntry) :
++                                           0;
++}
++
++std::string WC24ReceiveList::GetMailPath(u32 index) const
++{
++  return fmt::format("mb/r{:07d}.msg", GetEntryId(index));
++}
++
++void WC24ReceiveList::RefreshQueuedMessageMetadata()
++{
++  bool changed = false;
++  for (u32 index = 0; index < MAX_ENTRIES; ++index)
++  {
++    MailListEntry& entry = m_data.entries[index];
++    const u32 message_size = Common::swap32(entry.msg_size);
++    if (GetEntryId(index) == 0 || message_size == 0)
++      continue;
++
++    std::vector<u8> message(message_size);
++    if (ReadFromVFF(RECEIVE_BOX_PATH, GetMailPath(index), m_fs, message) != WC24_OK)
++      continue;
++
++    PopulateEntryMetadata(&entry, message);
++    changed = true;
++  }
++
++  if (changed)
++    WriteReceiveList();
++}
++
++ErrorCode WC24ReceiveList::AddMessage(std::span<const u8> message)
++{
++  if (m_is_disabled || message.empty() || message.size() > 208952)
++    return WC24_ERR_BROKEN;
++
++  if (!ReadReceiveList())
++    return WC24_ERR_BROKEN;
++
++  // A failed delete.cgi or a partially imported batch is replayed by the service. Only an
++  // explicit Message-ID establishes retry identity; equal text alone can be a new notice.
++  const std::string_view text{reinterpret_cast<const char*>(message.data()), message.size()};
++  const auto message_id = GetField(text, FindHeader(text, "Message-ID"));
++  if (!message_id.empty())
++  {
++    for (u32 existing_index = 0; existing_index < MAX_ENTRIES; ++existing_index)
++    {
++      if (GetEntryId(existing_index) == 0)
++        continue;
++      std::vector<u8> existing(Common::swap32(m_data.entries[existing_index].msg_size));
++      if (ReadFromVFF(RECEIVE_BOX_PATH, GetMailPath(existing_index), m_fs, existing) != WC24_OK)
++        return WC24_ERR_FILE_READ;
++      const std::string_view existing_text{reinterpret_cast<const char*>(existing.data()),
++                                           existing.size()};
++      const auto existing_id = GetField(
++          existing_text, FindHeader(existing_text, "Message-ID"));
++      // Some older clients reuse a fixed registration ID across different friends.
++      // Scope that legacy identifier by its two envelope address headers as well.
++      if (existing_id != message_id ||
++          GetField(existing_text, FindHeader(existing_text, "From")) !=
++              GetField(text, FindHeader(text, "From")) ||
++          GetField(existing_text, FindHeader(existing_text, "To")) !=
++              GetField(text, FindHeader(text, "To")))
++        continue;
++      // Refuse conflicting reuse of an identifier rather than silently acknowledging it.
++      return std::ranges::equal(existing, message) ? WC24_OK : WC24_ERR_BROKEN;
++    }
++  }
++
++  u32 index = GetNextEntryIndex();
++  if (index >= MAX_ENTRIES || GetEntryId(index) != 0)
++  {
++    const auto free_entry = std::find_if(m_data.entries.begin(), m_data.entries.end(),
++                                         [](const MailListEntry& entry) { return entry.id == 0; });
++    if (free_entry == m_data.entries.end())
++      return WC24_ERR_FILE_WRITE;
++    index = static_cast<u32>(std::distance(m_data.entries.begin(), free_entry));
++  }
++
++  const u32 id = std::max(GetNextEntryId(), 1U);
++  MailListEntry& entry = m_data.entries[index];
++  // Free entries use app_id as a linked-list pointer and may retain other bookkeeping data.
++  // Start from a clean NWC24iMBCEntry before installing the received message metadata.
++  entry = {};
++  entry.id = Common::swap32(id);
++  entry.msg_size = Common::swap32(static_cast<u32>(message.size()));
++  PopulateEntryMetadata(&entry, message);
++
++  // RevoEX reads message files in 32-byte blocks even though the MBC entry stores the logical
++  // MIME length. Nintendo's mailbox writer therefore pads the VFF file itself to 32 bytes.
++  std::vector<u8> padded_message{message.begin(), message.end()};
++  padded_message.resize((padded_message.size() + 31) & ~size_t{31});
++  const ErrorCode result =
++      WriteToVFF(RECEIVE_BOX_PATH, GetMailPath(index), m_fs, padded_message);
++  if (result != WC24_OK)
++  {
++    entry.id = 0;
++    return result;
++  }
++
++  m_data.header.number_of_mail =
++      Common::swap32(Common::swap32(m_data.header.number_of_mail) + 1);
++  m_data.header.total_size_of_messages =
++      Common::swap32(Common::swap32(m_data.header.total_size_of_messages) +
++                     static_cast<u32>(message.size()));
++  m_data.header.next_entry_id = Common::swap32(id + 1);
++
++  u32 next_index = (index + 1) % MAX_ENTRIES;
++  for (u32 checked = 0; checked < MAX_ENTRIES && GetEntryId(next_index) != 0; ++checked)
++    next_index = (next_index + 1) % MAX_ENTRIES;
++  m_data.header.next_entry_offset = CalculateFileOffset(next_index);
++
++  if (!WriteReceiveList())
++  {
++    ReadReceiveList();
++    return WC24_ERR_FILE_WRITE;
++  }
++  return WC24_OK;
++}
++
++u32 WC24ReceiveList::ProcessFriendRegistrationMessages(WC24FriendList& friend_list)
++{
++  if (!ReadReceiveList())
++    return 0;
++  u32 processed = 0;
++  for (u32 index = 0; index < MAX_ENTRIES; ++index)
++  {
++    MailListEntry& entry = m_data.entries[index];
++    if (GetEntryId(index) == 0 || Common::swap32(entry.wii_cmd) != 0x80010001)
++      continue;
++
++    const u64 sender = Common::swap64(entry.from_friend_code);
++    if (!friend_list.ConfirmFriend(sender))
++      continue;
++
++    const std::string mail_path = GetMailPath(index);
++    const ReceiveList previous = m_data;
++    const u32 message_size = Common::swap32(entry.msg_size);
++    m_data.header.number_of_mail =
++        Common::swap32(Common::swap32(m_data.header.number_of_mail) - 1);
++    m_data.header.total_size_of_messages = Common::swap32(
++        Common::swap32(m_data.header.total_size_of_messages) - message_size);
++    entry = {};
++    m_data.header.next_entry_offset = CalculateFileOffset(index);
++    // Persist removal before deleting its data file. Failed cleanup leaves an unindexed file,
++    // whereas the reverse ordering leaves a live entry pointing to a missing message.
++    if (!WriteReceiveList())
++    {
++      m_data = previous;
++      continue;
++    }
++    DeleteFileFromVFF(RECEIVE_BOX_PATH, mail_path, m_fs);
++    ++processed;
++  }
++
++  return processed;
++}
++}  // namespace IOS::HLE::NWC24::Mail
+diff --git a/Source/Core/Core/IOS/Network/KD/Mail/WC24Receive.h b/Source/Core/Core/IOS/Network/KD/Mail/WC24Receive.h
+new file mode 100644
+--- /dev/null
++++ b/Source/Core/Core/IOS/Network/KD/Mail/WC24Receive.h
+@@ -0,0 +1,70 @@
++// Copyright 2026 Dolphin Emulator Project
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#pragma once
++
++#include <array>
++#include <memory>
++#include <optional>
++#include <string_view>
++#include <vector>
++#include <span>
++#include <string>
++
++#include "Common/CommonPaths.h"
++#include "Common/CommonTypes.h"
++#include "Core/IOS/Network/KD/Mail/MailCommon.h"
++#include "Core/IOS/Network/KD/Mail/WC24FriendList.h"
++#include "Core/IOS/Network/KD/NWC24Config.h"
++
++namespace IOS::HLE
++{
++namespace FS
++{
++class FileSystem;
++}
++namespace NWC24::Mail
++{
++constexpr const char RECEIVE_BOX_PATH[] = "/" WII_WC24CONF_DIR "/mbox/wc24recv.mbx";
++
++// Returned views borrow response storage; no mailbox or account access is performed.
++std::optional<std::vector<std::string_view>> ParseReceiveEnvelope(std::string_view content_type,
++                                                                  std::string_view response);
++
++class WC24ReceiveList final
++{
++public:
++  explicit WC24ReceiveList(std::shared_ptr<FS::FileSystem> fs);
++
++  bool IsDisabled() const;
++  u32 GetNumberOfMail() const;
++  bool ReadReceiveList();
++  bool WriteReceiveList() const;
++  ErrorCode AddMessage(std::span<const u8> message);
++  u32 ProcessFriendRegistrationMessages(WC24FriendList& friend_list);
++
++private:
++  static constexpr u32 MAX_ENTRIES = 255;
++  static constexpr u32 RECEIVE_LIST_SIZE = 32768;
++
++#pragma pack(push, 1)
++  struct ReceiveList final
++  {
++    MailListHeader header;
++    std::array<MailListEntry, MAX_ENTRIES> entries;
++  };
++  static_assert(sizeof(ReceiveList) == RECEIVE_LIST_SIZE);
++#pragma pack(pop)
++
++  u32 GetEntryId(u32 index) const;
++  u32 GetNextEntryId() const;
++  u32 GetNextEntryIndex() const;
++  std::string GetMailPath(u32 index) const;
++  void RefreshQueuedMessageMetadata();
++
++  ReceiveList m_data{};
++  std::shared_ptr<FS::FileSystem> m_fs;
++  bool m_is_disabled = false;
++};
++}  // namespace NWC24::Mail
++}  // namespace IOS::HLE
+diff --git a/Source/UnitTests/Core/IOS/Network/WC24ReceiveTest.cpp b/Source/UnitTests/Core/IOS/Network/WC24ReceiveTest.cpp
+new file mode 100644
+--- /dev/null
++++ b/Source/UnitTests/Core/IOS/Network/WC24ReceiveTest.cpp
+@@ -0,0 +1,314 @@
++// Copyright 2026 Dolphin Emulator Project
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include <array>
++#include <cstring>
++#include <memory>
++#include <map>
++#include <string>
++#include <vector>
++#include <gtest/gtest.h>
++#include "Common/FileUtil.h"
++#include "Common/Swap.h"
++#include "Core/IOS/FS/FileSystem.h"
++#include "Core/IOS/IOS.h"
++#include "Core/IOS/Network/KD/Mail/WC24Receive.h"
++#include "Core/IOS/Network/KD/VFF/VFFUtil.h"
++#include "Core/IOS/Uids.h"
++#include "UICommon/UICommon.h"
++
++namespace
++{
++using IOS::PID_KD;
++using namespace IOS::HLE;
++using namespace IOS::HLE::NWC24;
++using namespace IOS::HLE::NWC24::Mail;
++constexpr char CTL[] = "/shared2/wc24/mbox/wc24recv.ctl";
++constexpr FS::Modes RW{FS::Mode::ReadWrite, FS::Mode::ReadWrite, FS::Mode::ReadWrite};
++
++// Faults are injected at the emulated FS boundary, since HostFileSystem deliberately
++// ignores mode metadata. All backing files still live in a fresh temporary profile.
++class FaultFileSystem final : public FS::FileSystem
++{
++public:
++  explicit FaultFileSystem(std::shared_ptr<FS::FileSystem> fs) : inner{std::move(fs)} {}
++  std::string blocked_write;
++  bool short_write = false;
++  void DoState(PointerWrap& p) override { inner->DoState(p); }
++  FS::ResultCode Format(FS::Uid u) override { return inner->Format(u); }
++  FS::Result<FS::FileHandle> OpenFile(FS::Uid u, FS::Gid g, const std::string& p, FS::Mode m) override
++  {
++    auto file = inner->OpenFile(u, g, p, m);
++    if (!file)
++      return std::unexpected{file.error()};
++    const auto fd = file->Release();
++    paths[fd] = p;
++    return FS::FileHandle{this, fd};
++  }
++  FS::ResultCode Close(FS::Fd f) override { paths.erase(f); return inner->Close(f); }
++  FS::Result<u32> ReadBytesFromFile(FS::Fd f, u8* p, u32 n) override
++  { return inner->ReadBytesFromFile(f, p, n); }
++  FS::Result<u32> WriteBytesToFile(FS::Fd f, const u8* p, u32 n) override
++  {
++    if (paths[f] == blocked_write)
++    {
++      if (short_write)
++        return u32{0};
++      return std::unexpected{FS::ResultCode::NoFreeSpace};
++    }
++    return inner->WriteBytesToFile(f, p, n);
++  }
++  FS::Result<u32> SeekFile(FS::Fd f, u32 n, FS::SeekMode m) override
++  { return inner->SeekFile(f, n, m); }
++  FS::Result<FS::FileStatus> GetFileStatus(FS::Fd f) override { return inner->GetFileStatus(f); }
++  FS::ResultCode CreateFile(FS::Uid u, FS::Gid g, const std::string& p, FS::FileAttribute a, FS::Modes m) override
++  { return inner->CreateFile(u, g, p, a, m); }
++  FS::ResultCode CreateDirectory(FS::Uid u, FS::Gid g, const std::string& p, FS::FileAttribute a, FS::Modes m) override
++  { return inner->CreateDirectory(u, g, p, a, m); }
++  FS::ResultCode Delete(FS::Uid u, FS::Gid g, const std::string& p) override
++  { return inner->Delete(u, g, p); }
++  FS::ResultCode Rename(FS::Uid u, FS::Gid g, const std::string& p, const std::string& q) override
++  { return inner->Rename(u, g, p, q); }
++  FS::Result<std::vector<std::string>> ReadDirectory(FS::Uid u, FS::Gid g, const std::string& p) override
++  { return inner->ReadDirectory(u, g, p); }
++  FS::Result<FS::Metadata> GetMetadata(FS::Uid u, FS::Gid g, const std::string& p) override
++  { return inner->GetMetadata(u, g, p); }
++  FS::ResultCode SetMetadata(FS::Uid u, const std::string& p, FS::Uid v, FS::Gid g, FS::FileAttribute a, FS::Modes m) override
++  { return inner->SetMetadata(u, p, v, g, a, m); }
++  FS::Result<FS::NandStats> GetNandStats() override { return inner->GetNandStats(); }
++  FS::Result<FS::DirectoryStats> GetDirectoryStats(const std::string& p) override
++  { return inner->GetDirectoryStats(p); }
++  FS::Result<FS::ExtendedDirectoryStats> GetExtendedDirectoryStats(const std::string& p) override
++  { return inner->GetExtendedDirectoryStats(p); }
++  void SetNandRedirects(std::vector<FS::NandRedirect> r) override
++  { inner->SetNandRedirects(std::move(r)); }
++private:
++  std::shared_ptr<FS::FileSystem> inner;
++  std::map<FS::Fd, std::string> paths;
++};
++
++class WC24ReceiveTest : public testing::Test
++{
++protected:
++  void SetUp() override
++  {
++    m_temp = File::CreateTempDir();
++    ASSERT_FALSE(m_temp.empty());
++    UICommon::SetUserDirectory(m_temp);
++    m_faults = std::make_shared<FaultFileSystem>(Kernel{}.GetFS());
++    m_fs = m_faults;
++    ASSERT_EQ(m_fs->CreateFullPath(PID_KD, PID_KD, CTL, 0, RW), FS::ResultCode::Success);
++    std::array<u8, 32768> ctl{};
++    MailListHeader header{};
++    header.magic = Common::swap32(MAIL_LIST_MAGIC);
++    header.version = Common::swap32(4);
++    header.total_entries = Common::swap32(255);
++    header.filesize = Common::swap32(32768);
++    header.next_entry_id = Common::swap32(1);
++    header.next_entry_offset = CalculateFileOffset(0);
++    std::memcpy(ctl.data(), &header, sizeof(header));
++    auto file = m_fs->CreateAndOpenFile(PID_KD, PID_KD, CTL, RW);
++    ASSERT_TRUE(file);
++    ASSERT_TRUE(file->Write(ctl.data(), ctl.size()));
++
++    // Generated, empty FAT12 VFF: no console files, credentials or Nintendo messages.
++    constexpr u32 volume_size = 1024 * 1024;
++    std::vector<u8> vff(volume_size - 480);
++    VFFHeader vff_header{};
++    std::memcpy(vff_header.magic, "VFF ", 4);
++    vff_header.endianness = Common::swap16(VF_BIG_ENDIAN);
++    vff_header.volume_size = Common::swap32(volume_size);
++    vff_header.cluster_size = Common::swap16(32);
++    std::memcpy(vff.data(), &vff_header, sizeof(vff_header));
++    for (const u32 fat_sector : {1u, 7u})
++    {
++      const u32 offset = fat_sector * 512 - 480;
++      // FAT12 reserved entries plus directory cluster 2, all end-of-chain.
++      const std::array<u8, 5> fat{0xf8, 0xff, 0xff, 0xff, 0x0f};
++      std::memcpy(vff.data() + offset, fat.data(), fat.size());
++    }
++    const u32 root = 13 * 512 - 480;
++    std::memcpy(vff.data() + root, "MB         ", 11);
++    vff[root + 11] = 0x10;  // directory attribute
++    vff[root + 26] = 2;     // first cluster (little endian)
++    auto box = m_fs->CreateAndOpenFile(PID_KD, PID_KD, RECEIVE_BOX_PATH, RW);
++    ASSERT_TRUE(box);
++    ASSERT_TRUE(box->Write(vff.data(), vff.size()));
++  }
++  void TearDown() override
++  {
++    m_fs.reset();
++    m_faults.reset();
++    if (!m_temp.empty())
++      File::DeleteDirRecursively(m_temp);
++  }
++  static std::vector<u8> Message(std::string id, std::string body = "test")
++  {
++    const std::string text = "Message-ID: <" + id + ">\r\nFrom: example@example.invalid\r\n"
++      "To: w0000000000000000@example.invalid\r\nContent-Type: text/plain; charset=utf-8\r\n"
++      "Content-Transfer-Encoding: 8bit\r\n\r\n" + body;
++    return {text.begin(), text.end()};
++  }
++  std::shared_ptr<FaultFileSystem> m_faults;
++  std::shared_ptr<FS::FileSystem> m_fs;
++  std::string m_temp;
++};
++
++TEST(WC24ReceiveEnvelopeTest, CompleteQuotedBoundaryAndBinaryMessage)
++{
++  const std::string response = "--abc\r\nContent-Type: text/plain\r\n\r\ncd=100\r\n"
++    "--abc\r\nContent-Type: message/rfc822\r\n\r\nFrom: test\r\n\r\nbody\r\n--abc--\r\n";
++  const auto parsed = ParseReceiveEnvelope("Multipart/Mixed; charset=utf-8; Boundary=\"abc\"", response);
++  ASSERT_TRUE(parsed);
++  ASSERT_EQ(parsed->size(), 2u);
++  EXPECT_EQ((*parsed)[0], "cd=100");
++  EXPECT_EQ((*parsed)[1], "From: test\r\n\r\nbody");
++}
++
++TEST(WC24ReceiveEnvelopeTest, BoundarySubstringAndPrefixedLinesRemainMessageData)
++{
++  const std::string body = "header\r\n\r\ninline --abc here\r\n--abc-extra\r\nlast";
++  const std::string response = "--abc\r\nContent-Type: message/rfc822\r\n\r\n" + body + "\r\n--abc--";
++  const auto parsed = ParseReceiveEnvelope("multipart/mixed; boundary=abc", response);
++  ASSERT_TRUE(parsed);
++  ASSERT_EQ(parsed->size(), 1u);
++  EXPECT_EQ(parsed->front(), body);
++}
++
++TEST(WC24ReceiveEnvelopeTest, TruncatedOrAmbiguousFramingCannotBeAcknowledged)
++{
++  const std::string part = "--abc\r\nContent-Type: text/plain\r\n\r\ncd=100\r\n";
++  EXPECT_FALSE(ParseReceiveEnvelope("multipart/mixed; boundary=abc", part));
++  EXPECT_FALSE(ParseReceiveEnvelope("multipart/mixed; boundary=abc", part + "--abc--garbage"));
++  EXPECT_FALSE(ParseReceiveEnvelope("multipart/mixed; boundary=abc; boundary=def", part));
++  EXPECT_FALSE(ParseReceiveEnvelope("multipart/mixed; boundary=\"abc", part));
++  EXPECT_FALSE(ParseReceiveEnvelope("multipart/mixed; boundary=", part));
++  EXPECT_FALSE(ParseReceiveEnvelope("text/plain; boundary=abc", part));
++  EXPECT_FALSE(ParseReceiveEnvelope("multipart/mixed; boundary=abc", "--abc--\r\n"));
++  EXPECT_FALSE(ParseReceiveEnvelope("multipart/mixed; boundary=abc", "--abc\r\n--abc--\r\n"));
++}
++
++TEST(WC24ReceiveEnvelopeTest, InputBoundsAndEmbeddedNul)
++{
++  const std::string body{"x\0y", 3};
++  const std::string response = "--abc\r\nContent-Type: text/plain\r\n\r\n" + body + "\r\n--abc--\r\n";
++  const auto parsed = ParseReceiveEnvelope("multipart/mixed; boundary=abc", response);
++  ASSERT_TRUE(parsed);
++  EXPECT_EQ(parsed->front(), body);
++  EXPECT_FALSE(ParseReceiveEnvelope(std::string(1025, 'x'), response));
++  EXPECT_FALSE(ParseReceiveEnvelope("multipart/mixed; boundary=abc", std::string(4 * 1024 * 1024 + 1, 'x')));
++}
++
++TEST_F(WC24ReceiveTest, StoresLogicalMessageAndAlignedVffFile)
++{
++  WC24ReceiveList list{m_fs};
++  ASSERT_FALSE(list.IsDisabled());
++  const auto message = Message("one");
++  ASSERT_EQ(list.AddMessage(message), WC24_OK);
++  EXPECT_EQ(list.GetNumberOfMail(), 1u);
++  std::vector<u8> stored((message.size() + 31) & ~size_t{31});
++  ASSERT_EQ(ReadFromVFF(RECEIVE_BOX_PATH, "mb/r0000001.msg", m_fs, stored), WC24_OK);
++  EXPECT_TRUE(std::equal(message.begin(), message.end(), stored.begin()));
++  WC24ReceiveList reopened{m_fs};
++  EXPECT_FALSE(reopened.IsDisabled());
++  EXPECT_EQ(reopened.GetNumberOfMail(), 1u);
++}
++
++TEST_F(WC24ReceiveTest, ReplayedBatchDoesNotDuplicateMessageIds)
++{
++  WC24ReceiveList list{m_fs};
++  ASSERT_EQ(list.AddMessage(Message("one")), WC24_OK);
++  ASSERT_EQ(list.AddMessage(Message("two")), WC24_OK);
++  WC24ReceiveList reopened{m_fs};
++  ASSERT_EQ(reopened.AddMessage(Message("one")), WC24_OK);
++  ASSERT_EQ(reopened.AddMessage(Message("two")), WC24_OK);
++  EXPECT_EQ(reopened.GetNumberOfMail(), 2u);
++  // A legitimate new notice with equal body gets its own entry.
++  ASSERT_EQ(reopened.AddMessage(Message("three")), WC24_OK);
++  EXPECT_EQ(reopened.GetNumberOfMail(), 3u);
++}
++
++TEST_F(WC24ReceiveTest, ConflictingMessageIdCannotBeAcknowledged)
++{
++  WC24ReceiveList list{m_fs};
++  ASSERT_EQ(list.AddMessage(Message("one")), WC24_OK);
++  EXPECT_EQ(list.AddMessage(Message("one", "changed")), WC24_ERR_BROKEN);
++  EXPECT_EQ(list.GetNumberOfMail(), 1u);
++}
++
++TEST_F(WC24ReceiveTest, IndexWriteFailureCannotBeAcknowledged)
++{
++  WC24ReceiveList list{m_fs};
++  m_faults->blocked_write = CTL;
++  EXPECT_EQ(list.AddMessage(Message("one")), WC24_ERR_FILE_WRITE);
++  EXPECT_EQ(list.GetNumberOfMail(), 0u);
++  m_faults->blocked_write.clear();
++  EXPECT_EQ(list.AddMessage(Message("one")), WC24_OK);
++  EXPECT_EQ(list.GetNumberOfMail(), 1u);
++}
++
++TEST_F(WC24ReceiveTest, ShortIndexWriteCannotBeAcknowledged)
++{
++  WC24ReceiveList list{m_fs};
++  m_faults->blocked_write = CTL;
++  m_faults->short_write = true;
++  EXPECT_EQ(list.AddMessage(Message("one")), WC24_ERR_FILE_WRITE);
++  EXPECT_EQ(list.GetNumberOfMail(), 0u);
++}
++
++TEST_F(WC24ReceiveTest, LegacyRegistrationIdsAreScopedBySender)
++{
++  WC24ReceiveList list{m_fs};
++  auto first = Message("legacy");
++  auto second = first;
++  // Mutate one sender address byte, preserving the legacy reused Message-ID.
++  const auto at = std::search(second.begin(), second.end(), "example@", "example@" + 8);
++  ASSERT_NE(at, second.end());
++  *at = 'z';
++  EXPECT_EQ(list.AddMessage(first), WC24_OK);
++  EXPECT_EQ(list.AddMessage(second), WC24_OK);
++  EXPECT_EQ(list.GetNumberOfMail(), 2u);
++}
++
++TEST_F(WC24ReceiveTest, FriendConfirmationRequiresPersistedStatus)
++{
++  std::array<u8, 32864> friends{};
++  const auto put32 = [&](size_t offset, u32 value) {
++    value = Common::swap32(value);
++    std::memcpy(friends.data() + offset, &value, sizeof(value));
++  };
++  put32(0, 0x5763466c);
++  put32(4, 2);
++  put32(8, 100);
++  put32(12, 1);
++  const u64 code = Common::swap64(1234567890123456ULL);
++  std::memcpy(friends.data() + 64, &code, sizeof(code));
++  put32(864, 1);  // Wii friend
++  put32(868, 1);  // unconfirmed
++  {
++    auto file = m_fs->CreateAndOpenFile(PID_KD, PID_KD, FRIEND_LIST_PATH, RW);
++    ASSERT_TRUE(file);
++    ASSERT_TRUE(file->Write(friends.data(), friends.size()));
++  }
++  WC24FriendList list{m_fs};
++  m_faults->blocked_write = FRIEND_LIST_PATH;
++  EXPECT_FALSE(list.ConfirmFriend(1234567890123456ULL));
++  EXPECT_EQ(list.GetUnconfirmedFriends().size(), 1u);
++  m_faults->blocked_write.clear();
++  EXPECT_TRUE(list.ConfirmFriend(1234567890123456ULL));
++  WC24FriendList reopened{m_fs};
++  EXPECT_TRUE(reopened.GetUnconfirmedFriends().empty());
++  EXPECT_TRUE(reopened.ConfirmFriend(1234567890123456ULL));
++  ASSERT_EQ(m_fs->Delete(PID_KD, PID_KD, FRIEND_LIST_PATH), FS::ResultCode::Success);
++  EXPECT_FALSE(reopened.ConfirmFriend(1234567890123456ULL));
++}
++
++TEST_F(WC24ReceiveTest, MissingIndexAndOversizedInputCannotBeAcknowledged)
++{
++  WC24ReceiveList list{m_fs};
++  EXPECT_EQ(list.AddMessage({}), WC24_ERR_BROKEN);
++  EXPECT_EQ(list.AddMessage(std::vector<u8>(208953)), WC24_ERR_BROKEN);
++  ASSERT_EQ(m_fs->Delete(PID_KD, PID_KD, CTL), FS::ResultCode::Success);
++  EXPECT_EQ(list.AddMessage(Message("one")), WC24_ERR_BROKEN);
++}
++}  // namespace

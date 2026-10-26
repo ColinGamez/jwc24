@@ -65,7 +65,10 @@ This is JWC24 queue/retry policy. It is not code recovered from Nintendo.
 The existing public mail implementation references and
 [Dolphin's upstream KD implementation](https://github.com/dolphin-emu/dolphin/blob/master/Source/Core/Core/IOS/Network/KD/NetKDRequest.cpp)
 are separate interoperability references, not proof of original service
-behavior or a functioning native receive path. This batch does not add
-Dolphin mailbox import, launch an emulator, alter credentials, restart the
-owner's live service or touch any NAND. Real receipt and display remain part
-of the coordinated native validation pass.
+behavior or a functioning native receive path. A separate
+[local Dolphin receive patch](dolphin_receive.md) now captures the previously
+untracked importer and persistence/retry fixes, with temporary-mailbox C++
+tests. It has not been installed into the active test emulator or verified
+through real native receipt/display. No live service, credentials or console
+backup was changed. Real receipt remains part of the coordinated validation
+pass.
