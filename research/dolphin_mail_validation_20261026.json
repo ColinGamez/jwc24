@@ -40,5 +40,15 @@
   "live_receive_delete_cgi_transaction_verified": false,
   "real_friend_registration_verified": false,
   "dolphin_launched": false,
-  "actual_wii_backup_accessed_or_changed": false
+  "actual_wii_backup_accessed_or_changed": false,
+  "application_candidate_build": {
+    "target": "dolphin-emu",
+    "succeeded": true,
+    "source_tree_includes_separate_SSL_diagnostics": true,
+    "patch_only_clean_build_verified": false,
+    "sha256": "2481853b02d3cd6439725d2d675c08e030c9089549fe73b7560b49d5691d645e",
+    "bytes": 22740992,
+    "installed_emulator_replaced": false,
+    "launched": false
+  }
 }

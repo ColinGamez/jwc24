@@ -46,10 +46,55 @@ experience or a request to run an incomplete final console test.
   Nintendo signatures remain unverified. Fortune has local resource evidence,
   voice has separate WFC/version dependencies, and printing needs a real provider.
 
+## Continued implementation after the 17-commit checkpoint
+
+The next swarm used the same four worker slots and committed additional scoped
+components rather than rerunning the broad Nintendo index:
+
+- News now builds/signs explicitly supplied native buffers, verifies coherent
+  references/signatures/locales/windows, atomically publishes generations and
+  serves all 24 binary routes. The shared manifest listener accepts an explicit
+  publication/key pair and preserves signed bytes without another envelope.
+  There is still no chosen publisher, current article importer/record builder,
+  automatic refresh or installed-client trust/IOS/VFF/UI proof.
+- Nintendo now decodes selected software titles and linked rows from the actual
+  subsequent ListData format. Original constructor/validator/accessor/wide-copy
+  checks corroborate that subset. Unknown nonempty tables remain undecoded;
+  genuine catalog/media, full loader/authentication and browsing remain open.
+- CMOC's FD record now has an explicit-values codec and actual native startup
+  state-copy comparisons. Opaque field meanings, genuine values, HTTP/header
+  negotiation, encryption/authentication and menu completion remain open.
+- Demae now checks combined item consumption, owned variant copying, exact stock
+  comparison, native price formatting and basket-code reselection. Explicit
+  zero yen remains valid structural data. A separate conservative candidate
+  gate does not confer orderability. All 38 retained branch observations remain
+  expired and their 248 parent items lack provider IDs/variant rows; no item
+  route, order or notice was enabled using those incomplete observations.
+- Existing local Dolphin incoming-mail source was located and captured in a
+  public GPL patch against a pinned upstream commit. Index/friend write failures
+  now propagate, replay IDs preserve distinct real notices and MIME boundaries
+  must be complete lines. Twelve new generated-mailbox/MIME tests and 18 existing
+  filesystem tests pass. The installed emulator and all existing profiles are
+  unchanged; native receipt/display and a live receive/delete transaction remain
+  unverified. Source/build distinctions are in the dedicated mail report.
+- Wii Speak's actual VF version reader and two word consumers are compared in
+  guarded RAM. Exact 8-byte inspection is a stricter local completeness policy;
+  constructor defaults are never generated as a service reply. Opaque capture
+  replay remains an unmounted experiment with crypto/delivery/voice false.
+- Body Check's existing header-only component was reviewed and committed with
+  a fixed CLI error that excludes paths. The original CRC matches 67 synthetic
+  twelve-byte cases with guarded reads and no native writes. Records, medical
+  meaning, authentication, legitimate saves and native flows remain unverified.
+
+Three inspector entry points also work directly from the source checkout
+without an installed project package. Source-only command checks are separate
+from the native comparisons. Private originals and GPL emulator changes are
+not interchangeable provenance categories.
+
 ## Validation and repository integrity
 
-The initial local worktree suite passed 696 tests. The final local offline
-suite passed **862 tests**, with no reported skips. This includes existing
+The earlier checkpoint's initial local worktree suite passed 696 tests and its
+then-final offline suite passed **862 tests**, with no reported skips. This includes existing
 uncommitted experiments and private originals; it is not proof of native UI
 acceptance or a claim that unrelated work was committed.
 
@@ -76,17 +121,51 @@ Completed changes were committed in scoped batches. Older unrelated worktree
 edits and experiments remain intact. Proprietary sources/software, media, keys,
 NAND data, extraction outputs and test logs remain private and ignored.
 
+## Latest continued validation
+
+The complete current local worktree passed **939 Python tests with no reported
+skips** in 235.673 seconds. This includes older uncommitted experiments and local
+private/optional inputs; it is not an assertion that all those experiments were
+committed or that any native application is complete.
+
+A corrected export containing every tracked test module passed **776 tests,
+with 208 reported skips**, in 75.165 seconds in the local environment. This is
+tracked-code validation, not an environment isolated from every external tool
+or fixture path. An earlier intermediate export omitted the new CMOC test
+module; it was corrected before this complete export run. No original bytes
+were copied into the export or staged.
+
+Actual GitHub CI on the complete implementation checkpoint
+`f4a88d4fb7ce5a3dc002dd203adc7c4fe235d5cb` passed **740 tests with 303 reported
+skips** in 14.998 seconds (run 40248819221, job 121336026642), including compilation
+and package checks. Class/subtest skip accounting, optional dependencies and
+available external fixtures make these counts distinct; none is a completion
+percentage. Native private comparisons cannot be replaced by a skipped CI test.
+
+The local Dolphin `tests` target built and passed 12 new receive/MIME tests plus
+18 existing filesystem tests. Its full `dolphin-emu` application candidate also
+built successfully in the separate source tree. That tree contains existing
+SSL diagnostics; a clean patch-only application build is not claimed. The
+candidate was not launched or copied over the installed emulator. Its private
+binary identity and the public patch identity are recorded in the mail report.
+
+Three source-checkout inspector entry points passed isolated `--help` checks
+without an installed JWC24 package. These are command-loading checks, not
+additional native service acceptance.
+
 ## Work that still prevents final completion
 
 The [channel inventory](../channels/README.md) controls the full scope. Continue
 from the verified contracts instead of repeating the broad collection searches:
 
-1. Implement actual News transport/registration and signed-data acceptance,
-   then acquire authorized current Japanese content. The owner was asked about
+1. Connect the implemented News publication/routes to verified client trust,
+   native registration/VFF acceptance and authorized current article inputs. The owner was asked about
    a preferred feed/API; no publisher default or fabricated article was chosen.
-2. Recover Nintendo's downloaded list records and full loader/manager lifecycle;
-   implement actual software/video browsing and submission contracts.
-3. Recover CMOC startup/authentication and real record meanings; connect actual
+2. Extend the partial Nintendo ListData reader to the remaining genuine tables
+   and full loader/manager lifecycle; implement software/video browsing and
+   submission contracts from actual source data.
+3. Complete CMOC FD field meanings, retrieval/authentication and startup;
+   connect actual
    Mii discovery, posting, contests, voting and native notices.
 4. Finish original Shop screens/assets and source-supported runtime/account/
    entitlement/acquisition behavior. Do not substitute account success or treat
@@ -98,8 +177,9 @@ from the verified contracts instead of repeating the broad collection searches:
 6. Continue the additional-channel native flows, Wii Speak's actual compatible
    communication service and Digicam's authorized fulfillment contract. Locate
    and verify an Everybody Votes client before inventing its protocol.
-7. Finish shared Dolphin mail import/friend behavior, refresh time-sensitive
-   inputs, and prepare the coordinated native validation pass for all genuinely
+7. Review/install only an isolated Dolphin mail candidate, verify live CGI,
+   scheduler/import/friend/display behavior, refresh time-sensitive inputs and
+   prepare the coordinated native validation pass for all genuinely
    implemented flows. Real-device findings can still require another fix/pass.
 
 No Dolphin launch, live provider account/order/submission, console installation,

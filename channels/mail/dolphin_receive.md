@@ -29,7 +29,10 @@ all fourteen affected base files accepted the patch; the resulting files
 matched the tested local source. The local Release/MSVC x64 `tests` target
 built successfully. That build checkout also contains separate SSL diagnostics;
 this does not prove an independently compiled clean production emulator.
-The installed emulator executable was not replaced.
+The complete `dolphin-emu` application target also built successfully in that
+separate source build. Its executable size/hash are recorded in the report,
+including the explicit caveat that the tree contains separate SSL diagnostics.
+It has not been launched or copied over the installed test emulator.
 
 ## Receive and retry behavior
 
