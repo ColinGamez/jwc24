@@ -1,0 +1,188 @@
+{
+  "date": "2026-10-26",
+  "original_main_sha256": "aef18b3a045c09b0a1c4dfdd9aed99f78bd4a6be8c0a967deea3e6aa93523264",
+  "tests": 15,
+  "synthetic_native_cases": 11,
+  "scope": "ListData constructor/validator, selected software and linked-row accessors, native UTF16 title copy; no SDK stubs",
+  "results": [
+    {
+      "case": "software_and_linked_rows",
+      "native_validator_status": 0,
+      "independent_subset_accepted": true,
+      "native_constructor_executed": true,
+      "native_validator_executed": true,
+      "counts": {
+        "instructions": 3664,
+        "software_records_compared": 2,
+        "native_titles_copied": 2,
+        "linked_records_compared": 2
+      },
+      "sdk_helpers_stubbed": false,
+      "input_and_stack_guards_verified": true,
+      "crc_or_signature_checked": false,
+      "catalog_sample_or_native_browsing_verified": false
+    },
+    {
+      "case": "missing_title_and_link",
+      "native_validator_status": 0,
+      "independent_subset_accepted": true,
+      "native_constructor_executed": true,
+      "native_validator_executed": true,
+      "counts": {
+        "instructions": 1983,
+        "software_records_compared": 2,
+        "native_titles_copied": 1,
+        "linked_records_compared": 2
+      },
+      "sdk_helpers_stubbed": false,
+      "input_and_stack_guards_verified": true,
+      "crc_or_signature_checked": false,
+      "catalog_sample_or_native_browsing_verified": false
+    },
+    {
+      "case": "opaque_header_word",
+      "native_validator_status": 0,
+      "independent_subset_accepted": true,
+      "native_constructor_executed": true,
+      "native_validator_executed": true,
+      "counts": {
+        "instructions": 3664,
+        "software_records_compared": 2,
+        "native_titles_copied": 2,
+        "linked_records_compared": 2
+      },
+      "sdk_helpers_stubbed": false,
+      "input_and_stack_guards_verified": true,
+      "crc_or_signature_checked": false,
+      "catalog_sample_or_native_browsing_verified": false
+    },
+    {
+      "case": "declared_length_mismatch_local_rejection",
+      "native_validator_status": 0,
+      "independent_subset_accepted": false,
+      "native_constructor_executed": true,
+      "native_validator_executed": true,
+      "counts": {
+        "instructions": 258,
+        "software_records_compared": 0,
+        "native_titles_copied": 0,
+        "linked_records_compared": 0
+      },
+      "sdk_helpers_stubbed": false,
+      "input_and_stack_guards_verified": true,
+      "crc_or_signature_checked": false,
+      "catalog_sample_or_native_browsing_verified": false
+    },
+    {
+      "case": "oversize_title_local_rejection",
+      "native_validator_status": 0,
+      "independent_subset_accepted": false,
+      "native_constructor_executed": true,
+      "native_validator_executed": true,
+      "counts": {
+        "instructions": 241,
+        "software_records_compared": 0,
+        "native_titles_copied": 0,
+        "linked_records_compared": 0
+      },
+      "sdk_helpers_stubbed": false,
+      "input_and_stack_guards_verified": true,
+      "crc_or_signature_checked": false,
+      "catalog_sample_or_native_browsing_verified": false
+    },
+    {
+      "case": "independent_lz11_input",
+      "native_validator_status": 0,
+      "independent_subset_accepted": true,
+      "native_constructor_executed": true,
+      "native_validator_executed": true,
+      "counts": {
+        "instructions": 3664,
+        "software_records_compared": 2,
+        "native_titles_copied": 2,
+        "linked_records_compared": 2
+      },
+      "sdk_helpers_stubbed": false,
+      "input_and_stack_guards_verified": true,
+      "crc_or_signature_checked": false,
+      "catalog_sample_or_native_browsing_verified": false
+    },
+    {
+      "case": "bad_linked_byte_0a",
+      "native_validator_status": 1,
+      "independent_subset_accepted": false,
+      "native_constructor_executed": true,
+      "native_validator_executed": true,
+      "counts": {
+        "instructions": 237,
+        "software_records_compared": 0,
+        "native_titles_copied": 0,
+        "linked_records_compared": 0
+      },
+      "sdk_helpers_stubbed": false,
+      "input_and_stack_guards_verified": true,
+      "crc_or_signature_checked": false,
+      "catalog_sample_or_native_browsing_verified": false
+    },
+    {
+      "case": "bad_linked_byte_1b",
+      "native_validator_status": 1,
+      "independent_subset_accepted": false,
+      "native_constructor_executed": true,
+      "native_validator_executed": true,
+      "counts": {
+        "instructions": 240,
+        "software_records_compared": 0,
+        "native_titles_copied": 0,
+        "linked_records_compared": 0
+      },
+      "sdk_helpers_stubbed": false,
+      "input_and_stack_guards_verified": true,
+      "crc_or_signature_checked": false,
+      "catalog_sample_or_native_browsing_verified": false
+    },
+    {
+      "case": "bad_linked_byte_1c",
+      "native_validator_status": 1,
+      "independent_subset_accepted": false,
+      "native_constructor_executed": true,
+      "native_validator_executed": true,
+      "counts": {
+        "instructions": 241,
+        "software_records_compared": 0,
+        "native_titles_copied": 0,
+        "linked_records_compared": 0
+      },
+      "sdk_helpers_stubbed": false,
+      "input_and_stack_guards_verified": true,
+      "crc_or_signature_checked": false,
+      "catalog_sample_or_native_browsing_verified": false
+    },
+    {
+      "case": "future_version_local_rejection",
+      "native_validator_status": 0,
+      "independent_subset_accepted": false,
+      "native_constructor_executed": true,
+      "native_validator_executed": true,
+      "counts": {
+        "instructions": 258,
+        "software_records_compared": 0,
+        "native_titles_copied": 0,
+        "linked_records_compared": 0
+      },
+      "sdk_helpers_stubbed": false,
+      "input_and_stack_guards_verified": true,
+      "crc_or_signature_checked": false,
+      "catalog_sample_or_native_browsing_verified": false
+    },
+    {
+      "case": "native_out_of_buffer_record_read",
+      "native_read_guard_trapped": true,
+      "valid_native_record_claimed": false
+    }
+  ],
+  "genuine_catalog_sample_found": false,
+  "original_bytes_or_titles_published": false,
+  "complete_catalog_schema_checked": false,
+  "transport_signature_freshness_or_ui_verified": false
+}
