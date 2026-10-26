@@ -189,3 +189,75 @@ synthetic HTTP only; public research and Git transport are separate from native
 service delivery. The region-changed physical Wii remains a distinct future
 validation target. Only the authorized isolated profile may use owned vWii
 credentials; no credential migration was performed by this checkpoint.
+
+## Continued backend work after the 28-commit checkpoint
+
+Seven implementation commits now connect additional actual backend operations:
+
+- Explicit News records encode all six tables with supplied text/dates/IDs,
+  explicit opaque fields, aligned storage and CRC. A private raw+provenance
+  directory is atomically built; the existing signer/publisher can consume it.
+  Loopback tests exercise encode/sign/publish/reload/download and exact text.
+  The complete original article display constructor also preserves supplied
+  titles and optional source suffixes. The separate ticker table's consumer,
+  image decoding, live provider ingestion/trust and original UI remain open.
+- HBNJ opt-in coherent publication snapshots all 112 inputs and captures 109
+  regional/header routes. The shared listener applies existing title-owned
+  encryption/compression and rejects expiry, unknown areas and route conflicts
+  without stale/national fallback. The captured generation does not hot-reload.
+  Argument-free legacy refresh remains operational; it retains its older
+  per-file publication with atomicity unverified. New activation requires an
+  explicit source-checkout command and isolated key input, not a profile edit.
+  Wheel-only snapshot validation remains unsupported because the validators
+  currently reside in the source checkout's tools directory.
+- Wii no Ma's four retained submission experiments now bind their XML response
+  to an actual committed SQLite receipt. Legacy JSON formatting/Unicode retries
+  canonicalize without erasing old rows; ambiguous duplicate keys roll back the
+  entire migration. POST/storage failures cannot return the static acknowledgment.
+  Bounded shared HTTP framing and UTF-8 form checks protect neighboring routes.
+  Original result-code/request meanings, eligibility, aggregation and UI success
+  remain unverified; a receipt is not a counted original Nintendo vote.
+- Shop's complete original CheckDeviceStatus request/response extraction and
+  sync-decision consumer run from both original worker dispatch sites. The
+  explicit-facts serializer and pure update plan preserve partial-state/error
+  distinctions without assigning a connected account. Real registration,
+  authoritative authenticated balances, persistence and full startup remain open.
+- Forecast provider-age receipts are separate from native clock words. Review
+  caught an incorrect first gate equating those clocks; it was corrected before
+  the implementation checkpoint was pushed. Original code uses record+4 minus
+  record+8 as a location-clock offset added to system time. Legitimate clock
+  rebuilding is allowed; stale provider receipts still reject even with a new
+  clock/fetch/hash. No real weather source was refreshed or private code changed.
+
+The targeted weather audit found no retained raw provider body/header cache.
+Old helpers discard headers and their outputs do not preserve independent
+provider dates. Historical overseas weather substitution, unknown precipitation
+converted to zero, repeated daily/six-hour values, copied wind and fixed indices
+remain separate reasons not to approve that pipeline as current data. Timestamp
+semantics are now documented carefully; native location clocks are not falsely
+called observation timestamps. Original missingness evidence is static and does
+not yet make every normalized field or display path complete.
+
+The [Demae source check](demae_menu_access_20261026.md) found no verified current
+provider variant/stock tuple or machine-feed contract. Personal/private-use
+terms are distinguished from broader redistribution; no page-read permission,
+stock fact, availability or merchant authorization was fabricated.
+
+### Current verification
+
+The complete current local worktree passed **1,011 tests with no reported skips**
+in 377.995 seconds. It includes older uncommitted/private experiments, as before.
+A staged-only export separately passed 37 receipt/shared-News/HBNJ/key-owner/
+readiness checks, proving the new server behavior did not depend on unrelated
+worktree edits. Scoped native comparisons and source checks overlap this total.
+
+Actual GitHub CI on `03711bb42f07435d4312e8c383683f7276f65aea` passed **811 tests
+with 315 reported skips** in 23.627 seconds, plus compilation/package checks
+(run 40254534747, job 121353439062). Those skips remain private/optional evidence
+gaps, not original-channel verification or a completion percentage.
+
+No emulator was launched, installed executable replaced, native service restarted,
+provider article/menu/weather/TV feed collected, real account/contact/order/notice
+created, credential migrated or actual Wii backup accessed/modified. HTTP tests
+used synthetic local fixtures; the separately identified public web research and
+Git transport do not constitute channel/service delivery.

@@ -148,8 +148,9 @@ checks are distinguished from actual browser evidence. Original assets,
 software and device data stay private; current templates still need native
 Dolphin visual verification.
 
-TV no Tomo has reached its real program-guide UI with current listings. The
-latest build validated:
+TV no Tomo reached its original program-guide UI in the retained test session.
+The retained build validated the following historical counts; they do not
+establish that today's source data or running server has been refreshed:
 
 - 54 broadcast areas
 - 376 stations
@@ -160,12 +161,30 @@ latest build validated:
 - every EPG-to-string record index
 - every regional native payload
 
-The next work is focused on visual testing of the completed genre and date
-flows, restoring the bundled Japanese Forecast and News channels through their
-native WC24 tasks, incoming-mail support in Dolphin's KD implementation,
-friend registration, easier local server setup, and adapters for more Japanese
-WC24 channels. Forecast comes before Wii no Ma bootstrap work because the room
-UI integrates weather state.
+The [full channel checklist](channels/README.md) tracks the remaining source,
+authentication, original-asset and native-validation gates. Recent offline work
+adds actual backend components while leaving full restoration unfinished:
+
+- [HBNJ coherent snapshots](channels/hbnj/publication.md) publish complete
+  generations and serve 109 frozen routes with native transport. Activation is
+  explicit; legacy daily publication remains available. Snapshot validation
+  currently requires the source checkout, and live refresh/console flows need
+  verification.
+- [News records](channels/news/record_builder.md) encode supplied articles into
+  native files, then pass through signing/publication and HTTP delivery. Original
+  title-display code preserves supplied text; the separate ticker consumer,
+  genuine licensed input, trust and rendering remain open.
+- [Forecast source checks](channels/forecast/source_freshness.md) verify separate
+  provider-time receipts, not the native location-clock anchors. The older
+  private pipeline's historical substitutions and guessed measurements must be
+  corrected before use as accepted current data. No new weather was activated.
+- [Wii no Ma submissions](channels/wii_no_ma/submissions.md) commit local receipts
+  before returning retained acknowledgments. Original result semantics,
+  identity/aggregation and native completion remain unverified; receipts do not
+  establish counted votes or purchases.
+- [Shop device status](channels/wii_shop/device_status.md) now has original
+  extraction/sync-decision comparisons and explicit-facts codecs. It does not
+  create an authenticated or connected account.
 
 Wii no Ma's native Flash shop is unfinished: no compatible `index.esf` entry
 is configured, so new bootstrap builds set `shopvalid=0`. The paid catalog

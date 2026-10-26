@@ -161,3 +161,9 @@ payload. Existing manifest routes remain available. Two additional shared
 listener/CLI tests cover all24 exact bodies, expiry, selectors, collisions,
 unchanged neighboring manifest delivery and explicit input pairing. Their
 signature call is isolated; separate publication tests verify actual signatures.
+
+Structured article inputs can now pass through the [native record builder](record_builder.md)
+before this signed publication path. It preserves supplied text/dates and does
+not choose a provider or fill hours. The [original display-model comparison](headline_model.md)
+verifies title/source copying separately from the still-unverified ticker table
+and rendering. These components do not confer source rights or client trust.
