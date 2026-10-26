@@ -19,7 +19,23 @@ availability and full item-level reuse scope were not verified. NHK's news
 domain was blocked to this browser by robots rules; no access control was
 bypassed and no NHK API, article or blanket redistribution permission is assumed.
 
-The owner's preferred feed/API is being requested while native work continues.
+The owner requested investigation of a suitable Japanese source while native work continues.
 Any eventual adapter needs actual source dates, text, attribution and provenance;
 missing article, image or geographic metadata cannot be invented. These source
 notes do not change original channel UI or select a replacement publisher.
+
+## Follow-up after the owner's answer
+
+The [original-provider review](../../research/news_original_provider_options_20261026.md)
+identifies Nippon TV as the strongest authenticity candidate: its original Wii
+participation is confirmed by Nintendo/NTV and its published syndication service
+includes full text and stills. Current enrollment, delivery specification,
+pricing and JWC24-specific rights remain unconfirmed. Mainichi is another
+original-provider candidate with an official reuse/contact route.
+
+The [alternative-source review](../../research/news_source_followup_20261026.md)
+compares licensed Reuters/Jiji offerings and checks changes to Nordot/Wikinews.
+No active free Japanese fulltext distribution source was verified. No publisher
+has been selected or connected, no account/contact/purchase was made, and no
+source article or image was imported. The native delivery/format work continues
+independently of obtaining an authorized machine feed and sample.

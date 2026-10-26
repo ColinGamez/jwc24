@@ -159,8 +159,9 @@ The [channel inventory](../channels/README.md) controls the full scope. Continue
 from the verified contracts instead of repeating the broad collection searches:
 
 1. Connect the implemented News publication/routes to verified client trust,
-   native registration/VFF acceptance and authorized current article inputs. The owner was asked about
-   a preferred feed/API; no publisher default or fabricated article was chosen.
+   native registration/VFF acceptance and authorized current article inputs. The owner requested source investigation. The original-provider and
+   alternative reviews record NTV/Reuters candidates and access gaps; no
+   provider, account or article feed was enabled.
 2. Extend the partial Nintendo ListData reader to the remaining genuine tables
    and full loader/manager lifecycle; implement software/video browsing and
    submission contracts from actual source data.
