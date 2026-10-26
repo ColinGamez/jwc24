@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-26",
+  "component": "Explicit News native record encoder and private build command",
+  "scope": "All six recovered tables; explicit supplied facts; no provider acquisition or automatic publication",
+  "native_source_sha256": "8c7328c94ed44f916f104e254d07eddbaed7c0f236539a4fe4e70d893b72e852",
+  "verification": {
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_news_records",
+    "tests": 13,
+    "passed": true,
+    "reported_skips": 0,
+    "native_complete_validator_cases": 2,
+    "native_cases": "All six tables and explicitly absent source/location/image records;24 supplied repeated buffers per case",
+    "native_statuses": [
+      0,
+      0
+    ],
+    "native_pruned_slots": [],
+    "native_guards_intact": true,
+    "real_loopback_record_encode_sign_publish_reload_download": true,
+    "actual_provider_text_or_images_used": false
+  },
+  "preservation": [
+    "Exact supplied article text, whitespace, dates and identifiers",
+    "Explicit category/source/credit/location/opaque header choices",
+    "Independent final structure, CRC and cross-buffer reference checks",
+    "Atomic new raw+provenance build directory; no replacement of prior builds",
+    "Malformed/duplicate JSON, field bounds and image base64 reject without source/path diagnostics"
+  ],
+  "not_verified": [
+    "Authorized genuine provider ingestion and article/date provenance",
+    "Native headline/ticker rendering; headline layout separately third-party corroborated",
+    "Actual image decoder, required credits and original UI",
+    "Client trust, native IOS registration and VFF delivery/capacity",
+    "Real hourly coverage and live refresh;repeated tests do not establish those"
+  ],
+  "production_feeds_activated": 0,
+  "device_profiles_or_actual_wii_backup_modified": false
+}
