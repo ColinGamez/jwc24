@@ -71,3 +71,37 @@ data: fresh source evidence plus an independent rebuilt local clock passes;
 stale source evidence still fails despite a current clock, retrieval and
 normalized-document digest. It does not execute these original routines or
 claim independently verified extraction of provider timestamps.
+
+## Builder and validator preservation
+
+The public builder and decoder now enforce the observed daily precipitation
+range in both long and compact records: each of the four explicit slots accepts
+`0..100` or `255`. They preserve the slot values independently. They do not turn
+one daily probability into four observations or replace unavailable values with
+zero. Every day must supply exactly four condition slots and four precipitation
+slots. Weekly precipitation and independent missing-speed semantics are outside
+this particular validation change.
+Both builders also enforce the existing native wind-direction range (`1..16`
+or `255`) before packing; missing direction remains `255`.
+
+The current-weather builder accepts signed-byte temperatures including `-128`
+for unavailable. It rejects values outside that range before unsigned packing;
+previous modulo packing could turn `128` into the unavailable sentinel or `256`
+into zero. This guard does not infer a missing value for an absent provider field.
+The caller must supply the actual measurement or the verified missing marker.
+
+Independent byte assertions also exposed a compact-only layout bug: when no
+long rows were present, the compact table offset incorrectly inherited the
+absent long table's zero offset. The builder now derives both offsets from the
+actual data-section position. Existing combined/long layouts retain their
+offsets. Synthetic compact-only and long-only payloads now pass the independent
+decoder, with unknown conditions, temperatures and wind direction preserved.
+
+```powershell
+.venv/Scripts/python.exe -m unittest tests.test_forecast_missing_measurements tests.test_forecast tests.test_forecast_bundle tests.test_forecast_freshness
+```
+
+These 37 tests passed locally. They check raw offsets/bytes, all daily slot
+positions, rejected source values and existing bundle/source-age behavior.
+They do not establish genuine provider measurements, a complete native
+validator, missing-index semantics, original rendering or current weather.

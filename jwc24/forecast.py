@@ -195,6 +195,20 @@ def encode_lz10(payload: bytes) -> bytes:
     return bytes(output)
 
 
+def _native_temperature_byte(value: int) -> int:
+    # 0x80 is the original unavailable-temperature sentinel. Do not turn an
+    # out-of-range provider value into that sentinel (or another temperature)
+    # through modulo conversion.
+    if type(value) is not int or not -128 <= value <= 127:
+        raise ValueError("temperature must be a signed byte, including -128 for unavailable")
+    return value & 0xFF
+
+
+def _validate_precipitation(value: int, label: str) -> None:
+    if type(value) is not int or not (0 <= value <= 100 or value == 0xFF):
+        raise ValueError(f"{label} precipitation must be 0..100 or 255 for unavailable")
+
+
 def build_short_payload(
     records: list[CurrentWeatherRecord] | tuple[CurrentWeatherRecord, ...],
     *,
@@ -207,6 +221,7 @@ def build_short_payload(
     opened = unix_to_wii_minutes(generated_unix_timestamp)
     rows = bytearray()
     for record in records:
+        _validate_wind_direction(record.wind_direction, "current forecast")
         rows.extend(
             CURRENT_FORECAST.pack(
                 record.country_code,
@@ -216,8 +231,8 @@ def build_short_payload(
                 opened,
                 record.condition_code,
                 0,
-                record.temperature_celsius & 0xFF,
-                record.temperature_fahrenheit & 0xFF,
+                _native_temperature_byte(record.temperature_celsius),
+                _native_temperature_byte(record.temperature_fahrenheit),
                 record.wind_direction,
                 record.wind_speed_metric,
                 record.wind_speed_imperial,
@@ -336,6 +351,11 @@ def build_location_forecast_payload(
     long_rows = bytearray()
 
     def day_values(day: ForecastDay) -> list[int]:
+        if len(day.six_hour_condition_codes) != 4 or len(day.precipitation) != 4:
+            raise ValueError("each forecast day needs four explicit condition and precipitation slots")
+        for value in day.precipitation:
+            _validate_precipitation(value, "daily forecast")
+        _validate_wind_direction(day.wind_direction, "daily forecast")
         return [
             day.condition_code,
             *day.six_hour_condition_codes,
@@ -409,8 +429,9 @@ def build_location_forecast_payload(
         + len(long_rows)
         + len(short_rows)
     )
-    long_offset = FORECAST_HEADER.size + len(rows) + len(text) if forecasts else 0
-    short_offset = long_offset + len(long_rows) if short_forecasts else 0
+    forecast_offset = FORECAST_HEADER.size + len(rows) + len(text)
+    long_offset = forecast_offset if forecasts else 0
+    short_offset = forecast_offset + len(long_rows) if short_forecasts else 0
 
     def text_section(
         records: list[WeatherConditionText] | tuple[WeatherConditionText, ...]
@@ -648,7 +669,7 @@ def _table_keys(
 
 
 def _validate_wind_direction(value: int, label: str) -> None:
-    if value not in range(1, 17) and value != 0xFF:
+    if type(value) is not int or (value not in range(1, 17) and value != 0xFF):
         raise ValueError(f"{label} has invalid wind direction {value}")
 
 
@@ -705,6 +726,8 @@ def validate_forecast(payload: bytes, *, signed: bool = True) -> ForecastSummary
         )
         _validate_wind_direction(values[23], f"long forecast {position} today")
         _validate_wind_direction(values[46], f"long forecast {position} tomorrow")
+        for index in (*range(19, 23), *range(42, 46)):
+            _validate_precipitation(values[index], f"long forecast {position}")
     for position in range(counts[1]):
         values = SHORT_FORECAST.unpack_from(
             raw, offsets[1] + position * SHORT_FORECAST.size
@@ -715,6 +738,8 @@ def validate_forecast(payload: bytes, *, signed: bool = True) -> ForecastSummary
             )
         _validate_wind_direction(values[23], f"short forecast {position} today")
         _validate_wind_direction(values[46], f"short forecast {position} tomorrow")
+        for index in (*range(19, 23), *range(42, 46)):
+            _validate_precipitation(values[index], f"short forecast {position}")
     records = []
     location_keys: set[tuple[int, int, int]] = set()
     for position in range(counts[6]):
