@@ -15,6 +15,7 @@ from pathlib import Path
 
 from .manifest import ChannelManifest
 from .wc24_delivery import envelope_key_paths
+from .news_server import NewsApplication
 from .wii_no_ma import get_response as wii_no_ma_get_response
 
 
@@ -84,12 +85,15 @@ def serve(
     nand_root: Path | None,
     tls_cert: Path | None = None,
     tls_key: Path | None = None,
+    *,
+    news_publication=None,
 ) -> None:
     manifests = (manifest,) if isinstance(manifest, ChannelManifest) else tuple(manifest)
     if not manifests:
         raise ValueError("at least one manifest is required")
     if (tls_cert is None) != (tls_key is None):
         raise ValueError("TLS requires both a certificate and private key")
+    news_application = NewsApplication(news_publication) if news_publication is not None else None
     all_tasks = tuple(task for item in manifests for task in item.tasks)
     all_assets = tuple(asset for item in manifests for asset in item.assets)
     wii_no_ma_base = next(
@@ -99,6 +103,12 @@ def serve(
     routes = {task.route: task for task in all_tasks}
     if len(routes) != len(all_tasks):
         raise ValueError("manifests declare duplicate task routes")
+    if news_application is not None:
+        news_prefix = news_publication.route_prefix + "/"
+        reserved_names = {f"news.bin.{slot:02d}" for slot in range(24)}
+        if (any(route.startswith(news_prefix) for route in routes)
+                or any(item.filename in reserved_names for item in (*all_tasks, *all_assets))):
+            raise ValueError("News publication routes conflict with manifest payloads")
     asset_routes = {}
     items_by_filename = {
         item.filename: item for item in (*all_tasks, *all_assets)
@@ -130,6 +140,17 @@ def serve(
         protocol_version = "HTTP/1.1"
 
         def do_GET(self) -> None:  # noqa: N802
+            # News bodies are already compressed/signed and must bypass generic envelope
+            # transformation, suffix aliases and Wii no Ma's route normalization.
+            if news_application is not None and self.path.startswith(news_prefix):
+                status, mime, body = news_application.get(self.path)
+                self.send_response(status)
+                self.send_header("Content-Type", mime)
+                self.send_header("Content-Length", str(len(body)))
+                self.send_header("Cache-Control", "no-store")
+                self.end_headers()
+                self.wfile.write(body)
+                return
             raw_route = self.path.split("?", 1)[0]
             # Shorter replacement hosts are slash-padded in fixed-size channel
             # URL fields. Treat repeated path separators as equivalent.

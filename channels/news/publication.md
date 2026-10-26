@@ -135,3 +135,29 @@ explicit working-copy endpoint/trust preparation, native SDK/IOS registration,
 real VFF storage, the live clock and original banner/globe/article UI remain
 unverified. A real authorized Japanese provider and native record-generation
 adapter are also still required; no content source is chosen implicitly.
+
+## Shared listener integration
+
+The regular multi-manifest listener can attach one explicit prepared News
+publication. It loads/revalidates the generation and key before listening:
+
+```powershell
+.venv/Scripts/python.exe -m jwc24 serve channels/hbnj/channel.json `
+  --base-url http://127.0.0.1:8080 `
+  --news-root private/news/publication --news-public-key private/news/public.pem
+```
+
+These paths are examples requiring genuine prepared inputs. Both News options
+are required together. This command starts a listener; it does not install or
+register tasks, patch trust or change a profile. Select the correct reachable
+origin and supplied native numeric route prefix for the intended isolated test.
+The local example does not configure a physical Wii.
+
+News's exact binary routes bypass generic per-title encryption/compression,
+suffix aliases and Wii no Ma route normalization. Manifest route or reserved
+News filename conflicts reject before serving. Expired snapshots return503
+and malformed News selectors return404; neither falls through to a generic
+payload. Existing manifest routes remain available. Two additional shared
+listener/CLI tests cover all24 exact bodies, expiry, selectors, collisions,
+unchanged neighboring manifest delivery and explicit input pairing. Their
+signature call is isolated; separate publication tests verify actual signatures.

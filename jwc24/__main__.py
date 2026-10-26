@@ -43,6 +43,8 @@ def build_parser() -> argparse.ArgumentParser:
     server.add_argument("--tls-cert", type=Path)
     server.add_argument("--tls-key", type=Path)
     server.add_argument("--base-url", help="select a shared origin in memory; does not rewrite manifests")
+    server.add_argument("--news-root", type=Path, help="explicit validated private News publication")
+    server.add_argument("--news-public-key", type=Path, help="explicit News signature verification key")
 
     account = sub.add_parser("account", help="audit or locally bootstrap the WC24 account")
     account.add_argument("--config", type=Path, required=True)
@@ -159,6 +161,12 @@ def main() -> int:
             return 0
 
         if args.command == "serve":
+            if (args.news_root is None) != (args.news_public_key is None):
+                raise ValueError("News serving requires both --news-root and --news-public-key")
+            news = None
+            if args.news_root is not None:
+                from .news_publication import load_news_publication
+                news = load_news_publication(args.news_root, public_key=args.news_public_key)
             manifests = tuple(load_manifest(path) for path in args.manifest)
             if args.base_url:
                 manifests = with_base_url(manifests, args.base_url)
@@ -174,6 +182,7 @@ def main() -> int:
                 args.nand_root,
                 args.tls_cert,
                 args.tls_key,
+                **({"news_publication": news} if news is not None else {}),
             )
             return 0
 
