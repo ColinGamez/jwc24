@@ -1,7 +1,7 @@
-"""Offline HBNJ generations; requires source-checkout tools for validation.
+"""Offline HBNJ generations with packaged, independent payload validation.
 
-No collection, IOS tasks or transport keys. Wheel-only runtime is unsupported
-until the independent validator tools are packaged with the library.
+No collection, IOS tasks or transport keys. The same validators ship in the
+installed wheel and remain isolated subprocesses with fixed timeouts.
 """
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ import uuid
 
 from .publication_lock import directory_lock
 
-WORKSPACE = Path(__file__).resolve().parents[1]
+PACKAGE_PARENT = Path(__file__).resolve().parents[1]
 JST = timezone(timedelta(hours=9))
 MAX_FILE_BYTES = 64 * 1024 * 1024
 MAX_TOTAL_BYTES = 256 * 1024 * 1024
@@ -154,15 +154,17 @@ def _filenames(area_ids):
 def _validate_files(directory):
     environment = os.environ.copy()
     environment['PYTHONIOENCODING'] = 'utf-8'
-    environment['PYTHONPATH'] = str(WORKSPACE)
+    # Use this exact package installation in the child interpreter, whether
+    # running from a source checkout or a wheel's site-packages directory.
+    environment['PYTHONPATH'] = str(PACKAGE_PARENT)
     commands = [
-        ('validate_hbnj_guide.py', 'guide.json'),
-        ('validate_hbnj_payloads.py', 'guide.json', '.'),
-        ('validate_hbnj_area_payloads.py', 'guide.json', 'areas'),
+        ('guide', 'guide.json'),
+        ('payloads', 'guide.json', '.'),
+        ('areas', 'guide.json', 'areas'),
     ]
-    for tool, *arguments in commands:
+    for validator, *arguments in commands:
         try:
-            result = subprocess.run([sys.executable, str(WORKSPACE / 'tools' / tool), *arguments],
+            result = subprocess.run([sys.executable, '-P', '-m', f'jwc24.hbnj_validation.{validator}', *arguments],
                                     cwd=directory, env=environment, capture_output=True,
                                     check=False, timeout=120)
         except (OSError, subprocess.TimeoutExpired):

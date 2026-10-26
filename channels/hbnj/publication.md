@@ -60,13 +60,25 @@ output root before recursive removal.
 
 ## Runtime snapshot integration
 
-**Current implementation requires a source checkout.** The loader invokes the
-existing `tools/validate_hbnj_guide.py`, `tools/validate_hbnj_payloads.py` and
-`tools/validate_hbnj_area_payloads.py` beneath that checkout. The installed wheel
-currently includes only `jwc24*`, so wheel-only `--hbnj-root` serving is not
-supported by this batch. Missing validator tools fail closed. Packaging-safe
-validation resources are a separate integration task, not a reason to skip the
-independent checks or claim installed-package runtime coverage.
+The independent validators now ship in the `jwc24.hbnj_validation` package.
+The loader runs its `guide`, `payloads` and `areas` modules under the current
+Python interpreter, with the same subprocess isolation, captured diagnostics,
+120-second timeouts and failure handling. Child interpreters use Python's
+`-P` safe-path option and the actual package location, so a payload directory
+cannot shadow validation modules through the current working directory. The existing validation bodies are
+unchanged; guide schema, national descriptions/references, regional links,
+HDPK/UTF-16 structure and size budgets still run before acceptance. Both a
+source checkout and an installed wheel can validate supplied generations.
+The three `tools/validate_hbnj_*.py` entry points remain compatibility wrappers,
+including their imported binary-helper interfaces. No duplicate validator copy
+or reduced wheel-only validation path is maintained.
+
+Collection and native packing tools still require the source checkout. This
+does not add a collector or provider access to the wheel. Deployment supplies
+an explicitly prepared private generation, manifest and the existing transport
+key inputs separately; none is bundled into the distribution. Installed serving
+does not depend on a checkout's `tools` directory or silently skip validation
+when those files are absent.
 
 `jwc24.hbnj_publication.load_hbnj_snapshot(root)` reads one pointed generation,
 checks contained paths, all recorded hashes and current source/schedule ranges,
@@ -92,7 +104,8 @@ These bytes are not a ready encrypted wire response. The snapshot component
 never reads a NAND key or changes IOS tasks. A later publication changes only
 the pointer; an already running prepared snapshot stays coherent until explicit
 reload/restart, rather than switching individual responses mid-session. New
-server mounting belongs to the separate shared integration batch.
+shared-server mounting and read-only preflight are now integrated through
+`--hbnj-root`; activation remains explicit.
 
 ## Validation
 
@@ -107,7 +120,7 @@ unverified by these tests.
 
 ## Shared manifest listener
 
-The source-checkout CLI can attach one validated generation while retaining the
+The source or installed CLI can attach one validated generation while retaining the
 existing HBNJ compression and key ownership:
 
 ```powershell
@@ -130,3 +143,30 @@ The generation is captured once at startup. Publishing another generation does
 not silently activate it in an ongoing server. Explicit restart/activation and
 the original task/download refresh handoff remain runtime work; these tests do
 not prove a complete live daily-update lifecycle or native display.
+
+
+## Installed-wheel verification
+
+`tests.test_hbnj_wheel` builds a real local wheel with the optional local
+`setuptools` backend, installs it without dependencies or network access into a
+fresh isolated virtual environment, and runs from outside the checkout with
+`-I`. The wheel contains the validation package and no `tools` or private data.
+The probe publishes and reloads explicitly synthetic 54-area/eight-day input;
+it rejects inconsistent national text, regional station links and invalid HDPK
+even after recorded hashes are updated. A shadow package in the payload
+working directory cannot bypass those checks. The transport probe verifies
+all 109 prepared routes after AES-OFB decryption and LZ10 decoding, plus
+unknown-route rejection, fixed-generation behavior and expiry. Its temporary
+key is synthetic, not a console credential.
+
+Run with a Python installation containing the local build backend and, for
+transport verification, local OpenSSL:
+
+```powershell
+python -m unittest tests.test_hbnj_wheel
+```
+
+The test skips explicitly if its optional build tooling is absent. This is
+installed-package and loopback verification using synthetic data, not proof
+of provider permission, authentic current schedules, IOS acceptance or native
+channel rendering. No collector, device, profile or scheduled task is run.
