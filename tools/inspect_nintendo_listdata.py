@@ -6,6 +6,9 @@ import json
 from pathlib import Path
 import sys
 
+if __package__ in (None, ''):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from jwc24.nintendo_listdata import MAX_INPUT_BYTES, ListDataFormatError, inspect_listdata
 
 

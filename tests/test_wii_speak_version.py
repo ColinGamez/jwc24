@@ -146,4 +146,3 @@ class WiiSpeakNativeVersionTests(unittest.TestCase):
                 self.assertEqual(native['newer_than_client_2'], local['newer_than_native_client_2'])
                 self.assertEqual(native['size_limit_bytes_u32'], local['size_limit_bytes_native_u32'])
                 self.assertTrue(native['vf_allocator_and_sdk_services_mocked'])
-

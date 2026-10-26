@@ -6,6 +6,9 @@ import json
 from pathlib import Path
 import sys
 
+if __package__ in (None, ''):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from jwc24.cmoc import CMOCFormatError, DEFAULT_MAX_BYTES
 from jwc24.cmoc_startup import MAX_NATIVE_CAST_SIZE, decode_first_data_record, inspect_first_data_response
 

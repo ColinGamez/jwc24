@@ -11,6 +11,9 @@ import json
 from pathlib import Path
 import random
 import sys
+
+if __package__ in (None, ''):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import zlib
 
 SOURCE_BYTES = 4110944
