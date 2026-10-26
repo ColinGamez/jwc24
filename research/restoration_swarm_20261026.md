@@ -261,3 +261,73 @@ provider article/menu/weather/TV feed collected, real account/contact/order/noti
 created, credential migrated or actual Wii backup accessed/modified. HTTP tests
 used synthetic local fixtures; the separately identified public web research and
 Git transport do not constitute channel/service delivery.
+
+## October 27: preparation, deployment and additional native consumers
+
+Seven further scoped code commits through `e4b292f` add the following, without
+changing original UI assets, selecting providers or activating a console:
+
+- Preflight loads the same explicitly selected News/HBNJ publications as the
+  server and shares their ownership, transport and route-conflict contract.
+  Only actual HBNJ snapshot-owned tasks bypass missing legacy file checks;
+  unrelated payloads still fail. Snapshot expiry is separate from file mtime.
+  News' generic-manifest checks explicitly do not implement native SDK subtask
+  registration. A clean staged export passed 29 related tests independently
+  of the older uncommitted server experiments.
+- HBNJ's independent guide/national/regional validators now ship in the wheel.
+  Their checks are preserved; old tools remain compatible entry points. Two
+  actual wheel tests passed outside the checkout in a fresh environment,
+  including all 109 decrypted/decoded routes and content/expiry/conflict
+  rejection. A reproduced working-directory shadow-package bypass is prevented
+  by the child interpreter's safe-path option and explicit package path.
+  Collection/packing still use source tools; automatic runtime activation and
+  genuine current provider data remain open.
+- Forecast preserves explicit daily probabilities `0..100` and unavailable
+  `255`, and rejects invalid source values rather than substituting zero.
+  Current temperature packing rejects overflow instead of wrapping into a real
+  value or the `-128` missing marker. Compact-only tables now point at their
+  actual data offset rather than zero. Thirty-seven focused tests passed.
+  The separate original-code proof checks 1,024 probability slot/byte cases
+  with protected code/input pages and immutable guards. It is an isolated
+  validation block, not full native weather validation or rendering.
+- CMOC now connects its existing FD decoder to the complete observed response
+  gate and actual SDK header/numeric behavior. There are 284 full-handler and
+  32 SDK accessor comparisons. Missing-request/incomplete-body zero completions
+  cannot become checked-header success. The original `%03d` conversion reads
+  three characters, including signs: `0100` becomes 10. Missing/malformed
+  values leave initialized zero; that is not authentication. Actual socket
+  construction, host overrides, requests, genuine Mii data and authorization
+  remain unimplemented.
+- Shop's registration-sync path now runs from the actual worker call through
+  original XML, response extraction, account assignment and token derivation.
+  The exact signed challenge bytes differ from escaped SOAP field text. The
+  standalone component requires explicit facts and returns a pure state plan;
+  88 focused startup tests passed, including 23 new registration tests.
+  Unregistered, expired-token, partial response and failed-save outcomes remain
+  distinct. Signing/certificate authority, replay/session binding, durable
+  registration and the full original startup/acquisition flow are still open.
+
+The new components use synthetic fixtures. Original binaries, SDK material,
+private keys and device backups remain outside Git. No original title was
+patched or launched, and no actual Wii backup, isolated vWii profile, real
+provider feed, account, order, vote or notice was changed by this batch.
+
+### Verification at `e4b292f`
+
+The full current local worktree passed **1,058 tests in 372.458 seconds**, with
+one explicit skip for the optional local wheel-build backend. The separately
+executed clean-export installed-wheel tests passed both cases in 97.5 seconds.
+The full worktree still includes older uncommitted experiments; its broad pass
+does not turn those experiments into reviewed commits or original experiences.
+The private full-run log is `private/swarm-sixth-full-20261027.log`.
+
+The seven code commits through `e4b292f` are pushed. That checkpoint's local
+evidence does not cover subsequent implementations, newly acquired provider
+content or real-device behavior. Tests use original software only as private,
+pinned comparison inputs and synthetic data as service fixtures. The complete
+channel inventory and its unresolved gates remain the completion criteria.
+
+GitHub CI for full commit `e4b292fd26cdff9a1ca9adc2663eb86e0c85f328` also
+passed compilation, package installation and **856 tests with 332 reported
+skips** in 24.692 seconds (run 40421240916, job 121915925310). The public
+checkout's private-fixture/optional skips are not native or full local evidence.

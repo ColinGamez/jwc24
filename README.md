@@ -168,8 +168,8 @@ adds actual backend components while leaving full restoration unfinished:
 - [HBNJ coherent snapshots](channels/hbnj/publication.md) publish complete
   generations and serve 109 frozen routes with native transport. Activation is
   explicit; legacy daily publication remains available. Snapshot validation
-  currently requires the source checkout, and live refresh/console flows need
-  verification.
+  ships in the installed package; fresh-wheel loopback tests cover all routes.
+  Live refresh/console flows still need verification.
 - [News records](channels/news/record_builder.md) encode supplied articles into
   native files, then pass through signing/publication and HTTP delivery. Original
   title-display code preserves supplied text; the separate ticker consumer,
@@ -178,13 +178,22 @@ adds actual backend components while leaving full restoration unfinished:
   provider-time receipts, not the native location-clock anchors. The older
   private pipeline's historical substitutions and guessed measurements must be
   corrected before use as accepted current data. No new weather was activated.
+  [Missing-value guards](channels/forecast/native_clock_and_missingness.md)
+  preserve native sentinels and fix compact-only payload offsets; the original
+  precipitation block is independently checked for all 1,024 slot/byte cases.
+- [Check Mii Out HTTP handling](channels/cmoc/http_conversion.md) now follows
+  original SDK header lookup and three-character numeric conversion into the
+  observed response gate/FD decoder. Real request/authentication/Mii flows remain
+  unfinished; an initialized result of zero is not authenticated startup.
 - [Wii no Ma submissions](channels/wii_no_ma/submissions.md) commit local receipts
   before returning retained acknowledgments. Original result semantics,
   identity/aggregation and native completion remain unverified; receipts do not
   establish counted votes or purchases.
 - [Shop device status](channels/wii_shop/device_status.md) now has original
-  extraction/sync-decision comparisons and explicit-facts codecs. It does not
-  create an authenticated or connected account.
+  extraction/sync-decision comparisons and explicit-facts codecs. The
+  [registration-sync component](channels/wii_shop/registration_sync.md) also
+  preserves exact signing input and native account-state decisions. Neither
+  creates an authenticated or connected account.
 
 Wii no Ma's native Flash shop is unfinished: no compatible `index.esf` entry
 is configured, so new bootstrap builds set `shopvalid=0`. The paid catalog
@@ -250,7 +259,11 @@ py -3 tools\update_hbnj_daily.py
 That command collects eight days for all regions into private staging,
 validates the complete guide and native size ceilings, creates HDPK payloads,
 independently parses them, and publishes only after every check passes. A
-failed build leaves the previous live guide untouched.
+validation failure leaves the previous published guide untouched. Legacy
+publication copies validated files individually; whole-generation atomicity
+is not verified for that path. Use the explicit
+[coherent snapshot mode](channels/hbnj/publication.md) for immutable generations;
+runtime activation remains separate.
 
 The shared command-line tools can audit WC24 state, inspect the local account,
 validate channel manifests, provision tasks, and run the replacement server:

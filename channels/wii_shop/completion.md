@@ -1,6 +1,6 @@
 # Full Shop restoration: remaining completion criteria
 
-Updated October 26, 2026. **The Shop is not complete.** Restored historical
+Updated October 27, 2026. **The Shop is not complete.** Restored historical
 browsing and a working loopback browser do not establish the original Japanese
 experience or a working acquisition service.
 
@@ -13,7 +13,7 @@ experience or a working acquisition service.
 | Japanese interface | Home copy corroborated against Nintendo's screenshot; detail heading corroborated in its manual; captured product text retained | Remaining Japanese labels, original markup/flow and encoding verification |
 | Category/search | Captured VC menu with original control meanings and native keyboard wiring; exact backend group filters and captured generic no-results layout | Original publisher/category gateway/WiiWare pages, two system-picker pictograms, genre-code mapping, exact Japanese keyword-empty/search-again states, verified popularity/new-release data |
 | Native experience | Original v21 browser connects; original installed scripts and selected captured handlers are checked | Current home/list/detail/controller visuals, Japanese input, hover/sound behavior and complete interaction in Dolphin |
-| Commerce | Client/library interfaces and selected native paths audited; offline CAS ListTitles, ECS GetECConfig and IAS GetChallenge components; retail EC/plugin call sites and selected original request/response code checked | Complete runtime startup/attribute contract, signing/registration/account/session/device status, catalog/entitlement semantics, verified content selection, tickets/acquisition, storage/install and error recovery |
+| Commerce | Client/library interfaces and selected native paths audited; offline CAS ListTitles, ECS GetECConfig, IAS GetChallenge, [CheckDeviceStatus](device_status.md) and [registration-sync](registration_sync.md) components; complete selected native request/response/state consumers checked | Complete runtime startup/attribute contract, actual signing/certificate trust, authorized registration/account/session, persistence, catalog/entitlement semantics, verified content selection, tickets/acquisition, storage/install and error recovery |
 | Operations guide | Original help/manual routing traced; partial Japanese game pilot recovered and kept inactive | Original Shop guide, complete manual dependencies and native session behavior |
 
 The known collector backup lacks `B_17.jsp`, `B_23.jsp` and `B_27.jsp`. A fresh
