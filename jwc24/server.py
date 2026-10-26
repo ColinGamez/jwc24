@@ -4,6 +4,8 @@ import hashlib
 import os
 import shutil
 import ssl
+import sqlite3
+import socket
 import subprocess
 import re
 from datetime import datetime, timezone
@@ -18,6 +20,10 @@ from .wc24_delivery import envelope_key_paths
 from .news_server import NewsApplication
 from .hbnj_publication import HBNJRouteSnapshot, HBNJSnapshotExpired
 from .wii_no_ma import get_response as wii_no_ma_get_response
+from .wii_no_ma_interactions import INTERACTION_ROUTES, InteractionStore
+
+MAX_CGI_BODY_BYTES = 1024 * 1024
+HTTP_CLIENT_TIMEOUT_SECONDS = 30
 
 
 def _nintendo_lz10_literal(payload: bytes) -> bytes:
@@ -148,18 +154,30 @@ def serve(
         raise FileNotFoundError("missing declared payloads:\n" + "\n".join(missing))
     request_log = Path("private/wii_no_ma/request.log")
     request_log.parent.mkdir(parents=True, exist_ok=True)
-    request_log.write_text("", encoding="utf-8")
+    with request_log.open("a", encoding="utf-8") as handle:
+        handle.write(f"SESSION {datetime.now(timezone.utc).isoformat()}\n")
     envelope_keys = envelope_key_paths(manifests, nand_root)
 
     class Handler(BaseHTTPRequestHandler):
         server_version = "JWC24/0.1"
-        # Wii no Ma uses NHTTP directly and expects the persistent HTTP/1.1
-        # behavior of Nintendo's original service.  HTTP/1.0 delivered the
-        # complete bodies but closed each socket, leaving the title's startup
-        # completion gate with generic service error 354153.
+        # Retain persistent HTTP sessions; transport success is separate from
+        # native response consumption and first-intro completion.
         protocol_version = "HTTP/1.1"
 
+        def setup(self) -> None:
+            super().setup()
+            self.connection.settimeout(HTTP_CLIENT_TIMEOUT_SECONDS)
+
+        def handle(self) -> None:
+            try:
+                super().handle()
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError, socket.timeout):
+                # A disconnected player ends this request, not the listener.
+                self.close_connection = True
+
         def do_GET(self) -> None:  # noqa: N802
+            if self._read_request_body() is None:
+                return
             # News bodies are already compressed/signed and must bypass generic envelope
             # transformation, suffix aliases and Wii no Ma's route normalization.
             if news_application is not None and self.path.startswith(news_prefix):
@@ -387,7 +405,7 @@ def serve(
                 return
             self.send_header("Content-Length", str(len(body)))
             self.send_header("Cache-Control", "no-store")
-            self.send_header("Connection", "keep-alive")
+            self.send_header("Connection", "close" if self.close_connection else "keep-alive")
             self.end_headers()
             self.wfile.write(body)
             if route == "/conf/first.bin" or route.startswith(("/url1/", "/url2/", "/url3/", "/shop/")):
@@ -397,11 +415,61 @@ def serve(
                         f"status=200 bytes={len(body)} sha256={hashlib.sha256(body).hexdigest()}\n"
                     )
 
+        def _read_request_body(self) -> bytes | None:
+            expectations = self.headers.get_all("Expect", [])
+            if expectations and (len(expectations) != 1 or expectations[0].lower() != "100-continue"):
+                self.send_error(HTTPStatus.EXPECTATION_FAILED)
+                self.close_connection = True
+                return
+            # Unsupported transfer encodings must close the connection rather
+            # than leave their body to be parsed as another HTTP request.
+            if self.headers.get_all("Transfer-Encoding"):
+                self.send_error(HTTPStatus.NOT_IMPLEMENTED)
+                self.close_connection = True
+                return
+            lengths = self.headers.get_all("Content-Length", [])
+            if len(lengths) > 1 or (lengths and not re.fullmatch(r"[0-9]+", lengths[0])):
+                self.send_error(HTTPStatus.BAD_REQUEST)
+                self.close_connection = True
+                return
+            try:
+                length = int(lengths[0]) if lengths else 0
+            except ValueError:
+                self.send_error(HTTPStatus.BAD_REQUEST)
+                self.close_connection = True
+                return
+            if length > MAX_CGI_BODY_BYTES:
+                self.send_error(HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
+                self.close_connection = True
+                return
+            try:
+                body = self.rfile.read(length) if length else b""
+            except socket.timeout:
+                self.send_error(HTTPStatus.REQUEST_TIMEOUT, "Request body timed out")
+                self.close_connection = True
+                return
+            if len(body) != length:
+                self.send_error(HTTPStatus.BAD_REQUEST, "Incomplete request body")
+                self.close_connection = True
+                return
+            return body
+
         def do_POST(self) -> None:  # noqa: N802
-            length = int(self.headers.get("Content-Length", "0") or "0")
-            body = self.rfile.read(length) if length else b""
-            path = urlparse(self.path).path
-            form = parse_qs(body.decode("ascii", errors="replace"), keep_blank_values=True)
+            body = self._read_request_body()
+            if body is None:
+                return
+            raw_path = self.path.split("?", 1)[0]
+            path = "/" + "/".join(part for part in raw_path.split("/") if part)
+            if raw_path.endswith("/") and path != "/":
+                path += "/"
+            try:
+                encoded_form = body.decode("utf-8")
+                if re.search(r"%(?![0-9a-fA-F]{2})", encoded_form):
+                    raise ValueError("Malformed percent escape")
+                form = parse_qs(encoded_form, keep_blank_values=True, errors="strict")
+            except (UnicodeError, ValueError):
+                self.send_error(HTTPStatus.BAD_REQUEST, "Malformed UTF-8 form")
+                return
             print(
                 f"{self.client_address[0]} POST {path} bytes={len(body)} "
                 f"fields={sorted(form)} user-agent={self.headers.get('User-Agent', '')!r}"
@@ -410,8 +478,25 @@ def serve(
                 handle.write(f"POST {path} bytes={len(body)} fields={sorted(form)}\n")
 
             endpoint = path.rsplit("/", 1)[-1]
-            endpoint = endpoint.replace("activate", "activate", 1)
-            direct_response = wii_no_ma_get_response(path, wii_no_ma_base)
+            if path in INTERACTION_ROUTES:
+                if not form:
+                    self.send_error(HTTPStatus.BAD_REQUEST, "Missing interaction form")
+                    return
+                try:
+                    direct_response = InteractionStore(Path("private/wii_no_ma/interactions")).submit(path, form).response
+                except (OSError, sqlite3.Error, ValueError):
+                    self.send_error(HTTPStatus.SERVICE_UNAVAILABLE, "Interaction storage unavailable")
+                    self.close_connection = True
+                    return
+            else:
+                try:
+                    direct_response = wii_no_ma_get_response(path, wii_no_ma_base)
+                except FileNotFoundError:
+                    self.send_error(HTTPStatus.NOT_FOUND)
+                    return
+                except OSError:
+                    self.send_error(HTTPStatus.INTERNAL_SERVER_ERROR)
+                    return
             if direct_response is not None:
                 response = direct_response
                 result = "0100"
@@ -443,7 +528,7 @@ def serve(
             self.send_header("X-RESULT", result)
             self.send_header("Content-Length", str(len(response)))
             self.send_header("Cache-Control", "no-store")
-            self.send_header("Connection", "keep-alive")
+            self.send_header("Connection", "close" if self.close_connection else "keep-alive")
             self.end_headers()
             self.wfile.write(response)
 

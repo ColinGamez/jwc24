@@ -1,0 +1,134 @@
+{
+  "channel": "Wii no Ma Japan HCIJ v1025",
+  "provenance": "Original locally preserved Nintendo HDPK response schemas; not third-party response samples. Source bytes remain private.",
+  "schemas": [
+    {
+      "source": "private/wii_no_ma/v1025/resource-u8/xml/Evaluate.bin",
+      "bytes": 226,
+      "sha256": "3bddb00ca39080f1d10d1ffdfa25518472a5c19430dc42ee13e58d90c14454cd",
+      "root": "Evaluate",
+      "fields": [
+        {
+          "name": "code",
+          "required": true,
+          "type": 6,
+          "bounds": [
+            1,
+            999
+          ]
+        },
+        {
+          "name": "msg",
+          "required": false,
+          "type": 1,
+          "bounds": [
+            0,
+            100,
+            0,
+            4294967295
+          ]
+        }
+      ]
+    },
+    {
+      "source": "private/wii_no_ma/v1025/resource-u8/xml/PayEvaluate.bin",
+      "bytes": 230,
+      "sha256": "666e0a5bdd44a205a9b1dfcc3406b0b462dc320b28548c13c7cf7596aa9b3ee5",
+      "root": "PayEvaluate",
+      "fields": [
+        {
+          "name": "code",
+          "required": true,
+          "type": 6,
+          "bounds": [
+            1,
+            999
+          ]
+        },
+        {
+          "name": "msg",
+          "required": false,
+          "type": 1,
+          "bounds": [
+            0,
+            100,
+            0,
+            4294967295
+          ]
+        }
+      ]
+    },
+    {
+      "source": "private/wii_no_ma/v1025/resource-u8/xml/Enquete.bin",
+      "bytes": 226,
+      "sha256": "fe5c480efc835ea04fb0e70363b3f2a662eff25739a3006b8a81e13a9429a720",
+      "root": "Enquete",
+      "fields": [
+        {
+          "name": "code",
+          "required": true,
+          "type": 6,
+          "bounds": [
+            1,
+            999
+          ]
+        },
+        {
+          "name": "msg",
+          "required": false,
+          "type": 1,
+          "bounds": [
+            0,
+            100,
+            0,
+            4294967295
+          ]
+        }
+      ]
+    },
+    {
+      "source": "private/wii_no_ma/v1025/resource-u8/xml/PicEval.bin",
+      "bytes": 226,
+      "sha256": "5fc182d1806da6ec745bddf32ac255c9c32c88bb37d75b10caeb543213e2a3e6",
+      "root": "PicEval",
+      "fields": [
+        {
+          "name": "code",
+          "required": true,
+          "type": 6,
+          "bounds": [
+            1,
+            999
+          ]
+        },
+        {
+          "name": "msg",
+          "required": false,
+          "type": 1,
+          "bounds": [
+            0,
+            100,
+            0,
+            4294967295
+          ]
+        }
+      ]
+    }
+  ],
+  "scope": {
+    "original_schema_fields_verified": true,
+    "native_xml_parser_executed": false,
+    "native_acknowledgment_consumer_verified": false,
+    "original_result_code_meanings_verified": false,
+    "original_request_field_meanings_verified": false,
+    "device_ui_verified": false,
+    "synthetic_local_persistence_tests": 8
+  },
+  "compatibility_codes": {
+    "/url2/evaluate.cgi": 1,
+    "/url2/pay/pevaluate.cgi": 1,
+    "/url2/enquete.cgi": 2,
+    "/url2/piceval.cgi": 1
+  },
+  "compatibility_code_provenance": "Retained JWC24 experiment, originally derived from locally preserved third-party room-server implementation. Passing schema bounds is not original result semantics or successful native completion."
+}
