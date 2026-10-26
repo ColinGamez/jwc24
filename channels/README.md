@@ -83,6 +83,23 @@ restriction without proving a stock client trusts replacement data. `serve`
 accepts the same in-memory `--base-url` selection. No server is started by
 `preflight`.
 
+Use the same explicit `--hbnj-root` and paired `--news-root` /
+`--news-public-key` options as `serve` when preparing validated publications.
+Both commands share snapshot ownership, transport-mode and route-conflict
+checks. A current HBNJ snapshot supplies its own three task payloads, so absent
+legacy `generated/current` files no longer cause a false failure. Other
+manifest payloads are still checked. Snapshot expiry is checked independently
+of legacy file modification age. The News loader verifies the supplied key and
+coherent signed bundle; this does not establish installed-client trust or
+article-source rights. Verification may use temporary scratch files, never
+rewrite a publication or profile, and opens no listener or provider connection.
+
+The report records each supplied publication under
+`checks.prepared_publications`. Generic manifest task checks do not implement
+News' distinct SDK subtask registration: a supplied News publication explicitly
+reports `checks.news_native_subtask_registration` as `not_implemented`.
+Publication preparation is not native registration or channel completion.
+
 ## One coordinated native validation session
 
 Prepare every source-supported offline path before requesting device testing.

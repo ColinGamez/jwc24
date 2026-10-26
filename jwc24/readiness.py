@@ -10,6 +10,7 @@ from urllib.parse import urlsplit
 
 from . import dl_list, wc24_config
 from .manifest import ChannelManifest
+from .prepared_delivery import PreparedDeliveryError, snapshot_tasks
 from .wc24_delivery import envelope_key_paths
 
 
@@ -26,6 +27,7 @@ def inspect_readiness(
     dl_path: Path | None = None, config_path: Path | None = None,
     nand_root: Path | None = None, max_payload_age_seconds: int | None = None,
     now: float | None = None,
+    news_publication=None, hbnj_snapshot=None,
 ) -> dict:
     """Inspect explicit inputs; never open sockets, provision tasks or write files.
 
@@ -54,6 +56,27 @@ def inspect_readiness(
             value["slot"] = slot
         issues.append(value)
 
+    prepared_checks = {'news': 'not_supplied', 'hbnj': 'not_supplied'}
+    # Check each independently: a bad News input cannot hide an unrelated HBNJ
+    # failure, and a valid snapshot never excuses another channel's missing file.
+    supplied_tasks = {}
+    for name, publication in (('news', news_publication), ('hbnj', hbnj_snapshot)):
+        if publication is None:
+            continue
+        try:
+            supplied = snapshot_tasks(
+                manifests, news_publication=publication if name == 'news' else None,
+                hbnj_snapshot=publication if name == 'hbnj' else None, now=int(now))
+            if name == 'news' and not publication.is_current(int(now)):
+                issue('news_publication_expired')
+                prepared_checks[name] = 'outside_publication_window'
+            else:
+                supplied_tasks.update(supplied)
+                prepared_checks[name] = 'validated_current_snapshot'
+        except PreparedDeliveryError as error:
+            issue(error.code)
+            prepared_checks[name] = 'invalid_or_conflicting_snapshot'
+
     channels = []
     slots: set[int] = set()
     identities: set[int] = set()
@@ -79,6 +102,8 @@ def inspect_readiness(
             if item.filename in names:
                 issue("payload_filename_collision", manifest.channel_id)
             names.add(item.filename)
+            if any(item is owned for owned in supplied_tasks.values()):
+                continue
             try:
                 metadata = item.payload.stat()
                 if not stat.S_ISREG(metadata.st_mode):
@@ -168,7 +193,10 @@ def inspect_readiness(
         "preflight_passed": not issues,
         "checks": {"task_registration": task_check, "account": account_check,
                    "envelope_key_files": key_check,
-                   "payload_age_policy_seconds": max_payload_age_seconds},
+                   "payload_age_policy_seconds": max_payload_age_seconds,
+                   "prepared_publications": prepared_checks,
+                   "news_native_subtask_registration":
+                       "not_implemented" if news_publication is not None else "not_supplied"},
         "unverified": ["payload_schema_and_internal_freshness", "signature_trust_on_client",
                        "scheduler_readiness_and_individual_task_result", "network_delivery",
                        "native_storage_consumption", "original_ui_rendering", "mail_receipt_and_display"],

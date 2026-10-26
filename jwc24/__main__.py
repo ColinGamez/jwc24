@@ -29,6 +29,9 @@ def build_parser() -> argparse.ArgumentParser:
     preflight.add_argument("--nand-root", type=Path)
     preflight.add_argument("--max-payload-age-seconds", type=int)
     preflight.add_argument("--base-url", help="select a shared origin in memory; does not rewrite manifests")
+    preflight.add_argument("--news-root", type=Path, help="explicit validated private News publication")
+    preflight.add_argument("--news-public-key", type=Path, help="explicit News signature verification key")
+    preflight.add_argument("--hbnj-root", type=Path, help="explicit coherent private HBNJ publication root")
 
     provision = sub.add_parser("provision", help="provision manifest tasks (dry run by default)")
     provision.add_argument("manifest", type=Path)
@@ -85,10 +88,21 @@ def main() -> int:
                 manifests = tuple(load_manifest(path) for path in args.manifest)
                 if args.base_url:
                     manifests = with_base_url(manifests, args.base_url)
+                if (args.news_root is None) != (args.news_public_key is None):
+                    raise ValueError('News preparation requires both publication and verification key')
+                prepared = {}
+                if args.news_root is not None:
+                    from .news_publication import load_news_publication
+                    prepared['news_publication'] = load_news_publication(
+                        args.news_root, public_key=args.news_public_key)
+                if args.hbnj_root is not None:
+                    from .hbnj_publication import load_hbnj_snapshot
+                    prepared['hbnj_snapshot'] = load_hbnj_snapshot(args.hbnj_root)
                 report = inspect_readiness(
                     manifests, dl_path=args.dl_list, config_path=args.config,
                     nand_root=args.nand_root,
                     max_payload_age_seconds=args.max_payload_age_seconds,
+                    **prepared,
                 )
             except (OSError, ValueError, KeyError, TypeError):
                 print(json.dumps({"preflight_passed": False,

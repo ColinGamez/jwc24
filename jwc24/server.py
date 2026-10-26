@@ -18,7 +18,8 @@ from pathlib import Path
 from .manifest import ChannelManifest
 from .wc24_delivery import envelope_key_paths
 from .news_server import NewsApplication
-from .hbnj_publication import HBNJRouteSnapshot, HBNJSnapshotExpired
+from .hbnj_publication import HBNJSnapshotExpired
+from .prepared_delivery import snapshot_tasks
 from .wii_no_ma import get_response as wii_no_ma_get_response
 from .wii_no_ma_interactions import INTERACTION_ROUTES, InteractionStore
 
@@ -101,27 +102,12 @@ def serve(
         raise ValueError("at least one manifest is required")
     if (tls_cert is None) != (tls_key is None):
         raise ValueError("TLS requires both a certificate and private key")
+    hbnj_items = snapshot_tasks(manifests, news_publication=news_publication,
+                                hbnj_snapshot=hbnj_snapshot)
     news_application = NewsApplication(news_publication) if news_publication is not None else None
+    news_prefix = news_publication.route_prefix + "/" if news_publication is not None else None
     all_tasks = tuple(task for item in manifests for task in item.tasks)
     all_assets = tuple(asset for item in manifests for asset in item.assets)
-    hbnj_items = {}
-    if hbnj_snapshot is not None:
-        if type(hbnj_snapshot) is not HBNJRouteSnapshot:
-            raise ValueError("HBNJ serving needs a validated loaded snapshot")
-        hbnj_snapshot.metadata()
-        hbnj_snapshot.raw_payload("/header.bin")  # Check expiry before listening.
-        owners = [item for item in manifests if item.channel_id == "HBNJ"]
-        if len(owners) != 1 or owners[0].title_id != 0x0001000148424E4A:
-            raise ValueError("HBNJ snapshot requires its verified title manifest")
-        hbnj_items = {task.filename: task for task in owners[0].tasks
-                      if task.filename in {"header.bin", "epg.bin", "str.bin"}}
-        if (set(hbnj_items) != {"header.bin", "epg.bin", "str.bin"}
-                or any(item.compression != "nintendo-lz10" or item.envelope != "wc24-aes-ofb"
-                       for item in hbnj_items.values())):
-            raise ValueError("HBNJ snapshot requires the original three task transport modes")
-        if any(task.route.rsplit("/", 1)[-1] in hbnj_items
-               and all(task is not owned for owned in hbnj_items.values()) for task in all_tasks):
-            raise ValueError("Another manifest task conflicts with the HBNJ route family")
     wii_no_ma_base = next(
         (item.base_url for item in manifests if item.channel_id == "HCIJ"),
         "http://127.0.0.1",
@@ -129,12 +115,6 @@ def serve(
     routes = {task.route: task for task in all_tasks}
     if len(routes) != len(all_tasks):
         raise ValueError("manifests declare duplicate task routes")
-    if news_application is not None:
-        news_prefix = news_publication.route_prefix + "/"
-        reserved_names = {f"news.bin.{slot:02d}" for slot in range(24)}
-        if (any(route.startswith(news_prefix) for route in routes)
-                or any(item.filename in reserved_names for item in (*all_tasks, *all_assets))):
-            raise ValueError("News publication routes conflict with manifest payloads")
     asset_routes = {}
     items_by_filename = {
         item.filename: item for item in (*all_tasks, *all_assets)
