@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-10-27",
+  "source_inventory_sha256": "ea7edbe9e4e03f96f24cb3b2ccf45241bbac678be6351877719cab89e453c352",
+  "inventory_verified_sources": [
+    {
+      "path": "common/lib/ec/ec_misc.cpp",
+      "bytes": 16814,
+      "sha256": "ec88bf0020a7361a26a17ba92d860ac8202c130dc3631104e96585e173985a3f"
+    },
+    {
+      "path": "common/lib/ec/ec_asyncOp.cpp",
+      "bytes": 29250,
+      "sha256": "7f61d58c83f82760f08e76a587cf79c1dff82d5895c11c43088b19aa5304a98d"
+    },
+    {
+      "path": "common/lib/ec/ec_asyncOp.h",
+      "bytes": 11471,
+      "sha256": "73d46565c0e32b640ad5dc4cecfff6fc8134966d606fddade56290401e9c0747"
+    },
+    {
+      "path": "common/lib/ec/ec_base64.cpp",
+      "bytes": 8179,
+      "sha256": "a59d70db9f0d63f2e01b50d775d2720afe69e0c4f378536fbeebf7dbd22bdc59"
+    },
+    {
+      "path": "common/lib/ec/ec_base64.h",
+      "bytes": 1397,
+      "sha256": "a62d8be1e40e4161b1089fab5e582d65fa9d92ab0db8d98b25d166a59e46d05d"
+    },
+    {
+      "path": "common/lib/ec/ec_common.h",
+      "bytes": 7093,
+      "sha256": "dd200395053b4360f3468127fc63b87e7328c1f88204889d1615a0c5ef7c268a"
+    },
+    {
+      "path": "common/lib/ec/ec_esEsp.h",
+      "bytes": 2601,
+      "sha256": "1651df54ec5d923bed8fa1b5361c98444386db77414bdcd664b31aeffb7b6e26"
+    }
+  ],
+  "selected_original_headers": [
+    {
+      "member": "ios_releases/ios_30.4.0/RVL_128/usr/include/rvl/iosc.h",
+      "bytes": 3807,
+      "sha256": "a9623c698d782cb1873963a4196702619f93aa469f626dd3bc9e7f19e0150b59"
+    },
+    {
+      "member": "ios_releases/ios_30.4.0/RVL_128/usr/include/es.h",
+      "bytes": 9398,
+      "sha256": "e6112488a385d03ee81fcfb3d66e9e2a661ab5dc4e9b16d8422669df1ebc1b2a"
+    },
+    {
+      "member": "ios_releases/ios_30.4.0/RVL_128/usr/include/iosccert.h",
+      "bytes": 3722,
+      "sha256": "93b4894dd409e9dbdbe691466748ae5c50e019a6fb8f2d23192f2b2437a6de7b"
+    },
+    {
+      "member": "ios_releases/ios_30.4.0/RVL_128/usr/include/iosctypes.h",
+      "bytes": 4388,
+      "sha256": "5037622270b2a8331a83693b2c299c2d7d6a91f525a1c5ed62dfad655907c9a9"
+    }
+  ],
+  "original_archive_sha256_checked": false,
+  "archive_nintendo_provenance_independently_verified": false,
+  "certificate_layout": {
+    "certificate_bytes": 384,
+    "raw_signature_bytes": 60,
+    "signature_type_offset": 0,
+    "raw_signature_offset": 4,
+    "issuer_offset": 128,
+    "public_key_type_offset": 192,
+    "name_offset": 196,
+    "opaque_word_offset": 260,
+    "public_key_offset": 264,
+    "raw_public_key_bytes": 60
+  },
+  "native_direct_calls_checked": [
+    {
+      "role": "sign_to_sign_data",
+      "site": "0x800785ac",
+      "target": "0x80078430"
+    },
+    {
+      "role": "sign_data_to_ES_Sign",
+      "site": "0x800784d8",
+      "target": "0x8025aa90"
+    },
+    {
+      "role": "sign_signature_to_base64",
+      "site": "0x800785d8",
+      "target": "0x800830e0"
+    },
+    {
+      "role": "sign_certificate_to_base64",
+      "site": "0x800785e8",
+      "target": "0x800830e0"
+    }
+  ],
+  "native_slices": [
+    {
+      "start": "0x80078430",
+      "end": "0x80078570",
+      "sha256": "423384ebd52ea2a8da13b48362d4d9e8f8236f23def866eaf0b8750a7d9c347c"
+    },
+    {
+      "start": "0x80078570",
+      "end": "0x80078610",
+      "sha256": "39c48b15d11a24f161bfd72693e6cd4603c9112c21a3b71377996860661b5d35"
+    }
+  ],
+  "headers_compiled_or_original_ios_crypto_executed": false,
+  "opaque_header_word_meaning_verified": false,
+  "device_or_profile_accessed": false,
+  "metadata_only": true,
+  "original_main_sha256": "aff20704bd4cf9025e34382e185b0936e9ebc6e047a3431f21a445165c9dc898",
+  "public_dolphin_commit": "3eb30c7620b4475b2e0404228ba0d2b238a132f1",
+  "public_source_references": [
+    {
+      "url": "https://raw.githubusercontent.com/dolphin-emu/dolphin/3eb30c7620b4475b2e0404228ba0d2b238a132f1/Source/Core/Core/IOS/IOSC.cpp",
+      "sha256": "1050ef0d7caa061ecf5807d4664492001fd12cb52c048a00c9c975fbe281fc11",
+      "kind": "public Dolphin implementation; not Nintendo-original execution"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/dolphin-emu/dolphin/3eb30c7620b4475b2e0404228ba0d2b238a132f1/Source/Core/Core/IOS/IOSC.h",
+      "sha256": "1e4223a8457b24ce9573b3ebeb2727b53fa745e70d7d8b9dbe6c8e6c7949392a",
+      "kind": "public Dolphin implementation; not Nintendo-original execution"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/dolphin-emu/dolphin/3eb30c7620b4475b2e0404228ba0d2b238a132f1/Source/Core/Common/Crypto/ec.cpp",
+      "sha256": "8323a37efe162844ff63a90c29e4e45ce0c5671673d72b61ada75f379705ccab",
+      "kind": "public Dolphin implementation; not Nintendo-original execution"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/dolphin-emu/dolphin/3eb30c7620b4475b2e0404228ba0d2b238a132f1/Source/Core/Common/Crypto/ec.h",
+      "sha256": "1a2cfffe6bc40f55205b8e1e53af94681c5fa874b3f90a534a5298a35fd418f1",
+      "kind": "public Dolphin implementation; not Nintendo-original execution"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/dolphin-emu/dolphin/3eb30c7620b4475b2e0404228ba0d2b238a132f1/Source/Core/Common/Crypto/bn.cpp",
+      "sha256": "11ef4ad01adb38cb4df02ef657ddbcfc7259a344c2e86708d8667234080b5743",
+      "kind": "public Dolphin implementation; not Nintendo-original execution"
+    }
+  ],
+  "openssl_sect233r1_B_generator_and_order_match_pinned_public_dolphin": true,
+  "ios_hardware_crypto_or_exclusive_private_key_possession_verified": false,
+  "new_public_component": "jwc24.wii_shop_proof",
+  "proof_scope": "Offline ECC proof under explicit device-certificate pin and device/title/challenge/operation context",
+  "nintendo_ca_chain_or_pin_enrollment_verified": false,
+  "challenge_freshness_replay_or_account_authority_verified": false,
+  "actual_nintendo_ng_ap_subject_generation_verified": false,
+  "original_native_wrapper_cases": 8,
+  "original_wrapper_generated_crypto_handoff_cases": 1,
+  "native_copy_string_and_base64_stubbed": false,
+  "native_es_crypto_boundary_stubbed": true,
+  "public_or_private_provider_data_imported": false,
+  "device_credentials_or_profiles_read": false,
+  "original_source_bodies_or_certificates_exported": false,
+  "validation": {
+    "new_test_count": 15,
+    "focused_suite_tests": 38,
+    "focused_suite_seconds": 24.259,
+    "focused_suite_passed": true,
+    "focused_suite_reported_skips": 0,
+    "public_fixture_absence_check": {
+      "tests": 15,
+      "skipped": 4,
+      "seconds": 1.41,
+      "passed": true,
+      "actual_private_inputs_available": false
+    }
+  }
+}
