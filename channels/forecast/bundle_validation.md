@@ -36,8 +36,10 @@ patch. Stock software, original trust resources and private keys stay private.
 `--require-current` independently checks both half-open validity windows at the
 current time. Omitting it permits historical inspection. Output contains counts
 and validation scope, without city names, provider details or key contents.
-This checks the files' envelope validity windows, not the observation timestamps
-inside their records. An old observation can appear in a newly generated file;
+This checks the files' envelope validity windows, not provider observation or
+forecast issue times. Native local/UTC clock fields are not independent source-age
+evidence; their observed [calendar role](native_clock_and_missingness.md) must
+remain separate. Old weather can appear in a newly generated file;
 the report explicitly sets `observation_timestamps_checked` to `false`. Provider
 acquisition/provenance checks must establish observation freshness separately.
 This tool does not invent a provider-specific maximum observation age.

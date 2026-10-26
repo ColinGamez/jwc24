@@ -54,21 +54,22 @@ def check_forecast_sources(documents, receipts, *, now, max_source_age_seconds):
 
     A digest/reference identifies the source bytes; it cannot prove an adapter
     actually extracted that time from them. Public code has no private provider
-    parser. Provider-origin timestamps and normalization attestations must come
-    from a separately reviewed acquisition adapter, not a caller's build clock.
+    parser. Provider-origin timestamps and their attestations must come from a
+    separately reviewed acquisition adapter, not a caller's build clock. Native
+    local-clock fields are independent and are never used as source times here.
     """
     if (type(now) is not int or not 946684800 <= now < 0xFFFFFFFF
             or type(max_source_age_seconds) is not int
             or not 1 <= max_source_age_seconds <= 7 * 86400
             or type(documents) is not dict or set(documents) != set(DATASETS)
             or type(receipts) is not dict or set(receipts) != {
-                'schema_version', 'rights_ref', 'normalization_retimed',
+                'schema_version', 'rights_ref', 'provider_times_retimed',
                 'reference_weather_substituted', 'datasets'}
             or type(receipts['schema_version']) is not int or receipts['schema_version'] != 1
-            or receipts['normalization_retimed'] is not False
+            or receipts['provider_times_retimed'] is not False
             or receipts['reference_weather_substituted'] is not False
             or type(receipts['datasets']) is not dict or set(receipts['datasets']) != set(DATASETS)):
-        raise ForecastSourceError('Explicit source-time policy and unmodified-data receipts required')
+        raise ForecastSourceError('Explicit source-time policy and unaltered provider-time receipts required')
     _ref(receipts['rights_ref'])
     counts, source_times, expiry_times, repeats = {}, [], [], 0
     for name in DATASETS:
@@ -96,7 +97,7 @@ def check_forecast_sources(documents, receipts, *, now, max_source_age_seconds):
         for entry in receipt['entries']:
             if type(entry) is not dict or set(entry) != {
                     'key', 'source_sha256', 'source_ref', 'time_basis',
-                    'source_time_utc', 'retrieved_utc', 'valid_until_utc', 'utc_offset_minutes'}:
+                    'source_time_utc', 'retrieved_utc', 'valid_until_utc'}:
                 raise ForecastSourceError('Source-time receipt fields are incomplete')
             key = _key(entry['key'])
             if key in seen or key not in indexed:
@@ -107,16 +108,13 @@ def check_forecast_sources(documents, receipts, *, now, max_source_age_seconds):
                     or re.fullmatch('[0-9a-f]{64}', entry['source_sha256']) is None
                     or entry['time_basis'] not in ('provider_observation', 'provider_issue')
                     or any(type(entry[field]) is not int for field in (
-                        'source_time_utc', 'retrieved_utc', 'valid_until_utc', 'utc_offset_minutes'))
-                    or not -840 <= entry['utc_offset_minutes'] <= 840):
+                        'source_time_utc', 'retrieved_utc', 'valid_until_utc'))):
                 raise ForecastSourceError('Provider-origin source-time receipt is invalid')
             issued, retrieved, expiry = (entry[field] for field in (
                 'source_time_utc', 'retrieved_utc', 'valid_until_utc'))
             if not (946684800 <= issued <= retrieved <= now < expiry < 0xFFFFFFFF
                     and now - issued < max_source_age_seconds):
                 raise ForecastSourceError('Weather source time is stale, future-dated or expired')
-            if indexed[key]['local_unix_timestamp'] != issued + 60 * entry['utc_offset_minutes']:
-                raise ForecastSourceError('Normalized weather time differs from its provider-time receipt')
             source_times.append(issued)
             expiry_times.append(expiry)
         if seen != set(indexed):
@@ -128,7 +126,7 @@ def check_forecast_sources(documents, receipts, *, now, max_source_age_seconds):
             'oldest_source_age_seconds': now - min(source_times),
             'earliest_supplied_expiry_utc': min(expiry_times),
             'source_ages_checked_against_supplied_receipts': True,
-            'normalized_record_times_match_receipts': True,
+            'native_clock_fields_used_as_source_times': False,
             'provider_timestamp_extraction_independently_verified': False,
             'source_rights_independently_verified': False,
             'all_catalog_locations_have_weather': False,

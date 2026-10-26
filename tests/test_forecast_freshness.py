@@ -19,15 +19,15 @@ class ForecastFreshnessTests(unittest.TestCase):
         # Schema-light synthetic rows exercise this acquisition boundary only.
         # Existing binary builders separately validate weather field schemas.
         row = {'country_code': 1, 'region_code': 10, 'location_code': 2,
-               'local_unix_timestamp': self.now - 100 + 9 * 3600}
+               'local_unix_timestamp': self.now + 9 * 3600}
         documents = {name: json.dumps([row] if name != 'compact' else []).encode()
                      for name in ('current', 'long', 'compact')}
         entry = {'key': [1, 10, 2], 'source_sha256': 'a' * 64,
                  'source_ref': 'synthetic private capture', 'time_basis': 'provider_observation',
                  'source_time_utc': self.now - 100, 'retrieved_utc': self.now - 1,
-                 'valid_until_utc': self.now + 1000, 'utc_offset_minutes': 540}
+                 'valid_until_utc': self.now + 1000}
         receipts = {'schema_version': 1, 'rights_ref': 'synthetic fixture rights',
-                    'normalization_retimed': False, 'reference_weather_substituted': False,
+                    'provider_times_retimed': False, 'reference_weather_substituted': False,
                     'datasets': {name: {'normalized_sha256': hashlib.sha256(value).hexdigest(),
                                         'entries': [deepcopy(entry)] if name != 'compact' else []}
                                  for name, value in documents.items()}}
@@ -42,33 +42,50 @@ class ForecastFreshnessTests(unittest.TestCase):
         self.assertEqual(report['oldest_source_age_seconds'], 100)
         self.assertEqual(report['rows'], {'current': 1, 'long': 1, 'compact': 0})
         self.assertFalse(report['provider_timestamp_extraction_independently_verified'])
+        self.assertFalse(report['native_clock_fields_used_as_source_times'])
         self.assertFalse(report['native_payload_generated_or_published'])
         self.assertNotIn('synthetic private', json.dumps(report))
 
     def test_new_fetch_or_envelope_does_not_make_old_source_fresh(self):
         documents, receipts = self.fixture()
+        rows = json.loads(documents['current'])
+        rows[0]['local_unix_timestamp'] = self.now + 9 * 3600
+        documents['current'] = json.dumps(rows).encode()
+        receipts['datasets']['current']['normalized_sha256'] = hashlib.sha256(documents['current']).hexdigest()
         entry = receipts['datasets']['current']['entries'][0]
         entry['source_time_utc'] = self.now - 3600
         entry['retrieved_utc'] = self.now
         with self.assertRaisesRegex(ForecastSourceError, 'stale'):
             self.check(documents, receipts)
 
-    def test_retimed_row_rejected_even_when_its_document_hash_is_updated(self):
+    def test_fresh_source_receipt_accepts_independently_rebuilt_native_local_clock(self):
         documents, receipts = self.fixture()
         rows = json.loads(documents['current'])
         rows[0]['local_unix_timestamp'] += 100
         documents['current'] = json.dumps(rows).encode()
         receipts['datasets']['current']['normalized_sha256'] = hashlib.sha256(documents['current']).hexdigest()
-        with self.assertRaisesRegex(ForecastSourceError, 'differs'):
-            self.check(documents, receipts)
+        report = self.check(documents, receipts)
+        self.assertEqual(report['oldest_source_age_seconds'], 100)
+        self.assertFalse(report['native_clock_fields_used_as_source_times'])
+        self.assertNotIn('normalized_record_times_match_receipts', report)
 
     def test_parse_time_historical_substitution_and_retime_attestations_fail(self):
-        for kind in ('parse_time', 'reference_weather_substituted', 'normalization_retimed'):
+        for kind in ('parse_time', 'reference_weather_substituted', 'provider_times_retimed'):
             documents, receipts = self.fixture()
             if kind == 'parse_time':
                 receipts['datasets']['current']['entries'][0]['time_basis'] = 'parse_time'
             else:
                 receipts[kind] = True
+            with self.subTest(kind=kind), self.assertRaises(ForecastSourceError):
+                self.check(documents, receipts)
+
+    def test_source_receipts_do_not_accept_native_offset_or_old_attestation_fields(self):
+        for kind in ('utc_offset_minutes', 'normalization_retimed'):
+            documents, receipts = self.fixture()
+            if kind == 'utc_offset_minutes':
+                receipts['datasets']['current']['entries'][0][kind] = 540
+            else:
+                receipts[kind] = receipts.pop('provider_times_retimed')
             with self.subTest(kind=kind), self.assertRaises(ForecastSourceError):
                 self.check(documents, receipts)
 
