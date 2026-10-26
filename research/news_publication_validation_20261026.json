@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-26",
+  "component": "Explicit News build/publication/HTTP adapter",
+  "source_content_policy": "No provider chosen or acquired;24explicit native inputs with source and rights references required",
+  "native_contract_dependencies": [
+    "channels/news/format.md",
+    "channels/news/task_registration.md",
+    "channels/news/bundle_validation.md"
+  ],
+  "verification_command": ".venv/Scripts/python.exe -m unittest tests.test_news tests.test_news_bundle tests.test_news_publication",
+  "result": {
+    "tests_run": 36,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "new_publication_tests": 15,
+    "existing_structure_and_graph_tests": 21
+  },
+  "checked": [
+    "Explicit raw buffers compress/sign without article or timestamp rewriting",
+    "Preexisting envelopes verify against the explicit supplied public key",
+    "Unsigned or wrong-key inputs reject before publication",
+    "Missing/ambiguous graph and source/rights configuration reject",
+    "Generator inputs reject before consumption/signing",
+    "Temporary key copies are private and cleaned up",
+    "Prepared snapshots cannot be replaced through dataclass copying without validation",
+    "Atomic staging and pointer failures preserve the previous generation",
+    "Reload checks contained generation paths, ordered files, hashes, signatures and graph",
+    "Current header-window serving policy fails closed on expiry",
+    "Loopback HTTP returns every one of24 exact signed bodies and Content-Length values on one persistent connection",
+    "Reports omit article/source/rights/key content and private file selectors"
+  ],
+  "limits": {
+    "slots": 24,
+    "supplied_and_advertised_decoded_aggregate_bytes": 33554432,
+    "raw_buffer_bytes": 4194304,
+    "envelope_buffer_bytes": 5242880,
+    "key_file_bytes": 16384,
+    "manifest_bytes": 65536
+  },
+  "real_publisher_articles_images_or_production_keys_used": false,
+  "live_provider_contacted": false,
+  "shared_server_edited": false,
+  "profile_task_database_save_backup_or_console_changed": false,
+  "signatures_verified_against_explicit_key": true,
+  "installed_native_trust_verified": false,
+  "native_vff_capacity_verified": false,
+  "native_news_envelope_or_decompressor_executed_in_this_batch": false,
+  "actual_sdk_ios_registration_verified": false,
+  "hourly_coverage_or_live_clock_mapping_verified": false,
+  "article_age_or_editorial_accuracy_verified": false,
+  "native_ui_or_delivery_verified": false,
+  "automatic_refresh_or_provider_adapter_implemented": false
+}
