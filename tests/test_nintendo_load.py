@@ -98,6 +98,7 @@ class NintendoLoadNativeTests(unittest.TestCase):
         if not path.is_file():
             raise unittest.SkipTest('Private original Japanese HATJ v1792 executable unavailable')
         try:
+            import capstone  # noqa: F401
             import unicorn  # noqa: F401
         except ImportError:
             raise unittest.SkipTest('Optional native verification dependency unavailable')
