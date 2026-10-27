@@ -669,7 +669,7 @@ def _table_keys(
 
 
 def _validate_wind_direction(value: int, label: str) -> None:
-    if type(value) is not int or (value not in range(1, 17) and value != 0xFF):
+    if type(value) is not int or (value not in range(17) and value != 0xFF):
         raise ValueError(f"{label} has invalid wind direction {value}")
 
 

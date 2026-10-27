@@ -82,8 +82,22 @@ class ForecastMissingMeasurementTests(unittest.TestCase):
 
     def test_builders_preserve_missing_wind_direction_and_reject_invalid_directions(self):
         record = CurrentWeatherRecord(1, 10, 2, self.now, 0xFFFF, -128, -128, 255, 12, 7)
-        for value in (0, 17, 254, True, 1.5):
+        for value in (-1, 17, 254, True, 1.5):
             with self.subTest(value=value), self.assertRaisesRegex(ValueError, 'wind direction'):
                 build_short_payload([replace(record, wind_direction=value)], generated_unix_timestamp=self.now)
             with self.subTest(value=value), self.assertRaisesRegex(ValueError, 'wind direction'):
                 self.full(day=replace(self.day, wind_direction=value))
+
+    def test_native_zero_wind_direction_is_preserved_without_assigning_a_meaning(self):
+        record = CurrentWeatherRecord(1, 10, 2, self.now, 0xFFFF, -128, -128, 0, 0, 0)
+        compressed = build_short_payload([record], generated_unix_timestamp=self.now)
+        validate_short(compressed, signed=False)
+        self.assertEqual(CURRENT_FORECAST.unpack_from(decode_lz10(compressed), SHORT_HEADER.size)[9], 0)
+        for compact in (False, True):
+            compressed = self.full(compact=compact, day=replace(self.day, wind_direction=0,
+                                                               wind_speed_metric=0, wind_speed_imperial=0))
+            validate_forecast(compressed, signed=False)
+            raw = decode_lz10(compressed)
+            start = FORECAST_HEADER.unpack_from(raw)[14 if compact else 12]
+            self.assertEqual(raw[start + 38], 0)
+            self.assertEqual(raw[start + 66], 0)

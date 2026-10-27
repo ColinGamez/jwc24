@@ -81,8 +81,12 @@ one daily probability into four observations or replace unavailable values with
 zero. Every day must supply exactly four condition slots and four precipitation
 slots. Weekly precipitation and independent missing-speed semantics are outside
 this particular validation change.
-Both builders also enforce the existing native wind-direction range (`1..16`
+Both builders also enforce the native wind-direction range (`0..16`
 or `255`) before packing; missing direction remains `255`.
+The earlier `1..16` lower bound was incorrect: the complete original validation
+block at `0x8000D310..0x8000D328` also admits zero. Zero is retained as a numeric
+source value; this correction does not assign a new direction label or prove
+all combinations of direction, speed and display configuration render safely.
 
 The current-weather builder accepts signed-byte temperatures including `-128`
 for unavailable. It rejects values outside that range before unsigned packing;
@@ -101,7 +105,7 @@ decoder, with unknown conditions, temperatures and wind direction preserved.
 .venv/Scripts/python.exe -m unittest tests.test_forecast_missing_measurements tests.test_forecast tests.test_forecast_bundle tests.test_forecast_freshness
 ```
 
-These 37 tests passed locally. They check raw offsets/bytes, all daily slot
+These 38 tests passed locally. They check raw offsets/bytes, all daily slot
 positions, rejected source values and existing bundle/source-age behavior.
 They do not establish genuine provider measurements, a complete native
 validator, missing-index semantics, original rendering or current weather.
