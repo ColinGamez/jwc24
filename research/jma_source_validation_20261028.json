@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "verification_date": "2026-10-28",
+  "scope": "JMA official public source input; no native publication or provider activation",
+  "source_terms_url": "https://www.jma.go.jp/jma/kishou/info/coment.html",
+  "source_pages": [
+    "https://www.jma.go.jp/bosai/forecast/",
+    "https://www.jma.go.jp/bosai/amedas/",
+    "https://www.jma.go.jp/jma/en/Activities/amedas/amedas.html"
+  ],
+  "private_evidence_directory": "private/forecast/jma-source-audit-20261028",
+  "captures": [
+    {
+      "name": "forecast-page",
+      "source_url": "https://www.jma.go.jp/bosai/forecast/",
+      "body_sha256": "2219c9b3f581d0e69857eeb4c98e1ebb8059269b73d7886f9ecc9a676b124a50",
+      "body_bytes": 199327,
+      "http_status": 200,
+      "complete_within_2mib": true,
+      "retrieved_start_utc": "2026-10-27T18:49:49.229083+00:00",
+      "retrieved_end_utc": "2026-10-27T18:49:50.038534+00:00"
+    },
+    {
+      "name": "amedas-page",
+      "source_url": "https://www.jma.go.jp/bosai/amedas/",
+      "body_sha256": "e455a0590b4168fa64c40facb5c51cfbe178a1e3c63ec861ab7371b2ea02c940",
+      "body_bytes": 228297,
+      "http_status": 200,
+      "complete_within_2mib": true,
+      "retrieved_start_utc": "2026-10-27T18:49:50.041583+00:00",
+      "retrieved_end_utc": "2026-10-27T18:49:50.646696+00:00"
+    },
+    {
+      "name": "forecast-tokyo",
+      "source_url": "https://www.jma.go.jp/bosai/forecast/data/forecast/130000.json",
+      "body_sha256": "12d000bef417088449867b5fdca2f4300c7337d297f5d0621c760e102fc5a9c6",
+      "body_bytes": 6085,
+      "http_status": 200,
+      "complete_within_2mib": true,
+      "retrieved_start_utc": "2026-10-27T18:50:37.525917+00:00",
+      "retrieved_end_utc": "2026-10-27T18:50:37.652039+00:00"
+    },
+    {
+      "name": "amedas-latest",
+      "source_url": "https://www.jma.go.jp/bosai/amedas/data/latest_time.txt",
+      "body_sha256": "9bf641c0167fe54de6f6eb5dee21e9bf19c8b5cc547f6a043a352544442adb79",
+      "body_bytes": 25,
+      "http_status": 200,
+      "complete_within_2mib": true,
+      "retrieved_start_utc": "2026-10-27T18:50:37.654029+00:00",
+      "retrieved_end_utc": "2026-10-27T18:50:37.755619+00:00"
+    },
+    {
+      "name": "amedas-stations",
+      "source_url": "https://www.jma.go.jp/bosai/amedas/const/amedastable.json",
+      "body_sha256": "319d215c6c9243ccb794e925dded2f849a0202f1b2cd74ce607b232f2bc2ddc5",
+      "body_bytes": 187742,
+      "http_status": 200,
+      "complete_within_2mib": true,
+      "retrieved_start_utc": "2026-10-27T18:50:37.757977+00:00",
+      "retrieved_end_utc": "2026-10-27T18:50:37.909611+00:00"
+    },
+    {
+      "name": "area-metadata",
+      "source_url": "https://www.jma.go.jp/bosai/common/const/area.json",
+      "body_sha256": "b2716ef1f338f66a7080c2498f0768e3941eebbd6880af70917f67b16ec09992",
+      "body_bytes": 262108,
+      "http_status": 200,
+      "complete_within_2mib": true,
+      "retrieved_start_utc": "2026-10-27T18:50:37.914000+00:00",
+      "retrieved_end_utc": "2026-10-27T18:50:38.523970+00:00"
+    },
+    {
+      "name": "amedas-explanation",
+      "source_url": "https://www.jma.go.jp/bosai/amedas/const/amedas_explain.html",
+      "body_sha256": "7e95d9b78d963f2ce0da8188b4352798c026e3566c90dd20893e615f1702c7bb",
+      "body_bytes": 5064,
+      "http_status": 200,
+      "complete_within_2mib": true,
+      "retrieved_start_utc": "2026-10-27T18:50:38.526592+00:00",
+      "retrieved_end_utc": "2026-10-27T18:50:39.089109+00:00"
+    },
+    {
+      "name": "forecast-area-metadata",
+      "source_url": "https://www.jma.go.jp/bosai/forecast/const/forecast_area.json",
+      "body_sha256": "b0f626b709383a9637e797c9d51df7b688894ca8d8398aa7171e9270985bee8d",
+      "body_bytes": 9407,
+      "http_status": 200,
+      "complete_within_2mib": true,
+      "retrieved_start_utc": "2026-10-27T18:50:39.091472+00:00",
+      "retrieved_end_utc": "2026-10-27T18:50:39.625381+00:00"
+    },
+    {
+      "name": "amedas-point",
+      "source_url": "https://www.jma.go.jp/bosai/amedas/data/point/44132/20261028_03.json",
+      "body_sha256": "2f2d4988b75ad93af73197e0eabd9f23554a5d9fb80f4d24d79b80ad9bda1978",
+      "body_bytes": 2602,
+      "http_status": 200,
+      "complete_within_2mib": true,
+      "retrieved_start_utc": "2026-10-27T18:51:49.931080+00:00",
+      "retrieved_end_utc": "2026-10-27T18:51:50.069837+00:00"
+    }
+  ],
+  "captures_total": 9,
+  "live_requests_during_implementation": 4,
+  "actual_capture_verification": {
+    "all_nine_complete_hashes_lengths_and_30_second_bounds_checked": true,
+    "data_resources_parsed": 4,
+    "forecast_reports": 2,
+    "forecast_time_series": 5,
+    "forecast_area_series": 18,
+    "observation_records": 5,
+    "observation_measurement_pairs": 85,
+    "missing_or_qualified_measurements": 5,
+    "current_sky_present": false,
+    "native_location_mapping": null,
+    "source_issue_and_observation_dates_retimed": false
+  },
+  "existing_capture_replay": {
+    "private_bundle_directory": "private/forecast/jma-source-records-replay-20261028",
+    "mode": "supplied_transport",
+    "new_live_requests": 0,
+    "resources": 4,
+    "complete": true,
+    "source_records_sha256": "fe48c6a74e95cdffb195b428db67882f25498e1fb5ed70afacbf1d1c8c3aa929",
+    "claim_of_new_live_refresh": false
+  },
+  "tests": {
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_jma_weather tests.test_jma_capture",
+    "result": "PASS",
+    "tests": 35,
+    "private_actual_capture_tests": 1,
+    "public_synthetic_tests": 34,
+    "network_calls_in_tests": 0,
+    "private_absence_check": {
+      "public_tests_passed": 34,
+      "private_tests_skipped": 1,
+      "skip_explicitly_verified": true
+    },
+    "syntax_and_json": "PASS",
+    "cli_help": "PASS",
+    "mid_export_write_failure_has_no_accepted_or_pending_records": "PASS",
+    "unknown_metadata_nonfinite_and_lone_surrogate_rejection": "PASS"
+  },
+  "preserved_boundaries": {
+    "raw_QC_and_qualifiers": true,
+    "separate_forecast_report_issue_times": true,
+    "forecast_target_times_distinct_from_issue": true,
+    "observation_full_date_JST_keys": true,
+    "m_s_wind_unconverted": true,
+    "JMA_codes_not_native_mapped": true,
+    "provider_area_and_station_identities_distinct": true,
+    "http_dates_not_provider_times": true,
+    "historical_or_unknown_weather_not_filled": true
+  },
+  "not_completed": [
+    "native area/station mapping",
+    "native weather-condition mapping",
+    "short-range temperature role mapping",
+    "native missing-value rendering policy",
+    "native wind conversion and explicit quantization policy",
+    "native source-attribution boundary",
+    "source-age acceptance and publication orchestration",
+    "global native location coverage"
+  ],
+  "default_transport_verification": {
+    "private_bundle_directory": "private/forecast/jma-source-live-20261028",
+    "mode": "official_get",
+    "command": ".venv/Scripts/python.exe tools/capture_jma_weather.py --office 130000 --station 44132 --output private/forecast/jma-source-live-20261028",
+    "complete": true,
+    "new_live_requests": 4,
+    "http_statuses": [
+      200,
+      200,
+      200,
+      200
+    ],
+    "raw_body_digests_and_bounds_rechecked": true,
+    "resources": [
+      {
+        "name": "forecast",
+        "body_bytes": 6085,
+        "body_sha256": "12d000bef417088449867b5fdca2f4300c7337d297f5d0621c760e102fc5a9c6",
+        "http_status": 200,
+        "elapsed_seconds": 0.141221,
+        "retrieved_start_utc": "2026-10-27T19:14:09.786075+00:00",
+        "retrieved_end_utc": "2026-10-27T19:14:09.927296+00:00"
+      },
+      {
+        "name": "latest",
+        "body_bytes": 25,
+        "body_sha256": "39115317d09693a7876be8a81d614b965cabb861cede974666b4efb34274293c",
+        "http_status": 200,
+        "elapsed_seconds": 0.11563,
+        "retrieved_start_utc": "2026-10-27T19:14:09.931268+00:00",
+        "retrieved_end_utc": "2026-10-27T19:14:10.046898+00:00"
+      },
+      {
+        "name": "stations",
+        "body_bytes": 187742,
+        "body_sha256": "319d215c6c9243ccb794e925dded2f849a0202f1b2cd74ce607b232f2bc2ddc5",
+        "http_status": 200,
+        "elapsed_seconds": 0.653553,
+        "retrieved_start_utc": "2026-10-27T19:14:10.051718+00:00",
+        "retrieved_end_utc": "2026-10-27T19:14:10.705271+00:00"
+      },
+      {
+        "name": "point",
+        "body_bytes": 3689,
+        "body_sha256": "63e1f75cb73925cb8bf47c2a055943f5a35ebb5ff34ea6e14548627c2957ccbd",
+        "http_status": 200,
+        "elapsed_seconds": 0.096096,
+        "retrieved_start_utc": "2026-10-27T19:14:10.719485+00:00",
+        "retrieved_end_utc": "2026-10-27T19:14:10.815581+00:00"
+      }
+    ],
+    "source_records_sha256": "13e84571e64f8749c6c6dc35566769fb810d92a556d51e6cd4987b4a324e42c9",
+    "forecast_reports": 2,
+    "forecast_time_series": 5,
+    "forecast_area_series": 18,
+    "forecast_report_datetimes": [
+      "2026-10-27T17:00:00+09:00",
+      "2026-10-27T17:00:00+09:00"
+    ],
+    "national_latest_datetime": "2026-10-28T04:00:00+09:00",
+    "observation_records": 7,
+    "first_observation_utc": "2026-10-27T18:00:00+00:00",
+    "last_observation_utc": "2026-10-27T19:00:00+00:00",
+    "observation_measurement_pairs": 122,
+    "missing_or_qualified_measurements": 10,
+    "current_sky_present": false,
+    "native_payload_written": false,
+    "provider_activated": false,
+    "native_location_mapping": null,
+    "claim_of_provider_coverage": false
+  }
+}
