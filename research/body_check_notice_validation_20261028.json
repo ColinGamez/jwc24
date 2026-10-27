@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-10-28",
+  "original_main_sha256": "ca6677094a9293219b4122038b916cb64f6361b5b4106a670ade438292d4969c",
+  "original_main_bytes": 4110944,
+  "provenance": "Pinned private Japanese HFNJ v256 and retained message resource; exact source-WAD/TMD/archive membership checked separately. No original assets, text, keys or dataset/profile content published.",
+  "source_regions": [
+    {
+      "role": "static_primary_vtable_assignment",
+      "start": "0x8022b92c",
+      "exclusive_end": "0x8022b940",
+      "sha256": "73940524beb08e81e6a3cc3754157acfe9d6dbabcb5204161403ea79f5e0b0bf"
+    },
+    {
+      "role": "complete_gate_caller",
+      "start": "0x802b63b0",
+      "exclusive_end": "0x802b6470",
+      "sha256": "c48cdb58e9774e01fee2eae01f1460aa2ee81682a2c0061cd6a3e8cb048c5371"
+    },
+    {
+      "role": "opaque_pair_predicate",
+      "start": "0x802bbb10",
+      "exclusive_end": "0x802bbb90",
+      "sha256": "499dcd1fbc9cb70a0ed411f4b2d9fde95ffe594ebcdf147365934ccedc16cdb1"
+    },
+    {
+      "role": "primary_vtable_and_selected_targets",
+      "start": "0x803e8628",
+      "exclusive_end": "0x803e8824",
+      "sha256": "f550e7d0b3f4dcd3121f627a4f263d42559f7bc1b6f8a1ccc5abc2fe77a3b785"
+    },
+    {
+      "role": "true_transition",
+      "start": "0x802b6880",
+      "exclusive_end": "0x802b68b4",
+      "sha256": "5e67b829c9a0bc1661b8800e07ada6955611aa71df74b912d42fde67b9fe4810"
+    },
+    {
+      "role": "false_context_path",
+      "start": "0x802b67d8",
+      "exclusive_end": "0x802b67e8",
+      "sha256": "45b8c38df51416834470d62af3ff7df4e9baa9b0cc598b22b9629df81d81d93c"
+    },
+    {
+      "role": "selector",
+      "start": "0x802b6de8",
+      "exclusive_end": "0x802b7200",
+      "sha256": "8c009cd6bc2a4f56123b4941a48916d3f23af3d9de12ee72918008597c631732"
+    },
+    {
+      "role": "message_request",
+      "start": "0x802b8920",
+      "exclusive_end": "0x802b8948",
+      "sha256": "6f20567984f394f82647873c392707a75012351535f3bd81f3b23b6ca71850c4"
+    },
+    {
+      "role": "original_bmg_constructor_and_lookup",
+      "start": "0x800c1ed4",
+      "exclusive_end": "0x800c2210",
+      "sha256": "eb6320c9fa6678eb89ce56348125ce5075b9b2c80eac423096f211b59716e1b4"
+    }
+  ],
+  "factory_assignment_scope": "Static original-code trace; full object factory not executed by this verifier.",
+  "flow_validation": {
+    "cases": 50,
+    "supported_handoff_cases": 48,
+    "unsupported_alternate_handler_cases": 2,
+    "counts": {
+      "instructions": 6474,
+      "original_pair_gate": 44,
+      "original_transition": 26,
+      "original_selector": 18,
+      "original_message_request": 10,
+      "ui_message_boundary": 10,
+      "ui_close_boundary": 12,
+      "secondary_async_boundary": 18,
+      "alternate_handler_boundary": 2
+    },
+    "all_immutable_input_state_stack_global_guards_verified": true,
+    "original_context_getters_header_transition_selector_stubbed": false,
+    "ui_close_message_and_secondary_async_boundaries_mocked": true,
+    "alternate_handler_body_executed": false,
+    "actual_ui_rendered": false,
+    "header_word_meanings_verified": false,
+    "independent_phase_samples_supplied": true
+  },
+  "original_message_binding": {
+    "bmg_sha256": "22049c1e62a52e1d0d6ba3000aca6d4c07aed50128a476ee1818bc6e784a7b27",
+    "bmg_bytes": 24160,
+    "message_id": 30028,
+    "variant": 0,
+    "selected_mid": 7687168,
+    "selected_resource_offset": 17692,
+    "instructions": 4140,
+    "original_bmg_constructor_and_getter_executed": true,
+    "lookup_or_service_boundaries_stubbed": false,
+    "resource_and_guards_unchanged": true,
+    "message_text_published": false,
+    "native_ui_rendered": false
+  },
+  "source_resource_membership": {
+    "wad_sha256": "e5801c74cfaad8e52c47b0b7ba043b3b75ee05e8ccd995264ba9840a7f7da245",
+    "title_id": "0001000148464E4A",
+    "title_version": 256,
+    "content_index": 2,
+    "content_sha256": "7dd4a3bdf7e7f4968798217e358317b798564f84d34c5ae08cd953fe1d62f5a5",
+    "content_matches_tmd_hash_and_size": true,
+    "message_carc_sha256": "f0692bf83490827182fe9122ab3b7011e6f855041980b47b654955390b4bf202",
+    "message_archive_sha256": "360a0a70191bc7cc06e63a95d580ad4af59bbcc4d337a6093da2c5d75f13e828",
+    "bmg_sha256": "22049c1e62a52e1d0d6ba3000aca6d4c07aed50128a476ee1818bc6e784a7b27",
+    "exact_resource_membership_verified": true,
+    "nintendo_signature_or_independent_archive_provenance_verified": false,
+    "original_bytes_keys_or_message_text_published": false,
+    "profile_or_backup_modified": false
+  },
+  "notice_meaning": "Existing channel-update announcement directing users to update Body Check through Wii Shop. This does not prove meanings of the two header words or current update availability.",
+  "validation": {
+    "focused_tests": 43,
+    "new_tests": 11,
+    "passed": true,
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_body_check_notice tests.test_body_check_tasks tests.test_body_check_completion tests.test_body_check tests.test_body_check_crc_native",
+    "public_tests": 7,
+    "private_native_tests": 3,
+    "optional_title_membership_tests": 1
+  },
+  "unverified": [
+    "complete header/payload semantics, freshness and authentication",
+    "alternate context/error-handler body",
+    "actual asynchronous service and UI close/dismissal behavior",
+    "original embedded message rendering, sound and animation",
+    "Nintendo signature trust or independent enclosing-WAD provenance",
+    "legitimate game save/profile and board prerequisites",
+    "task scheduler, genuine source delivery, questions/mail and complete original experience"
+  ]
+}
