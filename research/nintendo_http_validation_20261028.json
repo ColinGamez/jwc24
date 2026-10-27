@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-10-28",
+  "source_bytes": 4194944,
+  "source_sha256": "aef18b3a045c09b0a1c4dfdd9aed99f78bd4a6be8c0a967deea3e6aa93523264",
+  "source_regions": [
+    {
+      "role": "callback",
+      "start": "0x800287e0",
+      "exclusive_end": "0x80028914",
+      "sha256": "f07f1b5f3b07a67d9f15afcd15c45ec1547a7eb26c496b83361de832908922fc"
+    },
+    {
+      "role": "virtual_poll",
+      "start": "0x800285e0",
+      "exclusive_end": "0x8002872c",
+      "sha256": "f459d7e8cbf7cb94fa66ba26ef18f1a2ed92b00796ca05a7cba142c6fc46722d"
+    },
+    {
+      "role": "restart_wrapper",
+      "start": "0x80028490",
+      "exclusive_end": "0x80028580",
+      "sha256": "9b928c79a033ed944ab56097b680ab89aa539455309fa849ebbccfde813b6eb3"
+    },
+    {
+      "role": "manager_poll",
+      "start": "0x8002bd80",
+      "exclusive_end": "0x8002bdc8",
+      "sha256": "39730261aac91e96e42e1ebcab087b8659f55d1e8bb6e4792e6ee9e804f6c70c"
+    },
+    {
+      "role": "result_normalizer",
+      "start": "0x8002be20",
+      "exclusive_end": "0x8002beec",
+      "sha256": "7f0adbf91d8c6268dfa1ece11c3bfe990f666b4c3839fb7d9b3c1b1021cfc2ad"
+    },
+    {
+      "role": "vtable",
+      "start": "0x8038f108",
+      "exclusive_end": "0x8038f130",
+      "sha256": "e440cfb062a43d2af277e22537019236d5b3e2afaa06f0a19bd20a4012e71965"
+    }
+  ],
+  "native_comparisons": 157,
+  "native_callback_cases": 52,
+  "native_poll_cases": 105,
+  "all_native_comparisons_passed": true,
+  "comparison_seconds": 2.962,
+  "aggregate_counts": {
+    "instructions": 11742,
+    "timer_reset": 56,
+    "timer_start": 56,
+    "timer_update": 48,
+    "timer_predicate": 48,
+    "manager_27140": 6,
+    "manager_271d0": 3,
+    "request_26c80": 5,
+    "diagnostic_boundaries": 17,
+    "native_restart_entries": 6,
+    "native_normalizer_entries": 105
+  },
+  "original_copy_state_poll_restart_and_normalizer_stubbed": false,
+  "timer_underlying_manager_and_diagnostic_boundaries_stubbed": true,
+  "full_async_worker_or_socket_transport_executed": false,
+  "real_provider_catalog_or_response_origin_verified": false,
+  "authentication_freshness_or_original_ui_verified": false,
+  "opaque_callback_words_not_assigned_unproved_semantics": true,
+  "skipped_bytes_distinguished_from_native_data_phase": true,
+  "negative_raw_poll_distinguished_from_normalized_result": true,
+  "original_input_or_device_profile_changed": false,
+  "software_or_proprietary_bytes_copied_to_git": false,
+  "targeted_test_count": 8,
+  "all_nintendo_regression_test_count": 60,
+  "all_nintendo_regression_passed": true,
+  "all_nintendo_regression_seconds": 15.322,
+  "private_absent_public_test_count": 6,
+  "private_absent_native_classes_skipped": 1,
+  "public_state_and_underlying_results_are_explicit_caller_assertions": true,
+  "no_runtime_server_routes_enabled": true,
+  "final_targeted_test_seconds": 2.044,
+  "optional_native_dependencies_checked": [
+    "capstone",
+    "unicorn"
+  ]
+}
