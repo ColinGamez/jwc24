@@ -1,0 +1,355 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-10-28",
+  "original_main_bytes": 1925536,
+  "original_main_sha256": "ec33ec8eb2a8b9c76c2605ac6de2fd16dd5279b0c641d90746206a86a3a499b5",
+  "source_scope": "Pinned private original HAFJ v7 application; no independent Nintendo signature/provenance verification added by this audit. No real profile/settings/NAND read.",
+  "source_regions": [
+    {
+      "role": "static_startup_sda_bases",
+      "start": "0x80004224",
+      "exclusive_end": "0x80004234",
+      "sha256": "aed02f586ce4a00b39a264c91b2182c7c6fa637b4967e73c3a9be5efde416eac"
+    },
+    {
+      "role": "wind_caller_byte_selection_and_dispatch",
+      "start": "0x8001e1d0",
+      "exclusive_end": "0x8001e224",
+      "sha256": "e00454b312b3a92cbb077c1f2c2646fb19aedb0e24a9654120e2f34c6495b344"
+    },
+    {
+      "role": "japanese_formatter_call_setup",
+      "start": "0x8001e8d4",
+      "exclusive_end": "0x8001e8e4",
+      "sha256": "33e00f37166dbc42e55bdc3a677fe202d48f219eda78bfb0987f66871e6529ac"
+    },
+    {
+      "role": "complete_japanese_wind_formatter",
+      "start": "0x8001f110",
+      "exclusive_end": "0x8001f4cc",
+      "sha256": "a2a9664e005bbccf3f614bcfccadc9570043152b2754e023206828477883f9f0"
+    },
+    {
+      "role": "country_one_japanese_direction_pointer_table",
+      "start": "0x801994d8",
+      "exclusive_end": "0x8019951c",
+      "sha256": "8f925ee762b6c69f33ff9a044a25a9f8e866f234be2cc540207d7d7c56328046"
+    },
+    {
+      "role": "country_one_unit_pointer_table",
+      "start": "0x801999b0",
+      "exclusive_end": "0x801999e8",
+      "sha256": "b69c5189dd183db82f4887d1236d3c38c2a03bdab9c81c9cf0fe30b2d1e0e87e"
+    },
+    {
+      "role": "complete_condition_getter",
+      "start": "0x800203f0",
+      "exclusive_end": "0x8002044c",
+      "sha256": "6504e1e8ac02b4d1403be810eae7cecb4f8b66afe356d660fcd50b5816f59f42"
+    },
+    {
+      "role": "static_render_call_setup_secondary_field",
+      "start": "0x8001d774",
+      "exclusive_end": "0x8001d79c",
+      "sha256": "a815dbbb75b3aa284ebe34d27cf359ad0929f41138846e5a03011a2896f60bb7"
+    },
+    {
+      "role": "numerical_condition_dispatch_including_fallback_boundary",
+      "start": "0x800205b8",
+      "exclusive_end": "0x800208ec",
+      "sha256": "e1ef2610616300e4571466656844bc985dd64e962fced5cbcacc9984c53fad6a"
+    },
+    {
+      "role": "condition_dispatch_table",
+      "start": "0x8019af48",
+      "exclusive_end": "0x8019b144",
+      "sha256": "3629a7248a118bb08565faf78bcdade52372ce7585abd3ff3a96ca11502d9352"
+    },
+    {
+      "role": "temperature_format_prefix",
+      "start": "0x8001d558",
+      "exclusive_end": "0x8001d5bc",
+      "sha256": "859524712dd03a4ecb178791298c828a99a51dd18177ecc6ad0f98cef1c65086"
+    },
+    {
+      "role": "static_signed_temperature_byte_consumer",
+      "start": "0x80007ab0",
+      "exclusive_end": "0x80007ac4",
+      "sha256": "7927d58ecaa35dff252aacf8b9b3f3838aac0d178ab342122e20a3d194755635"
+    }
+  ],
+  "wind": {
+    "source_sha256": "ec33ec8eb2a8b9c76c2605ac6de2fd16dd5279b0c641d90746206a86a3a499b5",
+    "cases": 1152,
+    "complete_original_formatter_cases": 1142,
+    "observed_invalid_read_cases": 2,
+    "missing_direction_suppressed_cases": 8,
+    "instructions": 1216406,
+    "explicit_synthetic_country": 1,
+    "explicit_synthetic_language": 0,
+    "settings_selector_zero": {
+      "day_offset": 24,
+      "display_unit": "mph",
+      "unit_pointer": "0x8032fcb0"
+    },
+    "settings_selector_one": {
+      "day_offset": 23,
+      "display_unit": "km/h",
+      "unit_pointer": "0x80199928"
+    },
+    "format_pointers": [
+      "0x8019aedc",
+      "0x8019aef4",
+      "0x8019af0c",
+      "0x8019af1c"
+    ],
+    "native_direction_labels": [
+      {
+        "code": 0,
+        "meaning": "calm",
+        "pointer": "0x8032f5a0",
+        "label_sha256": "674c526f5822300eedfa3db139cc2129845dabdf3761afd4f30aa7f6a7be50a4"
+      },
+      {
+        "code": 1,
+        "meaning": "NNE",
+        "pointer": "0x8032f5a8",
+        "label_sha256": "6935b72c86367f67a6f8e3c81d0fb3171ca42b200a5309f16cdc326bf76d90bd"
+      },
+      {
+        "code": 2,
+        "meaning": "NE",
+        "pointer": "0x8032f5b0",
+        "label_sha256": "5fc9ab733fb2ef95fe0f612bd5cd075b0c81687bb5735e17d76653f9d0f6e076"
+      },
+      {
+        "code": 3,
+        "meaning": "ENE",
+        "pointer": "0x8032f5b8",
+        "label_sha256": "901f5a4b4bcc18f4541b7c314030657944f16985e564a77b0c73b5d946f7737c"
+      },
+      {
+        "code": 4,
+        "meaning": "E",
+        "pointer": "0x8032f5c0",
+        "label_sha256": "7104cae00d98f78ce59f6286749e5c2ad9526f3be3fae530c7f61b50512b31a9"
+      },
+      {
+        "code": 5,
+        "meaning": "ESE",
+        "pointer": "0x8032f5c8",
+        "label_sha256": "e5cca6e8ef32f2303dde763c7113f7333d01b344a9a53a25b1e1d72441a25c19"
+      },
+      {
+        "code": 6,
+        "meaning": "SE",
+        "pointer": "0x8032f5d0",
+        "label_sha256": "4435f091b50291e11a9060192e6d165c31f0a79540e21df156ebba6cbba03c6d"
+      },
+      {
+        "code": 7,
+        "meaning": "SSE",
+        "pointer": "0x8032f5d8",
+        "label_sha256": "3a886fa97827280d6a62d5a19f248a26e31ba9acb9f490b6e2af4b8944cf194e"
+      },
+      {
+        "code": 8,
+        "meaning": "S",
+        "pointer": "0x8032f5e0",
+        "label_sha256": "072f005fc3f2a49f2e29225d116c10a3904c326a1b810a6eb840d9a574526694"
+      },
+      {
+        "code": 9,
+        "meaning": "SSW",
+        "pointer": "0x8032f5e8",
+        "label_sha256": "9a11b141d651ad27385412034dfc4b5e774b7d528ee86a583f2671321cdc8340"
+      },
+      {
+        "code": 10,
+        "meaning": "SW",
+        "pointer": "0x8032f5f0",
+        "label_sha256": "a6d516819800916da02b766e6329fa1a2b41c95990ac32754c986ac3011cd804"
+      },
+      {
+        "code": 11,
+        "meaning": "WSW",
+        "pointer": "0x8032f5f8",
+        "label_sha256": "48e3ade60eb8a1b8522246565dd6b989cfe98c44ebe76d33a94f64b58a687c43"
+      },
+      {
+        "code": 12,
+        "meaning": "W",
+        "pointer": "0x8032f600",
+        "label_sha256": "d4817591e52af25f7522fcac5efcb71d8702eace3ae5d670c51d25ed9d639b03"
+      },
+      {
+        "code": 13,
+        "meaning": "WNW",
+        "pointer": "0x8032f608",
+        "label_sha256": "893fef4b9f41ef823a445262fbbc7b10649f854e7485fac379814bd74ef7b5b0"
+      },
+      {
+        "code": 14,
+        "meaning": "NW",
+        "pointer": "0x8032f610",
+        "label_sha256": "69ac266df812f039c9327741ceae6cf315d2e2be2dcf3581a1ea791c0214a9cf"
+      },
+      {
+        "code": 15,
+        "meaning": "NNW",
+        "pointer": "0x8032f618",
+        "label_sha256": "9595c6f7be4d3ad06289ed556ec7908e2ec4b0a4986d286a6f294226b46b060c"
+      },
+      {
+        "code": 16,
+        "meaning": "N",
+        "pointer": "0x8032f620",
+        "label_sha256": "1e4346300a6bf77cc946eed3a3e717366b026ebcabb8d0f54e93e142dd646572"
+      }
+    ],
+    "calm_label_static_binding_verified": true,
+    "nonzero_direction_label_arguments_executed": true,
+    "isolated_invalid_read_boundary": {
+      "address": 255,
+      "size": 2,
+      "pc": "0x8016f574",
+      "direction": 0,
+      "selected_speed": 255,
+      "full_ui_or_all_state_reachability_verified": false
+    },
+    "caller_byte_selection_and_japanese_dispatch_executed": true,
+    "complete_original_formatter_and_helpers_executed_for_successful_cases": true,
+    "helpers_or_service_boundaries_stubbed": false,
+    "input_settings_static_and_guards_unchanged": true,
+    "fractional_provider_rounding_verified": false,
+    "provider_conversion_performed": false,
+    "original_text_or_assets_published": false,
+    "native_ui_rendered": false,
+    "real_settings_profile_or_device_io": false,
+    "all_locales_verified": false
+  },
+  "condition_dispatch": {
+    "source_sha256": "ec33ec8eb2a8b9c76c2605ac6de2fd16dd5279b0c641d90746206a86a3a499b5",
+    "cases": 262,
+    "native_low15_selector_range": [
+      0,
+      126
+    ],
+    "complete_original_lookup_cases": 60,
+    "primary_u16_key_distinct_from_secondary_u16_graphical_selector": true,
+    "absent_key_getter_returns_ffff": true,
+    "original_lookup_stubbed": false,
+    "full_payload_validator_or_all_callers_executed": false,
+    "high_bit_preserved_as_separate_argument": true,
+    "in_range_unmapped_selectors": [
+      0,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100
+    ],
+    "mapped_selector_count": 59,
+    "distinct_definition_pointers": 59,
+    "instructions": 4266,
+    "original_selector_and_table_executed": true,
+    "pre_graphics_prefix_or_drawing_suffix_executed": false,
+    "selector_branch_or_table_stubbed": false,
+    "source_and_guards_unchanged": true,
+    "jma_or_provider_semantic_mapping_verified": false,
+    "original_graphics_rendered": false,
+    "original_assets_or_message_copy_published": false
+  },
+  "temperature_format_prefix": {
+    "source_sha256": "ec33ec8eb2a8b9c76c2605ac6de2fd16dd5279b0c641d90746206a86a3a499b5",
+    "cases": 256,
+    "preserved_signed_integer_cases": 255,
+    "missing_minus_128_cases": 1,
+    "instructions": 55063,
+    "original_prefix_and_string_numeric_helpers_executed": true,
+    "prefix_start": "0x8001d558",
+    "prefix_exit_before_drawing": "0x8001d5bc",
+    "helpers_stubbed": false,
+    "source_and_guards_unchanged": true,
+    "fractional_provider_rounding_or_unit_conversion_verified": false,
+    "temperature_field_selection_or_full_draw_function_executed": false,
+    "native_ui_rendered": false,
+    "original_message_copy_published": false
+  },
+  "validation": {
+    "new_tests": 6,
+    "public_tests": 3,
+    "optional_native_tests": 3,
+    "passed": true,
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_forecast_units_native"
+  },
+  "remaining_gates": [
+    "provider fractional conversion and quantization policy, overflow and missing-field handling",
+    "semantic correspondence between real provider conditions and native graphical definitions",
+    "full UI/render/audio behavior and all real state reachability, including isolated direction0/speedFF boundary",
+    "all locales/consumers, persisted settings lifecycle and original source freshness/trust delivery",
+    "native text lengths, display bounds and complete accepted current forecast dataset"
+  ]
+}
