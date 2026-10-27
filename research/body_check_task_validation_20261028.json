@@ -1,0 +1,1231 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-10-28",
+  "original_main_sha256": "ca6677094a9293219b4122038b916cb64f6361b5b4106a670ade438292d4969c",
+  "original_main_bytes": 4110944,
+  "provenance": "Pinned private decoded Japanese HFNJ v256 application. Synthetic task/context/key-presence fixtures only; no original resource bodies, profiles, credentials or actual task records published.",
+  "source_regions": [
+    {
+      "role": "resource_allocation_descriptor_caller",
+      "start": "0x8031bea0",
+      "exclusive_end": "0x8031bf7c",
+      "sha256": "992669e1ac6778cffdd3e317d637187ee38a6cf56c7008d6f8a4bf582701447d"
+    },
+    {
+      "role": "descriptor_constructor",
+      "start": "0x8031a9a4",
+      "exclusive_end": "0x8031aa08",
+      "sha256": "1984f77a70abaec9d5a2147c7de7a26611318cf358478cbe24cfee9e0c4a5ff9"
+    },
+    {
+      "role": "complete_preparation_caller",
+      "start": "0x8031a5a0",
+      "exclusive_end": "0x8031a7b0",
+      "sha256": "36c2957a4ea0dba82c11e722ce8b105025cabcbc02575d221b2a980a8089174a"
+    },
+    {
+      "role": "complete_local_setter_caller",
+      "start": "0x8031a7b0",
+      "exclusive_end": "0x8031a9a4",
+      "sha256": "ad54db9f57e024aaf935bea4a8832acc0094ec7150874f2a307b503b0f1dc1a3"
+    },
+    {
+      "role": "original_sdk_initializer",
+      "start": "0x801bb860",
+      "exclusive_end": "0x801bb9fc",
+      "sha256": "30f6c69a59034aaab7f883c2e1c6d50e5cf8a2d073227d6c246b41d4e22cc4ff"
+    },
+    {
+      "role": "original_sdk_validation",
+      "start": "0x801bb738",
+      "exclusive_end": "0x801bb860",
+      "sha256": "1d019f9049fc36a4745722c931ffc4d8157757d7b06fc3e7be52a1bf0cfbf82c"
+    },
+    {
+      "role": "original_sdk_local_fields",
+      "start": "0x801bba70",
+      "exclusive_end": "0x801bc038",
+      "sha256": "23d76bb6aed78fc6f46edd874b6660b3f30fce1c7ebfd0d2862c096455c34bfc"
+    }
+  ],
+  "descriptor": [
+    {
+      "allocation_succeeds": true,
+      "resource_lookup_calls": 2,
+      "descriptor_allocation_bytes": 556,
+      "descriptor_allocation_alignment": 4,
+      "native_flags_byte": 192,
+      "native_flags_word": 10,
+      "native_interval_minutes": 1440,
+      "native_server_interval_minutes": 1440,
+      "native_priority": 100,
+      "opaque_descriptor_word_18": 0,
+      "original_descriptor_constructor_executed": true,
+      "original_resource_allocation_descriptor_caller_executed": true,
+      "resource_lookup_and_allocation_mocked": true,
+      "original_key_bodies_read": false,
+      "task_registered": false,
+      "instructions": 83
+    },
+    {
+      "allocation_succeeds": false,
+      "resource_lookup_calls": 2,
+      "descriptor_allocation_bytes": 556,
+      "descriptor_allocation_alignment": 4,
+      "native_flags_byte": null,
+      "native_flags_word": null,
+      "native_interval_minutes": null,
+      "native_server_interval_minutes": null,
+      "native_priority": null,
+      "opaque_descriptor_word_18": null,
+      "original_descriptor_constructor_executed": false,
+      "original_resource_allocation_descriptor_caller_executed": true,
+      "resource_lookup_and_allocation_mocked": true,
+      "original_key_bodies_read": false,
+      "task_registered": false,
+      "instructions": 42
+    }
+  ],
+  "preparation": {
+    "native_cases": 27,
+    "zero_return_cases": 21,
+    "matching_local_image_cases": 24,
+    "initializer_cases": 15,
+    "actual_local_setter_entries": 192,
+    "instructions": 97948,
+    "all_input_object_stack_and_global_guards_verified": true,
+    "original_initializer_and_local_setters_stubbed": false,
+    "context_storage_task_database_clock_and_key_import_mocked": true,
+    "task_registration_or_persistence_verified": false,
+    "signature_trust_scheduler_or_native_ui_verified": false,
+    "case_results": [
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "initializer",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "add"
+        ],
+        "instructions": 4391,
+        "initializer_kinds": [
+          3
+        ],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 0,
+        "local_task_image_matches": true,
+        "original_initializer_executed": true,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "initializer",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "add"
+        ],
+        "instructions": 4391,
+        "initializer_kinds": [
+          3
+        ],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 0,
+        "local_task_image_matches": true,
+        "original_initializer_executed": true,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "initializer",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "add"
+        ],
+        "instructions": 4394,
+        "initializer_kinds": [
+          3
+        ],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 0,
+        "local_task_image_matches": true,
+        "original_initializer_executed": true,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "initializer",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "add"
+        ],
+        "instructions": 4431,
+        "initializer_kinds": [
+          3
+        ],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": true,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "update"
+        ],
+        "instructions": 2600,
+        "initializer_kinds": [],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 0,
+        "local_task_image_matches": true,
+        "original_initializer_executed": false,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "update"
+        ],
+        "instructions": 2600,
+        "initializer_kinds": [],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 0,
+        "local_task_image_matches": true,
+        "original_initializer_executed": false,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "update"
+        ],
+        "instructions": 2603,
+        "initializer_kinds": [],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 0,
+        "local_task_image_matches": true,
+        "original_initializer_executed": false,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "update"
+        ],
+        "instructions": 2640,
+        "initializer_kinds": [],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": false,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "initializer",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "add"
+        ],
+        "instructions": 4210,
+        "initializer_kinds": [
+          3
+        ],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": true,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "update"
+        ],
+        "instructions": 2419,
+        "initializer_kinds": [],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": false,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "initializer",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "add"
+        ],
+        "instructions": 8543,
+        "initializer_kinds": [
+          3
+        ],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": true,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "update"
+        ],
+        "instructions": 6752,
+        "initializer_kinds": [],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": false,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "initializer",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "add"
+        ],
+        "instructions": 4431,
+        "initializer_kinds": [
+          3
+        ],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": true,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "update"
+        ],
+        "instructions": 2652,
+        "initializer_kinds": [],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": false,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "initializer",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "add"
+        ],
+        "instructions": 4431,
+        "initializer_kinds": [
+          3
+        ],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": true,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "update"
+        ],
+        "instructions": 2652,
+        "initializer_kinds": [],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": false,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "initializer",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "add"
+        ],
+        "instructions": 4268,
+        "initializer_kinds": [
+          3
+        ],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": true,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "update"
+        ],
+        "instructions": 2477,
+        "initializer_kinds": [],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": false,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "initializer",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "add"
+        ],
+        "instructions": 4268,
+        "initializer_kinds": [
+          3
+        ],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": true,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "update"
+        ],
+        "instructions": 2477,
+        "initializer_kinds": [],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": false,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 0,
+        "events": [
+          "lookup",
+          "initializer",
+          "vff_name",
+          "find_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "add"
+        ],
+        "instructions": 4394,
+        "initializer_kinds": [
+          3
+        ],
+        "vff_create_sizes": [],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": true,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 16,
+        "events": [
+          "lookup"
+        ],
+        "instructions": 44,
+        "initializer_kinds": [],
+        "vff_create_sizes": [],
+        "key_import_calls": 0,
+        "local_task_image_matches": false,
+        "original_initializer_executed": false,
+        "original_local_setter_entries": [],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 16,
+        "events": [
+          "lookup",
+          "initializer",
+          "vff_name",
+          "find_vff"
+        ],
+        "instructions": 2173,
+        "initializer_kinds": [
+          3
+        ],
+        "vff_create_sizes": [],
+        "key_import_calls": 0,
+        "local_task_image_matches": false,
+        "original_initializer_executed": true,
+        "original_local_setter_entries": [],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 12,
+        "events": [
+          "lookup",
+          "initializer",
+          "vff_name",
+          "find_vff",
+          "create_vff"
+        ],
+        "instructions": 2217,
+        "initializer_kinds": [
+          3
+        ],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 0,
+        "local_task_image_matches": false,
+        "original_initializer_executed": true,
+        "original_local_setter_entries": [],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 12,
+        "events": [
+          "lookup",
+          "initializer",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys"
+        ],
+        "instructions": 4399,
+        "initializer_kinds": [
+          3
+        ],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": true,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 12,
+        "events": [
+          "lookup",
+          "initializer",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "add"
+        ],
+        "instructions": 4442,
+        "initializer_kinds": [
+          3
+        ],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": true,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      },
+      {
+        "native_return": 12,
+        "events": [
+          "lookup",
+          "vff_name",
+          "find_vff",
+          "create_vff",
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename",
+          "keys",
+          "update"
+        ],
+        "instructions": 2649,
+        "initializer_kinds": [],
+        "vff_create_sizes": [
+          32768
+        ],
+        "key_import_calls": 1,
+        "local_task_image_matches": true,
+        "original_initializer_executed": false,
+        "original_local_setter_entries": [
+          "url",
+          "byte_flags",
+          "interval",
+          "server_interval",
+          "priority",
+          "word_flags",
+          "opaque_word_1f8",
+          "filename"
+        ],
+        "descriptor_constructor_and_complete_preparation_caller_executed": true,
+        "context_storage_task_database_clock_and_key_import_mocked": true,
+        "immutable_inputs_and_object_stack_global_guards_verified": true,
+        "task_registration_or_persistence_verified": false,
+        "signature_trust_scheduler_or_native_ui_verified": false
+      }
+    ]
+  },
+  "native_comparisons": 29,
+  "validation": {
+    "focused_tests": 32,
+    "new_tests": 12,
+    "passed": true,
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_body_check_tasks tests.test_body_check_completion tests.test_body_check tests.test_body_check_crc_native",
+    "public_private_absent": {
+      "public_tests_run": 8,
+      "native_class_skips": 1,
+      "passed": true,
+      "private_input_used": false
+    }
+  },
+  "unverified": [
+    "actual SDK context and library readiness",
+    "SDK assigned task ID and IOS table slot",
+    "task database persistence and VFF capacity/IO",
+    "key import and RSA signature trust",
+    "scheduler and current genuine dataset delivery",
+    "opaque descriptor/header/payload meanings",
+    "complete asynchronous native lifecycle",
+    "save and board prerequisites, question/mail and original UI"
+  ]
+}
