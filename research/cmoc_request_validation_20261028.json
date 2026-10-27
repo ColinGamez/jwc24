@@ -1,0 +1,51 @@
+{
+  "checked_on_jst": "2026-10-28",
+  "source_bytes": 3410304,
+  "source_sha256": "3957942d54501633bd7d256c636517885958ed152d9c914f4e07aadecf84a5b3",
+  "provenance": "Private pinned Japanese HAPJ v512 executable; unmodified. Descriptor, cached header tail, configuration and singleton state are synthetic.",
+  "native_cases": 23,
+  "entry": "0x80069A18",
+  "complete_seed_constructor": "0x80069A58",
+  "complete_descriptor_constructor": "0x80074330",
+  "fd_branch": "0x80074520",
+  "complete_url_formatter": "0x80074904",
+  "suffix_selector": "0x80074A48",
+  "configuration_predicate": "0x80074248",
+  "manager_configuration_word_offset": 44,
+  "configuration_index_in_native_fixture": 1,
+  "descriptor_url_offset": 46,
+  "descriptor_url_capacity": 128,
+  "opaque_header_tail_bytes": 20,
+  "counts_per_case": {
+    "instructions": {
+      "min": 1823,
+      "max": 1979
+    },
+    "singleton_lookups_stubbed": {
+      "min": 2,
+      "max": 2
+    },
+    "manager_lookups_stubbed": {
+      "min": 2,
+      "max": 2
+    },
+    "native_snprintf_calls": {
+      "min": 3,
+      "max": 3
+    },
+    "native_configuration_predicate_calls": {
+      "min": 1,
+      "max": 1
+    }
+  },
+  "all_input_descriptor_and_stack_guards_verified": true,
+  "all_opaque_header_tails_preserved": true,
+  "native_printf_copy_suffix_or_configuration_predicate_stubbed": false,
+  "singleton_and_manager_lookup_boundaries_stubbed": true,
+  "request_body_serialization_verified": false,
+  "actual_http_sdk_setup_or_async_worker_executed": false,
+  "complete_native_startup_or_ui_verified": false,
+  "authentication_verified": false,
+  "service_or_profile_modified": false,
+  "original_bytes_included": false
+}
