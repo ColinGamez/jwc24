@@ -56,8 +56,9 @@ def verify_registration_sync(source, response, *, proof, environment=None,
                       or len(v.encode('utf-8')) > 96 or '\0' in v
                       for f in fields(environment) if f.name not in (*bool_fields, *int_fields))
         invalid = invalid or type(proof) is not SyntheticRegistrationProof or any(
-            not isinstance(v := getattr(proof, f.name), str) or len(v.encode('utf-8')) > 96 or '\0' in v
-            for f in fields(proof))
+            not isinstance(v := getattr(proof, f.name), str)
+            or len(v.encode('utf-8')) > (512 if f.name in ('device_cert', 'cert_chain') else 96)
+            or '\0' in v for f in fields(proof))
     except (UnicodeError, TypeError):
         raise ValueError('Expected bounded synthetic UTF-8 environment and proof strings') from None
     if (invalid or any(type(getattr(environment, f)) is not bool for f in bool_fields)

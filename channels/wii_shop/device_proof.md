@@ -106,7 +106,10 @@ including the operation, device/account/token fields, are not added to that
 signed message. The same challenge proof can mathematically verify for either
 reviewed sync operation if the caller supplies a matching context. Consequently
 operation-bound issuance, expiry and atomic replay consumption remain separate
-requirements. No challenge store is implemented or silently inferred.
+requirements. This mathematical verifier does not query a challenge store. The
+separate [durable local challenge component](challenge_state.md) adds issuance
+and single-use receipts, without changing this verifier's authority flags or
+claiming an authenticated account.
 
 Mathematical validity also does not prove exclusive private-key possession or
 physical-console origin. The pinned public Dolphin signing implementation uses

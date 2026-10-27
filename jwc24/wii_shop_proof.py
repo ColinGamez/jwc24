@@ -104,7 +104,8 @@ def _base64(value, size):
     return data
 
 
-def _context(context):
+def validate_pinned_device_context(context):
+    """Check context structure only; this does not verify a pin or signature."""
     if type(context) is not PinnedDeviceContext:
         raise DeviceProofError('An explicit pinned device context is required')
     if (type(context.certificate_sha256) is not str
@@ -196,7 +197,7 @@ def inspect_registration_sync_proof(data: bytes, *, soap_action: str,
     account/session authority remain the caller's separate unfinished work.
     This function deliberately does not return an authenticated account token.
     """
-    _context(context)
+    validate_pinned_device_context(context)
     try:
         request = parse_registration_sync_request(data, soap_action=soap_action)
     except RegistrationContractError:
