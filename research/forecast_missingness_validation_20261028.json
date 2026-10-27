@@ -1,0 +1,38 @@
+{
+  "source_sha256": "ec33ec8eb2a8b9c76c2605ac6de2fd16dd5279b0c641d90746206a86a3a499b5",
+  "source_bytes": 1925536,
+  "comparisons": {
+    "direction": 256,
+    "index_validation": 3584,
+    "lookup": 3840,
+    "availability": 1372,
+    "combined_display": 686,
+    "uv_only_display": 686,
+    "direction_ff_suppression": 2
+  },
+  "total_comparisons": 10426,
+  "direction_admitted_cases": 18,
+  "synthetic_raw_and_cooked_tables": true,
+  "cooked_table_constructor_executed": false,
+  "original_text_section_execution_bounds": true,
+  "guarded_original_reads_and_writes": true,
+  "unchanged_original_sections_and_file": true,
+  "original_string_copy_and_integer_helpers_executed": true,
+  "graphics_calls_intercepted": [
+    "0x8001C89C",
+    "0x80031170",
+    "0x800313F4",
+    "0x8003E150",
+    "0x8003F088",
+    "0x800D3C7C",
+    "0x800D56E8"
+  ],
+  "dictionary_ff_entries_remain_matchable": true,
+  "combined_null_and_ff_use_original_missing_string": true,
+  "uv_only_null_skips_value_path": true,
+  "full_validator_executed": false,
+  "full_layout_selection_executed": false,
+  "native_pixels_or_service_verified": false,
+  "provider_conversion_implemented": false,
+  "speed_units_or_all_wind_combinations_verified": false
+}
