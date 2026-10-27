@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-10-28",
+  "source_bytes": 4194944,
+  "source_sha256": "aef18b3a045c09b0a1c4dfdd9aed99f78bd4a6be8c0a967deea3e6aa93523264",
+  "source_regions": [
+    {
+      "role": "table_one_getter",
+      "start": "0x8002c610",
+      "exclusive_end": "0x8002c62c",
+      "sha256": "8dba449c7dba211fcfd340a9f066d134fe3f336ddf9779a261fe7f8eeffc9b81"
+    },
+    {
+      "role": "table_two_getter",
+      "start": "0x8002c3f0",
+      "exclusive_end": "0x8002c40c",
+      "sha256": "b75a2dade4f7ec8d1736834d364c400c0dbfa58cb53baddeadef306b6027b5d8"
+    },
+    {
+      "role": "identifier_name_lookup",
+      "start": "0x8002c630",
+      "exclusive_end": "0x8002c6e8",
+      "sha256": "5f1433c38c56dd0292538db06c29d7acc8581e5561c6c23afa4a41ebe9cfee24"
+    },
+    {
+      "role": "four_byte_comparison",
+      "start": "0x8002c330",
+      "exclusive_end": "0x8002c364",
+      "sha256": "b83d4935152cdea2adaf74a165dc78cd5ebe3499b6cca949852ac4adb1205225"
+    },
+    {
+      "role": "code_name_lookup",
+      "start": "0x8002c410",
+      "exclusive_end": "0x8002c4cc",
+      "sha256": "2f54d9d6f958241dd8c2a7ec6e853b360b3955b2cc74c669466d3715e2984927"
+    },
+    {
+      "role": "software_code_lookup",
+      "start": "0x8002ede0",
+      "exclusive_end": "0x8002ee98",
+      "sha256": "21d065cdcc5b0f75bc55b6470088196786e7476f642973f602469c7440c52e74"
+    },
+    {
+      "role": "kind_classification",
+      "start": "0x8002ecb0",
+      "exclusive_end": "0x8002eddc",
+      "sha256": "5ec3455621999a29400bcfd23a618c49fe492a11866d845fdbbe8546dab1104e"
+    },
+    {
+      "role": "ui_name_use",
+      "start": "0x800f648c",
+      "exclusive_end": "0x800f64c8",
+      "sha256": "e5475bc2972722043843fa615ffabb36d865c0e05119b1e4304ff0a8f1d9dc86"
+    },
+    {
+      "role": "ui_wide_format",
+      "start": "0x803b6c58",
+      "exclusive_end": "0x803b6c68",
+      "sha256": "33b05a8d89181f452e3184286287ce1e3f567ecfe5c82b743d46cfbd96a28a6d"
+    }
+  ],
+  "native_fixture_runs": 2,
+  "supported_fixture": {
+    "native_validator_status": 0,
+    "independent_inline_name_subset_accepted": true,
+    "counts": {
+      "instructions": 41949,
+      "named_id_rows_compared": 3,
+      "named_code_rows_compared": 3,
+      "first_match_lookups_compared": 6,
+      "missing_lookups_compared": 2,
+      "software_id_relations_compared": 2,
+      "native_names_copied": 6,
+      "classification_bytes_compared": 256
+    },
+    "native_getters_or_copy_helpers_stubbed": false,
+    "synthetic_kind_values_explicitly_varied_by_host": true,
+    "input_output_object_and_stack_guards_verified": true,
+    "name_termination_bounds_are_stricter_local_policy": true,
+    "full_catalog_semantics_or_original_ui_verified": false,
+    "genuine_source_trust_or_freshness_verified": false
+  },
+  "unterminated_name_local_refusal_fixture": {
+    "native_validator_status": 0,
+    "independent_inline_name_subset_accepted": false,
+    "counts": {
+      "instructions": 1551,
+      "named_id_rows_compared": 3,
+      "named_code_rows_compared": 3,
+      "first_match_lookups_compared": 6,
+      "missing_lookups_compared": 2,
+      "software_id_relations_compared": 2,
+      "native_names_copied": 0,
+      "classification_bytes_compared": 0
+    },
+    "native_getters_or_copy_helpers_stubbed": false,
+    "synthetic_kind_values_explicitly_varied_by_host": false,
+    "input_output_object_and_stack_guards_verified": true,
+    "name_termination_bounds_are_stricter_local_policy": true,
+    "full_catalog_semantics_or_original_ui_verified": false,
+    "genuine_source_trust_or_freshness_verified": false
+  },
+  "table_one_stride": 108,
+  "table_two_stride": 128,
+  "inline_name_limits_are_stricter_local_policy": true,
+  "kind_byte_zero_and_eleven_through_255_preserved_and_mapped_to_255": true,
+  "raw_identifiers_not_assigned_integer_or_publisher_genre_semantics": true,
+  "record_order_duplicates_and_post_nul_storage_preserved": true,
+  "existing_five_argument_inspection_constructor_preserved": true,
+  "original_software_copied_to_git": false,
+  "real_catalog_provider_network_or_device_used": false,
+  "targeted_tests": 10,
+  "targeted_tests_passed": true,
+  "all_nintendo_regression_tests": 70,
+  "all_nintendo_regression_passed": true,
+  "all_nintendo_regression_seconds": 17.891,
+  "private_absent_public_tests_passed": 8,
+  "private_absent_native_classes_skipped": 1,
+  "optional_native_dependencies": [
+    "capstone",
+    "unicorn"
+  ]
+}

@@ -1,7 +1,8 @@
 """Bounded partial HATJ ListData records for offline catalog inspection.
 
-This decodes proven software-title and linked-row fields, not a complete service
-catalog, price/availability feed, media codec or native browsing implementation.
+This decodes proven software-title, linked-row and selected name-table fields.
+It is not a complete service catalog, price/availability feed, media codec or
+native browsing implementation.
 """
 from __future__ import annotations
 
@@ -16,7 +17,7 @@ MAX_LIST_BYTES = 0x1FC7CC
 MAX_INPUT_BYTES = MAX_LIST_BYTES * 2 + 8  # Explicit local compressed-input cap.
 DESCRIPTOR_OFFSET = 0x25
 DESCRIPTOR_COUNT = 16
-KNOWN_STRIDES = {0: 0x22, 1: 0x6C, 3: 0xEC, 5: 0x116, 15: 0xCE}
+KNOWN_STRIDES = {0: 0x22, 1: 0x6C, 2: 0x80, 3: 0xEC, 5: 0x116, 15: 0xCE}
 MAX_TITLE_UNITS = 499  # Observed UI destination is 500 units including NUL.
 
 
@@ -56,14 +57,57 @@ class LinkedListRow:
 
 
 @dataclass(frozen=True)
+class NamedIdListRow:
+    index: int
+    file_offset: int = field(repr=False)
+    byte_field_00: int = field(repr=False)
+    bytes_field_01: bytes = field(repr=False)
+    name: str = field(repr=False)
+    name_storage: bytes = field(repr=False)
+    byte_field_6a: int = field(repr=False)
+    opaque_byte_6b: int = field(repr=False)
+
+    def classification_result(self):
+        """Observed selected consumer result, without invented category names."""
+        return self.byte_field_6a if 1 <= self.byte_field_6a <= 10 else 255
+
+
+@dataclass(frozen=True)
+class NamedCodeListRow:
+    index: int
+    file_offset: int = field(repr=False)
+    code_bytes: bytes = field(repr=False)
+    name: str = field(repr=False)
+    name_storage: bytes = field(repr=False)
+
+
+@dataclass(frozen=True)
 class NintendoListInspection:
     byte_length: int
     compression: str
     tables: tuple[ListTable, ...]
     software_rows: tuple[SoftwareListRow, ...] = field(repr=False)
     linked_rows: tuple[LinkedListRow, ...] = field(repr=False)
+    named_id_rows: tuple[NamedIdListRow, ...] = field(default=(), repr=False)
+    named_code_rows: tuple[NamedCodeListRow, ...] = field(default=(), repr=False)
+
+    def find_named_id(self, value: int):
+        if type(value) is not int or not 0 <= value <= 255:
+            raise ListDataFormatError('Expected an explicit identifier byte')
+        return next((row for row in self.named_id_rows if row.byte_field_00 == value), None)
+
+    def find_named_code(self, value: bytes):
+        if type(value) is not bytes or len(value) != 4:
+            raise ListDataFormatError('Expected exactly four opaque identifier bytes')
+        return next((row for row in self.named_code_rows if row.code_bytes == value), None)
+
+    def named_id_for_software(self, index: int):
+        if type(index) is not int or not 0 <= index < len(self.software_rows):
+            raise ListDataFormatError('Software index is outside the supplied records')
+        return self.find_named_id(self.software_rows[index].byte_field_08)
 
     def metadata(self):
+        named_ids = {row.byte_field_00 for row in self.named_id_rows}
         return {
             'byte_length': self.byte_length,
             'compression': self.compression,
@@ -71,12 +115,18 @@ class NintendoListInspection:
             'software_titles_present': sum(row.title is not None for row in self.software_rows),
             'linked_rows': len(self.linked_rows),
             'linked_rows_without_software': sum(row.software_index is None for row in self.linked_rows),
+            'named_id_rows': len(self.named_id_rows),
+            'named_code_rows': len(self.named_code_rows),
+            'software_rows_without_named_id': sum(row.byte_field_08 not in named_ids
+                                                  for row in self.software_rows),
             'tables': [{'index': table.index, 'count': table.count,
                         'stride_verified': table.stride is not None}
                        for table in self.tables],
             'undecoded_nonempty_tables': [table.index for table in self.tables
-                                         if table.count and table.index not in (3, 5)],
-            'decoded_record_fields': 'selected software-title and linked-row fields only',
+                                         if table.count and table.index not in (1, 2, 3, 5)],
+            'decoded_record_fields': 'selected software-title, linked-row and inline-name/code fields only',
+            'inline_name_bounds_are_local_policy': True,
+            'name_table_semantics_complete': False,
             'known_table_byte_spans_checked': True,
             'unknown_table_record_bounds_checked': False,
             'crc_or_signature_checked': False,
@@ -165,6 +215,28 @@ def inspect_listdata(payload: bytes) -> NintendoListInspection:
                     raise ListDataFormatError('Nintendo list title contains malformed UTF-16BE') from None
         raise ListDataFormatError('Nintendo list title exceeds bounded termination policy')
 
+    def inline_name(start, byte_count):
+        storage = raw[start:start + byte_count]
+        for offset in range(0, byte_count, 2):
+            if storage[offset:offset + 2] == bytes(2):
+                try:
+                    return storage[:offset].decode('utf-16-be'), storage
+                except UnicodeDecodeError:
+                    raise ListDataFormatError('Nintendo inline name contains malformed UTF-16BE') from None
+        raise ListDataFormatError('Nintendo inline name exceeds bounded termination policy')
+
+    named_id_rows = []
+    for index in range(tables[1].count):
+        offset = tables[1].offset + index * 0x6C
+        name, storage = inline_name(offset + 4, 0x66)
+        named_id_rows.append(NamedIdListRow(index, offset, raw[offset], raw[offset + 1:offset + 4],
+                                          name, storage, raw[offset + 0x6A], raw[offset + 0x6B]))
+    named_code_rows = []
+    for index in range(tables[2].count):
+        offset = tables[2].offset + index * 0x80
+        name, storage = inline_name(offset + 4, 0x7C)
+        named_code_rows.append(NamedCodeListRow(index, offset, raw[offset:offset + 4], name, storage))
+
     software = tables[3]
     software_rows = []
     for index in range(software.count):
@@ -190,4 +262,5 @@ def inspect_listdata(payload: bytes) -> NintendoListInspection:
                                          struct.unpack_from('>I', raw, offset + 6)[0],
                                          raw[offset + 0x0A], raw[offset + 0x0B], raw[offset + 0x1A],
                                          bool(raw[offset + 0x1B]), bool(raw[offset + 0x1C])))
-    return NintendoListInspection(len(raw), compression, tuple(tables), tuple(software_rows), tuple(linked_rows))
+    return NintendoListInspection(len(raw), compression, tuple(tables), tuple(software_rows), tuple(linked_rows),
+                                   tuple(named_id_rows), tuple(named_code_rows))
