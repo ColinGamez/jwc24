@@ -403,3 +403,62 @@ The public/private evidence scopes remain separate. No physical console,
 emulator launch, profile, real account, order, vote, notice or actual Wii backup
 was changed. Original software, SDK headers, keys, provider code and captures
 remain outside Git.
+
+## October 28: dated public weather input and original consumer constraints
+
+Six scoped commits after `5693036`, through `3cdf64e`, add the following
+implementation and evidence. They have been pushed; none activates a provider
+or changes an installed title/profile.
+
+- Nintendo ListData tables 1 and 2 now preserve inline names, raw identifiers,
+  row order, duplicates and first-match relationships. The original classification
+  consumer maps kinds outside 1..10 to `FF`; that is distinct from rejecting
+  a record. Seventy Nintendo-focused tests pass. Full table meanings, genuine
+  catalog/media, transport/authentication and native browsing remain open.
+- Body Check's original opaque-header decision is traced into its update-notice
+  transition and privately bound to the actual embedded message resource.
+  Fifty native flow cases and an original message constructor/getter comparison
+  support the projection. This is not a recovered health-data schema or a
+  verified rendered screen; the original header words remain opaque.
+- Forecast's original validator accepts wind direction zero. The public range
+  check now preserves it, with a regression for every native record form.
+  Original Japanese formatting selects km/h, not the JMA source's m/s. Calm
+  plus missing speed exposes an original invalid-read boundary in two isolated
+  synthetic cases; missing wind cannot safely be replaced with a guessed zero.
+  Primary condition keys and secondary graphical selectors are independently
+  checked; provider codes cannot simply be copied into graphical selectors.
+- Original index validation, first-match lookups, availability and selected
+  display branches pass 10,426 comparisons. `FF` can still match a supplied
+  dictionary entry; using a missing byte alone does not establish that an
+  unsupported UV/laundry/pollen card disappears. Actual graphics remain outside
+  this intercepted-boundary proof.
+- The owner confirmed that no Weathernews API configuration or permission-letter
+  file is available and authorized the best public alternative. The previous
+  permission assertion is not independently verified. A new opt-in JMA parser
+  and bounded four-request capture utility preserve real provider issue and
+  observation dates separately from forecast targets and retrieval time.
+  Thirty-five focused tests pass, including atomic-export failure handling.
+  Four actual official GETs produced a complete private source-record bundle;
+  this is source acquisition, not native weather publication or national coverage.
+
+The [JMA source contract](../channels/forecast/jma_source.md) records terms,
+credit requirements and the remaining exact area/station associations,
+temperature roles, unit conversion/quantization, condition graphics, native
+attribution, source-age policy and global-coverage gates. Missing sky conditions
+and indices remain missing. No historical values or invented measurements were
+substituted. The private Weathernews experiment remains unchanged.
+
+### Verification at `3cdf64e`
+
+The complete current local worktree passed **1,209 tests in 329.269 seconds**,
+with one explicit skip for the absent optional wheel-build backend. The private
+UTF-8 log is `private/swarm-eighth-full-20261028.log`. This run covers the six
+new scoped commits and still includes older uncommitted experiments; their
+passing tests do not make them reviewed changes or native completion.
+
+GitHub CI for full code commit
+`3cdf64e759aa7fc5d7c9b317c9535153fc6c6354` passed compilation, package installation
+and **985 tests with 349 reported skips** in 28.622 seconds (run 40568497131,
+job 122416049627). Missing private originals and optional inputs remain explicit
+public-checkout skips. No native application was launched, no channel payload
+was activated, and no actual Wii backup or test profile was changed by this batch.

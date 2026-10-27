@@ -177,10 +177,16 @@ adds actual backend components while leaving full restoration unfinished:
 - [Forecast source checks](channels/forecast/source_freshness.md) verify separate
   provider-time receipts, not the native location-clock anchors. The older
   private pipeline's historical substitutions and guessed measurements must be
-  corrected before use as accepted current data. No new weather was activated.
+  corrected before use as accepted current data. The new
+  [JMA capture utility](channels/forecast/jma_source.md) preserves actual dated
+  source records, units, quality flags and missing readings; native mapping and
+  publication remain unfinished. No new weather was activated.
   [Missing-value guards](channels/forecast/native_clock_and_missingness.md)
   preserve native sentinels and fix compact-only payload offsets; the original
   precipitation block is independently checked for all 1,024 slot/byte cases.
+  Original [unit/condition consumers](channels/forecast/native_units_and_conditions.md)
+  and [index missingness](channels/forecast/index_missingness.md) now establish
+  further conversion/display constraints without inventing provider values.
 - [Check Mii Out HTTP handling](channels/cmoc/http_conversion.md) now follows
   original SDK header lookup and three-character numeric conversion into the
   observed response gate/FD decoder. Real request/authentication/Mii flows remain
@@ -192,10 +198,14 @@ adds actual backend components while leaving full restoration unfinished:
   language eligibility, actual retained callback bytes and native load checks.
   A completed-looking state cannot hide a skipped input chunk or substitute
   an unverified catalog for genuine service data.
+  [Named-table decoding](channels/nintendo/named_tables.md) preserves original
+  identifiers, raw rows, duplicate order and first-match relationships.
 - [Body Check task preparation](channels/body_check/tasks.md) preserves the
   original SDK task-image fields separately from its assigned task ID and actual
   registration. The read-completion and opaque header gates are also checked;
   they do not establish a health-record schema, real downloads or native UI.
+  The [original update-notice path](channels/body_check/update_notice.md) is
+  bound privately to its embedded message; header words remain opaque.
 - [Wii no Ma submissions](channels/wii_no_ma/submissions.md) commit local receipts
   before returning retained acknowledgments. Original result semantics,
   identity/aggregation and native completion remain unverified; receipts do not
@@ -210,7 +220,7 @@ adds actual backend components while leaving full restoration unfinished:
   signature/local replay checks, while CA trust, enrollment and account
   authority remain separate unfinished requirements.
 
-The [latest bounded weather-source audit](research/forecast_source_capture_findings_20261028.md)
+The [bounded Weathernews-source audit](research/forecast_source_capture_findings_20261028.md)
 found forecast target dates without a verified issuance basis and an observation
 selector mismatch in the captured input. No source-age receipt or new weather
 payload was fabricated from those responses.

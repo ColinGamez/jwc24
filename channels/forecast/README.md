@@ -96,9 +96,9 @@ validation lookup alongside other Japanese cities.
 
 Current conditions use the same provider-neutral boundary:
 `tools/build_forecast_short.py` accepts normalized records keyed by the catalog
-IDs and emits native LZ10 data. Provider-specific acquisition code and raw
-responses remain private; the public builder neither imports nor knows about a
-Weathernews endpoint.
+IDs and emits native LZ10 data. The private Weathernews experiment stays
+separate; the public builder does not import it. The new public JMA source
+utility exports dated provider records, not this native normalized schema.
 
 `tools/build_forecast_full.py` joins that catalog with normalized today,
 tomorrow, six-hour, wind/index, and seven-day records. It rejects duplicate or
@@ -124,19 +124,32 @@ the user chooses their area through the original Forecast Channel setup UI.
 
 ## Weather-data source policy
 
-Weathernews is the preferred provider because it supplied the original Wii
-Forecast service and still publishes detailed Japanese local forecasts. The
-project owner has privately obtained written authorization to use
-`weathernews.jp` for JWC24, subject to keeping Weathernews-specific code and API
-details confidential.
+The owner confirmed on October 28 that no authorized Weathernews API
+configuration or permission-letter file is available and authorized investigation
+of the best public alternative. Earlier wording asserting that written
+authorization had been obtained was not independently established and must not
+be treated as evidence of API access or reuse permission.
 
-The public generator keeps acquisition behind a generic provider interface.
+The [JMA source utility](jma_source.md) now captures one explicitly selected
+forecast office and observation station. Actual public-source captures preserve
+full issue/observation dates, target dates, units, quality flags and missing
+fields. This is an opt-in acquisition boundary, not an active-provider switch
+or a native weather publication. JMA reuse/credit evidence is linked in that
+document. Exact native location associations, temperature roles, condition
+graphics, conversion/quantization, freshness and attribution remain open.
+
+The public native generator keeps acquisition behind a generic provider interface.
 The Weathernews acquisition adapter, selectors, endpoint details, credentials,
 and captured responses must remain under ignored private storage and must not
 appear in Git history, logs, tests, fixtures, or documentation. Only normalized
 weather records may cross into the public Wii-format generator. Every generated
 payload must retain private source and transformation provenance outside the
 binary.
+
+Public JMA acquisition code and source-contract documentation are tracked
+separately. Live raw captures and generated source-record exports remain private.
+Neither their existence nor a successful parse establishes national/global
+coverage or authorizes substituting station readings for other locations.
 
 The [October 28 source audit](../../research/forecast_source_capture_findings_20261028.md)
 retains two bounded responses privately. Their available timestamps did not

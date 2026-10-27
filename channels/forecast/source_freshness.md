@@ -1,11 +1,13 @@
 # Forecast source-time gate
 
-The Weathernews permission and confidentiality direction are recorded in the
-[channel source policy](README.md#weather-data-source-policy). This batch did
-not independently inspect the owner's permission letter or contact a provider.
-No credential value was used or emitted. Provider-specific selectors, endpoints,
-code and captures remain private. No live acquisition, signing, server update or profile/task operation
-was performed.
+The current source direction is recorded in the
+[channel source policy](README.md#weather-data-source-policy). No Weathernews
+API configuration or permission-letter file is available; its existing adapter,
+selectors, endpoints and captures remain private. No credential value was used
+or emitted. The separate [JMA source utility](jma_source.md) now preserves actual
+provider dates in typed records. It does not produce the normalized documents
+or source-age receipts accepted here, sign files, activate weather, or change
+profiles/tasks. Its acquisition tests do not establish current native delivery.
 
 The existing private refresh pipeline must **not be used as the accepted current
 data refresh path** in its audited form. Its assembly stage substitutes missing
