@@ -185,6 +185,17 @@ adds actual backend components while leaving full restoration unfinished:
   original SDK header lookup and three-character numeric conversion into the
   observed response gate/FD decoder. Real request/authentication/Mii flows remain
   unfinished; an initialized result of zero is not authenticated startup.
+  [Native FD request construction](channels/cmoc/request_construction.md)
+  preserves the observed target and cached-header tail without inventing
+  identity meanings or a live first-data response.
+- [Nintendo catalog loading](channels/nintendo/http_lifecycle.md) now connects
+  language eligibility, actual retained callback bytes and native load checks.
+  A completed-looking state cannot hide a skipped input chunk or substitute
+  an unverified catalog for genuine service data.
+- [Body Check task preparation](channels/body_check/tasks.md) preserves the
+  original SDK task-image fields separately from its assigned task ID and actual
+  registration. The read-completion and opaque header gates are also checked;
+  they do not establish a health-record schema, real downloads or native UI.
 - [Wii no Ma submissions](channels/wii_no_ma/submissions.md) commit local receipts
   before returning retained acknowledgments. Original result semantics,
   identity/aggregation and native completion remain unverified; receipts do not
@@ -194,6 +205,15 @@ adds actual backend components while leaving full restoration unfinished:
   [registration-sync component](channels/wii_shop/registration_sync.md) also
   preserves exact signing input and native account-state decisions. Neither
   creates an authenticated or connected account.
+  [Pinned-device proofs](channels/wii_shop/device_proof.md) and
+  [durable challenge receipts](channels/wii_shop/challenge_state.md) add actual
+  signature/local replay checks, while CA trust, enrollment and account
+  authority remain separate unfinished requirements.
+
+The [latest bounded weather-source audit](research/forecast_source_capture_findings_20261028.md)
+found forecast target dates without a verified issuance basis and an observation
+selector mismatch in the captured input. No source-age receipt or new weather
+payload was fabricated from those responses.
 
 Wii no Ma's native Flash shop is unfinished: no compatible `index.esf` entry
 is configured, so new bootstrap builds set `shopvalid=0`. The paid catalog

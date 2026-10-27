@@ -331,3 +331,75 @@ GitHub CI for full commit `e4b292fd26cdff9a1ca9adc2663eb86e0c85f328` also
 passed compilation, package installation and **856 tests with 332 reported
 skips** in 24.692 seconds (run 40421240916, job 121915925310). The public
 checkout's private-fixture/optional skips are not native or full local evidence.
+
+## October 28: native request/receive paths and durable Shop proofs
+
+Eight implementation/test commits after `cdd1115` now cover the next completed
+slices. A separate bounded Forecast source-audit note records actual negative
+provenance evidence rather than treating retrieval as a weather update.
+
+- Nintendo's CSData language predicate feeds an exact-byte ListData handoff.
+  Original raw/LZ10/LZ11 installation executes through constructor, validator
+  and publication. The raw branch copies its full configured allocation;
+  that allocation and its synthetic tail are distinct from received data.
+  The async callback/poll component preserves retained versus skipped bytes,
+  retry resets and raw versus manager-normalized errors. Its 157 native
+  comparisons show why a zero normalized result can still accompany a failure.
+  The inner request-manager, real endpoint response and genuine catalog/media
+  remain unverified.
+- CMOC's complete FD descriptor constructor, original formatting and actual
+  configuration predicate now match an explicit producer. Word 4 selects the
+  decimal target; word 8 stays in the correlation prefix; the cached tail is
+  caller-supplied because native construction leaves it unchanged. Canonical
+  target decoding can be used by a future backend. Twenty-three original
+  comparisons and the 47-test CMOC regression pass. Actual SDK setup, socket
+  serialization, `.ces` processing, identity and real first-data responses remain
+  unfinished.
+- Body Check's full selected read consumer and opaque-pair gate distinguish
+  unchecked result 2, CRC decisions and retained diagnostics. Its task producer
+  matches original SDK initializer kind 3 and eight local setters, preserving
+  existing identities and unknown bytes. Twenty-nine task-side native cases
+  execute 192 setter entries. Prepared images and zero native returns do not
+  establish VFF/task persistence, key import, real delivery or health-record
+  meanings. No downloaded health-record table has been recovered.
+- The Shop verifier checks AP-certificate and challenge signatures under an
+  explicit NG-certificate pin, with the original 60/384-byte signing wrapper and
+  Base64 path independently executed. Four narrowly selected private SDK headers
+  strengthen layout evidence; public Dolphin crypto remains separate emulator
+  corroboration. No Nintendo CA chain, enrollment or exclusive key possession
+  is inferred from a caller pin.
+- The new challenge store issues genuine local eleven-byte challenges and
+  commits operation/device/title-bound issuance before returning IAS bytes.
+  Actual crypto precedes an atomic, expiry-rechecked single-use receipt. Race,
+  restart, replay, changed issuance and actual SQLite COMMIT-denial cases pass.
+  The composed native test runs GetChallenge construction/response reading,
+  signing wrappers and registration SOAP with full 512-character certificate
+  fields into real local proof consumption. It deliberately supplies a reported
+  registration error, preserving the distinction between proof receipt and
+  account assignment. The combined 74-test Shop suite passes. Account authority,
+  durable registration, complete startup and acquisition remain open.
+
+The [Forecast source capture findings](forecast_source_capture_findings_20261028.md)
+record exactly two approved requests. The checked daily epochs are consistent
+with effective dates, not an established issue time. The observation selector
+also fails on the retained HTML sample. No genuine source-age receipt, normalized
+weather, reference substitution or active payload was generated. No provider API
+credentials were found in the bounded configuration check; broader access and
+full source-time evidence remain unresolved. Request details and provider code
+remain private under the existing source policy.
+
+### Verification at `91f54c0`
+
+The complete current local worktree passed **1,137 tests in 370.111 seconds**
+with one explicit optional-wheel-backend skip. Its private UTF-8 log is
+`private/swarm-seventh-full-20261028.log`. As before, it includes older
+uncommitted experiments; their passing tests do not make those changes reviewed
+commits or native completion. Subsequent implementations require their own checks.
+
+GitHub CI at full code commit
+`91f54c073776ece8fe5e573ef17b2866b701c17b` passed compilation, package installation
+and **921 tests with 343 reported skips** in 28.392 seconds (run 40560768610).
+The public/private evidence scopes remain separate. No physical console,
+emulator launch, profile, real account, order, vote, notice or actual Wii backup
+was changed. Original software, SDK headers, keys, provider code and captures
+remain outside Git.

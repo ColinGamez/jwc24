@@ -102,7 +102,11 @@ Weathernews endpoint.
 
 `tools/build_forecast_full.py` joins that catalog with normalized today,
 tomorrow, six-hour, wind/index, and seven-day records. It rejects duplicate or
-unknown location keys before emitting the native long-forecast table.
+unknown catalog location keys and unknown forecast references before emitting
+the native tables. The separately verified original duplicate long-row layout
+is retained; paired-bundle checks reject conflicting records. The
+[missing-value checks](native_clock_and_missingness.md) preserve explicit native
+unavailable values instead of manufacturing measurements.
 
 Generated signed payloads are checked independently before delivery:
 
@@ -133,3 +137,10 @@ appear in Git history, logs, tests, fixtures, or documentation. Only normalized
 weather records may cross into the public Wii-format generator. Every generated
 payload must retain private source and transformation provenance outside the
 binary.
+
+The [October 28 source audit](../../research/forecast_source_capture_findings_20261028.md)
+retains two bounded responses privately. Their available timestamps did not
+establish actual observation/issuance times, and the old observation selector
+did not match the captured sample. No normalized update or source-age receipt
+was generated from that evidence. Current-source provenance remains a separate
+gate from valid native clocks, envelopes and historical download observations.
