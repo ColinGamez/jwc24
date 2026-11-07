@@ -1,0 +1,67 @@
+{
+  "date": "2026-11-07",
+  "scope": "Original HAGJ v7 article constructor, selected layout suffix and formatter-prefix UTF-16 unit consumer; no complete rendering",
+  "original_executable_sha256": "8c7328c94ed44f916f104e254d07eddbaed7c0f236539a4fe4e70d893b72e852",
+  "tests": {
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_news_article_text -v",
+    "count": 8,
+    "public_input_tests": 1,
+    "optional_original_code_tests": 7,
+    "result": "passed",
+    "elapsed_seconds": 1.41,
+    "completed_native_comparisons": 10,
+    "actual_undersized_glyph_buffer_write_trapped": true,
+    "out_of_range_body_pointer_rejected_before_expected_text_read": true
+  },
+  "executed_original_regions": {
+    "complete_article_constructor": "0x8000FA38..0x8000FCFC",
+    "selected_layout_suffix": "0x800331CC..0x80033278",
+    "observed_formatter_call_boundary": "0x80027F94",
+    "formatter_prefix_and_utf16_unit_setup": "0x80028000..0x8002824C",
+    "original_grouping_helper": "0x800278A0..0x80027F90",
+    "original_utf16_string_helpers": true
+  },
+  "literal_text_case": {
+    "utf16_units": 65,
+    "glyph_rows": 65,
+    "line_feed_dispatches": 2,
+    "native_nbsp_to_space_conversions": 1,
+    "synthetic_font_width_calls": 63,
+    "synthetic_font_height_calls": 65,
+    "surrogate_units_preserved": true,
+    "literal_url_and_markup_units_retained": true,
+    "literal_url_clickability_verified": false,
+    "html_or_rich_article_support_verified": false
+  },
+  "verified": {
+    "exact_wire_article_title_and_body_pointers": true,
+    "exact_wire_source_name_and_copyright_pointers": true,
+    "separate_title_body_copyright_layout_handoffs": true,
+    "original_body_utf16_unit_walk_and_terminator": true,
+    "source_absence_preserves_null_pointers": true,
+    "fixture_guards_and_unchanged_input": true
+  },
+  "scaffolding": {
+    "synthetic_guarded_allocation_service": true,
+    "synthetic_layout_suffix_register_and_float_context": true,
+    "layout_formatter_calls_observed_not_executed": true,
+    "synthetic_font_metrics": true,
+    "synthetic_text_objects_glyph_storage_and_font_vtable": true,
+    "explicit_guarded_bss_text_pointers_grouping_mode_color_and_spacing": true,
+    "original_code_patched": false,
+    "paired_save_restore_instructions_claimed_executed": false
+  },
+  "unverified": [
+    "Complete original formatter method, width aggregation, wrapping and image handling",
+    "Actual font metrics, supplementary-character glyphs and visible native rendering",
+    "Working original article/source/license hyperlinks and appropriate attribution placement",
+    "Provider component rights and complete full-article transformation policy",
+    "Native identifiers, genres/geography, provider coverage and genuine hourly scheduling",
+    "Native signatures, IOS/VFF delivery and original UI/hardware behavior"
+  ],
+  "provider_article_used": false,
+  "actual_story_or_original_code_committed": false,
+  "new_network_requests": false,
+  "article_publication_or_provider_activation": false,
+  "credentials_profiles_or_actual_wii_backup_modified": false
+}
