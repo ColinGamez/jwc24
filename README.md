@@ -178,7 +178,11 @@ from completed native experiences.
 - [News records](channels/news/record_builder.md) encode supplied articles into
   native files, then pass through signing/publication and HTTP delivery. Original
   title-display code preserves supplied text; the separate ticker consumer,
-  genuine licensed input, trust and rendering remain open.
+  trust and rendering remain open. The complete [Global Voices Japanese source
+  adapter](channels/news/globalvoices_source.md) preserves article structure,
+  distinct author/translator credits and source dates. It is a supplemental
+  source; third-party media, quotations and native attribution remain pending,
+  so it cannot publish a News payload.
 - [Forecast source checks](channels/forecast/source_freshness.md) verify separate
   provider-time receipts, not the native location-clock anchors. The older
   private pipeline's historical substitutions and guessed measurements must be
@@ -208,6 +212,10 @@ from completed native experiences.
   The separate [VPFD51 XML parser](channels/forecast/jma_xml_temperatures.md)
   retains genuine 05:00/11:00 announcement evidence and binds temperature
   periods by reference ID; it does not infer the website JSON's array layout.
+  [Explicit XML extrema conversion](channels/forecast/jma_xml_projection.md)
+  now preserves complete report qualifiers and converts eligible daily high/low
+  values from their original decimal tokens. General maxima cannot substitute
+  for missing morning minima; source eligibility and full assembly remain open.
 - [Check Mii Out HTTP handling](channels/cmoc/http_conversion.md) now follows
   original SDK header lookup and three-character numeric conversion into the
   observed response gate/FD decoder. Real request/authentication/Mii flows remain
@@ -225,12 +233,20 @@ from completed native experiences.
   storage and rounded input backing. [Original hash execution](channels/cmoc/hash_processing.md)
   establishes HMAC-SHA1 while preserving the native string-comparison result
   separately from full-span binary equality and authentication.
+  [Original AES-CBC comparisons](channels/cmoc/cipher.md) verify all three key
+  sizes and application no-write/error behavior. Install the optional `crypto`
+  extra for these offline checks; callback transform integration, resource
+  envelopes and authentication remain unfinished.
 - [Nintendo catalog loading](channels/nintendo/http_lifecycle.md) now connects
   language eligibility, actual retained callback bytes and native load checks.
   A completed-looking state cannot hide a skipped input chunk or substitute
   an unverified catalog for genuine service data.
   [Named-table decoding](channels/nintendo/named_tables.md) preserves original
   identifiers, raw rows, duplicate order and first-match relationships.
+  The [manager callback relay](channels/nintendo/manager_callback.md) now
+  preserves original error precedence, response mapping and downstream copy/load
+  behavior. SDK request/state production, authentication and genuine catalogs
+  remain separate requirements.
 - [Body Check task preparation](channels/body_check/tasks.md) preserves the
   original SDK task-image fields separately from its assigned task ID and actual
   registration. The read-completion and opaque header gates are also checked;

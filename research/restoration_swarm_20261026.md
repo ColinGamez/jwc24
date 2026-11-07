@@ -700,3 +700,54 @@ was committed. No emulator was launched, actual Wii backup accessed, profile
 modified, provider activated or native payload installed. Unrelated existing
 worktree changes remain untouched. Full data/authentication/rendering/hardware
 requirements across every channel remain in scope.
+
+
+## November 7 continuation: original cipher, manager relay and complete source records
+
+Five scoped implementation commits follow the preceding full-suite checkpoint:
+`1eda2e0` optional crypto dependency/CI installation, `259fe5a` XML extrema
+projection, `eb82bc8` CMOC cipher, `53d108f` Nintendo manager callback and
+`7157caa` Global Voices Japanese supplemental source adapter.
+
+- [CMOC cipher](../channels/cmoc/cipher.md): 69 actual-original comparison
+  cases (18 SDK and 51 application) verify AES-CBC for 128/192/256-bit keys,
+  chaining, in-place/separate output and application acquisition/error behavior.
+  A requested return length can coexist with no output write; these facts remain
+  separate. Sixteen focused tests passed. The optional crypto dependency is
+  declared rather than supplied by copied original AES code. Callback integration,
+  genuine resource envelopes/keys, compression and authentication remain open.
+- [Nintendo manager relay](../channels/nintendo/manager_callback.md): 311 complete
+  actual-original comparisons include callback thunk/relay, error and response
+  precedence, loader callback/body and native memcpy. Twelve focused tests and
+  the 82-test Nintendo selection passed. SDK state/request production and genuine
+  catalog/authentication/media remain unfinished; synthetic compressed ListData
+  verifies a handoff, not an original downloaded catalog.
+- [XML extrema projection](../channels/forecast/jma_xml_projection.md): ten tests
+  pass with actual 05:00/11:00 captures. Each report supplies twelve eligible
+  extrema and four separately retained general maxima. Original decimal values,
+  units, qualifiers, complete headers and date/reference bindings remain attached.
+  A general maximum cannot supply an absent daily low. Source eligibility, native
+  city identity and complete accepted payload assembly remain separate gates.
+- [Global Voices source adapter](../channels/news/globalvoices_source.md): nineteen
+  tests pass, including the complete privately retained feed/article/policy replay.
+  Complete inert article structure, distinct author/translator/proofreading credits,
+  original publication/modification/translation dates and source receipts remain
+  separate. Independent review fixed discarded processing instructions and omitted
+  policy-receipt date checks. This is supplemental international-feature coverage,
+  not a full current/hourly provider. Third-party screenshot/video/quotation review,
+  original native attribution and article rendering remain pending. No News payload
+  can be published by this adapter.
+
+The combined 48-module regression at frozen code checkpoint `7157caa` passed
+**492 tests in 148.841 seconds with no skips, failures or errors**. Its UTF-8
+log remains private at `private/swarm-focused-20261107b.log`; session 69316
+completed with exit zero. This is a new affected-channel selection, not another
+full-suite run. The preceding complete 1,355-test run at `2a9db55` and public
+CI at `c0838e6` remain distinct historical checkpoints.
+
+The owner has no Weathernews credential/permission file and authorized choosing
+the best alternative. Continue the public JMA track; no Weathernews authorization
+or invented issue/observation timestamps are assumed. No source activation,
+native publication/install, emulator launch, profile/credential change or actual
+Wii backup access occurred. Unrelated worktree changes remain untouched and the
+full project inventory remains unfinished.
