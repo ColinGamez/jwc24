@@ -1,0 +1,53 @@
+{
+  "date_jst": "2026-11-07",
+  "source_application_sha256": "3957942d54501633bd7d256c636517885958ed152d9c914f4e07aadecf84a5b3",
+  "tests": 10,
+  "passed": true,
+  "successful_native_comparison_cases": 591,
+  "application_cases": 278,
+  "sdk_cases": 313,
+  "counts": {
+    "instructions": 1275038,
+    "sdk_calls": 1153,
+    "size_header_reads": 276
+  },
+  "scope": [
+    "LZ10/LZ11 whole and all tested two-chunk cut points",
+    "partial SDK headers and token states",
+    "LZ11 short/medium/long overlapping references",
+    "extended-size headers",
+    "SDK remaining vs cached remaining vs output cursor",
+    "explicit limit count/write mismatch",
+    "late trailing-input error after output writes",
+    "overshooting reference error",
+    "disabled copy and truncated streams",
+    "original backing guards"
+  ],
+  "exact_write_addresses_and_untouched_tail_verified": true,
+  "decoder_stubbed": false,
+  "original_static_data_or_resource_spans_admitted": false,
+  "callback_order_verified_by_targeted_original_instructions": [
+    "hash rounded wire input",
+    "cipher to intermediate",
+    "intermediate count from cipher application return",
+    "decompress intermediate using that count",
+    "accumulate decompressor application return"
+  ],
+  "complete_transform_composition_verified": false,
+  "optional_absence_validation": {
+    "command": "python -S -m unittest tests.test_cmoc_compression -q",
+    "tests": 7,
+    "skipped": 1,
+    "passed": true
+  },
+  "real_resource_envelope_verified": false,
+  "service_authentication_established": false,
+  "network_or_profile_access": false,
+  "original_source_unchanged": true,
+  "actual_wii_backup_untouched": true,
+  "remaining": [
+    "integrated actual hash/cipher/decompressor callback",
+    "real resource envelope framing/ownership",
+    "transport/cache/native full flow and actual IOS behavior"
+  ]
+}
