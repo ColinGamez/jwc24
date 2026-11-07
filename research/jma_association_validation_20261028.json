@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "subject": "JMA published source associations and dated temperature-role projection",
+  "evidence_capture_date_jst": "2026-10-28",
+  "implementation_validation_date_jst": "2026-11-07",
+  "new_network_requests_during_implementation": 0,
+  "source_kind": "official public JMA website client and JSON metadata, not Nintendo material",
+  "private_capture_directories": [
+    "private/forecast/jma-source-audit-20261028",
+    "private/forecast/jma-association-audit-20261028"
+  ],
+  "reviewed_metadata_routes": [
+    "https://www.jma.go.jp/bosai/forecast/const/forecast_area.json",
+    "https://www.jma.go.jp/bosai/forecast/const/week_area.json",
+    "https://www.jma.go.jp/bosai/forecast/const/week_area05.json",
+    "https://www.jma.go.jp/bosai/forecast/const/week_area_name.json"
+  ],
+  "historical_replay": {
+    "receipted_resources_rechecked": 6,
+    "short_offices": 58,
+    "short_rows": 142,
+    "weekly_rows": 92,
+    "unique_weekly_groups": 91,
+    "candidate_lists": 142,
+    "candidate_lists_with_multiple_groups": 37,
+    "short_forecast_points_absent_from_observation_catalog": [
+      "63576",
+      "73136"
+    ],
+    "weekly_points_all_in_observation_catalog": true,
+    "representative_group": "130100",
+    "representative_group_name_en": "Izu Islands",
+    "representative_temperature_point": "44263",
+    "actual_short_report_datetime": "2026-10-27T17:00:00+09:00",
+    "actual_short_target_datetimes": [
+      "2026-10-28T00:00:00+09:00",
+      "2026-10-28T09:00:00+09:00"
+    ],
+    "actual_short_roles": [
+      "morning_minimum",
+      "daytime_maximum"
+    ],
+    "representative_weekly_temperature_slots": 42
+  },
+  "selector_evidence": {
+    "private_exact_pure_function_harness": "private/forecast/jma-association-audit-20261028/verify-pure-client-functions.js",
+    "prior_exact_function_checks": 27,
+    "actual_17_provider_response": true,
+    "actual_05_or_11_provider_response": false,
+    "synthetic_05_11_projection_retains_unused_slot_1": true,
+    "missing_current_day_minimum_not_fabricated": true,
+    "report_issued_time_and_target_date_separate": true,
+    "actual_before_05_provider_report": false,
+    "synthetic_early_17_bucket_local_guard": true
+  },
+  "validation": {
+    "focused_command": ".venv/Scripts/python.exe -m unittest tests.test_jma_associations",
+    "focused_tests": 19,
+    "focused_private_replay_tests": 1,
+    "combined_command": ".venv/Scripts/python.exe -m unittest tests.test_jma_associations tests.test_jma_weather tests.test_jma_capture tests.test_jma_measurements",
+    "combined_tests": 67,
+    "combined_result": "OK",
+    "combined_elapsed_seconds": 1.167
+  },
+  "restrictions_and_remaining_gates": [
+    "Receipt validation binds supplied bytes and retrieval metadata; it does not independently authenticate a supplied receipt.",
+    "No first or nearest temperature point, weekly candidate, station or native city is selected.",
+    "Forecast area/field absence and exact observation catalog absence are independent states.",
+    "Dates and all raw slots are retained. Count/date guards and increasing unique target times are local acceptance restrictions.",
+    "Actual 05/11 source target shapes remain uncaptured; their selector roles are tested with synthetic fixtures only.",
+    "Historical October captures are not live weather, freshness acceptance, or current national coverage.",
+    "No native location mapping, unit conversion, icon mapping, provider activation, profile changes, task writes or signing occur here.",
+    "Native attribution boundary and full rendering/hardware validation remain open.",
+    "Before-05 issue times select bucket17 in the captured pure function, but report/target shape evidence is synthetic only; next-day calendar validation remains a local restriction."
+  ]
+}

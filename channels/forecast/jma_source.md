@@ -33,12 +33,17 @@ specification—establishes these routes. Their availability and format may chan
 | National latest observation time | `/bosai/amedas/data/latest_time.txt` |
 | Station identities and coordinates | `/bosai/amedas/const/amedastable.json` |
 | Selected station window | `/bosai/amedas/data/point/{five_digit_station}/{YYYYMMDD}_{HH}.json` |
+| Short area / all forecast temperature points | `/bosai/forecast/const/forecast_area.json` |
+| Weekly published groups / representative points | `/bosai/forecast/const/week_area.json` |
+| Short-area alternate weekly group candidates | `/bosai/forecast/const/week_area05.json` |
+| Published weekly group names | `/bosai/forecast/const/week_area_name.json` |
 
 The forecast client displays each report's `reportDatetime` as its announcement
 time. `timeSeries[].timeDefines` are separate target times. The parser retains
 each report's date, publishing office, area identity and exact value tokens.
-Empty tokens remain missing. Short-range `temps` remain a provider sequence
-until their specific min/max roles are verified. Forecast wind text is not
+Empty tokens remain missing. Short-range `temps` remain a provider sequence in
+the base parser; the separate explicit association projection described below
+assigns reviewed source roles with date/count guards. Forecast wind text is not
 numeric wind; JMA weather codes are not native Weathernews codes. Climatological
 averages remain separate metadata. [Official forecast client](https://www.jma.go.jp/bosai/forecast/)
 
@@ -93,6 +98,70 @@ from the default official GET path. Tests never access the network.
 Office area forecasts and station observations are separate identities. Choosing
 both does not establish that the station represents all forecast areas.
 
+## Published associations and dated temperature roles
+
+`jwc24.jma_associations` accepts four separately receipted metadata resources.
+It retains the office, `class10`, `class20` and **every** short-range temperature
+point. Weekly associations retain their published `srf`, `week`, representative
+temperature point and Japanese/English group names. The alternate-group table
+is retained in published order. Candidate queries return every alternative
+with separate weather-area, temperature-area, temperature-field and exact
+observation-catalog membership flags. Callers can filter `forecast_present`;
+the module selects no first candidate. A temperature forecast can exist even
+when its point is absent from the observation catalog, and an observation
+station can exist without the required forecast field.
+
+An explicit catalog association, temperature point and report index are required
+for temperature projection. The result preserves that report's original
+`reportDatetime`, issued UTC instant, raw tokens, each `timeDefines` target and
+JST calendar date, Celsius unit, and forecast/association/catalog receipts.
+No common issue time or retrieval-time date replaces these source times.
+Weekly rows keep the published group identity and representative point identity;
+an island group is not relabeled as a member city or a measurement at that city.
+
+The captured official client's pure selector chooses an issue bucket using JST:
+before 05:00 or from 17:00 it uses `17`; before 11:00 it uses `05`; otherwise
+`11`. For `17`, short-range slot 0 is next-day morning minimum and slot 1 is
+next-day daytime maximum. For `05`/`11`, slot 0 is current-day daytime maximum,
+slots 2/3 are next-day morning minimum/daytime maximum, and slot 1 is unused
+by that selector. **All raw slots remain in the projection**, including unused
+slot 1, null and empty tokens. Weekly `tempsMin`, `tempsMax` and their published
+upper/lower arrays retain their own field roles and dates.
+
+Local acceptance requires exactly two short-range slots for `17`, four for
+`05`/`11`, and selected-role calendar dates consistent with the issue date.
+It does not invent uncaptured 05/11 target hours or assign a role to slot 1.
+Weekly targets must have unique consecutive JST dates beginning on the issue
+date or following date. These and the base parser's increasing/unique target
+time requirement are **local restrictions**, not established universal JMA
+format guarantees. An unfamiliar shape rejects for review instead of being
+repaired, retimed or silently mapped to another point.
+In particular, a before-05:00 report is classified into `17` by the captured
+selector, but no actual before-05 report/target combination was captured.
+The projection still requires next-day targets relative to that report's JST
+calendar date; a different shape rejects under the local guard. Its behavior
+is covered synthetically and is not a proven provider-wide early-morning rule.
+
+The metadata and actual forecast sample were captured on **2026-10-28 JST**.
+Offline replay checked 58 offices, 142 short rows, 92 weekly rows / 91 distinct
+weekly groups, and 142 candidate lists; 37 lists have multiple groups. All
+weekly representative points occur in the captured observation catalog, while
+short-range forecast points `63576` and `73136` do not. The actual `17` sample
+has next-day 00:00 / 09:00 JST targets and matches the selector's min/max roles.
+For `05`/`11`, only synthetic probes of the captured pure selector and synthetic
+dated projection tests have been performed; **actual provider response shapes
+for those buckets remain uncaptured**. All captures are historical evidence,
+not a live refresh or present-day national data-coverage claim.
+
+```powershell
+.venv/Scripts/python.exe -m unittest tests.test_jma_associations
+```
+
+These source associations still assign no native Forecast city, infer no
+nearest station, alter no published target area and activate no provider.
+Evidence and measured test outcomes are recorded in
+[`research/jma_association_validation_20261028.json`](../../research/jma_association_validation_20261028.json).
+
 ## Actual verification and remaining gates
 
 Nine bounded representative responses were captured privately on 2026-10-28:
@@ -118,8 +187,9 @@ stations do not cover the native globe. Current source age must be evaluated
 again before publication. An existing-capture replay is historical evidence,
 not a new live refresh.
 
-Native mapping still requires explicit area/station provenance, weather-code
-mapping, verified temperature roles and missing-field/rendering behavior. Native
+Native mapping still requires explicit native-city-to-published-area/station
+provenance, weather-code mapping, actual 05/11 temperature shape evidence and
+missing-field/rendering behavior. Native
 Japanese wind formatting selects a km/h byte, whereas these source records
 retain m/s; conversion and quantization need their own explicit policy. Calm
 with a missing speed must not be emitted as a guessed zero or north. Attribution
