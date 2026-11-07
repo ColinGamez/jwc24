@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-11-07",
+  "scope": "Explicit single-slot VPFD51 daily-extremum conversion to native integer C/F; no city, complete day, native clock, source age acceptance or publication.",
+  "policy_id": "jwc24-jma-xml-daily-extrema-v1",
+  "rounding": "nearest_half_away_from_zero",
+  "official_unit_evidence": [
+    "https://www.jma.go.jp/jma/kishou/know/kurashi/yoho.html",
+    "https://www.jma.go.jp/jma/kishou/know/yougo_hp/kion.html"
+  ],
+  "schema_evidence": {
+    "url": "https://xml.kishou.go.jp/jmaxml_20241031_Schema%28xsd%29.zip",
+    "body_sha256": "adcea5e6f4af9bdf48b47dbc9cb2143f7499831eeec8dd633bc661a9420bede3",
+    "bytes": 19673,
+    "status": 200,
+    "retrieved_start_utc": "2026-11-07T12:17:14.204848+00:00",
+    "retrieved_end_utc": "2026-11-07T12:17:16.397260+00:00"
+  },
+  "schema_usage": "Reviewed temperature attributes include optional description and separate condition; no schema bytes in Git.",
+  "actual_morning_replay": {
+    "reports": 2,
+    "announcement_hours_jst": [
+      "05",
+      "11"
+    ],
+    "converted_extrema_per_report": 12,
+    "general_maxima_retained_unavailable_per_report": 4,
+    "native_city_assigned": false,
+    "source_issue_target_transmission_and_original_values_preserved": true,
+    "new_weather_requests": 0,
+    "complete_source_header_status_and_series_qualifiers_retained": true
+  },
+  "verification": {
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_jma_xml_projection -v",
+    "tests": 10,
+    "seconds": 0.045,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "optional_private_replay_tests": 1
+  },
+  "remaining": [
+    "Source identity/age/native validity and complete payload dependency integration",
+    "Complete forecast day, missing-field rendering and unimplemented data fields",
+    "Attribution/signatures and actual original UI/hardware validation"
+  ]
+}
