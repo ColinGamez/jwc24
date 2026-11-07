@@ -56,6 +56,8 @@ def _iso(value: Any) -> datetime:
 def source_path(url: str) -> tuple[str, tuple[str, ...]]:
     """Restrict evidence and acquisition to the exact reviewed official routes."""
     _require(isinstance(url, str) and len(url) <= 256, "invalid source URL")
+    _require(all(33 <= ord(char) <= 126 for char in url),
+             "source URL must retain an unmodified printable ASCII route")
     try:
         p = urlsplit(url)
     except ValueError as exc:

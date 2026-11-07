@@ -78,6 +78,16 @@ class SourceReceiptTests(unittest.TestCase):
             with self.subTest(url=url), self.assertRaises(JMAError):
                 source_path(url)
 
+    def test_raw_whitespace_controls_and_del_are_rejected_before_urlsplit(self):
+        # urlsplit strips some leading controls and internal TAB/LF/CR. A
+        # consistent receipt must describe the actual reviewed URL, not a
+        # normalized string with those characters silently removed.
+        for char in ("\0", "\t", "\n", "\r", " ", "\x1f", "\x7f", "\u3000"):
+            for url in (char + FORECAST_URL, FORECAST_URL + char,
+                        FORECAST_URL.replace("/bosai", "/bo" + char + "sai")):
+                with self.subTest(char=repr(char), url=url), self.assertRaises(JMAError):
+                    source_path(url)
+
     def test_hash_length_status_and_dates_are_validated(self):
         body = encoded(forecast_fixture())
         good = receipt(FORECAST_URL, body)
