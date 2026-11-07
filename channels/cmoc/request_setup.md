@@ -64,7 +64,13 @@ not appear in representations or metadata reports.
 The immutable result exposes capacity, retained spans, ordered attempted header
 calls and decompressor predicate. It can support a later service adapter without
 secret values, a profile, a socket or a mutated native cache. Sizes, ASCII header
-bounds and the accepted URL subset are explicit local restrictions. The current
+bounds and the accepted URL subset are explicit local restrictions. Date values
+are limited to 75 bytes plus a terminator in the 76-byte copied date context.
+Application-version values are limited to 63 bytes plus a terminator because the
+synthetic context puts their string at `+0x18` and the original availability
+predicate at `+0x58`. A 64-byte value would overlap that flag. The actual producer's
+maximum string length is not proved by this fixture; 63 is a local accepted
+subset. The longest accepted values execute in a separate native case. The current
 resolved `+0xC8` maximum of 64 is a local supported subset, not a recovered native
 capacity check. No method-enum HTTP meaning is invented; the actual FD descriptor
 still supplies numeric method word zero.
@@ -95,10 +101,11 @@ Explicit intercepted boundaries are:
 - Debug logging. There is no native console, profile, device or network access.
 
 The [validation report](../../research/cmoc_request_setup_validation_20261107.json)
-records eighteen native executions: fourteen configured and four unconfigured,
+records nineteen native executions: fifteen configured and four unconfigured,
 covering HTTP/HTTPS predicates, timestamp absence/presence, zero/nonzero resolved
 sizes, null/present-empty comparison spans, 64/65-byte truncation, decompression
-zero/nonzero and null application-version producer. All use synthetic FD method
+zero/nonzero, null application-version producer and both accepted header-length
+maxima. All use synthetic FD method
 word zero and an empty header queue. Nonempty queue/header serialization, setup
 failure, existing-request cancellation, resource acquisition, cache persistence,
 actual `.ces` processing, trust, identity and original full UI remain unfinished.
@@ -107,6 +114,6 @@ actual `.ces` processing, trust, identity and original full UI remain unfinished
 .venv/Scripts/python.exe -m unittest tests.test_cmoc_request_setup
 ```
 
-Five public tests and one eighteen-case native test pass locally. The native
+Six public tests and one nineteen-case native test pass locally. The native
 class skips honestly without the pinned private executable or optional
 Capstone/Unicorn; the public projection tests remain usable.

@@ -26,6 +26,7 @@ def native_cases():
                                      timestamp_present=timestamp, configuration=cfg))
     for cfg in (ResourceSetup(0, None, 0), ResourceSetup(1, b'x', 1)):
         result.append(inputs(configuration=cfg, appver_header_value=None))
+    result.append(inputs(appver_header_value=b'A' * 63, date_header_value=b'D' * 75))
     return result
 
 
@@ -58,6 +59,16 @@ class RequestSetupTests(unittest.TestCase):
     def test_null_appver_preserves_attempt_not_serialized_header(self):
         result = project_request_setup(**inputs(appver_header_value=None))
         self.assertEqual(result.requested_headers[-1], ('X-APPVER', None))
+
+    def test_header_storage_boundaries_are_explicit_local_subset(self):
+        result = project_request_setup(**inputs(appver_header_value=b'A' * 63,
+                                               date_header_value=b'D' * 75))
+        self.assertEqual(result.requested_headers,
+                         (('If-Modified-Since', b'D' * 75), ('X-APPVER', b'A' * 63)))
+        for changes in (dict(appver_header_value=b'A' * 64),
+                        dict(date_header_value=b'D' * 76)):
+            with self.subTest(changes=changes), self.assertRaises(ValueError):
+                project_request_setup(**inputs(**changes))
 
     def test_private_inputs_are_not_in_representation_or_metadata(self):
         marker = b'private-marker'
