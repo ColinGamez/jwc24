@@ -138,10 +138,14 @@ or a native weather publication. JMA reuse/credit evidence is linked in that
 document. Published provider-area associations and dated temperature roles now
 have explicit projections; actual 05/11 response shapes remain uncaptured.
 [Measurement conversion](jma_measurements.md) uses a documented JWC24 rounding/QC
-policy. [Original texture membership](condition_resources.md) is verified, while
-provider-code-to-graphic semantics and native-city associations remain open.
-Freshness, full publication and the accompanying attribution path also need
-integration. [Source credits](ATTRIBUTION.md) accompany the public tools.
+policy. [Original texture membership](condition_resources.md) supports an
+explicit [four-category condition projection](jma_conditions.md); 114 reviewed
+source categories remain unmapped. [Catalog/area identity checks](jma_identity.md)
+pin exact rows and provider hierarchy while retaining the unproved native-city
+and station crosswalks. [Selected source ages](jma_freshness.md) now use separate
+provider issue, observation and metadata cache bases. Full dependency/validity
+integration, publication and the accompanying attribution path remain open.
+[Source credits](ATTRIBUTION.md) accompany the public tools.
 
 The public native generator keeps acquisition behind a generic provider interface.
 The Weathernews acquisition adapter, selectors, endpoint details, credentials,

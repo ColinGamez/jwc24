@@ -557,3 +557,59 @@ public CI nor these native comparison harnesses establish full original UI or
 hardware behavior. No emulator was launched, active weather/provider switched,
 native payload installed, real account/order/vote submitted, or actual Wii backup
 changed by this continuation.
+
+## November 7 continuation: exact identities, source ages and callback finalization
+
+Four scoped implementation commits extend the previous `f7b25c8` checkpoint:
+`7bc4d06` checks selected JMA source ages, `b4d3295` models CMOC body/finalizer
+callbacks, `681cdda` projects four reviewed JMA conditions and checks native text
+consumption, and `6155f76` checks exact catalog/provider-area identities. The
+preceding goal turn and this continuation are progress, not whole-goal completion.
+
+- [Source age checks](../channels/forecast/jma_freshness.md) require explicit
+  limits and explicit report/observation selection. Provider report issue,
+  station observation and national observation times remain independent of
+  metadata retrieval age. Exact expiry rejects; fetching historical data again
+  cannot renew weather validity. The returned earliest deadline covers the
+  checked inputs, not every dependency of an unbuilt native payload. Thirteen
+  tests include unchanged historical-bundle acceptance at its old check clock
+  and rejection at a November 7 clock. No source record is retimed.
+- [Identity assessment](../channels/forecast/jma_identity.md) checks all 2,380
+  reciprocal edges in the captured JMA hierarchy and pins the whole experimental
+  catalog plus exact row. Real retained catalogs give Tokyo different numeric
+  keys: `(1, 1, 1)` versus `(1, 2, 1)`. Existing catalog provenance remains
+  third-party/unverified, not Nintendo origin. The representative Takasaki
+  chain ends in a southern-Gunma forecast whose published temperature point is
+  Maebashi. No native-city identity or city measurement claim is inferred from
+  this relationship. Assessment remains pending for publication.
+- [Condition projection](../channels/forecast/jma_conditions.md) maps the actual
+  JMA canonical labels for codes 100/200/300/400 to the independently inspected
+  original sun/cloud/umbrella/snowman selectors. This is an explicit JWC24
+  replacement policy, not a recovered original provider dictionary. The other
+  114 known codes report unsupported status. Source issue/target dates and
+  detailed qualified forecast sentences remain separate from canonical labels.
+  Historical replay has 12 mapped and 21 unsupported slots. Fourteen original
+  lookup/pointer handoffs, 28 UTF-16 length checks and 38 control-branch cases
+  pass; full fonts, fitting, glyph rendering and composite semantics remain open.
+- [CMOC callbacks](../channels/cmoc/callback_lifecycle.md) preserve event-2 body
+  and event-4 finalization accumulation, prefix comparisons/latches and flags.
+  The original finalizer can set `0x20` without a completed prefix comparison,
+  so the bit is not globally interpreted as changed data. Native comparisons
+  cover 840 lifecycles and 1,652 dispatcher calls, with actual guarded prefix
+  comparisons. Configured cipher/decompressor/hash boundaries remain explicitly
+  intercepted, not cryptographic or authentication proofs. The real combined
+  header/capacity invariant and SDK transport remain unfinished.
+
+After all four components were frozen and reviewed, the combined Forecast/JMA
+and CMOC regression selection passed **245 tests in 74.803 seconds**, with no
+reported skips. This includes available private-source/native comparison tests.
+It is a targeted pass, not a replacement for the earlier failed 1,255-test full
+run and subsequent 50-test shared-lock regression pass. Those results remain
+recorded above. Public CI may skip private-input tests; that skip count must be
+reported separately.
+
+No new network weather capture, source activation, native payload publication,
+Dolphin launch, profile/credential modification or actual Wii backup access
+occurred in this batch. Unrelated existing Wii no Ma/provider/artwork worktree
+changes remain unstaged. All channel/data/authentication/native UI and physical
+hardware gates in the [inventory](../channels/README.md) remain in scope.
