@@ -66,6 +66,8 @@ def source_path(url: str) -> tuple[str, tuple[str, ...]]:
         ("forecast", r"/bosai/forecast/data/forecast/([0-9]{6})\.json"),
         ("latest", r"/bosai/amedas/data/latest_time\.txt"),
         ("stations", r"/bosai/amedas/const/amedastable\.json"),
+        ("forecast_client", r"/bosai/forecast/"),
+        ("common_areas", r"/bosai/common/const/area\.json"),
         ("short_associations", r"/bosai/forecast/const/forecast_area\.json"),
         ("weekly_associations", r"/bosai/forecast/const/week_area\.json"),
         ("weekly_candidates", r"/bosai/forecast/const/week_area05\.json"),
