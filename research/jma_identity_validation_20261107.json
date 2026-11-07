@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "subject": "Explicit JMA area hierarchy and experimental native catalog pin assessment",
+  "validation_date_jst": "2026-11-07",
+  "provider_capture_date_jst": "2026-10-28",
+  "new_network_requests": 0,
+  "live_profile_or_actual_wii_access": false,
+  "provider_area_source_url": "https://www.jma.go.jp/bosai/common/const/area.json",
+  "historical_common_area_counts": {
+    "centers": 11,
+    "offices": 58,
+    "class10s": 142,
+    "class15s": 375,
+    "class20s": 1805,
+    "total_nodes": 2391,
+    "reciprocal_edges": 2380
+  },
+  "private_catalog_evidence": {
+    "current_experimental_catalog": "private/forecast/generated/japan-locations.json",
+    "current_catalog_sha256": "ba96d3510c1c0fa3b0160e976f2eeccc22e7ad74083a787114272e25fe942e2d",
+    "current_japanese_rows": 283,
+    "classification": "third_party_catalog",
+    "xml_origin": "https://github.com/WiiLink24/ForecastChannel",
+    "xml_last_commit": "adc752c7dbd96c2864eb11dbecde1cd80075007a",
+    "xml_sha256": "4d3d431946dac0b36ad129ffd5008cc47c33633331ba9273e4beb3ab19437bf0",
+    "retained_native_format_response": "private/forecast/reference/wiilink-live/forecast.bin",
+    "retained_response_sha256": "29f5526385602be30a6640552d63a4b971d321b53f20f9d138fcfab957fa30ca",
+    "retained_response_all_rows": 653,
+    "retained_response_japanese_rows": 281,
+    "current_tokyo_key": [
+      1,
+      1,
+      1
+    ],
+    "retained_response_tokyo_key": [
+      1,
+      2,
+      1
+    ],
+    "real_cross_catalog_pin_rejected": true,
+    "native_format_implies_nintendo_provenance": false
+  },
+  "bounded_vff_audit": {
+    "post_first_run_snapshot": "private/forecast/snapshots/post-first-run-20260802-031925/wc24dl.vff",
+    "post_first_run_forecast_downloads_found": 0,
+    "post_first_run_only_entry": "empty MB",
+    "other_retained_decoded_file": "private/forecast/vff-audit-3.BIN",
+    "other_retained_file_sha256": "a56a95e3878cea53f80a73e4150c35251a9fc3099321e7d3f69d7099a5d356cf",
+    "other_retained_catalog_counts": [
+      653,
+      281
+    ],
+    "genuine_nintendo_catalog_origin_established": false
+  },
+  "actual_representative_assessment": {
+    "experimental_key": [
+      1,
+      11,
+      2
+    ],
+    "city_label": "高崎市",
+    "explicit_jma_class20": "1020200",
+    "provider_class15": "100013",
+    "provider_class10": "100010",
+    "provider_office": "100000",
+    "temperature_point": "42251",
+    "station_label": "前橋",
+    "catalog_pin_status": "validated_exact_catalog_row",
+    "provider_hierarchy_status": "validated_reciprocal_provider_membership",
+    "native_city_municipality_status": "unresolved_external_identity_evidence",
+    "native_city_measurement_status": "unresolved_station_to_native_city_identity",
+    "original_catalog_provenance_status": "unverified_by_this_validator",
+    "ready_for_native_publication": false
+  },
+  "existing_forecast_shape_audit": {
+    "private_capture_directories_checked": [
+      "private/forecast/jma-source-audit-20261028",
+      "private/forecast/jma-source-live-20261028",
+      "private/forecast/jma-source-records-replay-20261028"
+    ],
+    "forecast_bodies": 3,
+    "distinct_forecast_body_sha256": [
+      "12d000bef417088449867b5fdca2f4300c7337d297f5d0621c760e102fc5a9c6"
+    ],
+    "all_report_datetimes": "2026-10-27T17:00:00+09:00",
+    "actual_05_11_response_shapes_found": false,
+    "actual_before_05_report_shapes_found": false
+  },
+  "verification": {
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_jma_identity",
+    "tests": 21,
+    "result": "OK",
+    "private_historical_replay_tests": 1,
+    "combined_command": ".venv/Scripts/python.exe -m unittest tests.test_jma_identity tests.test_jma_associations tests.test_jma_weather tests.test_jma_capture tests.test_jma_measurements",
+    "combined_tests": 88,
+    "combined_elapsed_seconds": 0.471,
+    "public_absence_simulation_tests": 21,
+    "public_absence_simulation_skipped": 1,
+    "public_absence_simulation_result": "OK",
+    "ordinary_constructor_and_replace_cannot_upgrade_status_or_ready": true
+  },
+  "remaining_requirements": [
+    "External native-row-to-municipality identity evidence, beyond matching names or coordinates.",
+    "Genuine original Nintendo catalog provenance and exact numeric identities.",
+    "Station identity/representative scope must remain separate from native city measurement claims.",
+    "Actual 05/11 and early-morning provider response shape evidence.",
+    "Native payload binding, source age acceptance, attribution, icon semantics and full rendering/hardware validation."
+  ]
+}
