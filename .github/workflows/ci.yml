@@ -20,7 +20,7 @@ jobs:
       - name: Validate package metadata
         run: python -m pip install --no-deps .
       - name: Install offline test dependencies
-        run: python -m pip install ".[artwork,reverse-engineering]" pycryptodome
+        run: python -m pip install ".[artwork,reverse-engineering,crypto]"
       - name: Run available offline regressions
         env:
           PYTHONUTF8: "1"
