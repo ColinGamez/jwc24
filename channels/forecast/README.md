@@ -137,9 +137,12 @@ fields. This is an opt-in acquisition boundary, not an active-provider switch
 or a native weather publication. JMA reuse/credit evidence is linked in that
 document. Published provider-area associations and dated temperature roles now
 have explicit projections; actual 05/11 response shapes remain uncaptured.
+The separate [VPFD51 XML source parser](jma_xml_temperatures.md) now retains
+actual 05:00/11:00 announcement records and their reference-bound temperature
+periods. These XML documents do not establish the website JSON array shape.
 [Measurement conversion](jma_measurements.md) uses a documented JWC24 rounding/QC
 policy. [Original texture membership](condition_resources.md) supports an
-explicit [four-category condition projection](jma_conditions.md); 114 reviewed
+explicit [five-category condition projection](jma_conditions.md); 113 reviewed
 source categories remain unmapped. [Catalog/area identity checks](jma_identity.md)
 pin exact rows and provider hierarchy while retaining the unproved native-city
 and station crosswalks. [Selected source ages](jma_freshness.md) now use separate

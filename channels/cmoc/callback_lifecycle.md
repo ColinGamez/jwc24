@@ -77,10 +77,12 @@ insufficient spans and unsupported bounds reject without echoing payloads.
 The earlier setup component projects capacity as `+0xC8 + wire-prefix size +
 0x400`; it does not prove real resource sizes, actual SDK chunk guarantees or
 that every projected capacity fits the underlying buffer. The observed wire
-storage interval has `0x440` payload bytes. Its complete live allocation and
-combined-header-size invariant remain unfinished. This callback component
-requires supplied backing to fit that interval and does not silently change
-the older setup API or claim that all runtime configurations are safe.
+storage interval has `0x440` payload bytes. The new
+[receive-geometry check](receive_geometry.md) independently proves that storage
+and requires the combined offset to be at most 64 bytes. Actual loaded resource
+sizes and SDK chunking/initialization guarantees remain unverified. This callback
+component requires supplied backing to fit that interval and does not silently
+change the older setup API or claim that all runtime configurations are safe.
 
 ## Verification and remaining restoration work
 

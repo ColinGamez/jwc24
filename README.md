@@ -198,13 +198,16 @@ from completed native experiences.
   further conversion/display constraints without inventing provider values.
   [Original texture membership](channels/forecast/condition_resources.md)
   connects native selectors to privately inspected graphics without replacing
-  assets. An explicit [four-category JMA mapping](channels/forecast/jma_conditions.md)
-  now projects reviewed source meanings; 114 composite/qualified categories
+  assets. An explicit [five-category JMA mapping](channels/forecast/jma_conditions.md)
+  now projects reviewed source meanings; 113 composite/qualified categories
   remain unsupported. [Catalog/area identity checks](channels/forecast/jma_identity.md)
   pin exact catalog rows and preserve the unresolved city/station crosswalk.
   [Selected source-age checks](channels/forecast/jma_freshness.md) keep provider
   issue/observation times separate from metadata cache age. These components
   do not activate or establish a complete current-weather payload.
+  The separate [VPFD51 XML parser](channels/forecast/jma_xml_temperatures.md)
+  retains genuine 05:00/11:00 announcement evidence and binds temperature
+  periods by reference ID; it does not infer the website JSON's array layout.
 - [Check Mii Out HTTP handling](channels/cmoc/http_conversion.md) now follows
   original SDK header lookup and three-character numeric conversion into the
   observed response gate/FD decoder. Real request/authentication/Mii flows remain
@@ -218,6 +221,10 @@ from completed native experiences.
   [Body/finalizer callbacks](channels/cmoc/callback_lifecycle.md) now preserve
   prefix comparisons, latches and incomplete-finish behavior against the
   original dispatcher; cryptographic transform boundaries remain explicit.
+  [Receive geometry](channels/cmoc/receive_geometry.md) checks the embedded
+  storage and rounded input backing. [Original hash execution](channels/cmoc/hash_processing.md)
+  establishes HMAC-SHA1 while preserving the native string-comparison result
+  separately from full-span binary equality and authentication.
 - [Nintendo catalog loading](channels/nintendo/http_lifecycle.md) now connects
   language eligibility, actual retained callback bytes and native load checks.
   A completed-looking state cannot hide a skipped input chunk or substitute

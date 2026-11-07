@@ -53,6 +53,13 @@ from an empty on-disk resource block. A present configuration with size zero
 remains distinct from no configuration. Optional comparison-prefix pointers
 retain null versus present-empty identity in the input object.
 
+Subsequent [original hash-wrapper execution](hash_processing.md) establishes
+that `+0xC8` is assigned the supplied or C-string-resolved key length, rather
+than the algorithm's fixed twenty-byte HMAC-SHA1 output size. The existing
+`hash_span_size` API name remains a projection of that explicit resolved word;
+it neither supplies a key nor proves actual resource initialization. Native
+final string comparison and full-span binary equality remain separate results.
+
 ## Independent backend boundary
 
 `project_request_setup()` requires the URL, method word, optional resolved
@@ -74,6 +81,13 @@ subset. The longest accepted values execute in a separate native case. The curre
 resolved `+0xC8` maximum of 64 is a local supported subset, not a recovered native
 capacity check. No method-enum HTTP meaning is invented; the actual FD descriptor
 still supplies numeric method word zero.
+
+The separate [receive-geometry composition](receive_geometry.md) now verifies
+the embedded `0x440` wire storage and requires the combined resolved span and
+retained wire prefix to fit its 64-byte overhead allowance. This setup component
+continues to project the original unchecked arithmetic; not every projected
+configuration passes that composition check. Actual loaded resource sizes and
+SDK chunking remain unverified.
 
 ## Original execution comparison and limits
 

@@ -153,6 +153,14 @@ dated projection tests have been performed; **actual provider response shapes
 for those buckets remain uncaptured**. All captures are historical evidence,
 not a live refresh or present-day national data-coverage claim.
 
+The subsequent [VPFD51 XML audit/parser](jma_xml_temperatures.md) captures real
+05:00 and 11:00 announcements under a separate exact official-document
+contract. It preserves nonmonotonic time-definition order and binds values by
+reference ID. This is actual XML evidence; it does not relax the separate JSON
+array guards or prove an early-before-05 report-time shape. Both receipt
+contracts now reject raw whitespace/control characters and DEL before URL
+parsing, avoiding silent normalization of a supplied source URL.
+
 ```powershell
 .venv/Scripts/python.exe -m unittest tests.test_jma_associations
 ```
@@ -195,8 +203,13 @@ retain m/s. The separate [measurement projection](jma_measurements.md) now
 converts units using an explicit JWC24 rounding/QC policy and suppresses
 incomplete wind pairs. It does not choose native cities or publish weather.
 [Original resource evidence](condition_resources.md) establishes actual
-textures and numerical selector membership; JMA condition equivalence remains
-unverified. [Source attribution](ATTRIBUTION.md) accompanies these tools and
+textures and numerical selector membership. The separate
+[five-category projection](jma_conditions.md), including the
+[original manual's intermittent-cloud example](condition_semantics.md), now
+supports five explicit JMA mappings; the remaining 113 stay unsupported.
+[Catalog/area checks](jma_identity.md) retain the unresolved native identity
+crosswalks, and [source age checks](jma_freshness.md) check explicitly selected
+inputs without renewing their provider times. [Source attribution](ATTRIBUTION.md) accompanies these tools and
 must remain with service distribution/provenance. The original manual's
 historical provider credit and an interrupting native message field are not
 a verified inline credit path for replacement data. None of these gates is

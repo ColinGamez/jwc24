@@ -613,3 +613,90 @@ Dolphin launch, profile/credential modification or actual Wii backup access
 occurred in this batch. Unrelated existing Wii no Ma/provider/artwork worktree
 changes remain unstaged. All channel/data/authentication/native UI and physical
 hardware gates in the [inventory](../channels/README.md) remain in scope.
+
+## November 7 continuation: receive geometry, actual hash semantics and real morning reports
+
+Five scoped implementation commits after `3aa82a6` are pushed through
+`2a9db55`: `4ff651a` receive geometry, `f3e3a15` the original manual's additional
+condition mapping, `659b047` actual HMAC/string-check execution, `bbed8e2` raw
+source-URL validation and `2a9db55` genuine VPFD51 XML temperature records.
+This is further progress toward the full inventory, not channel completion.
+
+- [Receive geometry](../channels/cmoc/receive_geometry.md) executes the original
+  wire/intermediate storage resets and capacity/rounding fragments. The wire
+  storage has `0x440` bytes; a configured offset plus `0x400` capacity must fit
+  that storage. All 4,225 locally supported span/prefix combinations are checked:
+  2,145 fit, 2,080 exceed it. Actual resource sizes are not inferred from these
+  synthetic combinations. The new composition gate rejects excess capacity and
+  missing rounded backing without changing the original setup projection or
+  inventing padding. Five focused tests passed in 7.436 seconds.
+- [Original HMAC execution](../channels/cmoc/hash_processing.md) matches all
+  seven RFC 2202 HMAC-SHA1 vectors under three chunk arrangements and additional
+  binary/block-boundary cases. The application resolves `+0xC8` from supplied
+  or C-string key length, not the fixed twenty-byte digest size. Its final check
+  uses a bounded **string comparison**: an equal NUL can end comparison before
+  later mismatching bytes. Original guarded overlong cases attempt a twenty-first
+  digest read. Independent results distinguish native acceptance from full-span
+  binary equality; neither establishes service authentication. Nine tests passed
+  in 14.379 seconds, covering 98 SDK, 90 wrapper and three guarded-overread cases.
+- [Original manual/component evidence](../channels/forecast/condition_semantics.md)
+  supports JMA 101, sunny with intermittent cloud, using native selector 2.
+  The retained original manual image was privately inspected and independently
+  reviewed; its TMD/archive membership is checked. Actual original floating-point
+  component calculations preserve sun/cloud placement in 84 cases, and 150
+  selected caller suffixes preserve secondary/high-bit values. Full paired-single
+  prologs, composition loops, GX and night/arrow meanings remain unverified.
+  Policy v2 supports five source categories and explicitly leaves 113 unsupported;
+  the historical 33-slot replay now has 13 supported and 20 unsupported slots.
+  Nineteen focused tests passed in 5.336 seconds; prior v1 evidence is retained.
+- [Real VPFD51 source records](../channels/forecast/jma_xml_temperatures.md)
+  preserve genuine November 7 05:00/11:00 report announcements, separate earlier
+  transmission times, four exact temperature points and reference-ID-bound
+  nonmonotonic target periods. A general maximum remains distinct from morning
+  minimum. The oversized long feed was rejected under its two-MiB audit bound;
+  complete prefix entries were discovery leads only. Both actual document GETs
+  completed independently within bounds. This XML evidence does not establish
+  the separate website JSON array layout or a before-05 report-time sample.
+  Eighteen focused tests passed; the final related 80-test selection also passed.
+- Independent XML review found raw URL controls silently removed by `urlsplit`.
+  Both exact-route contracts now reject raw ASCII whitespace/controls and DEL
+  before parsing. The existing JSON source/capture selection passed 36 tests in
+  0.135 seconds after the correction. A numeric XML token/type annotation still
+  does not prove unit, qualifier or native conversion eligibility.
+
+Public GitHub CI for full code checkpoint
+`2a9db55b176e0c40d5762a72b85772d1a7a6fc4c` passed compilation, package installation
+and **1,118 tests with 361 reported skips** in 30.559 seconds (run 42370748111,
+job 128398171222). Missing private originals remain public-checkout skips, not
+native completion evidence.
+
+The first full-worktree attempt at this checkpoint wrote
+`private/swarm-tenth-full-20261107.log` but has no final result. Its tool handle
+became unknown and no matching unittest process remained. It is not counted as
+a passing or completed run. The subsequent named-test run uses
+`private/swarm-eleventh-full-20261107.log`; these logs remain private.
+
+The named full-worktree run subsequently completed successfully: **1,355 tests
+in 370.973 seconds, with one reported skip**. All code/tests remained frozen at
+`2a9db55` during that run. It includes the available private original-code/source
+comparisons and older uncommitted experiments. Their passing tests do not make
+the unrelated changes reviewed, committed or native-complete. The prior failed
+1,255-test result and its separate lock fix remain historical evidence; this is
+a new complete passing checkpoint, rather than a rewrite of that old result.
+The sole skip was the installed-wheel test's unavailable optional local
+setuptools build backend; no native-original/source comparison skip was reported.
+
+While public code/tests stayed frozen for the integrated run, bounded private
+research established concrete next steps: actual AES-CBC vectors through the
+original CMOC core, Nintendo's manager-to-loader callback relay, and Global
+Voices Japanese full-text/source-attribution records. These are next-work leads,
+not new public adapters or completed service flows. The News source is a
+supplemental Japanese international-feature candidate with actual older article
+dates; third-party media/quotation handling and native credits/links remain
+unresolved. No hourly coverage or full genre coverage is inferred from its feed.
+
+No original asset, proprietary source, credential, article corpus or NAND data
+was committed. No emulator was launched, actual Wii backup accessed, profile
+modified, provider activated or native payload installed. Unrelated existing
+worktree changes remain untouched. Full data/authentication/rendering/hardware
+requirements across every channel remain in scope.
