@@ -41,6 +41,11 @@ The caller must pass `rounding="nearest_half_away_from_zero"`. Policy identifier
   negative wind, invalid units/periods and malformed typed measurements reject.
   Values never wrap, clamp or become a missing marker through overflow.
 
+The rational input is the decimal spelling of the already parsed numeric
+value. This does not add arbitrary-precision JSON number parsing; the capture's
+exact raw bytes remain bound by its source receipt. The typed observation and
+the conversion policy must both accompany later transformation provenance.
+
 ## Verification and remaining integration
 
 ```powershell
@@ -55,6 +60,12 @@ no network requests and need no original software. A composition test packs
 the converted measurements into the existing short-file builder with explicit
 synthetic identity/clock and missing sky condition, then validates and inspects
 its actual native fields. No active payload is written.
+
+A separate private replay on November 7 projected all five observations from
+the retained October 28 source sample. Source hashes were rechecked by the
+parsers, and every original record, station, date and receipt remained intact.
+That sample had complete eligible temperature/wind pairs. It is historical
+pipeline evidence, not a new request, current weather or national coverage.
 
 The existing [original-unit execution proof](native_units_and_conditions.md)
 establishes the downstream integer consumers. This projection's rounding and

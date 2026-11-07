@@ -462,3 +462,98 @@ and **985 tests with 349 reported skips** in 28.622 seconds (run 40568497131,
 job 122416049627). Missing private originals and optional inputs remain explicit
 public-checkout skips. No native application was launched, no channel payload
 was activated, and no actual Wii backup or test profile was changed by this batch.
+
+## November 7: source-to-measurement projections and configured CMOC setup
+
+Five scoped code/test commits after `a3fb7bb`, through `170cc56`, are pushed.
+The previous goal turn was progress: it committed dated source acquisition and
+native consumer proofs. This continuation rechecked the actual worktree before
+extending those contracts. Existing unrelated Wii no Ma/provider/artwork work
+remains untouched.
+
+- The JMA association projection retains every published short-range temperature
+  point and alternate weekly group, with independent forecast-field and
+  observation-station presence. Historical metadata replay covers 58 offices,
+  142 short rows, 92 weekly rows and 142 candidate lists; 37 lists have multiple
+  alternatives. No first/nearest point or native city is selected. Explicit
+  temperature projection retains raw values, unused slots, separate issue and
+  target dates, group/point identities and all receipts. Real `17` evidence is
+  distinguished from synthetic `05`/`11` and before-05 probes; unfamiliar target
+  shapes reject under documented local restrictions.
+- A separate measurement projection converts one explicitly selected observation
+  using exact rational arithmetic before rounding each unit independently.
+  Its JWC24 policy is nearest-half-away-from-zero, QC-0-only eligibility and
+  explicit native-range rejection. Incomplete wind pairs become unavailable
+  together, avoiding the verified calm/missing-speed invalid-read boundary.
+  Source records, station, dates and receipts remain exact. Thirteen public
+  tests include actual short-payload packing/validation using explicit synthetic
+  identity/clock and missing sky condition; no active payload is written.
+  A private replay of five actual October observations also preserved every
+  source record/date/receipt; it is historical evidence, not a live refresh.
+- Original resource membership is now verified from retained TMD/content through
+  the unique compressed member and every padded TPL texture span. All 27 original
+  textures were inspected privately. Unchanged selector code reaches 59
+  definitions; 162 original integer-substitution cases connect sun textures to
+  crescent/full-moon alternatives. No raster, raw definition records or original
+  text enters Git. These are graphic membership/appearance facts, not complete
+  floating-point/GX rendering or JMA condition equivalence.
+- CMOC now has an independent configured-request setup projection compared with
+  the complete original cached worker and outer SDK constructor. It preserves
+  zero-size configured state separately from no configuration, bounded prefixes,
+  receive capacity, decompressor predicate and attempted standard-header order.
+  Resource/crypto initialization, lower SDK request creation, header acceptance,
+  sockets and asynchronous lifetime remain explicit intercepted boundaries.
+  Nineteen native cases include maximum accepted header lengths; the 63-byte
+  application-version bound is a local accepted subset, not a recovered producer
+  limit. Seven focused tests pass. Earlier root regression independently passed
+  all 53 CMOC tests before the added header-boundary test.
+
+The [source credit document](../channels/forecast/ATTRIBUTION.md) accompanies
+the public JMA tools, with agency/source URLs and a JWC24 processing notice.
+Official terms were rechecked on November 7. No original manual or screen is
+rewritten. The original manual's historical provider credit and interrupting
+message field do not establish an inline replacement-credit solution; the
+actual service-distribution credit path still needs verification.
+
+Next concrete evidence leads remain recorded privately: exact native-city to
+published-area/station provenance, provider-code-to-original-graphic semantics,
+source-kind-specific freshness and actual forecast shapes; CMOC's complete
+event-2/event-4 body/finalizer lifecycle, where finalization can force flag
+`0x20` if prefix comparison never completed. That flag must not be globally
+renamed "changed data." Current input feeds, complete service/authentication
+contracts and the full channel inventory's native/hardware gates remain open.
+
+### Integrated run and shared-lock correction
+
+The complete current local worktree at code checkpoint
+`170cc56336623084a594695f1665562ba5444a53` ran **1,255 tests in 749.573 seconds**,
+with **one error and one optional wheel-backend skip**. Its private UTF-8 log is
+`private/swarm-ninth-full-20261107.log`. This is not recorded as a passing run.
+As before, the worktree includes older uncommitted experiments.
+
+The error was the existing concurrent Rakuten publication test: the shared
+directory lock attempted to flush an initialization byte after another handle
+had locked that byte. A deterministic actual-OS test reproduced the same
+`PermissionError` before correction. Commit `776bc98` removes the unnecessary
+initialization write. Windows permits locking past EOF; the file remains
+persistent and existing nonempty files remain compatible. No unrelated
+Rakuten or Wii no Ma changes were staged.
+
+After the fix, **50 affected regressions passed in 97.699 seconds**, covering
+the actual OS lock, Rakuten, artwork publication, News publication and HBNJ
+publication. The four lock tests also passed a separate final 0.412-second run
+with file-identity assertions. They cover held empty files, real child-process
+exclusion, timeout, exception release and preservation of existing bytes.
+The original full run was not repeated after this narrow correction; its
+failed result and the subsequent affected-suite pass remain separate evidence.
+
+Public GitHub CI for `170cc56` passed compilation, package installation and
+**1,028 tests with 352 reported skips** in 27.751 seconds (run 42355571829,
+job 128352812531). Shared-lock code commit
+`776bc98aef8aa7c812cf93fde262d49b01604ee1` subsequently passed compilation,
+package installation and **1,032 tests with 352 reported skips** in 30.879
+seconds (run 42356729801, job 128356326001). Neither
+public CI nor these native comparison harnesses establish full original UI or
+hardware behavior. No emulator was launched, active weather/provider switched,
+native payload installed, real account/order/vote submitted, or actual Wii backup
+changed by this continuation.

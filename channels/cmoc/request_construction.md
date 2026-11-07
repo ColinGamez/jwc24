@@ -117,3 +117,8 @@ by this descriptor harness. Executing a convenient generic no-config SDK branch
 would not establish the real FD worker path, so it is not substituted here.
 Actual `.ces` processing, verified service values, host override/state handling,
 authorization and complete native startup/UI remain separate unfinished work.
+
+The subsequent [configured setup comparison](request_setup.md) now executes the
+actual cached worker, configured construction and outer SDK constructor. Its
+runtime/resource/crypto and lower SDK boundaries are explicit mocks; real
+serialization and authenticated startup remain unfinished.

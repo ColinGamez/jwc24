@@ -165,6 +165,11 @@ The [full channel checklist](channels/README.md) tracks the remaining source,
 authentication, original-asset and native-validation gates. Recent offline work
 adds actual backend components while leaving full restoration unfinished:
 
+The [shared publication lock](channels/publication_lock.md) now avoids a Windows
+first-creation race between simultaneous publishers. Actual OS contention and
+child-process tests verify the fix; catalog/artwork experiments remain separate
+from completed native experiences.
+
 - [HBNJ coherent snapshots](channels/hbnj/publication.md) publish complete
   generations and serve 109 frozen routes with native transport. Activation is
   explicit; legacy daily publication remains available. Snapshot validation
@@ -181,12 +186,19 @@ adds actual backend components while leaving full restoration unfinished:
   [JMA capture utility](channels/forecast/jma_source.md) preserves actual dated
   source records, units, quality flags and missing readings; native mapping and
   publication remain unfinished. No new weather was activated.
+  [Published-area associations](channels/forecast/jma_source.md#published-associations-and-dated-temperature-roles)
+  retain every temperature point and alternate weekly group. The
+  [measurement projection](channels/forecast/jma_measurements.md) converts units
+  under an explicit rounding/QC policy while preserving source dates and values.
   [Missing-value guards](channels/forecast/native_clock_and_missingness.md)
   preserve native sentinels and fix compact-only payload offsets; the original
   precipitation block is independently checked for all 1,024 slot/byte cases.
   Original [unit/condition consumers](channels/forecast/native_units_and_conditions.md)
   and [index missingness](channels/forecast/index_missingness.md) now establish
   further conversion/display constraints without inventing provider values.
+  [Original texture membership](channels/forecast/condition_resources.md)
+  connects native selectors to privately inspected graphics without replacing
+  assets or claiming that provider weather codes already map to them.
 - [Check Mii Out HTTP handling](channels/cmoc/http_conversion.md) now follows
   original SDK header lookup and three-character numeric conversion into the
   observed response gate/FD decoder. Real request/authentication/Mii flows remain
@@ -194,6 +206,9 @@ adds actual backend components while leaving full restoration unfinished:
   [Native FD request construction](channels/cmoc/request_construction.md)
   preserves the observed target and cached-header tail without inventing
   identity meanings or a live first-data response.
+  [Configured request setup](channels/cmoc/request_setup.md) follows the original
+  cached worker through its configured branch and outer SDK constructor;
+  cryptography, lower SDK serialization and full startup remain unfinished.
 - [Nintendo catalog loading](channels/nintendo/http_lifecycle.md) now connects
   language eligibility, actual retained callback bytes and native load checks.
   A completed-looking state cannot hide a skipped input chunk or substitute

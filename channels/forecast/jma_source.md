@@ -191,10 +191,15 @@ Native mapping still requires explicit native-city-to-published-area/station
 provenance, weather-code mapping, actual 05/11 temperature shape evidence and
 missing-field/rendering behavior. Native
 Japanese wind formatting selects a km/h byte, whereas these source records
-retain m/s; conversion and quantization need their own explicit policy. Calm
-with a missing speed must not be emitted as a guessed zero or north. Attribution
-must fit a genuinely existing data/credit boundary; existing provider credits
-must not falsely attribute another provider's data. None of these gates is
+retain m/s. The separate [measurement projection](jma_measurements.md) now
+converts units using an explicit JWC24 rounding/QC policy and suppresses
+incomplete wind pairs. It does not choose native cities or publish weather.
+[Original resource evidence](condition_resources.md) establishes actual
+textures and numerical selector membership; JMA condition equivalence remains
+unverified. [Source attribution](ATTRIBUTION.md) accompanies these tools and
+must remain with service distribution/provenance. The original manual's
+historical provider credit and an interrupting native message field are not
+a verified inline credit path for replacement data. None of these gates is
 relaxed by a successful parse. See the [native evidence](native_clock_and_missingness.md)
 and [source freshness boundary](source_freshness.md).
 

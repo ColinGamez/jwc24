@@ -1,16 +1,16 @@
 # Project-wide restoration and coordinated validation
 
-Updated October 28, 2026. The target is the original Japanese applications and
+Updated November 7, 2026. The target is the original Japanese applications and
 their native flows, with replacement services behind them. This inventory is
 broader than the adapters already implemented. It is not a completion claim.
 
 | Channel or service | Established implementation/evidence | Remaining completion gate |
 | --- | --- | --- |
 | [TV no Tomo / HBNJ](hbnj/README.md) | Previously observed native delivery/UI; country-wide builders plus [immutable 109-route snapshots and installed-wheel validation](hbnj/publication.md) with native transport | Current eight-day data, genre/date/search/banner flows and repeat refresh in the coordinated native pass |
-| [Forecast / HAFJ](forecast/README.md) | Native payload builders, historical download observations, [paired/signature checks](forecast/bundle_validation.md), [provider-age receipts](forecast/source_freshness.md), [dated JMA source capture](forecast/jma_source.md), [units/condition consumers](forecast/native_units_and_conditions.md) and [index missingness](forecast/index_missingness.md) | Explicit provider/native location and condition mapping, conversion/temperature roles, freshness and attribution; replace historical/guessed inputs without fabricated fields; client trust, original setup/banner/globe/full UI and Wii no Ma panel checks |
+| [Forecast / HAFJ](forecast/README.md) | Native builders, historical observations, [paired/signature checks](forecast/bundle_validation.md), [provider-age receipts](forecast/source_freshness.md), [dated JMA inputs/associations](forecast/jma_source.md), [measurement conversion](forecast/jma_measurements.md), [original condition resources](forecast/condition_resources.md) and [index missingness](forecast/index_missingness.md) | Native-city-to-source identities, provider-code-to-graphic mapping, actual 05/11 temperature shapes, freshness and accompanying attribution; replace historical/guessed inputs; client trust, original setup/banner/globe/full UI and Wii no Ma panel checks |
 | [News / HAGJ](news/readiness.md) | [Explicit native article encoding](news/record_builder.md), [original title-display model](news/headline_model.md), graph/task checks and signed binary publication | Authorized current provider adapter/sample and native image/taxonomy mapping; installed-client trust/IOS/VFF/decompression, automatic hourly refresh and original UI/ticker |
 | [Nintendo Channel / HATJ](nintendo/readiness.md) | CSData/reference checks, [selected software records](nintendo/listdata_contract.md), [inline-name tables and first-match relationships](nintendo/named_tables.md), [language/load lifecycle](nintendo/load_lifecycle.md) and [native callback/poll handling](nintendo/http_lifecycle.md) | Complete tables and inner request/manager lifecycle, actual download/auth/registration, genuine catalog/media, review/bookmark behavior and native UI |
-| [Check Mii Out / HAPJ](cmoc/framing.md) | Bounded framing, [FD fields](cmoc/startup_record.md), [completion gate](cmoc/response_gate.md), [SDK header conversion](cmoc/http_conversion.md) and [native FD target/header construction](cmoc/request_construction.md) | Actual worker/SDK/socket/host-override paths and `.ces` processing, full FD meanings and genuine values, retrieval/auth/encryption, native menus/discovery/search, submission/contest/vote receipts and WC24 delivery |
+| [Check Mii Out / HAPJ](cmoc/framing.md) | Bounded framing, [FD fields](cmoc/startup_record.md), [completion gate](cmoc/response_gate.md), [SDK header conversion](cmoc/http_conversion.md), [FD descriptor](cmoc/request_construction.md) and [configured cached-worker setup](cmoc/request_setup.md) | Live resource/crypto and `.ces` processing, lower SDK/socket/host override and async/error/cache lifecycle, full FD meanings/genuine values, authentication, original menus/discovery/search, submission/contest/vote receipts and WC24 delivery |
 | [Demae / HCHJ and address helper HCCJ](demae/README.md) | Nationwide directory, partial menu observations, [native item/variant ownership, stock/price and basket-code matching](demae/item_model_flow.md), phone confirmation and notice queue | Fresh actual branch variants/orderability, native images/shop/full basket/checkout integration, notice display and full postal delivery |
 | [Wii no Ma / HCIJ](wii_no_ma/README.md) | Bootstrap/metadata experiments and [transaction-backed submission receipts](wii_no_ma/submissions.md) with bounded HTTP framing | Original result/request semantics, identity/aggregation, Flash shop, native playback/DSi transfer, household/setup/artwork and notices |
 | [Wii Fit Body Check / HFNJ](body_check/research.md) | Verified client/dependencies, [header CRC comparisons](body_check/header_crc.md), [native read-completion/opaque gate](body_check/completion.md), [SDK task preparation](body_check/tasks.md) and [original update-notice/resource binding](body_check/update_notice.md) | Legitimate Japanese Fit/Plus save/profile, actual dataset/header semantics and source, real task/IO/trust, registration/authentication and native question/mail/board flows |
@@ -32,6 +32,11 @@ guidance does not supply missing service schemas. Original material, private
 keys and device backups remain outside Git.
 
 ## Shared preparation before opening a channel
+
+Directory publishers use a [persistent shared lock](publication_lock.md).
+Its Windows first-creation race is fixed with real empty-file contention and
+child-process regression coverage. This protects publisher exclusion; each
+service still needs its own complete transaction/recovery validation.
 
 Run the full offline suite first:
 
