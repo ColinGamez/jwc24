@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-11-07",
+  "policy_id": "jwc24-vpfd51-normal-announcement-age-v1",
+  "scope": "Byte-bound narrow normal announcement/status/version and explicit provider issue-age check; not supersession, complete source acceptance or publication.",
+  "verification": {
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_jma_xml_eligibility -v",
+    "tests": 7,
+    "seconds": 0.032,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "optional_private_replay_tests": 1
+  },
+  "actual_replay": {
+    "reports": 2,
+    "historical_retrieval_clock_passes": true,
+    "later_clock_rejects": true,
+    "original_issue_transmission_target_and_receipt_retained": true,
+    "requests": 0,
+    "published": false
+  },
+  "remaining": [
+    "Latest report, corrections and cancellation lifecycle",
+    "Independent source authentication, city/source identity, all dependencies and native validity",
+    "Complete forecast assembly, source attribution and native UI/hardware"
+  ]
+}
