@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-11-07",
+  "source_bytes": 4194944,
+  "source_sha256": "aef18b3a045c09b0a1c4dfdd9aed99f78bd4a6be8c0a967deea3e6aa93523264",
+  "source_regions": [
+    {
+      "role": "manager_setup_wrapper",
+      "start": "0x80026c80",
+      "exclusive_end": "0x80026dd0",
+      "sha256": "558372673501687c1c38632ad09964c3a7c4d53e77ed9098ba5bfe6e72f489df"
+    },
+    {
+      "role": "inner_create",
+      "start": "0x80027a40",
+      "exclusive_end": "0x80027b60",
+      "sha256": "50a87707555351da499f4133143e997750e3ef24e68865c4090ef6ca9fab78cb"
+    },
+    {
+      "role": "inner_submission",
+      "start": "0x80027b60",
+      "exclusive_end": "0x80027c10",
+      "sha256": "a022a712bb8b50d6049b237f984fc1d928afc4d1ded435ed3cf0b099a9bb3502"
+    },
+    {
+      "role": "stage_result_conversion",
+      "start": "0x800271e0",
+      "exclusive_end": "0x80027238",
+      "sha256": "e1761f2d5685dd0e5baeb2f634edfadef61c7412d5ae6972732c6e4d78edebe1"
+    },
+    {
+      "role": "opaque_sdk_configuration_selector",
+      "start": "0x80027570",
+      "exclusive_end": "0x800275fc",
+      "sha256": "b90ec2ae970d55d4453f0c4ecf63bb23336447c392074462db22335d7adb1bb7"
+    },
+    {
+      "role": "range_user_agent_referer_setters",
+      "start": "0x800277f0",
+      "exclusive_end": "0x80027974",
+      "sha256": "8b3513320e861804ca8e6f5239771daea1a4f1489c46e0e7ff0c0a0b81ace9a5"
+    },
+    {
+      "role": "inner_cleanup_and_reset",
+      "start": "0x80028170",
+      "exclusive_end": "0x80028208",
+      "sha256": "09c942f8de34c3ae4326c1fb917df42cc6ed854d80703b63d7767c458df1c4a4"
+    },
+    {
+      "role": "header_storage_helpers",
+      "start": "0x80028270",
+      "exclusive_end": "0x800283b8",
+      "sha256": "0748527312164afa8edd976cb279df4b9183d6a1f65f0d494c74f6d730539651"
+    },
+    {
+      "role": "initialized_user_agent_getter",
+      "start": "0x80025860",
+      "exclusive_end": "0x800258bc",
+      "sha256": "bf418c26f2e86e9bfe9b4da36f5797a3299f0ede43936559416c10bc2877fa5d"
+    },
+    {
+      "role": "temporary_copy_initialization",
+      "start": "0x80025110",
+      "exclusive_end": "0x80025130",
+      "sha256": "bf0fa9537ff2bdee71b772e5da314975baeff03ec5d6768e85498a5e9a180357"
+    },
+    {
+      "role": "temporary_bounded_copy",
+      "start": "0x800251e0",
+      "exclusive_end": "0x80025260",
+      "sha256": "c8d65de6ca1e58753dd90a8d162fe4dd5bd90b414e699a8a8b35c7c8650776cf"
+    },
+    {
+      "role": "error_detail_mapping",
+      "start": "0x8002b6a0",
+      "exclusive_end": "0x8002b780",
+      "sha256": "468b40cd0d7f22627fdc8b077acc32e1ae7cbe747a4ec834c2f06b26ff311ef8"
+    }
+  ],
+  "native_comparisons": 193,
+  "native_prepare_cases": 129,
+  "native_direct_submit_cases": 64,
+  "all_native_comparisons_passed": true,
+  "comparison_seconds": 2.92,
+  "aggregate_counts": {
+    "instructions": 159263,
+    "setup": 129,
+    "create": 129,
+    "initialized_config_getter": 93,
+    "header_user_agent": 93,
+    "header_referer": 57,
+    "header_range": 69,
+    "submit": 148,
+    "cleanup": 149,
+    "reset_inner": 39,
+    "sdk_boundaries": 787,
+    "tick_boundaries": 75
+  },
+  "original_setup_create_cleanup_header_storage_formatting_submission_and_error_conversion_stubbed": false,
+  "sdk_leaves_and_tick_boundaries_stubbed": true,
+  "select_call_is_normalized_handle_and_table_index": true,
+  "actual_original_indexed_sdk_pointer_and_size_arguments_checked": true,
+  "original_referenced_sdk_resources_read": false,
+  "device_configuration_generation_executed": false,
+  "initialized_configuration_is_supplied_synthetic_data": true,
+  "full_async_sdk_callbacks_state_mutations_or_transport_verified": false,
+  "sdk_resource_semantics_or_authentication_verified": false,
+  "genuine_catalog_source_or_original_ui_verified": false,
+  "exact_opaque_storage_outcome_order_arguments_and_guards_checked": true,
+  "original_files_profiles_or_console_backups_changed": false,
+  "software_credentials_or_proprietary_bytes_committed": false,
+  "no_runtime_routes_or_network_requests_enabled": true,
+  "targeted_tests": {
+    "count": 13,
+    "result": "passed",
+    "seconds": 3.216,
+    "final_seconds": 3.11
+  },
+  "host_side_inspection_reads_share_emulated_read_bounds": true,
+  "host_word_reads_restricted_to_exact_abi_and_indexed_table_slots": true,
+  "all_nintendo_regression_tests": {
+    "count": 95,
+    "result": "passed",
+    "seconds": 20.274
+  },
+  "private_absent_tests": {
+    "public_count": 12,
+    "native_classes_skipped": 1,
+    "result": "passed",
+    "seconds": 0.037
+  }
+}
