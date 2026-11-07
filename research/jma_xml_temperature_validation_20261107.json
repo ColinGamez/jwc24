@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "subject": "Actual JMA VPFD51 05/11 daily-temperature source records",
+  "capture_and_validation_date_jst": "2026-11-07",
+  "source_kind": "official public JMA XML, not Nintendo material or website JSON layout evidence",
+  "private_capture_directory": "private/forecast/jma-shape-audit-20261107",
+  "new_bounded_data_gets": 3,
+  "retries": 0,
+  "redirects_followed": 0,
+  "authentication_supplied": false,
+  "existing_json_allowlist_changed": false,
+  "native_provider_activated": false,
+  "profile_or_actual_wii_access": false,
+  "feed_discovery": {
+    "url": "https://www.data.jma.go.jp/developer/xml/feed/regular_l.xml",
+    "status": 200,
+    "declared_body_bytes": 4592730,
+    "retained_prefix_bytes_including_overflow_sentinel": 2097153,
+    "retained_prefix_sha256": "c305d639a82357250759060fa154b8057a419329d52f7416457da680078b45dd",
+    "complete": false,
+    "accepted_source_data": false,
+    "failure": "capture_bounds_or_transport_contract",
+    "complete_retained_atom_entries": 4285,
+    "use": "Discovery leads only; no accepted feed receipt or feed-data product"
+  },
+  "successful_documents": [
+    {
+      "url": "https://www.data.jma.go.jp/developer/xml/data/20261106193445_0_VPFD51_130000.xml",
+      "body_sha256": "13f9c23b4c33b3ac2049b332da15176106dfcbb985ec8fd58c952dd5eb24c4c5",
+      "body_bytes": 52941,
+      "status": 200,
+      "complete": true,
+      "report_datetime": "2026-11-07T05:00:00+09:00",
+      "control_datetime": "2026-11-06T19:34:44Z",
+      "target_datetime": "2026-11-07T05:00:00+09:00"
+    },
+    {
+      "url": "https://www.data.jma.go.jp/developer/xml/data/20261107013843_0_VPFD51_130000.xml",
+      "body_sha256": "5f8c16db930ecd0e979827fca22adc050956662225b71b5bf8bb873ad9653b92",
+      "body_bytes": 53848,
+      "status": 200,
+      "complete": true,
+      "report_datetime": "2026-11-07T11:00:00+09:00",
+      "control_datetime": "2026-11-07T01:38:43Z",
+      "target_datetime": "2026-11-07T11:00:00+09:00"
+    }
+  ],
+  "actual_daily_temperature_definitions_in_source_order": [
+    {
+      "ref_id": "1",
+      "target_datetime": "2026-11-07T09:00:00+09:00",
+      "duration": "PT9H",
+      "role": "daytime_maximum"
+    },
+    {
+      "ref_id": "2",
+      "target_datetime": "2026-11-07T00:00:00+09:00",
+      "duration": "PT24H",
+      "role": "maximum_temperature"
+    },
+    {
+      "ref_id": "3",
+      "target_datetime": "2026-11-08T00:00:00+09:00",
+      "duration": "PT9H",
+      "role": "morning_minimum"
+    },
+    {
+      "ref_id": "4",
+      "target_datetime": "2026-11-08T09:00:00+09:00",
+      "duration": "PT9H",
+      "role": "daytime_maximum"
+    }
+  ],
+  "actual_nonmonotonic_xml_definition_order_retained": true,
+  "points_per_document": [
+    "44132",
+    "44172",
+    "44263",
+    "44301"
+  ],
+  "daily_temperature_values_per_document": 16,
+  "raw_reported_unit": "度",
+  "unit_conversion_performed": false,
+  "json_array_order_inferred": false,
+  "actual_before_05_report_datetime_captured": false,
+  "early_control_time_not_promoted_to_report_time": true,
+  "validation": {
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_jma_xml_temperatures",
+    "tests": 18,
+    "result": "OK",
+    "elapsed_seconds": 0.038,
+    "optional_private_replay_tests": 1,
+    "test_network_requests": 0,
+    "combined_command": ".venv/Scripts/python.exe -m unittest tests.test_jma_xml_temperatures tests.test_jma_weather tests.test_jma_associations tests.test_jma_identity",
+    "combined_tests": 80,
+    "combined_result": "OK",
+    "combined_elapsed_seconds": 0.567,
+    "public_absence_simulation_tests": 18,
+    "public_absence_simulation_skipped": 1,
+    "public_absence_simulation_result": "OK",
+    "raw_url_control_whitespace_del_regressions": "rejected before urlsplit",
+    "numeric_or_role_annotation_is_native_eligibility": false
+  },
+  "limits": [
+    "Receipt digests and supplied metadata are consistency evidence, not independent authentication.",
+    "The oversized Atom feed was incomplete and rejected; only complete prefix entries were discovery leads.",
+    "Actual XML proves XML source order/refID semantics only, not website JSON array shape.",
+    "05:00 report announcement and earlier04:34:44 transmission do not establish a before05 reportDatetime sample.",
+    "Unknown/absent tokens, types, units and qualifiers remain source metadata; no fabricated numeric zero or native normalization.",
+    "Full VPFD51 schema/other bulletin-field support, native identity, XML source-age acceptance, attribution and native publication are unfinished."
+  ]
+}
