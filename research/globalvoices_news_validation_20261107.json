@@ -1,0 +1,63 @@
+{
+  "date": "2026-11-07",
+  "scope": "Offline supplemental Global Voices Japanese source-candidate adapter; no native activation",
+  "implementation": [
+    "jwc24/globalvoices_news.py",
+    "tools/inspect_globalvoices_news.py"
+  ],
+  "tests": {
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_globalvoices_news -v",
+    "count": 19,
+    "public_synthetic_tests": 18,
+    "optional_private_actual_capture_tests": 1,
+    "result": "passed",
+    "elapsed_seconds": 0.162,
+    "scope_note": "Source bytes/identity/date/structure/pending-state and offline CLI checks; not native UI or publication verification"
+  },
+  "historical_capture_replay": {
+    "feed_url": "https://jp.globalvoices.org/feed/",
+    "canonical_article_url": "https://jp.globalvoices.org/2026/11/02/65795/",
+    "article_sha256": "84d87721d5bb307ddaa7ca3ea4fa9f17dc4b3717b35e96e179b8f70f305ded3c",
+    "verified_capture_count": 5,
+    "checked_utc": "2026-11-07T10:00:00Z",
+    "published_utc": "2026-11-02T07:06:38Z",
+    "modified_utc": "2026-11-04T02:34:30Z",
+    "original_displayed_publication_date": "2026-08-12",
+    "publication_age_seconds": 442402,
+    "modification_age_seconds": 285930,
+    "article_html_language": "jp",
+    "feed_language_label": "en-US",
+    "body_nodes": 68,
+    "source_text_node_characters": 3537,
+    "normalized_full_core_characters": 3534,
+    "normalized_full_core_utf16be_bytes": 7068,
+    "normalized_feed_core_equals_page_entry": true,
+    "original_author_and_translator_roles_distinct": true,
+    "additional_contributor_blocks": 1,
+    "media_review_objects": 3,
+    "quotation_review_objects": 2,
+    "inert_attribute_review_objects": 4,
+    "language_label_review_objects": 1
+  },
+  "boundaries": {
+    "full_story_bodies_committed": false,
+    "new_network_requests": false,
+    "publisher_contact_made": false,
+    "independent_source_authentication_verified": false,
+    "all_component_rights_verified": false,
+    "native_attribution_links_rendered": false,
+    "native_text_rendering_verified": false,
+    "native_records_generated": false,
+    "provider_activated": false,
+    "native_category_or_location_guesses": false,
+    "credentials_or_profiles_modified": false,
+    "physical_wii_backup_touched": false
+  },
+  "remaining": [
+    "Reviewed component rights and faithful representation of third-party media/quotations",
+    "Visible appropriate source/author/translator/license attribution, usable links and change disclosure in native layout",
+    "Stable native ID mapping and explicit native headers/opaque fields, topic/geography choices and timestamp conversion",
+    "Complete current source coverage and genuine 24-buffer scheduling without retiming articles or fabricating hours",
+    "Native signature trust, VFF capacity and original Japanese UI verification"
+  ]
+}
