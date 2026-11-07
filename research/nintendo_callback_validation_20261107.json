@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-11-07",
+  "source_bytes": 4194944,
+  "source_sha256": "aef18b3a045c09b0a1c4dfdd9aed99f78bd4a6be8c0a967deea3e6aa93523264",
+  "source_regions": [
+    {
+      "role": "sdk_callback_wrapper",
+      "start": "0x80027e40",
+      "exclusive_end": "0x80027e90",
+      "sha256": "a76e5996fbcb4366d81c564a53a8e30a79e61ddfa8b4bcb7c7bbb013abaf77fa"
+    },
+    {
+      "role": "event_dispatch",
+      "start": "0x80027e90",
+      "exclusive_end": "0x80027ecc",
+      "sha256": "9b5d832b21c7aec664005b1cbb8d1ba72f2629ba9515d7635fabca3453389873"
+    },
+    {
+      "role": "complete_event_four_branch_and_return",
+      "start": "0x80028068",
+      "exclusive_end": "0x80028158",
+      "sha256": "792c7abf78d7704a623fb8b92f1a1248a1763bf4225f62d9779c7a5b754b05b6"
+    },
+    {
+      "role": "header_first_byte_clear",
+      "start": "0x800282b0",
+      "exclusive_end": "0x800282fc",
+      "sha256": "a6dc88bdd75f3a3dc1570f6407fd15314bb21a3db685604d99a482e61bb429db"
+    },
+    {
+      "role": "signed_division_and_register_support_region",
+      "start": "0x80340400",
+      "exclusive_end": "0x80340b00",
+      "sha256": "302ea111213f1ac4e7b1f9db8f2ef5b24141cfcb389b300d77d70dda64d5a4be"
+    },
+    {
+      "role": "empty_string_copy_region",
+      "start": "0x8034757c",
+      "exclusive_end": "0x8034763c",
+      "sha256": "76c60d4c14d060b4d941207708b244a3c964f6277e786f1d6683a19aa68745e4"
+    },
+    {
+      "role": "manager_callback_thunk",
+      "start": "0x80026ae0",
+      "exclusive_end": "0x80026b04",
+      "sha256": "527b4b0445fc972df81aea0e488ef5caf405cb6f4d8798d64d21119bb96bb210"
+    },
+    {
+      "role": "manager_callback_relay",
+      "start": "0x80026b10",
+      "exclusive_end": "0x80026c78",
+      "sha256": "3e3fb8fd5309ef61f17c3bbb0a30c02b0c13ba2bb399b5ca71837d4ed9e1a814"
+    },
+    {
+      "role": "success_predicates",
+      "start": "0x80027d70",
+      "exclusive_end": "0x80027e24",
+      "sha256": "efa81c344a140eb257146cae95f02a2bc47ffc416167dbd47260e987988e1c12"
+    },
+    {
+      "role": "error_and_detail_maps",
+      "start": "0x8002b6a0",
+      "exclusive_end": "0x8002b86c",
+      "sha256": "083a5bc3232799fd3bf2d9c5d2cd1ca08aa72ed2e40e9c1490d3cb01cff5da7b"
+    },
+    {
+      "role": "response_detail_map",
+      "start": "0x8002ba20",
+      "exclusive_end": "0x8002ba30",
+      "sha256": "2f966c637dc717471da0deee536b6db078cc1cf9375d6182c715f617b3afbdbf"
+    },
+    {
+      "role": "http_callback_wrapper_and_body",
+      "start": "0x800287c0",
+      "exclusive_end": "0x80028914",
+      "sha256": "3011a9356a712965a1bc585858bab901c10d48c5215e99f2053c040fb4f5427c"
+    }
+  ],
+  "native_comparisons": 345,
+  "all_native_comparisons_passed": true,
+  "comparison_seconds": 4.498,
+  "aggregate_counts": {
+    "instructions": 112358,
+    "sdk_wrapper": 345,
+    "inner_dispatch": 345,
+    "event_four_branch": 345,
+    "native_signed_division": 125,
+    "header_clear": 345,
+    "manager_thunk": 343,
+    "manager_relay": 341,
+    "http_callback_wrapper": 339,
+    "http_callback_body": 337,
+    "sdk_getters": 1324,
+    "tick": 125,
+    "timer_reset": 337,
+    "timer_start": 337
+  },
+  "original_wrapper_event_four_signed_division_header_clear_relay_and_http_consumer_stubbed": false,
+  "sdk_getters_ticks_and_callback_timer_boundaries_stubbed": true,
+  "getter_outcomes_are_explicit_caller_assertions": true,
+  "signed_division_toward_zero_and_low_word_behavior_verified": true,
+  "conditional_response_read_distinguished_from_prior_numeric_200": true,
+  "conditional_detail_read_and_preserved_opaque_words_checked": true,
+  "context_links_descriptor_storage_frame_and_guards_checked": true,
+  "host_inspection_reads_share_emulated_bounds": true,
+  "original_sdk_context_or_actual_http_response_independently_verified": false,
+  "authentication_genuine_catalog_native_ui_or_full_async_lifetime_verified": false,
+  "other_events_cancellation_or_worker_verified": false,
+  "new_network_requests_or_runtime_routes_enabled": false,
+  "original_files_resources_credentials_profiles_or_console_backups_changed": false,
+  "targeted_tests": {
+    "count": 11,
+    "result": "passed",
+    "seconds": 4.732
+  },
+  "all_nintendo_regression_tests": {
+    "count": 106,
+    "result": "passed",
+    "seconds": 24.728
+  },
+  "private_absent_tests": {
+    "public_count": 10,
+    "native_classes_skipped": 1,
+    "result": "passed",
+    "seconds": 0.046
+  }
+}
