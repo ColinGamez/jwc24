@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "checked_on_jst": "2026-11-07",
-  "scope": "Explicit JWC24 replacement mapping of four reviewed JMA daily categories plus bounded actual original native text consumers. No active provider or original assets changed.",
+  "scope": "Explicit JWC24 replacement mapping of five reviewed JMA daily categories, with code101 added from original manual category evidence; bounded actual original text consumers. No activation.",
   "source_client": {
     "url": "https://www.jma.go.jp/bosai/forecast/",
     "sha256": "2219c9b3f581d0e69857eeb4c98e1ebb8059269b73d7886f9ecc9a676b124a50",
@@ -32,9 +32,14 @@
       "jma_primary_code": 400,
       "native_secondary_selector": 26,
       "label": "雪"
+    },
+    {
+      "jma_primary_code": 101,
+      "native_secondary_selector": 2,
+      "label": "晴時々曇"
     }
   ],
-  "known_unmapped_codes": 114,
+  "known_unmapped_codes": 113,
   "unknown_codes_reject_separately": true,
   "missing_codes_reject_separately": true,
   "silent_ff_or_generic_picture_fallback": false,
@@ -43,17 +48,17 @@
   "historical_forecast_replay": {
     "captured_on_jst": "2026-10-28",
     "weather_code_slots": 33,
-    "mapped_slots": 12,
-    "explicitly_unsupported_slots": 21,
+    "mapped_slots": 13,
+    "explicitly_unsupported_slots": 20,
     "provider_issue_target_description_and_receipts_preserved": true,
     "current_weather_claim": false
   },
   "native_text": {
     "source_application_sha256": "ec33ec8eb2a8b9c76c2605ac6de2fd16dd5279b0c641d90746206a86a3a499b5",
-    "condition_label_pointer_handoff_cases": 14,
-    "complete_original_primary_key_lookup_cases": 14,
-    "complete_utf16_length_helper_cases": 28,
-    "width_height_prefix_cases": 28,
+    "condition_label_pointer_handoff_cases": 15,
+    "complete_original_primary_key_lookup_cases": 15,
+    "complete_utf16_length_helper_cases": 30,
+    "width_height_prefix_cases": 30,
     "control_branch_cases": 38,
     "largest_tested_utf16_units": 1024,
     "condition_label_handoff": "0x8001d7e4..0x8001d7f8",
@@ -71,20 +76,37 @@
     "native_ui_or_device_io_executed": false
   },
   "verification": {
-    "command": ".venv/Scripts/python.exe -m unittest tests.test_jma_conditions tests.test_forecast_condition_text -v",
-    "tests": 13,
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_forecast_condition_semantics tests.test_jma_conditions tests.test_forecast_condition_text -v",
+    "tests": 19,
     "failures": 0,
     "errors": 0,
     "skips": 0,
-    "optional_private_inputs_available": true
+    "private_inputs_and_native_backend_available": true
   },
   "remaining": [
-    "114 qualified/composite source categories",
+    "113 other qualified/composite source categories",
     "Clock/night-bit policy",
     "Actual font metrics and full text fitting/glyph rendering",
     "Native location association",
     "Source freshness acceptance",
     "Inline provider attribution",
     "Full native payloads and UI/hardware validation"
-  ]
+  ],
+  "evidence_history": [
+    {
+      "commit": "681cdda",
+      "policy_id": "jwc24-jma-pure-daily-conditions-v1",
+      "supported_codes": 4,
+      "known_unmapped_codes": 114,
+      "historical_forecast_mapped_slots": 12,
+      "historical_forecast_unsupported_slots": 21,
+      "native_pointer_handoffs": 14,
+      "native_length_cases": 28,
+      "focused_tests": 13,
+      "note": "Original first checkpoint preserved as historical evidence; revised below after original manual category inspection."
+    }
+  ],
+  "revision": 2,
+  "policy_id": "jwc24-jma-daily-conditions-v2",
+  "additional_category_evidence": "research/forecast_condition_semantics_validation_20261107.json"
 }

@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-11-07",
+  "scope": "Original retained manual screen/category observation, native float-component math, all immediate icon-call suffixes, and one additional explicitly evidenced JMA101 replacement mapping. Metadata only.",
+  "manual": {
+    "content_index": 10,
+    "content_id": 10,
+    "manual_bytes": 276617,
+    "manual_sha256": "6ba845fc812a4106632b2843ae2439e2a14057d8a02cb8782a6514a0ba453b79",
+    "retained_tmd_hash_size_match": true,
+    "nested_archive_sha256": "5d8bb9db62311cc676711fa41f175676b93a4daedb4c49276d8cdaacdb030d48",
+    "screenshot_member": "page03gazo.png",
+    "screenshot_sha256": "1e1fb971235d7b001762cb64ae7ae9514041aae298ba8532c290a740e49c4db6",
+    "screenshot_bytes": 15220,
+    "original_assets_or_captions_emitted": false,
+    "nintendo_signature_or_independent_provenance_verified": false
+  },
+  "visual_inspection": {
+    "actual_private_image_opened": true,
+    "image_source": "Retained original Japanese channel manual illustration, not a new JWC24 rendering.",
+    "observation": "The pictured original forecast screen pairs upper-left sun/lower-right cloud with a caption meaning sunny with intermittent cloud.",
+    "human_visual_reading_not_automated_ocr": true,
+    "original_caption_or_image_published": false
+  },
+  "native": {
+    "source_application_sha256": "ec33ec8eb2a8b9c76c2605ac6de2fd16dd5279b0c641d90746206a86a3a499b5",
+    "original_float_component_cases": 84,
+    "selectors_and_texture_indices": {
+      "2": [
+        4,
+        0
+      ],
+      "6": [
+        4,
+        0,
+        18
+      ],
+      "11": [
+        0,
+        4
+      ]
+    },
+    "sun_first_x_and_y_less_than_cloud_for_selector2": true,
+    "actual_component_draw_scale_verified": true,
+    "original_immediate_icon_call_sites": [
+      "0x80010fa0",
+      "0x80014524",
+      "0x800149e0",
+      "0x8001931c",
+      "0x800193e0",
+      "0x8001d79c",
+      "0x8001e174",
+      "0x80024580",
+      "0x800247bc",
+      "0x80024aa8",
+      "0x80024d28",
+      "0x80024fa8",
+      "0x8002524c",
+      "0x800254e0",
+      "0x8002575c"
+    ],
+    "immediate_call_sites": 15,
+    "selected_handoff_cases": 150,
+    "selected_suffixes_preserve_secondary_including_high_bit": true,
+    "source_static_inputs_and_guards_unchanged": true,
+    "native_code_or_helpers_patched": false,
+    "paired_single_prolog_full_composition_loop_or_gx_executed": false,
+    "indirect_call_inventory_or_whole_ui_clock_policy_verified": false,
+    "native_arrow_temporal_meaning_verified": false,
+    "original_definition_coordinates_colours_or_assets_emitted": false
+  },
+  "jma_extension": {
+    "policy_id": "jwc24-jma-daily-conditions-v2",
+    "source_client_sha256": "2219c9b3f581d0e69857eeb4c98e1ebb8059269b73d7886f9ecc9a676b124a50",
+    "source_client_url": "https://www.jma.go.jp/bosai/forecast/",
+    "source_code": "101",
+    "canonical_label": "晴時々曇",
+    "native_secondary_selector": 2,
+    "basis": "Captured official canonical meaning plus actual original manual picture/caption and original definition2 component calculations.",
+    "replacement_mapping_not_recovered_original_dictionary": true,
+    "supported_catalog_codes": 5,
+    "explicitly_unsupported_catalog_codes": 113,
+    "historical_forecast_mapped_slots": 13,
+    "historical_forecast_unsupported_slots": 20,
+    "source_detailed_qualification_dates_identity_receipts_preserved": true,
+    "automatic_night_or_arrow_policy_added": false
+  },
+  "verification": {
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_forecast_condition_semantics tests.test_jma_conditions tests.test_forecast_condition_text -v",
+    "tests": 19,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "private_inputs_and_native_backend_available": true
+  },
+  "remaining": [
+    "113 other canonical source categories",
+    "Arrow temporal meaning",
+    "Backend night selection policy",
+    "Whole native font/GX rendering and source-to-screen legibility",
+    "Native location/freshness/attribution/payload activation and hardware checks"
+  ]
+}

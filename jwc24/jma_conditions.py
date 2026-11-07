@@ -1,4 +1,4 @@
-"""Explicit replacement mapping for four reviewed JMA daily condition meanings.
+"""Explicit replacement mapping for five reviewed JMA daily condition meanings.
 
 Source: https://www.jma.go.jp/bosai/forecast/ (JMA public data, PDL 1.0).
 JWC24 maps the official source meanings to inspected original channel pictures.
@@ -19,9 +19,10 @@ from jwc24.jma_weather import (FORECAST_PAGE, ForecastSource, JMAError,
 
 CLIENT_BYTES = 199327
 CLIENT_SHA256 = '2219c9b3f581d0e69857eeb4c98e1ebb8059269b73d7886f9ecc9a676b124a50'
-POLICY_ID = 'jwc24-jma-pure-daily-conditions-v1'
+POLICY_ID = 'jwc24-jma-daily-conditions-v2'
 SUPPORTED = MappingProxyType({'100': (1, '\u6674'), '200': (10, '\u66c7'),
-                              '300': (19, '\u96e8'), '400': (26, '\u96ea')})
+                              '300': (19, '\u96e8'), '400': (26, '\u96ea'),
+                              '101': (2, '\u6674\u6642\u3005\u66c7')})
 
 
 class JMAUnknownCondition(JMAError):
@@ -124,7 +125,7 @@ def parse_condition_catalog(body: bytes, receipt: SourceReceipt) -> ConditionCat
     found = {entry.code: entry for entry in entries}
     if any(found.get(code) is None or found[code].japanese_label != label
            for code, (_, label) in SUPPORTED.items()):
-        raise JMAError('reviewed pure condition meaning differs')
+        raise JMAError('reviewed condition meaning differs')
     return ConditionCatalog(entries, receipt)
 
 
@@ -181,7 +182,7 @@ def project_daily_condition(source: ForecastSource, *, report_index: int,
         raise JMAUnsupportedCondition('selected source condition has no verified native mapping')
     selector, expected_label = SUPPORTED[code]
     if entries[0].japanese_label != expected_label:
-        raise JMAError('pure condition label differs from the reviewed source meaning')
+        raise JMAError('condition label differs from the reviewed source meaning')
     raw_description = descriptions[0].values[target_index].raw if descriptions else None
     return NativeDailyCondition(
         POLICY_ID, source.office_code, area.code, area.name, report_index, series_index,

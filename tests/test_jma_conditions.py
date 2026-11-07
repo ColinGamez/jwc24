@@ -1,4 +1,4 @@
-"""Explicit four-meaning replacement policy; no network or synthetic UI assets."""
+"""Explicit five-meaning replacement policy; no network or synthetic UI assets."""
 from dataclasses import replace
 from datetime import datetime, timezone
 import hashlib
@@ -44,12 +44,19 @@ def project(source=None, **changes):
 
 
 class JMAConditionTests(unittest.TestCase):
-    def test_four_reviewed_meanings_use_distinct_original_graphical_selectors(self):
+    def test_five_reviewed_meanings_use_distinct_original_graphical_selectors(self):
         for code, (selector, label) in SUPPORTED.items():
             value = project(forecast(code))
             self.assertEqual((value.dictionary_row.code_primary, value.dictionary_row.code_secondary,
                               value.dictionary_row.text), (int(code), selector, label))
             self.assertLess(value.dictionary_row.code_secondary, 0x8000)
+
+    def test_101_exact_canonical_meaning_does_not_rewrite_detailed_qualifications(self):
+        value = project(forecast('101', description='Source text retains a later regional rain qualification'))
+        self.assertEqual((value.dictionary_row.code_primary, value.dictionary_row.code_secondary,
+                          value.dictionary_row.text), (101, 2, '\u6674\u6642\u3005\u66c7'))
+        self.assertEqual(value.raw_weather_description, 'Source text retains a later regional rain qualification')
+        self.assertEqual(value.policy_id, 'jwc24-jma-daily-conditions-v2')
 
     def test_exact_source_dates_area_description_and_both_receipts_survive(self):
         source, original_catalog = forecast(), catalog()
@@ -135,9 +142,9 @@ class JMAConditionCapturedTests(unittest.TestCase):
             else:
                 with self.assertRaises(JMAUnsupportedCondition):
                     project(forecast(entry.code), catalog=self.catalog)
-        self.assertEqual(count, 4)
+        self.assertEqual(count, 5)
 
-    def test_actual_historical_dated_forecast_projects_12_and_reports_21_unmapped(self):
+    def test_actual_historical_dated_forecast_projects_13_and_reports_20_unmapped(self):
         if not (self.root / 'forecast-tokyo.body').is_file():
             self.skipTest('Optional paired historical forecast capture unavailable')
         body = (self.root / 'forecast-tokyo.body').read_bytes()
@@ -167,7 +174,7 @@ class JMAConditionCapturedTests(unittest.TestCase):
                             with self.assertRaises(JMAUnsupportedCondition):
                                 project_daily_condition(source, **arguments)
                             unsupported += 1
-        self.assertEqual((accepted, unsupported), (12, 21))
+        self.assertEqual((accepted, unsupported), (13, 20))
 
 
 if __name__ == '__main__':

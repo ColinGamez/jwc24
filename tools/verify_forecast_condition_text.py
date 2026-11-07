@@ -35,7 +35,7 @@ def verify_condition_text(source):
         reviewed = tuple((int(code), selector) for code, (selector, _) in SUPPORTED.items())
         for position, text in enumerate(texts):
             raw = text.encode('utf-16-be') + b'\0\0'
-            primary, secondary = reviewed[position] if position < 4 else (100, 1)
+            primary, secondary = reviewed[position] if position < len(reviewed) else (100, 1)
             manager_bytes, header_bytes = bytearray(48), bytearray(56)
             struct.pack_into('>I', manager_bytes, 0x10, wrapper)
             struct.pack_into('>I', manager_bytes, 0x28, header)

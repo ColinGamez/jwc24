@@ -36,9 +36,9 @@ class ForecastConditionTextOriginalTests(unittest.TestCase):
         if importlib.util.find_spec('unicorn') is None:
             self.skipTest('Optional native execution dependency unavailable')
         report = verify_condition_text(path.read_bytes())
-        self.assertEqual(report['condition_label_pointer_handoff_cases'], 14)
-        self.assertEqual(report['complete_original_primary_key_lookup_cases'], 14)
-        self.assertEqual(report['complete_utf16_length_helper_cases'], 28)
+        self.assertEqual(report['condition_label_pointer_handoff_cases'], 15)
+        self.assertEqual(report['complete_original_primary_key_lookup_cases'], 15)
+        self.assertEqual(report['complete_utf16_length_helper_cases'], 30)
         self.assertEqual(report['control_branch_cases'], 38)
         self.assertEqual(report['largest_tested_utf16_units'], 1024)
         self.assertTrue(report['source_static_inputs_and_guards_unchanged'])
