@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-11-07",
+  "scope": "Configured CMOC receive storage resets and arithmetic fragments on synthetic RAM; explicit composition checks, not a live service change.",
+  "source_application_sha256": "3957942d54501633bd7d256c636517885958ed152d9c914f4e07aadecf84a5b3",
+  "native_evidence": {
+    "wire_storage_bytes": 1088,
+    "intermediate_storage_bytes": 1024,
+    "complete_original_storage_resets": 2,
+    "capacity_cases": 4225,
+    "fits_storage_cases": 2145,
+    "exceeds_storage_cases": 2080,
+    "rounding_cases": 29575,
+    "partial_header_cases": 16490,
+    "original_helpers_or_memset_stubbed": false,
+    "arithmetic_inputs_and_object_stack_guards_verified": true,
+    "constructor_fragment": "0x8007F1B4..0x8007F1F4",
+    "body_fragment": "0x8007F49C..0x8007F4D8",
+    "wire_reset": "0x8007F3C0",
+    "intermediate_reset": "0x8007F3A8"
+  },
+  "independent_composition": {
+    "original_setup_projection_retained": true,
+    "requires_combined_resolved_span_and_prefix_at_most": 64,
+    "requires_explicit_rounded_input_backing": true,
+    "invented_padding": false,
+    "callback_endpoint_composition_cases": 5125
+  },
+  "verification": {
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_cmoc_receive -v",
+    "tests": 5,
+    "seconds": 7.436,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "private_original_available": true
+  },
+  "genuine_live_resource_sizes_verified": false,
+  "sdk_chunking_or_crypto_verified": false,
+  "native_ui_profile_or_network_executed": false,
+  "remaining": [
+    "Actual loaded resource sizes and cryptographic/comparison semantics",
+    "SDK receive chunking and initialization guarantees",
+    "Complete decoded output bounds and response lifecycle",
+    "Authenticated genuine channel startup and original UI"
+  ]
+}
