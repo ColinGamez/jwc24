@@ -1,15 +1,15 @@
 {
   "date_jst": "2026-11-07",
   "source_application_sha256": "3957942d54501633bd7d256c636517885958ed152d9c914f4e07aadecf84a5b3",
-  "tests": 10,
+  "tests": 12,
   "passed": true,
-  "successful_native_comparison_cases": 591,
-  "application_cases": 278,
-  "sdk_cases": 313,
+  "successful_native_comparison_cases": 594,
+  "application_cases": 280,
+  "sdk_cases": 314,
   "counts": {
-    "instructions": 1275038,
-    "sdk_calls": 1153,
-    "size_header_reads": 276
+    "instructions": 1276155,
+    "sdk_calls": 1161,
+    "size_header_reads": 278
   },
   "scope": [
     "LZ10/LZ11 whole and all tested two-chunk cut points",
@@ -21,7 +21,8 @@
     "late trailing-input error after output writes",
     "overshooting reference error",
     "disabled copy and truncated streams",
-    "original backing guards"
+    "original backing guards",
+    "Malformed header resume: raw unsigned application subtraction vs signed SDK status, followed by genuine output"
   ],
   "exact_write_addresses_and_untouched_tail_verified": true,
   "decoder_stubbed": false,
@@ -36,7 +37,7 @@
   "complete_transform_composition_verified": false,
   "optional_absence_validation": {
     "command": "python -S -m unittest tests.test_cmoc_compression -q",
-    "tests": 7,
+    "tests": 8,
     "skipped": 1,
     "passed": true
   },
@@ -49,5 +50,6 @@
     "integrated actual hash/cipher/decompressor callback",
     "real resource envelope framing/ownership",
     "transport/cache/native full flow and actual IOS behavior"
-  ]
+  ],
+  "application_return_representation": "Raw 32-bit register count; SDK status remains signed. Verified 0xFFFFFFFE without treating it as produced bytes."
 }

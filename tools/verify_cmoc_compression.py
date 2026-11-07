@@ -70,8 +70,7 @@ def _execute(source, *, chunks, enabled, limit, application, capacity):
         u.emu_start(a, stop, count=1000000)
         if u.reg_read(UC_PPC_REG_PC) != stop:
             raise ValueError('CMOC decompressor instruction cap reached')
-        v = u.reg_read(UC_PPC_REG_3)
-        return v if v < 0x80000000 else v - 4294967296
+        return u.reg_read(UC_PPC_REG_3)
     if application:
         call(0x80069428, {3: context, 4: out, 5: limit, 6: int(enabled)})
     else:
@@ -88,7 +87,8 @@ def _execute(source, *, chunks, enabled, limit, application, capacity):
         if not 0 <= cursor <= capacity:
             raise ValueError('CMOC decompressor cursor exceeds explicit backing')
         rows.append(dict(
-            return_value=r, sdk_return=None if len(returns) == sdk_start else returns[-1],
+            return_value=r if application or r < 0x80000000 else r - 4294967296,
+            sdk_return=None if len(returns) == sdk_start else returns[-1],
             remaining=int.from_bytes(c[4:8], 'big', signed=True),
             limit=int.from_bytes(c[8:12], 'big', signed=True), header_remaining=c[0x13],
             variant=c[0x14], cached_remaining=int.from_bytes(c[0x1c:0x20], 'big'),

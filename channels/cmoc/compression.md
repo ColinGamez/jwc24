@@ -48,6 +48,14 @@ network or cipher padding. Every supplied byte remains an explicit caller input.
 Negative SDK results do not erase already written output or reset stream state.
 Successful completion does not establish a valid resource or authenticated body.
 
+SDK results are signed statuses/remaining counts; the application's computed
+count is retained as its raw 32-bit register value. A malformed header declaring
+three bytes can leave cached count three, followed by a valid five-byte header
+that returns SDK remaining five without writing output. The application then
+returns `0xFFFFFFFE` (raw unsigned subtraction), not SDK error `-2`. The verifier
+checks this malformed resume and later successful output against original code;
+it does not treat the huge application count as produced or valid body bytes.
+
 ## Backing and local bounds
 
 The application's original size helper at `0x801783D0` reads four bytes, or eight

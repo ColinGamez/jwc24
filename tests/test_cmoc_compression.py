@@ -80,6 +80,15 @@ class CompressionTests(unittest.TestCase):
         self.assertEqual((bad.steps[0].sdk_return, bad.steps[0].return_value), (-4, 0))
         self.assertEqual((bad.steps[0].remaining, bad.steps[0].cached_remaining), (3, 4))
 
+    def test_malformed_header_resume_keeps_raw_application_underflow_separate_from_sdk(self):
+        chunks = (b'\x20\x03\0\0', b'\x10\x05\0\0', b'\0ABCDE')
+        result = inspect(chunks)
+        self.assertEqual([s.return_value for s in result.steps], [0, 0xFFFFFFFE, 5])
+        self.assertEqual([s.sdk_return for s in result.steps], [-1, 5, 0])
+        self.assertEqual([s.cached_remaining for s in result.steps], [3, 5, 0])
+        self.assertEqual([len(s.written) for s in result.steps], [0, 0, 5])
+        self.assertEqual(result.output, b'ABCDE')
+
     def test_disabled_copy_and_privacy_no_implicit_compression_detection(self):
         result = inspect_compression(chunks=(b'private-marker', b'!'), enabled=False,
                                      output_limit=0, output_capacity=32)
@@ -154,6 +163,17 @@ class CompressionNativeTests(unittest.TestCase):
                        dict(chunks=(b'\x10\x03\0\0\0ABC',), capacity=2)):
             with self.subTest(change=change), self.assertRaisesRegex(ValueError, 'Unexpected (read|write)'):
                 _execute(self.source, **(base | change))
+
+    def test_actual_malformed_header_resume_unsigned_application_count_and_signed_sdk(self):
+        from tools.verify_cmoc_compression import verify_compression
+        chunks = (b'\x20\x03\0\0', b'\x10\x05\0\0', b'\0ABCDE')
+        for application, supplied in ((True, chunks[:2]), (True, chunks), (False, chunks)):
+            result = verify_compression(self.source, chunks=supplied, enabled=True,
+                output_limit=0, output_capacity=4096, application=application)
+            if application:
+                self.assertEqual(result['steps'][1]['return_value'], 0xFFFFFFFE)
+            self.assertEqual(result['steps'][1]['sdk_return'], 5)
+            self.assertEqual(result['steps'][1]['written_size'], 0)
 
 
 if __name__ == '__main__':
