@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-11-07",
+  "source_bytes": 4194944,
+  "source_sha256": "aef18b3a045c09b0a1c4dfdd9aed99f78bd4a6be8c0a967deea3e6aa93523264",
+  "source_regions": [
+    {
+      "role": "manager_callback_thunk",
+      "start": "0x80026ae0",
+      "exclusive_end": "0x80026b04",
+      "sha256": "527b4b0445fc972df81aea0e488ef5caf405cb6f4d8798d64d21119bb96bb210"
+    },
+    {
+      "role": "manager_callback_relay",
+      "start": "0x80026b10",
+      "exclusive_end": "0x80026c78",
+      "sha256": "3e3fb8fd5309ef61f17c3bbb0a30c02b0c13ba2bb399b5ca71837d4ed9e1a814"
+    },
+    {
+      "role": "combined_success_predicate",
+      "start": "0x80027d70",
+      "exclusive_end": "0x80027dc8",
+      "sha256": "494081db321cadb82e07a801da31a5407bbb1638fd4b18d96089553ef1c178eb"
+    },
+    {
+      "role": "inner_error_predicate",
+      "start": "0x80027dd0",
+      "exclusive_end": "0x80027df4",
+      "sha256": "da568b9b72462beae5b630b982502445b412568aefc83fd1111e6180f2bd0889"
+    },
+    {
+      "role": "signed_response_predicate",
+      "start": "0x80027e00",
+      "exclusive_end": "0x80027e24",
+      "sha256": "27a74d2099f6bec1cfe4824e7615959110d6d572f9779ceb1c8f5cc94a587770"
+    },
+    {
+      "role": "error_detail_map",
+      "start": "0x8002b6a0",
+      "exclusive_end": "0x8002b780",
+      "sha256": "468b40cd0d7f22627fdc8b077acc32e1ae7cbe747a4ec834c2f06b26ff311ef8"
+    },
+    {
+      "role": "inner_detail_map",
+      "start": "0x8002b780",
+      "exclusive_end": "0x8002b86c",
+      "sha256": "e46b326149e1f13d239f16bcb503a3547da87804a9f8f5e4cb51ed599f0b6383"
+    },
+    {
+      "role": "response_detail_map",
+      "start": "0x8002ba20",
+      "exclusive_end": "0x8002ba2c",
+      "sha256": "57cc5b81bdfaa97f71df520dd0c01b4f928ba85b394f4226217ba96447970810"
+    },
+    {
+      "role": "error_mapping_jump_tables",
+      "start": "0x8038f960",
+      "exclusive_end": "0x8038f9e8",
+      "sha256": "6e158aec0ea495a31eb76f06b00efa24b5d3b304edb6011b0f89132e9fff4aca"
+    },
+    {
+      "role": "http_callback_wrapper_and_body",
+      "start": "0x800287c0",
+      "exclusive_end": "0x80028914",
+      "sha256": "3011a9356a712965a1bc585858bab901c10d48c5215e99f2053c040fb4f5427c"
+    },
+    {
+      "role": "native_copy",
+      "start": "0x80004364",
+      "exclusive_end": "0x800046e0",
+      "sha256": "86a4098e9a9c5638a2310d91375491397920cc0248e80b15cd73d067d9e18984"
+    }
+  ],
+  "native_comparisons": 311,
+  "all_native_comparisons_passed": true,
+  "comparison_seconds": 3.76,
+  "aggregate_counts": {
+    "instructions": 57294,
+    "manager_thunk": 311,
+    "manager_relay": 309,
+    "http_callback_wrapper": 307,
+    "http_callback_body": 305,
+    "native_copy": 269,
+    "timer_reset": 305,
+    "timer_start": 305
+  },
+  "original_thunk_relay_predicates_error_maps_callback_and_copy_stubbed": false,
+  "timer_reset_and_start_boundaries_stubbed": true,
+  "complete_timer_behavior_verified": false,
+  "sdk_callback_state_production_or_real_network_verified": false,
+  "authentication_freshness_genuine_catalog_or_original_ui_verified": false,
+  "actual_callback_frame_and_runtime_context_verified": true,
+  "immutable_source_manager_chunk_guards_and_output_state_checked": true,
+  "original_files_or_device_profiles_modified": false,
+  "software_or_proprietary_bytes_copied_to_git": false,
+  "no_runtime_server_routes_enabled": true,
+  "targeted_test_count": 12,
+  "targeted_tests_passed": true,
+  "targeted_test_seconds": 4.121,
+  "all_nintendo_regression_test_count": 82,
+  "all_nintendo_regression_passed": true,
+  "all_nintendo_regression_seconds": 19.334,
+  "private_absent_public_test_count": 10,
+  "private_absent_native_classes_skipped": 1,
+  "private_absent_run_passed": true,
+  "private_absent_test_seconds": 0.023
+}
