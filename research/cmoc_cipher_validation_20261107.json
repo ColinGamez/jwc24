@@ -1,0 +1,55 @@
+{
+  "date_jst": "2026-11-07",
+  "source_application_sha256": "3957942d54501633bd7d256c636517885958ed152d9c914f4e07aadecf84a5b3",
+  "test_command": "python -m unittest tests.test_cmoc_cipher -v",
+  "tests": 16,
+  "passed": true,
+  "successful_native_comparison_cases": 69,
+  "native_sdk_cases": 18,
+  "native_application_cases": 51,
+  "counts": {
+    "instructions": 359577,
+    "native_blocks": 201,
+    "acquire_calls": 149,
+    "release_calls": 145,
+    "open_boundaries": 147,
+    "close_boundaries": 145,
+    "diagnostic_boundaries": 30
+  },
+  "standard_vector_scope": "NIST SP 800-38A F.2.2/F.2.4/F.2.6: AES-CBC128/192/256, whole/block/empty-interleaved chunks, separate/in-place output",
+  "additional_original_paths": [
+    "null IV",
+    "NUL-terminated key size",
+    "invalid key lengths",
+    "null key",
+    "non-block requested sizes",
+    "zero-size chunks",
+    "setup/decode acquisition failure",
+    "decode acquisition recovery",
+    "close failure retaining handle",
+    "cleanup success/failure",
+    "explicit backing and unused-boundary rejection"
+  ],
+  "crypto_and_key_expansion_stubbed": false,
+  "ios_open_close_and_diagnostics_stubbed": true,
+  "actual_ios_verified": false,
+  "real_resource_envelope_verified": false,
+  "service_authentication_established": false,
+  "original_resource_or_device_keys_used": false,
+  "network_or_profile_access": false,
+  "original_source_unchanged": true,
+  "actual_wii_backup_untouched": true,
+  "optional_absence_validation": {
+    "command": "python -S -m unittest tests.test_cmoc_cipher -v",
+    "tests": 16,
+    "skipped": 8,
+    "passed": true
+  },
+  "remaining": [
+    "actual resource envelope framing",
+    "hash/cipher/decompressor composition and capacity",
+    "real IOS/concurrent handle behavior",
+    "resource ownership and authentication",
+    "complete transport/cache/client flow"
+  ]
+}
