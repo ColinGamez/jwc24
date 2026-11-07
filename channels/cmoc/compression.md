@@ -92,10 +92,12 @@ Targeted original callback instructions establish this configured event-2 order:
 5. Add the decompressor's application return to the decoded-size counter.
 
 The hash input is therefore the rounded wire ciphertext span on this path,
-before decryption. This call-order evidence does not yet prove a complete
-configured transform execution. Existing callback tests still use explicit
-transform boundaries. A separate integrated verifier is planned using only
+before decryption. The subsequent [integrated verifier](transform_pipeline.md)
+now executes this complete configured callback with actual transforms using only
 synthetic encrypted streams, keys, IVs, digests and actual supplied padding.
+Its explicit success domain excludes failure-path persistent backing and
+count/write mismatches. The earlier callback harness still uses its separately
+documented explicit transform boundaries.
 Resource acquisition, genuine `.ces` framing, key/ownership provenance,
 concurrent transport/cache behavior, full native flow and authentication remain
 unfinished.

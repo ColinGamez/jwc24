@@ -92,9 +92,12 @@ private pinned executable. Missing optional material produces explicit skips,
 not native verification. The metadata-only [validation report](../../research/cmoc_cipher_validation_20261107.json)
 records the tested scope.
 
-Remaining work includes real envelope framing, hash/cipher/decompression order
-and chunk capacity integration, original resource formats and ownership, actual
-IOS/SDK transport, concurrent handle use, cache lifecycle, server authentication
+The subsequent [configured callback proof](transform_pipeline.md) verifies actual
+hash/cipher/decompression order and output on explicit synthetic success cases.
+Failure-path persistent backing/count and genuine chunk-capacity integration
+remain separate. Remaining work includes real envelope framing, original
+resource formats and ownership, actual IOS/SDK transport, concurrent handle use,
+cache lifecycle, server authentication
 and complete native channel flow. Successful AES vectors prove none of those.
 No device credentials, original resource keys, emulator profiles, actual Wii
 backup, network service or native user interface are modified by this work.

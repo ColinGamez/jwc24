@@ -751,3 +751,78 @@ or invented issue/observation timestamps are assumed. No source activation,
 native publication/install, emulator launch, profile/credential change or actual
 Wii backup access occurred. Unrelated worktree changes remain untouched and the
 full project inventory remains unfinished.
+
+
+## November 7 continuation: actual configured transforms and SDK callback production
+
+Seven additional scoped code/evidence commits follow `8d836ad`: `8c188d1`
+normal XML report/age checks, `1c2d9c0` streaming compression, `fcd5c40` News
+article text, `ac0f690` Nintendo request setup, `e098b23` compression verifier
+return representation, `1f0d38c` Nintendo SDK event four and `d0c6d7b` actual
+configured CMOC transforms. Shared documentation is updated separately.
+
+- [Forecast XML eligibility](../channels/forecast/jma_xml_eligibility.md) reparses
+  exact bytes/receipts, requires the reviewed normal announcement/version tuple
+  and applies an explicit provider issue-age limit. Training, cancellation,
+  unsupported reports and exact-expiry inputs reject. Newly fetching an old
+  report does not renew it. Seven focused tests and the 35-test XML parser,
+  projection and eligibility selection passed. Latest/correction history,
+  identity, all dependencies, native validity and full publication remain open.
+- [Original streaming compression](../channels/cmoc/compression.md) now has
+  594 native comparisons and twelve focused tests. SDK statuses, raw application
+  counts, actual writes and retained state remain separate. Independent review
+  found a verifier representation bug on malformed resume: raw application
+  `0xFFFFFFFE` was incorrectly interpreted as signed SDK error `-2`. `e098b23`
+  fixes the verifier and adds actual-native regression cases, including later
+  successful output. The independent projection required no algorithm change.
+  Additional private review checked 200 bounded cases: 121 native matches and
+  79 matching local-domain rejections, with no further differences.
+- [Actual configured callback proof](../channels/cmoc/transform_pipeline.md)
+  runs original HMAC-SHA1, AES-CBC, streaming LZ10/LZ11, body/finalizer callbacks
+  and comparisons together. Seven tests cover 28 full pipelines, 89 dispatcher
+  calls, 132 AES blocks and 138 SHA1 compressions. Only SDK object lookup and
+  IOS open/close success are supplied runtime boundaries. Rounded ciphertext
+  is hashed before decryption. Exact output/backing, decoder state and CBC chain
+  are checked; hash proof checks final digest/result, not every internal update
+  word. Equal-NUL comparison can match despite binary inequality and remains
+  explicitly distinct from authentication. Failure-path retained backing/count
+  mismatches, genuine resources/envelopes and actual transport/cache remain open.
+- [Nintendo request setup](../channels/nintendo/request_setup.md) preserves
+  original create/cleanup/header/submit/error branches across 193 native cases.
+  Thirteen focused tests passed. SDK return/tick scripts are explicit; the
+  initialized synthetic User-Agent cannot invoke device-derived generation.
+  Indexed SDK pointer/size arguments are checked without reading their resources.
+- [Nintendo event four](../channels/nintendo/sdk_callback.md) reaches the actual
+  manager relay and original HTTP consumer in 345 native comparisons; eleven
+  focused tests and 106 Nintendo regressions passed. Conditional response reads
+  remain separate from retained initial numeric 200. Actual high-bit execution
+  established signed 64-bit division toward zero followed by low-word behavior,
+  correcting the earlier private unsigned-division hypothesis. SDK getter values
+  remain supplied observations; other events, async lifetime, actual transport,
+  catalog/media, authentication and full UI remain unfinished.
+- [News article text](../channels/news/article_text_contract.md) verifies exact
+  title/body/source-name/copyright pointers, three original text handoffs and
+  bounded UTF-16 unit handling in ten completed native comparisons. Eight tests
+  passed, including a trapped actual undersized glyph-storage write. Native
+  LF/NBSP handling and literal URL/markup units do not establish fonts, wrapping,
+  rendering, clickability or sufficient provider attribution. No actual article
+  was rewritten, flattened or published by this component.
+
+The combined sixteen-module run passed **180 tests in 52.099 seconds with no
+skips, failures or errors**. Code was frozen at `1f0d38c` plus the four frozen
+pipeline files subsequently committed unchanged as `d0c6d7b`. Exact file hashes
+and the named UTF-8 log `private/swarm-focused-20261107c.log` remain private;
+session 32163 completed with exit zero. This is an affected-component selection,
+not a new complete-suite run. The earlier full 1,355-test and 492-test checkpoints
+remain separate. Public CI for `8d836ad` passed compile/package checks and
+1,168 tests with 365 skips in 28.800 seconds (run 42372732109); the new push has
+its own subsequent CI result.
+
+The owner has no Weathernews API/permission file and authorized the best
+alternative. The public JMA track continues; no credentials or permission are
+invented. No provider was activated, payload installed, native UI launched,
+profile/credential modified or actual Wii backup accessed. Original software,
+article captures, resources and device data remain private. Existing unrelated
+Wii no Ma/provider/artwork changes stay unstaged. The entire inventory's source,
+identity, trust, native-flow and hardware requirements remain in scope; this
+batch is progress and does not complete or block the goal.

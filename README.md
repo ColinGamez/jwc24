@@ -182,7 +182,9 @@ from completed native experiences.
   adapter](channels/news/globalvoices_source.md) preserves article structure,
   distinct author/translator credits and source dates. It is a supplemental
   source; third-party media, quotations and native attribution remain pending,
-  so it cannot publish a News payload.
+  so it cannot publish a News payload. [Original body/credit consumers](channels/news/article_text_contract.md)
+  verify exact text pointers, separate handoffs and UTF-16 unit handling; full
+  font/layout/rendering and working links remain unverified.
 - [Forecast source checks](channels/forecast/source_freshness.md) verify separate
   provider-time receipts, not the native location-clock anchors. The older
   private pipeline's historical substitutions and guessed measurements must be
@@ -215,7 +217,9 @@ from completed native experiences.
   [Explicit XML extrema conversion](channels/forecast/jma_xml_projection.md)
   now preserves complete report qualifiers and converts eligible daily high/low
   values from their original decimal tokens. General maxima cannot substitute
-  for missing morning minima; source eligibility and full assembly remain open.
+  for missing morning minima. [Normal-report and issue-age checks](channels/forecast/jma_xml_eligibility.md)
+  reject training/cancellation/unsupported reports and expired issues. Latest
+  correction history and full source/payload assembly remain open.
 - [Check Mii Out HTTP handling](channels/cmoc/http_conversion.md) now follows
   original SDK header lookup and three-character numeric conversion into the
   observed response gate/FD decoder. Real request/authentication/Mii flows remain
@@ -235,8 +239,12 @@ from completed native experiences.
   separately from full-span binary equality and authentication.
   [Original AES-CBC comparisons](channels/cmoc/cipher.md) verify all three key
   sizes and application no-write/error behavior. Install the optional `crypto`
-  extra for these offline checks; callback transform integration, resource
-  envelopes and authentication remain unfinished.
+  extra for these offline checks. [Original streaming decompression](channels/cmoc/compression.md)
+  preserves partial LZ10/LZ11 state and actual writes separately from SDK
+  status and raw application counts. The [configured callback proof](channels/cmoc/transform_pipeline.md)
+  now executes actual HMAC/AES/LZ and comparisons together on explicit synthetic
+  inputs. Failure-path backing, genuine resource envelopes and service
+  authentication remain unfinished.
 - [Nintendo catalog loading](channels/nintendo/http_lifecycle.md) now connects
   language eligibility, actual retained callback bytes and native load checks.
   A completed-looking state cannot hide a skipped input chunk or substitute
@@ -246,7 +254,12 @@ from completed native experiences.
   The [manager callback relay](channels/nintendo/manager_callback.md) now
   preserves original error precedence, response mapping and downstream copy/load
   behavior. SDK request/state production, authentication and genuine catalogs
-  remain separate requirements.
+  remain separate requirements. [Actual request setup](channels/nintendo/request_setup.md)
+  now preserves native header order/truncation, cleanup and submission/error
+  precedence against original code. The [SDK event-four producer](channels/nintendo/sdk_callback.md)
+  now reaches the actual relay/HTTP consumer, preserving conditional response
+  observations and signed timing arithmetic. Other events, actual SDK/network
+  state and asynchronous lifetime remain open.
 - [Body Check task preparation](channels/body_check/tasks.md) preserves the
   original SDK task-image fields separately from its assigned task ID and actual
   registration. The read-completion and opaque header gates are also checked;

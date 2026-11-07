@@ -112,8 +112,15 @@ honestly without the pinned private executable or optional Capstone/Unicorn.
 The public tests also compose the resulting flags with the existing completion
 gate for unchanged, changed and truncated synthetic headers.
 
-Live resource acquisition, hash/cipher/compression algorithms and trust,
-transport chunking, response lifetime/error handling, cache persistence,
+The [hash](hash_processing.md), [cipher](cipher.md) and
+[streaming decompressor](compression.md) now have separate original-code proofs.
+A subsequent [configured pipeline verifier](transform_pipeline.md) executes all
+three inside the original callbacks for its explicit synthetic success domain;
+this earlier callback harness retains its stated transform boundaries.
+
+Live resource acquisition, genuine envelopes and trust, failure-path persistent
+backing/count integration, transport chunking, response lifetime/error handling,
+cache persistence,
 authenticated identities, genuine FD records, Mii/contest/menu consumers and
 original full UI remain unfinished. An explicit true digest-boundary result
 and passing header correlation are not authentication evidence.

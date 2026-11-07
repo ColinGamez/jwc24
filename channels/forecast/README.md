@@ -140,6 +140,10 @@ have explicit projections; actual 05/11 response shapes remain uncaptured.
 The separate [VPFD51 XML source parser](jma_xml_temperatures.md) now retains
 actual 05:00/11:00 announcement records and their reference-bound temperature
 periods. These XML documents do not establish the website JSON array shape.
+[Explicit extrema conversion](jma_xml_projection.md) preserves complete source
+qualifiers and original decimals. The separate [normal-report/age check](jma_xml_eligibility.md)
+reparses byte-bound inputs and rejects unreviewed report kinds and expired
+issues; later corrections/cancellations and full source acceptance remain open.
 [Measurement conversion](jma_measurements.md) uses a documented JWC24 rounding/QC
 policy. [Original texture membership](condition_resources.md) supports an
 explicit [five-category condition projection](jma_conditions.md); 113 reviewed
