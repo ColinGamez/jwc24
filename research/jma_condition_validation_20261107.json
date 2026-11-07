@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "checked_on_jst": "2026-11-07",
+  "scope": "Explicit JWC24 replacement mapping of four reviewed JMA daily categories plus bounded actual original native text consumers. No active provider or original assets changed.",
+  "source_client": {
+    "url": "https://www.jma.go.jp/bosai/forecast/",
+    "sha256": "2219c9b3f581d0e69857eeb4c98e1ebb8059269b73d7886f9ecc9a676b124a50",
+    "bytes": 199327,
+    "retrieved_start_utc": "2026-10-27T18:49:49.229083+00:00",
+    "retrieved_end_utc": "2026-10-27T18:49:50.038534+00:00",
+    "entries": 118,
+    "javascript_executed": false,
+    "receipt_is_independent_authentication": false
+  },
+  "mapping": [
+    {
+      "jma_primary_code": 100,
+      "native_secondary_selector": 1,
+      "label": "晴"
+    },
+    {
+      "jma_primary_code": 200,
+      "native_secondary_selector": 10,
+      "label": "曇"
+    },
+    {
+      "jma_primary_code": 300,
+      "native_secondary_selector": 19,
+      "label": "雨"
+    },
+    {
+      "jma_primary_code": 400,
+      "native_secondary_selector": 26,
+      "label": "雪"
+    }
+  ],
+  "known_unmapped_codes": 114,
+  "unknown_codes_reject_separately": true,
+  "missing_codes_reject_separately": true,
+  "silent_ff_or_generic_picture_fallback": false,
+  "high_bit_night_policy_supplied": false,
+  "original_weathernews_or_nintendo_dictionary_recovered": false,
+  "historical_forecast_replay": {
+    "captured_on_jst": "2026-10-28",
+    "weather_code_slots": 33,
+    "mapped_slots": 12,
+    "explicitly_unsupported_slots": 21,
+    "provider_issue_target_description_and_receipts_preserved": true,
+    "current_weather_claim": false
+  },
+  "native_text": {
+    "source_application_sha256": "ec33ec8eb2a8b9c76c2605ac6de2fd16dd5279b0c641d90746206a86a3a499b5",
+    "condition_label_pointer_handoff_cases": 14,
+    "complete_original_primary_key_lookup_cases": 14,
+    "complete_utf16_length_helper_cases": 28,
+    "width_height_prefix_cases": 28,
+    "control_branch_cases": 38,
+    "largest_tested_utf16_units": 1024,
+    "condition_label_handoff": "0x8001d7e4..0x8001d7f8",
+    "original_fitting_function": "0x8001c89c",
+    "width_prefix": "0x800d5700..0x800d5724",
+    "height_prefix": "0x800d59ac..0x800d59d0",
+    "complete_utf16_length_helper": "0x8016f56c",
+    "control_prefix": "0x800d03e4..0x800d040c/0x800d0440/0x800d04f4",
+    "pointers_and_utf16_code_unit_lengths_preserved": true,
+    "newline_tab_and_surrogate_units_preserved": true,
+    "source_static_inputs_and_guards_unchanged": true,
+    "original_instructions_or_helpers_stubbed": false,
+    "full_fitting_font_metrics_line_bounds_or_glyph_rendering_executed": false,
+    "fixed_character_cap_established": false,
+    "native_ui_or_device_io_executed": false
+  },
+  "verification": {
+    "command": ".venv/Scripts/python.exe -m unittest tests.test_jma_conditions tests.test_forecast_condition_text -v",
+    "tests": 13,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "optional_private_inputs_available": true
+  },
+  "remaining": [
+    "114 qualified/composite source categories",
+    "Clock/night-bit policy",
+    "Actual font metrics and full text fitting/glyph rendering",
+    "Native location association",
+    "Source freshness acceptance",
+    "Inline provider attribution",
+    "Full native payloads and UI/hardware validation"
+  ]
+}
