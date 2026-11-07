@@ -10,12 +10,10 @@ from pathlib import Path
 def directory_lock(directory: Path, timeout: float = 30.0):
     directory.mkdir(parents=True, exist_ok=True)
     # Never remove the lockfile: removing it can split waiting publishers
-    # across different inodes. Only byte zero is locked on Windows.
+    # across different inodes. Only byte zero is locked on Windows, including
+    # when it is beyond EOF. Do not initialize the file: another opener may
+    # already hold byte zero, making that write fail before our retry loop.
     with (directory / ".publication.lock").open("a+b") as stream:
-        stream.seek(0, os.SEEK_END)
-        if stream.tell() == 0:
-            stream.write(b"\0")
-            stream.flush()
         deadline = time.monotonic() + timeout
         while True:
             try:
