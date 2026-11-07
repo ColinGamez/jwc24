@@ -90,8 +90,10 @@ specific original public-algorithm tables/descriptors, the original SHA1 `0x80`
 finalization byte and its checked loader-zero padding span. No unrelated
 original resource or credential spans are admitted. Cipher intermediate reads
 require actually written backing; LZ backreferences require actual decoded
-history. Every event verifies exact output write addresses, bytes and untouched
-tail, and immutable inputs and all outer guards remain intact.
+history. Body events verify exact output write addresses, bytes and untouched
+tail. Finalization separately verifies zero intermediate/decoded output writes
+and no transform-update calls, including same-value writes that value checks
+alone could miss. Immutable inputs and all outer guards remain intact.
 The host-side final digest snapshot additionally requires its entire twenty-byte
 span inside the supplied mutable hash-worker context or bounded stack; its
 pointer cannot select arbitrary original or mapped memory.

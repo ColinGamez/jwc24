@@ -826,3 +826,13 @@ article captures, resources and device data remain private. Existing unrelated
 Wii no Ma/provider/artwork changes stay unstaged. The entire inventory's source,
 identity, trust, native-flow and hardware requirements remain in scope; this
 batch is progress and does not complete or block the goal.
+
+
+Final independent pipeline review found one additional verification gap: the
+finalizer's output-write sets were not cleared/asserted separately, so a
+same-value rewrite could pass byte/guard checks. The subsequent scoped verifier
+correction now requires zero intermediate/decoded writes and no transform-update
+calls during finalization. All seven pipeline tests passed again in 3.517 seconds;
+no transform algorithm or original behavior changed. The independent reviewer
+found no further semantic, bounds or scope blocker. The preceding combined
+180-test result remains its own checkpoint; this is the later focused correction.

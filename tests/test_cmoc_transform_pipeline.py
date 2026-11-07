@@ -57,6 +57,7 @@ class PipelineNativeTests(unittest.TestCase):
                         self.assertTrue(result['native_digest_match'])
                         self.assertTrue(result['full_digest_binary_match'])
                         self.assertFalse(result['transform_or_digest_stubs_used'])
+                        self.assertTrue(result['finalizer_zero_transform_output_writes_verified'])
                         self.assertEqual(result['counts']['hash_updates'], arrangement)
 
     def test_prefix_mismatches_checked_latches_and_forced_short_body_finalization(self):

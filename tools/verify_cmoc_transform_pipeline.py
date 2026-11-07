@@ -252,7 +252,7 @@ def verify_transform_pipeline(source, *, hash_key, cipher_key, iv, ciphertext_ch
             word(descriptor + 4, 0x400)
             word(descriptor + 8, 20 + len(wire_prefix) + receive_sizes[i])
         else:
-            live.update(event=None, call_order=[])
+            live.update(event=None, call_order=[], intermediate_writes=set(), current_decoded=set())
         before = bytes(cpu.mem_read(descriptor, 12))
         if call(0x8007F3F0, {3: 77, 4: 2 if i < len(frames) else 4, 5: descriptor}) != 0:
             raise ValueError('Original CMOC dispatcher return differs')
@@ -281,8 +281,11 @@ def verify_transform_pipeline(source, *, hash_key, cipher_key, iv, ciphertext_ch
                     or int.from_bytes(raw[0xc:0x10], 'big') != d.reference_word):
                 raise ValueError('Original composed decoder streaming state differs')
             previous = len(body)
-        elif bytes(cpu.mem_read(descriptor, 12)) != before:
-            raise ValueError('Original finalizer unexpectedly changed SDK descriptor')
+        else:
+            if bytes(cpu.mem_read(descriptor, 12)) != before:
+                raise ValueError('Original finalizer unexpectedly changed SDK descriptor')
+            if live['intermediate_writes'] or live['current_decoded'] or live['call_order']:
+                raise ValueError('Original finalizer unexpectedly updated transform output')
         for pointer, value, mutable in objects:
             if (bytes(cpu.mem_read(pointer - len(guard), len(guard))) != guard
                     or bytes(cpu.mem_read(pointer + len(value), len(guard))) != guard
@@ -303,4 +306,5 @@ def verify_transform_pipeline(source, *, hash_key, cipher_key, iv, ciphertext_ch
                 transform_or_digest_stubs_used=False,
                 ios_and_sdk_object_lookup_are_synthetic_boundaries=True,
                 exact_write_spans_and_backing_verified=True,
+                finalizer_zero_transform_output_writes_verified=True,
                 resource_envelope_or_service_authentication_established=False)
